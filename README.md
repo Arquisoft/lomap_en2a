@@ -258,4 +258,5 @@ After the actions process is finished, we can access the application using the I
 
 # TEAM MEMBERS (COLLABORATORS)
 Patricia Garcia Fernandez uo282210@uniovi.es
+Pablo Argallero Fernandez uo283216@uniovi.es
 
