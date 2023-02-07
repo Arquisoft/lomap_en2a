@@ -41,14 +41,14 @@ It is possible to use a sequence diagram:
 
 [plantuml,"Sequence diagram",png]
 ----
-actor Alice
-actor Bob
+actor Patricia
+actor Pablo
 database Pod as "Bob's Pod"
-Alice -> Bob: Authentication Request
-Bob --> Alice: Authentication Response
-Alice  --> Pod: Store route
-Alice -> Bob: Another authentication Request
-Alice <-- Bob: another authentication Response
+Patricia -> Pablo: Authentication Request
+Pablo --> Patricia: Authentication Response
+Patricia  --> Pod: Store route
+Patricia -> Pablo: Another authentication Request
+Patricia <-- Pablo: another authentication Response
 ----
 === <Runtime Scenario 2>
 

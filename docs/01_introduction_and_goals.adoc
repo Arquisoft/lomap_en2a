@@ -1,6 +1,8 @@
 [[section-introduction-and-goals]]
 == Introduction and Goals
 
+This is the documentation created by the LoMap_en2a team formed by Patricia, Pablo, Santiago and Adrián. 
+
 [role="arc42help"]
 ****
 Describes the relevant requirements and the driving forces that software architects and development team must consider. These include
