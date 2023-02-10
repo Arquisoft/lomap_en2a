@@ -1,6 +1,6 @@
 [[section-architecture-constraints]]
 == Architecture Constraints
-When designing the LoMap application, there are several constraints that must be taken into consideration. These constraints will have a significant impact on the overall design of the application and the architectural decisions that are made. The constraints include privacy, performance, user experience, deployment, security, and integration. These constraints must be considered in order to ensure that the final product meets the needs and expectations of the users and stakeholders. The following table summarizes these constraints and provides a brief explanation for each.
+When designing the LoMap application, there are several constraints that must be taken into consideration. These constraints will have a significant impact on the overall design of the application and the architectural decisions that are made. The constraints include privacy, performance, user experience, deployment, security,... These constraints must be considered in order to ensure that the final product meets the needs and expectations of the users and stakeholders. The following table summarizes these constraints and provides a brief explanation for each.
 
 [options="header", cols="1,1"]
 |===
@@ -13,8 +13,6 @@ When designing the LoMap application, there are several constraints that must be
 | User Experience | The user experience should be user-friendly and intuitive, making it easy for users to add, edit, and delete locations, as well as manage their friends and personal information, this means application will support connection between friends.
 
 | Deployment | The application should be deployable to different cities.
-
-| Security | The security of the application and the data stored in it should be a high priority. Appropriate security measures to protect the data stored in the application must be taken.
 
 | Test coverage | Code must meet a good test quality and coverage to ensure the expected outcome.
 
