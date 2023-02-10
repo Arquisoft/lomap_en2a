@@ -1,19 +1,21 @@
 [[section-architecture-constraints]]
 == Architecture Constraints
+When designing the LoMap application, there are several constraints that must be taken into consideration. These constraints will have a significant impact on the overall design of the application and the architectural decisions that are made. The constraints include privacy, performance, user experience, deployment, security, and integration. These constraints must be considered in order to ensure that the final product meets the needs and expectations of the users and stakeholders. The following table summarizes these constraints and provides a brief explanation for each.
 
+[options="header", cols="1,1"]
+|===
+| Constraint | Explanation
 
-[role="arc42help"]
-****
-.Contents
-Any requirement that constrains software architects in their freedom of design and implementation decisions or decision about the development process. These constraints sometimes go beyond individual systems and are valid for whole organizations and companies.
+| Privacy (use of SOLID) | The privacy of the users is a key concern, and the application should be designed to respect the privacy of users. The information stored in each user’s pod should not be centralized and should be kept confidential.
 
-.Motivation
-Architects should know exactly where they are free in their design decisions and where they must adhere to constraints.
-Constraints must always be dealt with; they may be negotiable, though.
+| Performance | The application should perform well and should be scalable to handle large amounts of data.
 
-.Form
-Simple tables of constraints with explanations.
-If needed you can subdivide them into
-technical constraints, organizational and political constraints and
-conventions (e.g. programming or versioning guidelines, documentation or naming conventions)
-****
+| User Experience | The user experience should be user-friendly and intuitive, making it easy for users to add, edit, and delete locations, as well as manage their friends and personal information, this means application will support connection between friends.
+
+| Deployment | The application should be deployable to different cities.
+
+| Security | The security of the application and the data stored in it should be a high priority. Appropriate security measures to protect the data stored in the application must be taken.
+
+| Test coverage | Code must meet a good test quality and coverage to ensure the expected outcome.
+
+|===
