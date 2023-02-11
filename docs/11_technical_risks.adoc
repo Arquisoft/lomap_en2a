@@ -1,6 +1,54 @@
 [[section-technical-risks]]
 == Risks and Technical Debts
 
+This section contains a list of identified risks that the project will face during its lifetime. In addition to it, each particular risk comes with a brief 
+self-explanatory description, the probability of its occurrence, its impact on the project and a solution on how to minimize it or mitigate it.
+
+=== Risks
+[options="header", cols="2, 3, 1, 1, 3"]
+|===
+| Risk | Description | Probability | Impact | Solution
+
+|*Characteristics of the project*
+| The team has never worked on the development of a web application and never developed a project with these or similar requirements.
+| High
+| Very high
+| Each member will work individually on the needed technologies for the application to contribute to the overall knowledge of the team. To minimize any 
+possible error on the understanding of the requirements, the team will informe the client of any misconception.
+
+|*Unexpertised on React*
+| The team has never worked with the tool React. This will take time from the team which could have been invested in advancing the development of the project.
+| Very high
+| Very high
+| The team has compromised to take an in-depth look at the documentation of the tool and practice with it as much as possible.
+
+|*Unexpertised on Solid*
+| The team did not know about the existence of Solid and as a consequence has no knowledge about how it works.
+| Very high
+| Very high
+| Every member of the team will sig up in Solid and take the developer tutorial to understand what is the technology and how it should be used.
+
+|*Lack of experience working cooperatively*
+| The members of the team have never worked together. This may cause problems such as lack of communication or trust in each other's work.
+| Medium
+| Medium
+| The team will use the the peer review technique so every member can supervise and contribute to the tasks of the others. Every meeting will 
+be summarised in a document so that every member knows the tasks that have been done as well as those pending. Also, the Project tool of GitHub will 
+used for a better task planning. Any major problem a member may encounter will be discussed with the rest of the team.
+
+|*First time with web technologies*
+| Some of the members have no knowledge about any web technology or programming language. As a consequence they may slow down the team.
+| Medium
+| High
+| Those members will catch up as much as possible with the rest of the team with respect to web technologies.
+
+|*Aggressive deadlines*
+| The team must meet a series of deadlines and the queality of the deliveries can be affected by the team's lack of total dedication to the project.
+| Very high
+| High
+| The team will follow the planification of the project to avoid backlogs of work.
+
+|===
 
 [role="arc42help"]
 ****
