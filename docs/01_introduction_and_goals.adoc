@@ -1,5 +1,10 @@
 [[section-introduction-and-goals]]
 == Introduction and Goals
+LoMap consists on an application where you can access to a map and add markers, routes and share it with your friends. 
+
+It's being developed by software architecture students during 2023. 
+
+It follows SOLID principles, ensuring privacy and availability of the data.
 
 [role="arc42help"]
 ****
@@ -11,6 +16,23 @@ Describes the relevant requirements and the driving forces that software archite
 ****
 
 === Requirements Overview
+The application shows a map of a city or place. Each user is able to modify it's map to customize and personalized. The users can personalize it's maps by adding 
+markers, which can define bars, restaurants, sights, or points of interests from the city. This markers are stored, so that each user, by login in, can access to his personal map.
+
+This storage will be handled according to the SOLID principles.
+
+It's also possible to personalize a map of every city, since this app is not limited by a region or country, and can be accessed from anywhere.
+
+.Requirements: 
+* Add different categories for each location
+* See the locations in a map in form of markers
+* Interact with markers adding photos, reviews or comments.
+* Manage a list of friends.
+* Manage the information that is shared with your friends.
+* See the locations created by friends.
+* Filter the locations of the map by categories.
+
+There are also some optional features which, by today, are still not defined whether if they'll be done or not. This can be seen in the https://arquisoft.github.io/course2223/labAssignmentDescription.html#OPTIONAL[Lab assingmnent]
 
 [role="arc42help"]
 ****
@@ -31,6 +53,25 @@ Keep these excerpts as short as possible. Balance readability of this document w
 ****
 
 === Quality Goals
+
+
+[options="header", cols="1,1"]
+|===
+| Goal | Description
+
+| Security | Each user should access to it's pod and it can not be accessed by other user. User can modify their access data.
+
+| Performance | The application should be able to give short response time when users are interacting with it. 
+
+| Availability | The personal data from the pods can be accessed at any time.
+
+| Usability | The application should be easy to use. This can be achieved by using different technices such as familiarity, learnability, etc.
+
+| Portability | The application must work regarding the device, since it will be developed as a web application.
+
+| Testability | There must be tests for the application in order to check it's correct behavior.
+
+|===
 
 [role="arc42help"]
 ****
@@ -69,7 +110,8 @@ Table with role names, person names, and their expectations with respect to the 
 
 [options="header",cols="1,2,2"]
 |===
-|Role/Name|Contact|Expectations
-| _<Role-1>_ | _<Contact-1>_ | _<Expectation-1>_
-| _<Role-2>_ | _<Contact-2>_ | _<Expectation-2>_
+|Role/Name|Description|Expectations
+| Developers | People that are implementing and mantaining the app | A good documentation and well commented code, avoiding repetitions and with a good use of patterns, in order to be easy to modify or extend.
+| Professors | In charge of the subject. | An application fullfilling the expectations, that can be qualified. They can also give feedback and help to the developers.
+| Users | Interact with the application | A good, easy to use application, that responds well to their inputs and adds value to them, while keeping their data secure.
 |===
