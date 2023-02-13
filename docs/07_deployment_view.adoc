@@ -3,35 +3,41 @@
 == Deployment View
 An overall structure of the application is presented in this section. The following diagram illustrates the structure:
 
+image::07-deployment_view_general.png["Deploy view general structure"]
+
 We will go one by one through all the different subsystems identified in the diagram with the big boxes explaining each of the components or elements that they are composed of. These sections also outline the relationships between these subsystems, and how they interact with each other to deliver the desired functionality. This information is critical for ensuring that our system is properly deployed and configured in order to meet the requirements and goals of our stakeholders.
 
-=== Infrastructure subsystem 1 - LoMap hosting server
+=== LoMap hosting server
 In this section we will cover in depht the architecture for the hosting server of the application (this server is yet to be decided, but most of the options will suit our purpose). The server will contain mainly 2 elements: the application itself and an auxiliary database for performance purposes.
 
 The hosting server for LoMap is a critical component of our deployment architecture. It is responsible for providing a stable and secure platform for our application to run on, as well as for managing the data storage requirements of the system, this is why the decision on the structure on which the application will be executed is still to be decided. The server will be configured to meet the performance and scalability needs of the application, and will be equipped with the necessary hardware and software components to support the application and its associated database.
 
 The hosting service is still to be decided but given the nature of the project the hosting service chosen will be one that fulfills the requirements in a way costs are minimized. We may user Azure credit and a really simple machine to host the application or we may use another cheap hosting service.
 
-==== Infrastructure subsystem 1 - Element 1 - Application
+==== LoMap hosting server - Application
 The LoMap application will be the heart of the whole system, serving as the interface for users to interact with the stored data. In this section, we will discuss the deployment options for the application, including whether it will run natively on the server or if we will use a containerization solution such as Docker to simplify deployment. The choice of deployment option will depend on various factors such as scalability, ease of maintenance, and security concerns. Regardless of the deployment option chosen, the application will be the key component that connects all the different infrastructures.
 
 
-==== Infrastructure subsystem 1 - Element 2 - Database
+==== LoMap hosting server - Database
 The LoMap application may use a server database to store some information in order to boost application performance by not loading all the information from user's pods. The main idea of this database is to not store sensitive information but to store information to allow lower response times and an overall better user experience while using the application.
 
 Database system is expected to be embedded inside of the system hosting the application in a docker container. This may vary over time since the main idea of the database (help improve performance) can not be assessed since it is a preliminary architecture and application is not yet implemented.
 
-=== Infrastructure subsystem 2 - Map Service Provider
+=== Map Service Provider
 This section of the diagram represents the API used to include the map view to the application. The decision on what map API to be used is still being debated since all possibilities offer similar outcomes. Google maps API and MapBox API are currently being studied for this position but both will serve just fine for the application requirements.
 
 This subsystem of the application is not a key subsystem and may change over time. Design patterns may be applied to completely decouple the implementation of the application with this subsystem for it to be scalable and responsive to changes in a controlled way.
 
-=== Infrastructure subsystem 3 - User computer
+=== User computer
 In this section we will delve into the architecture of the end-user environment, which is the final link in the deployment of the LoMap application. The user computer, which serves as the main interface between the user and the LoMap application, is composed of two main components: the web client and the SOLID component. These components play a crucial role in ensuring that the user experience is seamless and efficient. In this section, we will examine each component in detail, discussing how they contribute to the overall deployment of the LoMap application.
 
-==== Infrastructure subsystem 3 - Element 1 - Web Client
+==== User computer - Web Client
 In the diagram the web client represents the browser from which the user will make the requests to the application, this client will connect to the hosting service and serve as a mean of communication with the user. Application is expected to be independent to all web clients so this element is not considered as a key element of the system.
 
-==== Infrastructure subsystem 3 - Element 2 - SOLID element
+==== User computer - SOLID element
 We call this element "SOLID element" and not pod since we are abstracting the concept of the SOLID pod to be a whole subsystem. Pod can be stored in a private local place on the client machine or may be stored in a SOLID pod provider. Application should be able to abstract both cases and use the pod as a source of information in either way.
+
+The following image illustrates the two possibilities application will have to face to obtain user`s pod data.
+
+image::07-deployment_view_pod_configurations.png["Possible pod configurations"]
 
