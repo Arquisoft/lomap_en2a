@@ -4,7 +4,7 @@
 This section contains a list of identified risks that the project will face during its lifetime. In addition to it, each particular risk comes with a brief 
 self-explanatory description, the probability of its occurrence, its impact on the project and a solution on how to minimize it or mitigate it.
 
-=== Risks
+=== 11.1 Risks
 [options="header", cols="2, 3, 1, 1, 3"]
 |===
 | Risk | Description | Probability | Impact | Solution
@@ -49,6 +49,10 @@ used for a better task planning. Any major problem a member may encounter will b
 | The team will follow the planification of the project to avoid backlogs of work.
 
 |===
+
+=== 11.2 Technical Debts
+
+Due to the early stage of development of the project, the technical debt is not tangible enough to be added and, as a consequence, this section will be filled in as we start to create the source code.
 
 [role="arc42help"]
 ****
