@@ -492,11 +492,7 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_quality_scenarios">10.2. Quality Scenarios</a></li>
 </ul>
 </li>
-<li><a href="#section-technical-risks">11. Risks and Technical Debts</a>
-<ul class="sectlevel2">
-<li><a href="#_risks">11.1. Risks</a></li>
-</ul>
-</li>
+<li><a href="#section-technical-risks">11. Risks and Technical Debts</a></li>
 <li><a href="#section-glossary">12. Glossary</a></li>
 </ul>
 </div>
@@ -540,6 +536,9 @@ For documentation of your own system you use better the <em>plain</em> version.<
 <div class="sect1">
 <h2 id="section-introduction-and-goals">1. Introduction and Goals</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>This is the documentation created by the LoMap_en2a team formed by Patricia, Pablo, Santiago and Adrián.</p>
+</div>
 <div class="sidebarblock arc42help">
 <div class="content">
 <div class="paragraph">
@@ -758,8 +757,24 @@ The title of the table is the name of your system, the three columns contain the
 </div>
 </div>
 <div class="paragraph">
-<p><strong>&lt;Diagram or Table&gt;</strong></p>
+<p><strong>&lt;Diagram or Table&gt;</strong>
+images::Business-context-diagram.png[Business context diagram]</p>
 </div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 33.3333%;">
+<col style="width: 33.3333%;">
+<col style="width: 33.3334%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Communication partners</th>
+<th class="tableblock halign-left valign-top">Inputs</th>
+<th class="tableblock halign-left valign-top">Outputs
+User</th>
+</tr>
+</thead>
+</table>
 <div class="paragraph">
 <p><strong>&lt;optionally: Explanation of external domain interfaces&gt;</strong></p>
 </div>
@@ -1217,7 +1232,7 @@ building block instances depicted in this diagram.&gt;</em></p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="./images/Sequence%20diagram.png" alt="Sequence diagram" width="332" height="335">
+<img src="./images/Sequence%20diagram.png" alt="Sequence diagram" width="346" height="335">
 </div>
 </div>
 </div>
@@ -1640,77 +1655,6 @@ more precisely down to a level of scenarios that can be discussed and evaluated.
 <div class="sect1">
 <h2 id="section-technical-risks">11. Risks and Technical Debts</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>This section contains a list of identified risks that the project will face during its lifetime. In addition to it, each particular risk comes with a brief
-self-explanatory description, the probability of its occurrence, its impact on the project and a solution on how to minimize it or mitigate it.</p>
-</div>
-<div class="sect2">
-<h3 id="_risks">11.1. Risks</h3>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 20%;">
-<col style="width: 30%;">
-<col style="width: 10%;">
-<col style="width: 10%;">
-<col style="width: 30%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Risk</th>
-<th class="tableblock halign-left valign-top">Description</th>
-<th class="tableblock halign-left valign-top">Probability</th>
-<th class="tableblock halign-left valign-top">Impact</th>
-<th class="tableblock halign-left valign-top">Solution</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Characteristics of the project</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The team has never worked on the development of a web application and never developed a project with these or similar requirements.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">High</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Very high</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Each member will work individually on the needed technologies for the application to contribute to the overall knowledge of the team. To minimize any
-possible error on the understanding of the requirements, the team will informe the client of any misconception.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Unexpertised on React</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The team has never worked with the tool React. This will take time from the team which could have been invested in advancing the development of the project.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Very high</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Very high</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The team has compromised to take an in-depth look at the documentation of the tool and practice with it as much as possible.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Unexpertised on Solid</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The team did not know about the existence of Solid and as a consequence has no knowledge about how it works.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Very high</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Very high</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Every member of the team will sig up in Solid and take the developer tutorial to understand what is the technology and how it should be used.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Lack of experience working cooperatively</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The members of the team have never worked together. This may cause problems such as lack of communication or trust in each other&#8217;s work.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Medium</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Medium</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The team will use the the peer review technique so every member can supervise and contribute to the tasks of the others. Every meeting will
-be summarised in a document so that every member knows the tasks that have been done as well as those pending. Also, the Project tool of GitHub will
-used for a better task planning. Any major problem a member may encounter will be discussed with the rest of the team.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>First time with web technologies</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Some of the members have no knowledge about any web technology or programming language. As a consequence they may slow down the team.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Medium</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">High</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Those members will catch up as much as possible with the rest of the team with respect to web technologies.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Aggressive deadlines</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The team must meet a series of deadlines and the queality of the deliveries can be affected by the team&#8217;s lack of total dedication to the project.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Very high</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">High</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The team will follow the planification of the project to avoid backlogs of work.</p></td>
-</tr>
-</tbody>
-</table>
 <div class="sidebarblock arc42help">
 <div class="content">
 <div class="paragraph">
@@ -1731,7 +1675,6 @@ used for a better task planning. Any major problem a member may encounter will b
 </div>
 </div>
 <div style="page-break-after: always;"></div>
-</div>
 </div>
 </div>
 <div class="sect1">
@@ -1816,7 +1759,7 @@ Created by Dr. Peter Hruschka &amp; Dr. Gernot Starke.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-02-09 22:36:53 +0100
+Last updated 2023-01-31 12:07:43 +0100
 </div>
 </div>
 </body>
