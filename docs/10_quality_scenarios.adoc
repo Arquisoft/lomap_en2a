@@ -6,10 +6,8 @@
 ****
 
 .Content
-This section contains all quality requirements as quality tree with scenarios. The most important ones have already been described in section 1.2. (quality goals)
+This section contains all quality requirements as quality tree with scenarios. The most important ones have already been described in section 1.2 Quality Goals.
 
-Here you can also capture quality requirements with lesser priority,
-which will not create high risks when they are not fully achieved.
 
 .Motivation
 Since quality requirements will have a lot of influence on architectural
@@ -22,7 +20,7 @@ concrete and measurable.
 [role="arc42help"]
 ****
 .Content
-The quality tree (as defined in ATAM – Architecture Tradeoff Analysis Method) with quality/evaluation scenarios as leafs.
+We will use a mindmap representation to better explain the quality tree and quality scenarios of the project.
 
 .Motivation
 The tree structure with priorities provides an overview for a sometimes large number of quality requirements.
