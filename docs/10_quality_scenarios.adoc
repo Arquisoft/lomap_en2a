@@ -4,7 +4,7 @@
 
 [role="arc42help"]
 ****
-This section contains all quality requirements as quality tree with scenarios. The most important ones have already been described in section 1.2 Quality Goals. This section aims to represent all the quality attributes identified in order to be able to satisfy the needs of the stakeholders of this project.
+This section contains all quality requirements as quality tree with scenarios. The most important ones have already been described in section 1.2 Quality Goals. With this specification, we aim to represent all the identified quality attributes in order to be able to satisfy the needs of the stakeholders of this project.
 
 ****
 
