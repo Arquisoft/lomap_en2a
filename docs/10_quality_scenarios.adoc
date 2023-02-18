@@ -6,32 +6,26 @@
 ****
 
 .Content
-This section contains all quality requirements as quality tree with scenarios. The most important ones have already been described in section 1.2 Quality Goals.
+This section contains all quality requirements as quality tree with scenarios. The most important ones have already been described in section 1.2 Quality Goals. This section aims to represent all the quality attributes identified in order to be able to satisfy the needs of the stakeholders of this project.
 
-
-.Motivation
-Since quality requirements will have a lot of influence on architectural
-decisions you should know for every stakeholder what is really important to them,
-concrete and measurable.
 ****
 
 === Quality Tree
 
 [role="arc42help"]
 ****
-.Content
-We will use a mindmap representation to better explain the quality tree and quality scenarios of the project.
+The quality tree uses "quality" as the root while the rest of the quality categories will be displayed as branches. Following PlantUML notation, the tree is as follows:
 
-.Motivation
-The tree structure with priorities provides an overview for a sometimes large number of quality requirements.
+@startmindmap
+* Quality
+	* Portability
+	* Testability
+  * Security
+  * Performance
+  * Availability
+  *Usability
+@endmindmap
 
-.Form
-The quality tree is a high-level overview of the quality goals and requirements:
-
-* tree-like refinement of the term "quality". Use "quality" or "usefulness" as a root
-* a mind map with quality categories as main branches
-
-In any case the tree should include links to the scenarios of the following section.
 ****
 
 === Quality Scenarios
