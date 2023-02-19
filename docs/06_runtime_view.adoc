@@ -9,7 +9,7 @@ A very basic representation of the workflow of the application could be the foll
 header LoMap-en2a
 title Runtime view
 database Pod
-
+ 
 User-> Pod : Login
 Application ->Pod: Request auth
 Pod -> Application : Grant access
@@ -86,7 +86,6 @@ Application -> Pod : removeLocation(Location)
 
 === Add a friend
 LoMap will allow users to add new friends. This is where the centraliced database will come into play. User will send friend requests by giving the username of the other user, after that, application will search for that username in the centraliced database and obtain it's webId
-//TODO mirar lo de como identifico a los amigos dentro de la base de datos para hacerles llegar la peticion
 If that username is found the friend request will be sent to the other user. Information of friend status will be all stored in the user's pod since it is considered personal information. A diagram that could model the behavior of this scenario could be the following one:
 [plantuml,"Add a friend",png]
 ----
@@ -136,13 +135,15 @@ actor usr1
 
 usr1 -> Application : selectLocation
 Application -> usr1 : return location
+usr1 -> podUsr1 : getFriends
+podUsr1 ->usr1 : return ["usr2", ...]
 usr1 -> Application : shareLocation(Location,"usr2")
 database db
 Application -> db : getUserByName("usr2")
 db -> Application : return ID
 
 database podUsr2
-Application -> podUsr2 : addLocation(Location,"usr1")
+Application -> podUsr2 : addSharedLocation(Location,"usr1")
 
 @enduml
 ----
