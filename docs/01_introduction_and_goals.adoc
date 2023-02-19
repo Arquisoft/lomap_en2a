@@ -1,10 +1,8 @@
 [[section-introduction-and-goals]]
 == Introduction and Goals
-LoMap consists on an application where you can access to a map and add markers, routes and share it with your friends. 
-
-It's being developed by software architecture students during 2023. 
-
-It follows SOLID principles, ensuring privacy and availability of the data.
+The Council of Brussels has hired the company HappySw, which consists in software architecture students from Oviedo, to develop an application called LoMap.
+With LoMap you can access to a map and add markers, routes and share it with your friends. 
+Our goal is to develop an application that fullfills the requirements and good quality standards, following SOLID principles ensuring privacy and availability of the data.
 
 === Requirements Overview
 The application shows a map of a city or place. Each user is able to modify it's map to customize and personalized. The users can personalize it's maps by adding 
@@ -14,16 +12,30 @@ This storage will be handled according to the SOLID principles.
 
 It's also possible to personalize a map of every city, since this app is not limited by a region or country, and can be accessed from anywhere.
 
-.Requirements: 
-* Add different categories for each location
-* See the locations in a map in form of markers
-* Interact with markers adding photos, reviews or comments.
-* Manage a list of friends.
-* Manage the information that is shared with your friends.
-* See the locations created by friends.
-* Filter the locations of the map by categories.
+The user requirements are actions that they can do in the application.
 
-There are also some optional features which, by today, are still not defined whether if they'll be done or not. This can be seen in the https://arquisoft.github.io/course2223/labAssignmentDescription.html#OPTIONAL[Lab assingmnent]
+.User requirements. The user can: 
+* add different categories for each location.
+* see the locations in a map in form of markers.
+* interact with markers adding photos, reviews or comments.
+* manage a list of friends.
+* manage the information that is shared with his friends.
+* create personalized routes.(optional)
+* compare specific categories. (optional)
+
+.System requirements. The system must:
+* store the information about each user's places in his pod, not centralized. 
+* store information in a centralized way for performance reasons, respecting users' privacy.
+* allow users to see their friends' markers.
+* allow map filtering by categories.
+* allow places to create their own pods.(optional)
+* be able to create newsfeed from places.(optional)
+* add some game features to engage people for discovering new places.(optional)
+* allow the creation of maps between groups of users.(optional)
+* be able to create place recomendations or check information about them.(optional)
+* allow different roles for the users.(optional)
+* allow business owners to create opportunities.(optional)
+
 
 === Quality Goals
 
@@ -51,6 +63,8 @@ There are also some optional features which, by today, are still not defined whe
 [options="header",cols="1,2,2"]
 |===
 |Role/Name|Description|Expectations
+| Council of Brussels | The sponsor of the application | An application that allows users to have a better experience while visiting Brussels.
+| HappySw | The company in charge of the application | A good application that fullfills the requirements expected by the sponsor.
 | Developers | People that are implementing and mantaining the app | A good documentation and well commented code, avoiding repetitions and with a good use of patterns, in order to be easy to modify or extend.
 | Professors | In charge of the subject. | An application fullfilling the expectations, that can be qualified. They can also give feedback and help to the developers.
 | Users | Interact with the application | A good, easy to use application, that responds well to their inputs and adds value to them, while keeping their data secure.
