@@ -2,6 +2,55 @@
 == Design Decisions
 
 
+=== Google Maps API
+==== Problem
+Need to develop a software system capable of provide personalized maps about places and local businesses in any city. In order to do this, a Map API is needed to provide location-aware infographics, mind maps and visualization aids. We need and API which includes geocoding, geolocation, directions and navigation, touch-screen interaction, popups and customizable control objects.
+
+==== Advantages
+Some team members have already used the Google Maps API in other projects. This is one of the decisive advantages, since it facilitates the development of the web application. Also it provides a very important series of features that perfectly adapt to the requirements of LoMap:
+
+* Directions: provides a route planner with an estimate of how much time the route takes and can include additional locations the user wants to travel through.
+* Places: helps users find points of interest, whether that's a landmark or tourist attraction, a public building such as a school or hospital, or a restaurant or shop. Also provides the possibility of adding reviews or comments to those points of interest.
+* Geocoding: allows to accurately mark locations on maps, by converting between street addresses latitude and longitude coordinates. 
+* Data layers: lets the user personalize or overlay own data on the map.
+
+==== Alternatives
+Apart from Google Maps API, we also considered these other options:
+* MapBox API.
+* Geopify API.
+Both of them were temporarily discarded because of the familiarity of Google Maps. However, we remark temporarily since we plan to implement an adapter pattern that lets us change the used Map API if we consider it necessary.
+
+==== ARD Link
+https://github.com/Arquisoft/lomap_en2a/wiki/ARD---Map-API[Google Maps API]
+
+=== MySQL DataBase
+==== Problem
+Although with a database we store the information in a centralized way, this is necessary for performance reasons. We need a solution that allows us to respect the privacy of the users as much as possible, as well as store the data in a secure way. Apart from this, the solution must be reliable, scalable and flexible. For all this, we have chosen MySQL.
+
+==== Advantages
+Again, the fact of team members having familiarity with the data base has been a decisive advantage, but we also had into account:
+* Simplicity: it is a simple, intuitive and easy to work with DB.
+* Scalability and Flexibility: leaves open the door to potentially stored growing data.
+* Community support: as the solution is a well known DB, we count with the help of the software communnity to fix any kind of error or solve any doubt that we may have.
+* Secure and reliable:  it complies with ACID (Atomicity, Consistency, Isolation, and Durability) which ensures data integrity and consistency. Apart from that, it provides password encryption and secure transactions.
+
+==== Alternatives
+An alternative was MariaDB, since it is based on MySQL. Since both data bases are very similar and offer the same features, the alternative was discarded because of the familiarity with MySQL.
+
+==== ARD Link
+https://github.com/Arquisoft/lomap_en2a/wiki/ARD---Data-Base[MySQL DB]
+
+=== Storing users' ID in DB
+==== Problem
+For performance reasons, there are some data that should be stored in a centralized way, in other words, using our data base. For now, we have decided to store the user IDs this way.
+
+==== Advantages
+Storing this piece of information in this way, we can save the application some time wasting operations, such as having to scan all the users pods in order to retrieve the wanted ID. This ID will be used, for example, in friend requests.
+
+==== Alternatives
+We considered the option of storing the user ID in the user pod, but for performance reasons, this was discarded.
+
+
 [role="arc42help"]
 ****
 .Contents
