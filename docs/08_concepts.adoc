@@ -53,9 +53,29 @@ image:08-Crosscutting-Concepts-Structure-EN.png["Possible topics for crosscuttin
 === _Domain model_
 
 This is the actual state of the domain model, which will change along the development:
-image:empty.png["For now it is empty"]
 
+[plantuml,Domain model,png]
+----
+class Mapa
+    Mapa : - places : List<Place>
 
+class Place
+    Place : - location : Location
+    Place : - name : String
+    Place : - description : String
+    Place : + getLocation() : Location
+    Place : + getName() : String
+    Place : + getDescription() : String
+
+class Location
+    Location : - latitude : double
+    Location : - longitude : double
+    Location : + getLatitude() : String
+    Location : + getLongitude() : String
+
+Mapa <-- "*" Place
+Place *--> "1" Location
+----
 
 === _Architecture and design patterns_
 
@@ -85,3 +105,7 @@ These are rules to be considered when implementing our code:
 
 * Write in English the names of all the functions, variables, etc.
 * Never get the responsabilities of the different layer of the MVC pattern mixed (no UI outside View, no database access outside Model...).
+
+=== _User Experience (UX)_
+
+We want to have adaptable so it can be used in different devices. We also want it to have accessible interfaces, so we have to be careful with the use of colors, alternative texts and more details.
