@@ -1,57 +1,149 @@
 [[section-runtime-view]]
 == Runtime View
 
-
-[role="arc42help"]
-****
-.Contents
-The runtime view describes concrete behavior and interactions of the system’s building blocks in form of scenarios from the following areas:
-
-* important use cases or features: how do building blocks execute them?
-* interactions at critical external interfaces: how do building blocks cooperate with users and neighboring systems?
-* operation and administration: launch, start-up, stop
-* error and exception scenarios
-
-Remark: The main criterion for the choice of possible scenarios (sequences, workflows) is their *architectural relevance*. It is *not* important to describe a large number of scenarios. You should rather document a representative selection.
-
-.Motivation
-You should understand how (instances of) building blocks of your system perform their job and communicate at runtime.
-You will mainly capture scenarios in your documentation to communicate your architecture to stakeholders that are less willing or able to read and understand the static models (building block view, deployment view).
-
-.Form
-There are many notations for describing scenarios, e.g.
-
-* numbered list of steps (in natural language)
-* activity diagrams or flow charts
-* sequence diagrams
-* BPMN or EPCs (event process chains)
-* state machines
-* ...
-
-****
-
-=== <Runtime Scenario 1>
-
-
-* _<insert runtime diagram or textual description of the scenario>_
-* _<insert description of the notable aspects of the interactions between the
-building block instances depicted in this diagram.>_
-
-It is possible to use a sequence diagram:
-
-[plantuml,"Sequence diagram",png]
+A very basic representation of the workflow of the application could be the following:
+[plantuml,"General structure",png]
 ----
-actor Alice
-actor Bob
-database Pod as "Bob's Pod"
-Alice -> Bob: Authentication Request
-Bob --> Alice: Authentication Response
-Alice  --> Pod: Store route
-Alice -> Bob: Another authentication Request
-Alice <-- Bob: another authentication Response
+@startuml
+
+header LoMap-en2a
+title Runtime view
+database Pod
+ 
+User-> Pod : Login
+Application ->Pod: Request auth
+Pod -> Application : Grant access
+Application -> Pod : RequestLocations
+Pod->Application : returnLocations
+Application -> MapProvider : RepresentLocations
+User ->Application :saveLocation
+Application -> Pod : saveLocation
+Application -> MapProvider : showLocation
+
+@enduml
 ----
-=== <Runtime Scenario 2>
 
-=== ...
+Now let us start to expand some of the use cases the application has to face for us to see the structure with more depth.
 
-=== <Runtime Scenario n>
+
+=== Add location to the user's map
+
+Once user decides to add a new location by selecting the corresponding tool to add a new location and clicking on some location on the map a menu to introduce location data will be presented to the user. Once fulfilled and confirmed location is created and added to user's pod.
+
+In terms of runtime execution of this action application will perform actions similar to the ones bellow.
+[plantuml,"Addition of a location",png]
+----
+@startuml
+
+header LoMap-en2a
+
+title Add location
+
+database Pod
+
+User -> Application : select create location tool
+Application -> Application : change selected tool
+User -> Application : selectPoint(x,y)
+Application -> Location : create location on x,y
+Application -> Pod : saveLocation()
+Application -> Map : addLocation(Location)
+Map -> MapAdapter :representInMap(Location)
+MapAdapter -> MapAPI : addMarker(location.x,location.y)
+MapAdapter -> MapAPI : setLocationImage(location.img)
+
+@enduml
+----
+
+=== Remove location from user's map
+
+In order to remove a location from the user's map user will click on a Location of the map that he/she has created previously. This will show more information on the location selected (name, coordinates, description,...). On this location view the option to delete the location will be presented to the user. Once clicked and confirmed by the user location will be deleted from the user's pod and from the map.
+
+Bellow we can see a representation of this process in a runtime diagram:
+[plantuml,"Remove location from map",png]
+-----
+@startuml
+
+header LoMap-en2a
+
+title Remove a location
+
+database Pod
+actor User
+
+User -> Application : click on the map
+Application -> Map : verifyLocation(x,y)
+Map -> Map : findLocation(x,y)
+Map -> Application : return location object
+Application -> Application : show location info
+User -> Application : select delete option for the location
+Application -> Map :deleteLocation(Location)
+Map -> MapAdapter : deleteLocation(Location)
+MapAdapter -> MapAPI : removeMark(x,y)
+Application -> Pod : removeLocation(Location)
+
+@enduml
+-----
+
+=== Add a friend
+LoMap will allow users to add new friends. This is where the centralized database will come into play. User will send friend requests by giving the username of the other user, after that, application will search for that username in the centralized database and obtain it's webId
+If that username is found the friend request will be sent to the other user. Information of friend status will be all stored in the user's pod since it is considered personal information. A diagram that could model the behavior of this scenario could be the following one:
+[plantuml,"Add a friend",png]
+----
+@startuml
+
+header LoMap-en2a
+
+title Add a friend
+
+database podUsr1
+actor usr1
+
+usr1 -> Application : addFriend("usr2")
+database db
+Application -> db : getUserByName("usr2")
+db -> Application : returnId
+actor usr2
+database podUsr2
+Application -> podUsr2 : addFriendRequest("usr1",idUsr1)
+|||
+......usr2 logs in.........
+|||
+usr2 -> Application : login
+Application -> podUsr2 : getFriendRequests()
+usr2 -> Application : acceptFriendRequest("usr1")
+Application -> podUsr2 : addFriend("usr1",idUsr1)
+Application -> podUsr1 : addFriend("usr2")
+
+@enduml
+----
+
+As it can be seen in the previous diagram information stored in a centralized way is mainly performance related information to speed up the process of making two friends. 
+
+=== Share location with friends
+
+Application will allow users to share their locations with friends or group of friends. This functionality will be covered by adding to the creation (or configuration once created) of a location to have a sharing section where user can select the people or group of people that will be able to access that location.
+[plantuml,"Share a location with friends",png]
+----
+@startuml
+
+header LoMap-en2a
+
+title Share a location
+
+database podUsr1
+actor usr1
+
+usr1 -> Application : selectLocation
+Application -> usr1 : return location
+usr1 -> podUsr1 : getFriends
+podUsr1 ->usr1 : return ["usr2", ...]
+usr1 -> Application : shareLocation(Location,"usr2")
+database db
+Application -> db : getUserByName("usr2")
+db -> Application : return ID
+
+database podUsr2
+Application -> podUsr2 : addSharedLocation(Location,"usr1")
+
+@enduml
+----
