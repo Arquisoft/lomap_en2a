@@ -116,7 +116,6 @@ Application -> podUsr1 : addFriend("usr2")
 
 @enduml
 ----
-
 As it can be seen in the previous diagram information stored in a centralized way is mainly performance related information to speed up the process of making two friends. 
 
 === Share location with friends
