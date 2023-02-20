@@ -56,25 +56,29 @@ This is the actual state of the domain model, which will change along the develo
 
 [plantuml,Domain model,png]
 ----
-class Mapa
-    Mapa : - places : List<Place>
-
-class Place
-    Place : - location : Location
-    Place : - name : String
-    Place : - description : String
-    Place : + getLocation() : Location
-    Place : + getName() : String
-    Place : + getDescription() : String
+class Map
+    Map : - locations : List<Location>
 
 class Location
     Location : - latitude : double
-    Location : - longitude : double
+    Location : - longitude : double    
+    Location : - name : String
+    Location : - description : String
+    Location : - reviews : List<String>
+
     Location : + getLatitude() : String
     Location : + getLongitude() : String
+    Location : + getName() : String
+    Location : + getDescription() : String
 
-Mapa <-- "*" Place
-Place *--> "1" Location
+class User
+    User : maps : List<Map>
+    User : friends : List<User>
+
+
+Map <-- "*" Location
+User "1" *--> "*" Map 
+User --> "*" User
 ----
 
 === _Architecture and design patterns_
