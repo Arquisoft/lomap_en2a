@@ -50,18 +50,66 @@ image:08-Crosscutting-Concepts-Structure-EN.png["Possible topics for crosscuttin
 ****
 
 
-=== Domain model
+=== _Domain model_
 
-image:UmlDiagram.png["Example UML Diagram"]
+This is the actual state of the domain model, which will change along the development:
+
+[plantuml,Domain model,png]
+----
+class Map
+    Map : - locations : List<Location>
+
+class Location
+    Location : - latitude : double
+    Location : - longitude : double    
+    Location : - name : String
+    Location : - description : String
+    Location : - reviews : List<String>
+
+    Location : + getLatitude() : String
+    Location : + getLongitude() : String
+    Location : + getName() : String
+    Location : + getDescription() : String
+
+class User
+    User : maps : List<Map>
+    User : friends : List<User>
 
 
+Map <-- "*" Location
+User "1" *--> "*" Map 
+User --> "*" User
+----
 
-=== _<Concept 2>_
+=== _Architecture and design patterns_
 
-_<explanation>_
+.Architecture pattern: MVC
+We will use the MVC (Model-View-Controller) Pattern, which is very commonly used for developing applications with Graphical User Interfaces (GUIs). Both desktop and web applications use ir. It is simple but powerful, allowing us to separate the application in three different but interconnected parts or layers:
 
-...
+* Model: contains the core functionality and data. It contains the data that the View layer will represent
+* View: displays information to the user. It passes the input information to the Controller layer.
+* Controller: handles the inputs from the users. It communicates with the Model layer.
 
-=== _<Concept n>_
+.Design pattern: Adapter
+We will use this pattern when working with the geolocalization API. We chose to use Google Maps for this, but maybe in the future we want or have to change it. To prevent and minimize the impact such a change could have in our application, we will use an Adapter pattern. This way only a few changes will be necessary in our code.
 
-_<explanation>_
+=== _Rules for using specific technology_
+
+Right now we now little about the technologies we are going to use. Once we learn more about them more content will be added to this section.
+
+.Rules:
+
+* Always make a _git pull_ before getting to work. This will prevent possible problems in the repository.
+* Never make a _commit_ to the master branch.
+* Never merge a branch into another by yourself. Create always a _pull request_ so the rest of the team can check the changes and approve them.
+
+=== _Implementation rules_
+
+These are rules to be considered when implementing our code:
+
+* Write in English the names of all the functions, variables, etc.
+* Never get the responsabilities of the different layer of the MVC pattern mixed (no UI outside View, no database access outside Model...).
+
+=== _User Experience (UX)_
+
+We want to have adaptable so it can be used in different devices. We also want it to have accessible interfaces, so we have to be careful with the use of colors, alternative texts and more details.
