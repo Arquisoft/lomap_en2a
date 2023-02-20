@@ -50,21 +50,6 @@ Storing this piece of information in this way, we can save the application some 
 ==== Alternatives
 We considered the option of storing the user ID in the user pod, but for performance reasons, this was discarded.
 
-==== ARD Link
-
-=== Heroku
-==== Problem
-The application needs a host provider in order to be deployed. For this, we need a server that hosts our application, but since we do not have the needed infrastructures, we searched for a host provider.
-
-==== Advantages
-We chose Heroku beacuse it provides the minimum requirements we think an application of this magnitude asks for. Furthermore, it is a cheap solution and other developer teams of the Arquisoft community have used it in past years.
-
-==== Alternatives
-*Azure Web Hosting. As we are students we have credit in Azure, but as we are not aware of how the application will scale, we decided not to use it in case we need the credit for other subjects.
-
-==== ARD Link
-
-
 
 [role="arc42help"]
 ****
