@@ -256,5 +256,11 @@ After the actions process is finished, we can access the application using the I
 
 ![image](https://user-images.githubusercontent.com/10683040/155297402-41c09d54-8160-4832-be04-21951d18bc28.png)
 
+# TEAM MEMBERS (COLLABORATORS)
+
+Adrián Vega Sánchez UO282365@uniovi.es<br>
+Patricia Garcia Fernandez uo282210@uniovi.es <br>
+Pablo Argallero Fernandez uo283216@uniovi.es <br>
+Santiago Fernández Carballal uo283523@uniovi.es
 
 
