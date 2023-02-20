@@ -10,8 +10,6 @@ This section contains all quality requirements as quality tree with scenarios. T
 
 === Quality Tree
 
-[role="arc42help"]
-****
 The quality tree uses "quality" as the root while the rest of the quality categories will be displayed as branches. As mindmaps are not supported, we will denote as root Q (Quality) and everything will come out of it. The tree is read from left to right and the arrows indicate the branches of the root:
 
 (Quality) as (Q) +
@@ -32,13 +30,9 @@ Q --> U +
 Q --> M +
 Q --> Re +
 
-
-****
-
 === Quality Scenarios
 
-[role="arc42help"]
-****
+
 .Contents
 To have a measurable response of the system regarding some stimulus corresponding to the different quality branches described in the mindmap, we will use quality scenarios. The purpose of these quality scenarios is to make the requirements concrete and traceable. Firstly, we will denote the quality goal, followed by its motivation, usage scenario and priority. Given the fact that at this point of the development we did not encounter any change scenarios, they would not be added until the second version of the documentation. 
 
@@ -106,6 +100,3 @@ To have a measurable response of the system regarding some stimulus correspondin
 | High
 
 |===
-
-
-****
