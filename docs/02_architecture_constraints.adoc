@@ -8,6 +8,8 @@ When designing the LoMap application, there are several constraints that must be
 
 | Privacy (use of SOLID) | The privacy of the users is a key concern, and the application should be designed to respect the privacy of users. The information stored in each user’s pod should not be centralized and should be kept confidential.
 
+| Version control and monitoring (GitHub) | For the LoMap application, GitHub can be a useful tool for version control and collaboration among the team members working on the project. It allows for easier coordination and organization of the development process, as well as keeping track of changes and contributions made by each team member.
+
 | Performance | The application should perform well and should be scalable to handle large amounts of data.
 
 | User Experience | The user experience should be user-friendly and intuitive, making it easy for users to add, edit, and delete locations, as well as manage their friends and personal information, this means application will support connection between friends.
@@ -15,5 +17,23 @@ When designing the LoMap application, there are several constraints that must be
 | Deployment | The application should be deployable to different cities.
 
 | Test coverage | Code must meet a good test quality and coverage to ensure the expected outcome.
+
+
+|===
+
+=== Recommended technologies to take into account
+For the development of this application, some technologies have been proposed to us in order to ease the implementation of the dessired application. These are not considered constraints since they are not forced to us, but given the strong recommendation we considered it should be taken into account and presented in this section. In the following table, we can see the set of technologies proposed. 
+
+[options="header", cols="1,1"]
+|===
+| Technology | Explanation
+
+| TypeScript | It is a really versatile programming language that takes the best out of JavaScript and adds Type definition on top of it. Making it much more understandable and consistent.
+
+| NodeJS | Node.js is a JavaScript runtime environment that allows developers to run JavaScript code outside of a web browser. This allows to use TypeScript language from the server side.
+
+| React | It is a JavaScript framework that allows the creation of web application UI in an easy way.
+
+| Inrupt | SOLID pod provider advised by the teachers. It will help us understand how solid pods work.
 
 |===
