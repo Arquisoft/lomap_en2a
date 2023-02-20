@@ -71,7 +71,7 @@ This is a general overview of the application. Here it can be seen the External 
 
 Contained Building Blocks::
 * _System._ It's the main application, which will be explained later on. There is also blocks for the Google Maps API and SOLID.
-* _DataBase._ It's the app's database. It has not been decided yet.
+
 
 Important Interfaces::
 No important interfaces yet.
@@ -140,11 +140,17 @@ The inner part of the application and how it interacts with the external service
 
 
 Contained Building Blocks::
+
 * _View._ It's the graphic part of the application. It interacts with the controller and the user.
 * _Model._ Interacts with the database and the external services and it's the part where the logic takes place.
 * _Controller._ Connects the view with the model, in order to process the petitions from the view and the responses from the model.
+* _DataBase._ It's the app's database. It has not been decided yet it's desing, but we will be using MySQL as stated in the https://github.com/Arquisoft/lomap_en2a/wiki/ARD---Data-Base[Architecturall decisions.]
+
+Fulfilled requirements::
+
+* Keep the information decentralized with SOLID.
 
 Important Interfaces::
-Some interfaces might be used for the communication of each layer.
+Some interfaces might be used for the communication of each layer. We will also use interfaces to apply de adapter pattern for communication with the API.
 
 
