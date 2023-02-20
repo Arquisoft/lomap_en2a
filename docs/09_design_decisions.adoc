@@ -19,6 +19,7 @@ Apart from Google Maps API, we also considered these other options:
 * MapBox API.
 * Geopify API.
 Both of them were temporarily discarded because of the familiarity of Google Maps. However, we remark temporarily since we plan to implement an adapter pattern that lets us change the used Map API if we consider it necessary.
+
 ==== ARD Link
 [Google Maps API](https://github.com/Arquisoft/lomap_en2a/wiki/ARD---Map-API)
 
