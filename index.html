@@ -461,7 +461,6 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <ul class="sectlevel2">
 <li><a href="#_whitebox_overall_system">5.1. Whitebox Overall System</a></li>
 <li><a href="#_level_2">5.2. Level 2</a></li>
-<li><a href="#_level_3">5.3. Level 3</a></li>
 </ul>
 </li>
 <li><a href="#section-runtime-view">6. Runtime View</a>
@@ -480,9 +479,11 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 </li>
 <li><a href="#section-concepts">8. Cross-cutting Concepts</a>
 <ul class="sectlevel2">
-<li><a href="#_domain_model">8.1. Domain model</a></li>
-<li><a href="#_concept_2">8.2. <em>&lt;Concept 2&gt;</em></a></li>
-<li><a href="#_concept_n">8.3. <em>&lt;Concept n&gt;</em></a></li>
+<li><a href="#_domain_model">8.1. <em>Domain model</em></a></li>
+<li><a href="#_architecture_and_design_patterns">8.2. <em>Architecture and design patterns</em></a></li>
+<li><a href="#_rules_for_using_specific_technology">8.3. <em>Rules for using specific technology</em></a></li>
+<li><a href="#_implementation_rules">8.4. <em>Implementation rules</em></a></li>
+<li><a href="#_user_experience_ux">8.5. <em>User Experience (UX)</em></a></li>
 </ul>
 </li>
 <li><a href="#section-design-decisions">9. Design Decisions</a></li>
@@ -536,9 +537,6 @@ For documentation of your own system you use better the <em>plain</em> version.<
 <div class="sect1">
 <h2 id="section-introduction-and-goals">1. Introduction and Goals</h2>
 <div class="sectionbody">
-<div class="paragraph">
-<p>This is the documentation created by the LoMap_en2a team formed by Patricia, Pablo, Santiago and Adrián.</p>
-</div>
 <div class="sidebarblock arc42help">
 <div class="content">
 <div class="paragraph">
@@ -677,26 +675,43 @@ These stakeholders determine the extent and the level of detail of your work and
 <div class="sect1">
 <h2 id="section-architecture-constraints">2. Architecture Constraints</h2>
 <div class="sectionbody">
-<div class="sidebarblock arc42help">
-<div class="content">
 <div class="paragraph">
-<div class="title">Contents</div>
-<p>Any requirement that constrains software architects in their freedom of design and implementation decisions or decision about the development process. These constraints sometimes go beyond individual systems and are valid for whole organizations and companies.</p>
+<p>When designing the LoMap application, there are several constraints that must be taken into consideration. These constraints will have a significant impact on the overall design of the application and the architectural decisions that are made. The constraints include privacy, performance, user experience, deployment, security,&#8230;&#8203; These constraints must be considered in order to ensure that the final product meets the needs and expectations of the users and stakeholders. The following table summarizes these constraints and provides a brief explanation for each.</p>
 </div>
-<div class="paragraph">
-<div class="title">Motivation</div>
-<p>Architects should know exactly where they are free in their design decisions and where they must adhere to constraints.
-Constraints must always be dealt with; they may be negotiable, though.</p>
-</div>
-<div class="paragraph">
-<div class="title">Form</div>
-<p>Simple tables of constraints with explanations.
-If needed you can subdivide them into
-technical constraints, organizational and political constraints and
-conventions (e.g. programming or versioning guidelines, documentation or naming conventions)</p>
-</div>
-</div>
-</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Constraint</th>
+<th class="tableblock halign-left valign-top">Explanation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Privacy (use of SOLID)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The privacy of the users is a key concern, and the application should be designed to respect the privacy of users. The information stored in each user’s pod should not be centralized and should be kept confidential.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Performance</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The application should perform well and should be scalable to handle large amounts of data.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">User Experience</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The user experience should be user-friendly and intuitive, making it easy for users to add, edit, and delete locations, as well as manage their friends and personal information, this means application will support connection between friends.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Deployment</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The application should be deployable to different cities.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Test coverage</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Code must meet a good test quality and coverage to ensure the expected outcome.</p></td>
+</tr>
+</tbody>
+</table>
 <div style="page-break-after: always;"></div>
 </div>
 </div>
@@ -757,7 +772,10 @@ The title of the table is the name of your system, the three columns contain the
 </div>
 </div>
 <div class="paragraph">
-<p><span class="image"><img src="./images/03-Business-context-diagram.png" alt="Business context diagram"></span></p>
+<p><strong>&lt;Diagram or Table&gt;</strong></p>
+</div>
+<div class="paragraph">
+<p><strong>&lt;optionally: Explanation of external domain interfaces&gt;</strong></p>
 </div>
 </div>
 <div class="sect2">
@@ -779,40 +797,15 @@ together with a mapping table showing the relationships between channels and inp
 </div>
 </div>
 </div>
-<table class="tableblock frame-all grid-all stretch">
-<colgroup>
-<col style="width: 50%;">
-<col style="width: 50%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Technical Interfaces</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">SOLID</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A specification that lets people store their data securely in decentralized data stores called Pods.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Hosting server</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">We will deploy the application so we can execute it.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">TypeScript</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The programming language we will use to develop the application</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">React.js</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A library that will make it easier to create user interfaces</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Docker</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">A very useful tool that makes developing easier</p></td>
-</tr>
-</tbody>
-</table>
+<div class="paragraph">
+<p><strong>&lt;Diagram or Table&gt;</strong></p>
+</div>
+<div class="paragraph">
+<p><strong>&lt;optionally: Explanation of technical interfaces&gt;</strong></p>
+</div>
+<div class="paragraph">
+<p><strong>&lt;Mapping Input/Output to Channels&gt;</strong></p>
+</div>
 <div style="page-break-after: always;"></div>
 </div>
 </div>
@@ -863,6 +856,10 @@ Refer to details in the following sections.</p>
 <div class="sect1">
 <h2 id="section-building-block-view">5. Building Block View</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>The building block view shows in a graphic way a decomposition of the system.
+As of now, some internal decisions have not been decided yet, it&#8217;s a very early build, so changes will be added as the development proceeds. We will be using a MVC pattern.</p>
+</div>
 <div class="sidebarblock arc42help">
 <div class="content">
 <div class="paragraph">
@@ -906,6 +903,9 @@ Thus it contains the white box description of selected building blocks of level 
 </div>
 <div class="sect2">
 <h3 id="_whitebox_overall_system">5.1. Whitebox Overall System</h3>
+<div class="paragraph">
+<p>Main view of the system, without much detail. It has the application as a black box with the external interactions.</p>
+</div>
 <div class="sidebarblock arc42help">
 <div class="content">
 <div class="paragraph">
@@ -945,21 +945,33 @@ In the best case you will get away with examples or simple signatures.</p>
 </div>
 </div>
 <div class="paragraph">
-<p><em><strong>&lt;Overview Diagram&gt;</strong></em></p>
+<p><em><strong>Overview Diagram</strong></em></p>
+</div>
+<div class="paragraph">
+<p><span class="image"><img src="./images/BuildingBlocks1.jpg" alt="Main Build Block"></span></p>
 </div>
 <div class="dlist">
 <dl>
 <dt class="hdlist1">Motivation</dt>
 <dd>
-<p><em>&lt;text explanation&gt;</em></p>
+<p>This is a general overview of the application. Here it can be seen the External services that will be used.</p>
 </dd>
 <dt class="hdlist1">Contained Building Blocks</dt>
 <dd>
-<p><em>&lt;Description of contained building block (black boxes)&gt;</em></p>
+<div class="ulist">
+<ul>
+<li>
+<p><em>System.</em> It&#8217;s the main application, which will be explained later on. There is also blocks for the Google Maps API and SOLID.</p>
+</li>
+<li>
+<p><em>DataBase.</em> It&#8217;s the app&#8217;s database. It has not been decided yet.</p>
+</li>
+</ul>
+</div>
 </dd>
 <dt class="hdlist1">Important Interfaces</dt>
 <dd>
-<p><em>&lt;Description of important interfaces&gt;</em></p>
+<p>No important interfaces yet.</p>
 </dd>
 </dl>
 </div>
@@ -986,11 +998,11 @@ responsibility according to the following schema:</p>
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>&lt;black box 1&gt;</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"> <em>&lt;Text&gt;</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>&lt;Text&gt;</em></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><em>&lt;black box 2&gt;</em></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"> <em>&lt;Text&gt;</em></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><em>&lt;Text&gt;</em></p></td>
 </tr>
 </tbody>
 </table>
@@ -1001,7 +1013,7 @@ Its headline is the name of the black box.</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_name_black_box_1">5.1.1. &lt;Name black box 1&gt;</h4>
+<h4 id="_system">5.1.1. System</h4>
 <div class="sidebarblock arc42help">
 <div class="content">
 <div class="paragraph">
@@ -1033,45 +1045,11 @@ according the the following black box template:</p>
 </div>
 </div>
 <div class="paragraph">
-<p><em>&lt;Purpose/Responsibility&gt;</em></p>
+<p>The main application. It interacts with the external services and provides the user a GUI to interact with the system.</p>
 </div>
 <div class="paragraph">
-<p><em>&lt;Interface(s)&gt;</em></p>
+<p>There are no interfaces defined yet</p>
 </div>
-<div class="paragraph">
-<p><em>&lt;(Optional) Quality/Performance Characteristics&gt;</em></p>
-</div>
-<div class="paragraph">
-<p><em>&lt;(Optional) Directory/File Location&gt;</em></p>
-</div>
-<div class="paragraph">
-<p><em>&lt;(Optional) Fulfilled Requirements&gt;</em></p>
-</div>
-<div class="paragraph">
-<p><em>&lt;(optional) Open Issues/Problems/Risks&gt;</em></p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_name_black_box_2">5.1.2. &lt;Name black box 2&gt;</h4>
-<div class="paragraph">
-<p><em>&lt;black box template&gt;</em></p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_name_black_box_n">5.1.3. &lt;Name black box n&gt;</h4>
-<div class="paragraph">
-<p><em>&lt;black box template&gt;</em></p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_name_interface_1">5.1.4. &lt;Name interface 1&gt;</h4>
-<div class="paragraph">
-<p>&#8230;&#8203;</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_name_interface_m">5.1.5. &lt;Name interface m&gt;</h4>
-
 </div>
 </div>
 <div class="sect2">
@@ -1089,70 +1067,40 @@ Leave out normal, simple, boring or standardized parts of your system</p>
 </div>
 </div>
 <div class="sect3">
-<h4 id="_white_box_building_block_1">5.2.1. White Box <em>&lt;building block 1&gt;</em></h4>
-<div class="sidebarblock arc42help">
-<div class="content">
+<h4 id="_white_box_system">5.2.1. White Box <em>System</em></h4>
 <div class="paragraph">
-<p>&#8230;&#8203;describes the internal structure of <em>building block 1</em>.</p>
-</div>
-</div>
+<p><em><strong>Overview Diagram</strong></em></p>
 </div>
 <div class="paragraph">
-<p><em>&lt;white box template&gt;</em></p>
+<p><span class="image"><img src="./images/BuildingBlocks2.jpg" alt="White Box System"></span></p>
 </div>
+<div class="dlist">
+<dl>
+<dt class="hdlist1">Motivation</dt>
+<dd>
+<p>The inner part of the application and how it interacts with the external services and the database.</p>
+</dd>
+<dt class="hdlist1">Contained Building Blocks</dt>
+<dd>
+<div class="ulist">
+<ul>
+<li>
+<p><em>View.</em> It&#8217;s the graphic part of the application. It interacts with the controller and the user.</p>
+</li>
+<li>
+<p><em>Model.</em> Interacts with the database and the external services and it&#8217;s the part where the logic takes place.</p>
+</li>
+<li>
+<p><em>Controller.</em> Connects the view with the model, in order to process the petitions from the view and the responses from the model.</p>
+</li>
+</ul>
 </div>
-<div class="sect3">
-<h4 id="_white_box_building_block_2">5.2.2. White Box <em>&lt;building block 2&gt;</em></h4>
-<div class="paragraph">
-<p><em>&lt;white box template&gt;</em></p>
-</div>
-<div class="paragraph">
-<p>&#8230;&#8203;</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_white_box_building_block_m">5.2.3. White Box <em>&lt;building block m&gt;</em></h4>
-<div class="paragraph">
-<p><em>&lt;white box template&gt;</em></p>
-</div>
-</div>
-</div>
-<div class="sect2">
-<h3 id="_level_3">5.3. Level 3</h3>
-<div class="sidebarblock arc42help">
-<div class="content">
-<div class="paragraph">
-<p>Here you can specify the inner structure of (some) building blocks from level 2 as white boxes.</p>
-</div>
-<div class="paragraph">
-<p>When you need more detailed levels of your architecture please copy this
-part of arc42 for additional levels.</p>
-</div>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_white_box_building_block_x_1">5.3.1. White Box &lt;_building block x.1_&gt;</h4>
-<div class="sidebarblock arc42help">
-<div class="content">
-<div class="paragraph">
-<p>Specifies the internal structure of <em>building block x.1</em>.</p>
-</div>
-</div>
-</div>
-<div class="paragraph">
-<p><em>&lt;white box template&gt;</em></p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_white_box_building_block_x_2">5.3.2. White Box &lt;_building block x.2_&gt;</h4>
-<div class="paragraph">
-<p><em>&lt;white box template&gt;</em></p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_white_box_building_block_y_1">5.3.3. White Box &lt;_building block y.1_&gt;</h4>
-<div class="paragraph">
-<p><em>&lt;white box template&gt;</em></p>
+</dd>
+<dt class="hdlist1">Important Interfaces</dt>
+<dd>
+<p>Some interfaces might be used for the communication of each layer.</p>
+</dd>
+</dl>
 </div>
 <div style="page-break-after: always;"></div>
 </div>
@@ -1238,7 +1186,7 @@ building block instances depicted in this diagram.&gt;</em></p>
 </div>
 <div class="imageblock">
 <div class="content">
-<img src="./images/Sequence%20diagram.png" alt="Sequence diagram" width="346" height="335">
+<img src="./images/Sequence%20diagram.png" alt="Sequence diagram" width="332" height="335">
 </div>
 </div>
 </div>
@@ -1494,24 +1442,80 @@ on this list.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_domain_model">8.1. Domain model</h3>
+<h3 id="_domain_model">8.1. <em>Domain model</em></h3>
 <div class="paragraph">
-<p><span class="image"><img src="./images/UmlDiagram.png" alt="Example UML Diagram"></span></p>
+<p>This is the actual state of the domain model, which will change along the development:</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="./images/Domain%20model.png" alt="Domain model" width="189" height="471">
+</div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_concept_2">8.2. <em>&lt;Concept 2&gt;</em></h3>
+<h3 id="_architecture_and_design_patterns">8.2. <em>Architecture and design patterns</em></h3>
 <div class="paragraph">
-<p><em>&lt;explanation&gt;</em></p>
+<div class="title">Architecture pattern: MVC</div>
+<p>We will use the MVC (Model-View-Controller) Pattern, which is very commonly used for developing applications with Graphical User Interfaces (GUIs). Both desktop and web applications use ir. It is simple but powerful, allowing us to separate the application in three different but interconnected parts or layers:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Model: contains the core functionality and data. It contains the data that the View layer will represent</p>
+</li>
+<li>
+<p>View: displays information to the user. It passes the input information to the Controller layer.</p>
+</li>
+<li>
+<p>Controller: handles the inputs from the users. It communicates with the Model layer.</p>
+</li>
+</ul>
 </div>
 <div class="paragraph">
-<p>&#8230;&#8203;</p>
+<div class="title">Design pattern: Adapter</div>
+<p>We will use this pattern when working with the geolocalization API. We chose to use Google Maps for this, but maybe in the future we want or have to change it. To prevent and minimize the impact such a change could have in our application, we will use an Adapter pattern. This way only a few changes will be necessary in our code.</p>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_concept_n">8.3. <em>&lt;Concept n&gt;</em></h3>
+<h3 id="_rules_for_using_specific_technology">8.3. <em>Rules for using specific technology</em></h3>
 <div class="paragraph">
-<p><em>&lt;explanation&gt;</em></p>
+<p>Right now we now little about the technologies we are going to use. Once we learn more about them more content will be added to this section.</p>
+</div>
+<div class="ulist">
+<div class="title">Rules:</div>
+<ul>
+<li>
+<p>Always make a <em>git pull</em> before getting to work. This will prevent possible problems in the repository.</p>
+</li>
+<li>
+<p>Never make a <em>commit</em> to the master branch.</p>
+</li>
+<li>
+<p>Never merge a branch into another by yourself. Create always a <em>pull request</em> so the rest of the team can check the changes and approve them.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_implementation_rules">8.4. <em>Implementation rules</em></h3>
+<div class="paragraph">
+<p>These are rules to be considered when implementing our code:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>Write in English the names of all the functions, variables, etc.</p>
+</li>
+<li>
+<p>Never get the responsabilities of the different layer of the MVC pattern mixed (no UI outside View, no database access outside Model&#8230;&#8203;).</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_user_experience_ux">8.5. <em>User Experience (UX)</em></h3>
+<div class="paragraph">
+<p>We want to have adaptable so it can be used in different devices. We also want it to have accessible interfaces, so we have to be careful with the use of colors, alternative texts and more details.</p>
 </div>
 <div style="page-break-after: always;"></div>
 </div>
@@ -1765,7 +1769,7 @@ Created by Dr. Peter Hruschka &amp; Dr. Gernot Starke.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-02-14 00:14:35 +0100
+Last updated 2023-01-31 12:06:01 +0100
 </div>
 </div>
 </body>
