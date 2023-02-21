@@ -2,6 +2,9 @@
 
 
 == Building Block View
+The building block view shows in a graphic way a decomposition of the system. 
+As of now, some internal decisions have not been decided yet, it's a very early build, so changes will be added as the development proceeds. We will be using a MVC pattern.
+
 
 [role="arc42help"]
 ****
@@ -35,7 +38,7 @@ Thus it contains the white box description of selected building blocks of level 
 ****
 
 === Whitebox Overall System
-
+Main view of the system, without much detail. It has the application as a black box with the external interactions.
 [role="arc42help"]
 ****
 Here you describe the decomposition of the overall system using the following white box template. It contains
@@ -57,18 +60,21 @@ In the best case you will get away with examples or simple signatures.
 
 ****
 
-_**<Overview Diagram>**_
+_**Overview Diagram**_
+
+image:BuildingBlocks1.jpg["Main Build Block"]
+
 
 Motivation::
-
-_<text explanation>_
+This is a general overview of the application. Here it can be seen the External services that will be used.
 
 
 Contained Building Blocks::
-_<Description of contained building block (black boxes)>_
+* _System._ It's the main application, which will be explained later on. There is also blocks for the Google Maps API and SOLID.
+
 
 Important Interfaces::
-_<Description of important interfaces>_
+No important interfaces yet.
 
 [role="arc42help"]
 ****
@@ -91,7 +97,7 @@ Its headline is the name of the black box.
 ****
 
 
-==== <Name black box 1>
+==== System
 
 [role="arc42help"]
 ****
@@ -107,37 +113,9 @@ according the the following black box template:
 
 ****
 
-_<Purpose/Responsibility>_
+The main application. It interacts with the external services and provides the user a GUI to interact with the system.
 
-_<Interface(s)>_
-
-_<(Optional) Quality/Performance Characteristics>_
-
-_<(Optional) Directory/File Location>_
-
-_<(Optional) Fulfilled Requirements>_
-
-_<(optional) Open Issues/Problems/Risks>_
-
-
-
-
-==== <Name black box 2>
-
-_<black box template>_
-
-==== <Name black box n>
-
-_<black box template>_
-
-
-==== <Name interface 1>
-
-...
-
-==== <Name interface m>
-
-
+There are no interfaces defined yet
 
 === Level 2
 
@@ -150,57 +128,29 @@ Please prefer relevance over completeness. Specify important, surprising, risky,
 Leave out normal, simple, boring or standardized parts of your system
 ****
 
-==== White Box _<building block 1>_
+==== White Box _System_
 
-[role="arc42help"]
-****
-...describes the internal structure of _building block 1_.
-****
+_**Overview Diagram**_
 
-_<white box template>_
+image:BuildingBlocks2.jpg["White Box System"]
 
-==== White Box _<building block 2>_
+Motivation::
 
-
-_<white box template>_
-
-...
-
-==== White Box _<building block m>_
+The inner part of the application and how it interacts with the external services and the database.
 
 
-_<white box template>_
+Contained Building Blocks::
+
+* _View._ It's the graphic part of the application. It interacts with the controller and the user.
+* _Model._ Interacts with the database and the external services and it's the part where the logic takes place.
+* _Controller._ Connects the view with the model, in order to process the petitions from the view and the responses from the model.
+* _DataBase._ It's the app's database. It has not been decided yet it's desing, but we will be using MySQL as stated in the https://github.com/Arquisoft/lomap_en2a/wiki/ARD---Data-Base[Architecturall decisions.]
+
+Fulfilled requirements::
+
+* Keep the information decentralized with SOLID.
+
+Important Interfaces::
+Some interfaces might be used for the communication of each layer. We will also use interfaces to apply de adapter pattern for communication with the API.
 
 
-
-=== Level 3
-
-[role="arc42help"]
-****
-Here you can specify the inner structure of (some) building blocks from level 2 as white boxes.
-
-When you need more detailed levels of your architecture please copy this
-part of arc42 for additional levels.
-****
-
-
-==== White Box <_building block x.1_>
-
-[role="arc42help"]
-****
-Specifies the internal structure of _building block x.1_.
-****
-
-
-_<white box template>_
-
-
-==== White Box <_building block x.2_>
-
-_<white box template>_
-
-
-
-==== White Box <_building block y.1_>
-
-_<white box template>_
