@@ -4,6 +4,8 @@ import bp from 'body-parser';
 import promBundle from 'express-prom-bundle';
 import api from "./api"; 
 
+import apiLocations from "./locations/locationRoutes"
+
 const app: Application = express();
 const port: number = 5000;
 
@@ -14,6 +16,7 @@ app.use(cors());
 app.use(bp.json());
 
 app.use("/api", api)
+app.use("/locations",apiLocations)
 
 app.listen(port, ():void => {
     console.log('Restapi listening on '+ port);
