@@ -1,36 +1,45 @@
-import React, { useState, useEffect } from 'react';
-import Box from '@mui/material/Box';
-import Link from '@mui/material/Link';
-import Container from '@mui/material/Container';
-import EmailForm from './components/EmailForm';
-import Welcome from './components/Welcome';
-import UserList from './components/UserList';
-import  {getUsers} from './api/api';
-import {User} from './shared/shareddtypes';
+import { Session} from "@inrupt/solid-client-authn-browser";
+import AddLocation from "./components/AddLocation";
+import Login from "./components/Login";
+import { Location } from "./types/types";
+import { createLocation } from "./solid/solidManagement"
+
 import './App.css';
+import {
+  LoginButton,
+  Text,
+  useSession,
+  CombinedDataProvider,
+} from "@inrupt/solid-ui-react";
+import { InputLabel } from "@mui/material";
+
+const dummy : Location = {name: "hola", latitude: "1", longitude:"1", description:"prueba"}
+let webID: string | undefined
+const authOptions = {
+  clientName: "Solid Todo App",
+};
+
 
 function App(): JSX.Element {
-
-  const [users,setUsers] = useState<User[]>([]);
-
-  const refreshUserList = async () => {
-    setUsers(await getUsers());
-  }
-
-  useEffect(()=>{
-    refreshUserList();
-  },[]);
+  
+  const session = useSession();
 
   return (
-    <>
-      <Container maxWidth="sm">
-        <Welcome message="ASW students"/>
-        <Box component="div" sx={{ py: 2}}>This is a basic example of a React application using Typescript. You can add your email to the list filling the form below.</Box>
-        <EmailForm OnUserListChange={refreshUserList}/>        
-        <UserList users={users}/>
-        <Link href="https://github.com/arquisoft/lomap_en2a">Source code</Link>
-      </Container>
-    </>
+    <div className="app-container">
+        <AddLocation
+          onClick={() => createLocation(session.session.info.webId as string, dummy)}
+        />  
+        {/* <Login onClick={() => login()}></Login> */}
+        <div className="message">
+          <span>You are not logged in. </span>
+          <LoginButton
+            oidcIssuer="https://inrupt.net/"
+            redirectUrl={window.location.href}
+						authOptions={authOptions}
+          />
+          <p>Info: {session.session.info.webId as string}</p>
+        </div>
+    </div>
   );
 }
 
