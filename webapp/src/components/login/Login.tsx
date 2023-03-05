@@ -36,7 +36,7 @@ function Login() : JSX.Element  {
     const Select = ({ label, value, options, onChange }) => {
         return (
             <label> {label}
-                <select value={value} onChange={onChange}>
+                <select value={value} onChange={onChange} style={{"fontSize":"0.9em"}}>
                 {options.map((option) => (
                     <option value={option.value}>{option.label}</option>
                 ))}
@@ -46,22 +46,18 @@ function Login() : JSX.Element  {
       };
 
     return (
-        <Stack direction="column" justifyContent="center" alignItems="center" spacing={2}>
-          <form onSubmit={handleSubmit}>
+        <Stack direction="column" justifyContent="center" alignItems="center">
+          <form onSubmit={handleSubmit} style={{"margin":"auto", "paddingTop":"50px"}}>
             <Select
                   label="Select your pod provider: "
                   options={providerOptions}
                   value={podProvider}
                   onChange={handleChange}
-              />
-              {/* <LoginButton
-                oidcIssuer={podProvider}
-                redirectUrl={window.location.href}
-                authOptions={authOptions}
-              /> */}
-              <Button type="submit">Log in</Button>
-            </form>
-            <p>Your webId is: {session.session.info.webId}</p>
+            />
+            <br></br>
+            <Button style={{"display":"block", "margin":"10px auto"}} type="submit">Log in</Button>
+          </form>
+          <p style={{"marginBottom":"15px"}}>Your webId is: {session.session.info.webId}</p>
         </Stack>
     )
 }

@@ -40,7 +40,7 @@ function CreateLocation() : JSX.Element {
     }
     
     return(
-        <form onSubmit={handleSubmit} style={{"border":"2px solid grey", "width":"30%", "margin":"auto", "padding":"20px"}}>
+        <form onSubmit={handleSubmit} style={{"border":"2px solid grey", "width":"30%", "margin":"auto", "padding":"20px", "borderRadius":"15px"}}>
             <p style={{"fontSize":"1.5em", "textAlign":"center", "marginTop":"0px"}}>Add a location</p>
             <label>Location name:
             <input style={{"margin": "10px"}}
