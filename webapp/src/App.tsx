@@ -1,45 +1,29 @@
-import { Session} from "@inrupt/solid-client-authn-browser";
-import AddLocation from "./components/AddLocation";
-import Login from "./components/Login";
-import { Location } from "./types/types";
-import { createLocation } from "./solid/solidManagement"
-
+import { Button, Stack } from '@mui/material';
 import './App.css';
-import {
-  LoginButton,
-  Text,
-  useSession,
-  CombinedDataProvider,
-} from "@inrupt/solid-ui-react";
-import { InputLabel } from "@mui/material";
+import Login from './components/login/Login';
+import {useSession } from "@inrupt/solid-ui-react";
+import { deleteLocation, createLocation } from './solid/solidManagement';
+import { Location } from './types/types';
 
-const dummy : Location = {name: "hola", latitude: "1", longitude:"1", description:"prueba"}
-let webID: string | undefined
-const authOptions = {
-  clientName: "Solid Todo App",
-};
 
 
 function App(): JSX.Element {
-  
+
   const session = useSession();
 
+  const dummy : Location = {
+    name: 'PARA BORRAR',
+    latitude: '1234',
+    longitude: '1234',
+    description: 'ESTO ES PARA BORRAR'
+  }
+
   return (
-    <div className="app-container">
-        <AddLocation
-          onClick={() => createLocation(session.session.info.webId as string, dummy)}
-        />  
-        {/* <Login onClick={() => login()}></Login> */}
-        <div className="message">
-          <span>You are not logged in. </span>
-          <LoginButton
-            oidcIssuer="https://inrupt.net/"
-            redirectUrl={window.location.href}
-						authOptions={authOptions}
-          />
-          <p>Info: {session.session.info.webId as string}</p>
-        </div>
-    </div>
+    <Stack>
+      <Login/>
+      <button onClick={() => createLocation(session.session.info.webId as string, dummy)}>CREATE</button>
+      <button onClick={() => deleteLocation(session.session.info.webId as string, "https://patrigarcia.inrupt.net/profile/card#d8068302-9df2-4e42-a531-e3d39f685f93")}>DELETE</button>
+    </Stack>
   );
 }
 
