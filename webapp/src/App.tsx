@@ -4,6 +4,7 @@ import Login from './components/login/Login';
 import {useSession } from "@inrupt/solid-ui-react";
 import { deleteLocation, createLocation } from './solid/solidManagement';
 import CreateLocation from './components/locations/add/CreateLocation';
+import GetLocations from './components/locations/get/GetLocations';
 
 
 
@@ -15,6 +16,7 @@ function App(): JSX.Element {
     <Stack spacing={4}>
       <Login/>
       <CreateLocation/>
+      <GetLocations/>
       <button onClick={() => deleteLocation(session.session.info.webId as string, "https://patrigarcia.inrupt.net/profile/card#d8068302-9df2-4e42-a531-e3d39f685f93")}>DELETE</button>
     </Stack>
   );

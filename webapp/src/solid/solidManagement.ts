@@ -5,7 +5,8 @@ import { Session } from "@inrupt/solid-client-authn-browser";
 import {
   createThing, removeThing,Thing,getThing, setThing,buildThing,
   getSolidDataset, saveSolidDatasetAt, 
-  removeUrl
+  removeUrl, getUrlAll,
+  getStringNoLocale
 } from "@inrupt/solid-client";
 
 import { VCARD } from "@inrupt/vocab-common-rdf"
@@ -24,6 +25,44 @@ export async function getUserProfile(webID: string) : Promise<Thing>{
     let dataSet = await getSolidDataset(profile, {fetch: session.fetch});
     // return the dataset as a thing
     return getThing(dataSet, webID) as Thing;
+}
+
+export async function getLocations(webID:string) {
+  
+  let locationsURLs = getUrlAll(await getUserProfile(webID), VCARD.hasGeo);
+  let locations: Location[] = [];
+
+  // for each location url, get the fields of the object
+  for (let location of locationsURLs) {
+    let name = getStringNoLocale(
+      await getUserProfile(location),
+      VCARD.Name
+    ) as string;
+    let longitude = getStringNoLocale(
+      await getUserProfile(location),
+      VCARD.longitude
+    ) as string;
+    let latitude = getStringNoLocale(
+      await getUserProfile(location),
+      VCARD.latitude
+    ) as string;
+    let description = getStringNoLocale(
+      await getUserProfile(location),
+      VCARD.Text
+    ) as string;
+
+    if (location)
+      locations.push({
+        name: name,
+        longitude: longitude,
+        latitude: latitude,
+        description: description,
+        url: location
+      });
+  }
+  
+  return locations;
+
 }
 
 
