@@ -1,21 +1,19 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { Box } from "@chakra-ui/react";
 import { GoogleMap, useJsApiLoader } from '@react-google-maps/api';
+import {Coordinates} from "../../../restapi/locations/Location"
 
-const containerStyle = {
-  width: '400px',
-  height: '400px'
-};
-
-const center = {
-  lat: -3.745,
-  lng: -38.523
-};
-
-function MyComponent() {
+const Map = () => {
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: "AIzaSyCIuz5w6NV5uWim0rQ3lwtDRjkmj6-s-70"
   })
+
+  const center = {
+    lat:  43.37776784391247, 
+    lng: -5.874621861782328
+  };
+  
 
   const [map, setMap] = React.useState(null)
 
@@ -27,22 +25,30 @@ function MyComponent() {
     setMap(map)
   }, [])
 
-  const onUnmount = React.useCallback(function callback(map) {
+  const onUnmount = React.useCallback(function callback(map) { 
     setMap(null)
   }, [])
 
-  return isLoaded ? (
+  const [coordinates, setCoordinates] = useState({lat:0,lng:0});
+  return (
+      isLoaded?(
+    // <Box width={'full'} height={'full'}>
       <GoogleMap
-        mapContainerStyle={containerStyle}
-        center={center}
-        zoom={10}
-        onLoad={onLoad}
-        onUnmount={onUnmount}
+      mapContainerStyle={{width: '100%', height: '100%'}}
+        center = {center}
+        zoom = {12}
+        onLoad= {onLoad}
+        onUnmount= {onUnmount}
       >
-        { /* Child components, such as markers, info windows, etc. */ }
-        <></>
+
       </GoogleMap>
-  ) : <></>
+    // </Box>
+    )
+    :
+    <Box>
+      <h1>An error occurred while loading the map</h1>
+    </Box>
+  )
 }
 
-export default React.memo(MyComponent)
+export default Map
