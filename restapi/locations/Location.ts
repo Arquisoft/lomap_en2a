@@ -2,25 +2,25 @@
 
 export type Location = {
 
-    name : String;
+    name : String,
 
-    coordinates : Coordinates;
+    coordinates : Coordinates,
 
-    description : String;
-    review ?: Array<Review>;
+    description : String,
+    review ?: Array<Review>
 };
 
 export type Coordinates = {
-    lng : Number;
-    lat : Number;
+    lng : Number,
+    lat : Number
 }
 
 export type Review = {
-    webId:URL;
+    webId:URL,
 
-    username:String;
-    title:String;
-    content:String;
+    username:String,
+    title:String,
+    content:String
 };
 
 
