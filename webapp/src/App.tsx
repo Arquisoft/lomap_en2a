@@ -60,7 +60,7 @@ function App(): JSX.Element {
           position={'relative'}
           >
             <List places={locations} isLoading= {isLoading} />
-            <Map center = {coordinates}/>
+            <Map center = {coordinates} locations={locations}/>
         </Flex>
       </ChakraProvider>
     </>
