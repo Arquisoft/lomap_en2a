@@ -2,7 +2,6 @@ import React, { useState } from 'react'
 import { Box } from "@chakra-ui/react";
 import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
 import {Coordinates, Location} from "../../../restapi/locations/Location"
-import {IoLocation} from 'react-icons/io5'
 
 
 type MapProps = {
@@ -13,7 +12,7 @@ type MapProps = {
 const Map = ( props : MapProps) => {
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: "AIzaSyCIuz5w6NV5uWim0rQ3lwtDRjkmj6-s-70"
+    googleMapsApiKey: "AIzaSyASYfjo4_435pVgG-kiB3cqaDXp-77j2O8"
   })
 
   const center = {
@@ -37,21 +36,12 @@ const Map = ( props : MapProps) => {
         zoom = {11}
         onLoad= {()=>{}}
         onUnmount= {onUnmount}
+        
       >
         {props.locations.map((place, i) => (
-
           <Marker
             position={{lat:Number(place.coordinates.lat), lng: Number(place.coordinates.lng)}}
           ></Marker>
-
-          // <Box
-          //   lat={Number(place.coordinates.lat)}
-          //   lng={Number(place.coordinates.lng)}
-          //   position={'relative'}
-          //   cursor='pointer'
-          //   >
-          //    <IoLocation color='red' fontSize={30}/>
-          // </Box>
         ))}
       </GoogleMap>
     )

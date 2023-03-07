@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ChakraProvider } from '@chakra-ui/react';
 import {Flex} from "@chakra-ui/react";
-import {Coordinates} from "../../restapi/locations/Location"
 import { Location } from '../../restapi/locations/Location';
 
 import Map from './components/Map';
