@@ -31,11 +31,12 @@ const Map = ( props : MapProps) => {
       isLoaded?(
     // <Box width={'full'} height={'full'}>
       <GoogleMap
-      mapContainerStyle={{width: '100%', height: '100%'}}
+        mapContainerStyle={{width: '100%', height: '100%'}}
         center = {{lat: props.center.lat.valueOf(), lng: props.center.lng.valueOf()}}
-        zoom = {11}
+        zoom = {2}
         onLoad= {()=>{}}
         onUnmount= {onUnmount}
+        options = {{minZoom: 2}}
         
       >
         {props.locations.map((place, i) => (
@@ -50,6 +51,7 @@ const Map = ( props : MapProps) => {
       <h1>An error occurred while loading the map</h1>
     </Box>
   )
+  
 }
 
 export default Map
