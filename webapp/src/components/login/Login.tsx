@@ -1,9 +1,8 @@
 import * as React from "react";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
 import {login} from "@inrupt/solid-client-authn-browser"
-import { Button, InputLabel, MenuItem, Stack } from "@mui/material";
 import { LoginButton, useSession } from "@inrupt/solid-ui-react";
 import { SessionInfo } from "@inrupt/solid-ui-react/dist/src/hooks/useSession";
+import { Button, Flex } from "@chakra-ui/react";
 
 function Login() : JSX.Element  {
 
@@ -46,7 +45,7 @@ function Login() : JSX.Element  {
       };
 
     return (
-        <Stack direction="column" justifyContent="center" alignItems="center">
+        <Flex direction="column" justifyContent="center" alignItems="center">
           <form onSubmit={handleSubmit} style={{"margin":"auto", "paddingTop":"50px"}}>
             <Select
                   label="Select your pod provider: "
@@ -58,7 +57,7 @@ function Login() : JSX.Element  {
             <Button style={{"display":"block", "margin":"10px auto"}} type="submit">Log in</Button>
           </form>
           <p style={{"marginBottom":"15px"}}>Your webId is: {session.session.info.webId}</p>
-        </Stack>
+        </Flex>
     )
 }
 
