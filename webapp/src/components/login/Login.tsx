@@ -1,12 +1,8 @@
 import * as React from "react";
-import {login} from "@inrupt/solid-client-authn-browser"
-import { LoginButton, useSession } from "@inrupt/solid-ui-react";
-import { SessionInfo } from "@inrupt/solid-ui-react/dist/src/hooks/useSession";
 import { Button, Flex } from "@chakra-ui/react";
+import axios from "axios";
 
 function Login() : JSX.Element  {
-
-    const session = useSession();
 
     const [podProvider, setProvider] = React.useState('https://inrupt.net/');
     
@@ -22,15 +18,7 @@ function Login() : JSX.Element  {
     const handleChange = (event) => {
         setProvider(event.target.value);
       };
-    
-    const handleSubmit = (e) => {
-        e.preventDefault(); //if not used, the page will reload and data will be lost
-        session.login({
-          redirectUrl: window.location.href, // after redirect, come to the actual page
-          oidcIssuer: podProvider, // redirect to the url
-          clientName: "Lo Map",
-        });
-    }
+
 
     const Select = ({ label, value, options, onChange }) => {
         return (
@@ -46,7 +34,7 @@ function Login() : JSX.Element  {
 
     return (
         <Flex direction="column" justifyContent="center" alignItems="center">
-          <form onSubmit={handleSubmit} style={{"margin":"auto", "paddingTop":"50px"}}>
+          <form  >
             <Select
                   label="Select your pod provider: "
                   options={providerOptions}
@@ -54,11 +42,34 @@ function Login() : JSX.Element  {
                   onChange={handleChange}
             />
             <br></br>
-            <Button style={{"display":"block", "margin":"10px auto"}} type="submit">Log in</Button>
+            <Button onClick={
+              (e) => {
+                e.preventDefault(); //if not used, the page will reload and data will be lost
+                
+                // we send to the restapi the request to add the location
+                axios.post( "http://localhost:5000/login/login", 
+                        //we send the webid in the session and the location to the restapi
+                        {podProvider : podProvider},
+                        //we indicate that the content is in json format
+                        {headers: {'Content-Type' : 'application/json'}}
+                    ).catch((error) =>{
+                        //if the request was not correct    
+                        //TODO show an error to the user so he/she can retry
+                    });
+        
+                //TODO refactoring
+                // session.login({
+                //   redirectUrl: window.location.href, // after redirect, come to the actual page
+                //   oidcIssuer: podProvider, // redirect to the url
+                //   clientName: "Lo Map",
+                // });
+            }
+            }>Log in</Button>
           </form>
-          <p style={{"marginBottom":"15px"}}>Your webId is: {session.session.info.webId}</p>
         </Flex>
     )
+              //TODO delete
+          //<p style={{"marginBottom":"15px"}}>Your webId is: {session.session.info.webId}</p>
 }
 
 export default Login;

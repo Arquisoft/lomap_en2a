@@ -1,16 +1,16 @@
 import { RequestHandler } from "express";
-import { hasUncaughtExceptionCaptureCallback } from "process";
 import {Location}  from "./Location";
+import { createLocation } from "../solidUtils/solidManagement";
 
-export const getLocation: RequestHandler = async (req, res) => {
+export const test: RequestHandler = async (req, res) => {
 
-    // const webId = req.headers.token + "";
-    
-    // let location : Location = {
-    //     name: "hola",
-    //     longitude : 2,
-    //     latitude : 2,
-    //     description : "des"
-    // };
-    // res.json(location);
+   res.json({test: "test"})
+}
+
+export const addLocation :RequestHandler = async(req, res) => {
+    let data = req.body;
+    //we make use of the solid class to store information on the location
+    createLocation(data.webID as string, data.location)
+
+    res.status(200) //we return OK
 }

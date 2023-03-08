@@ -3,7 +3,6 @@ import React, { useState, useEffect } from 'react';
 import { ChakraProvider } from '@chakra-ui/react';
 import {Flex} from "@chakra-ui/react";
 import { Location } from '../../restapi/locations/Location';
-import { deleteLocation, createLocation } from './solid/solidManagement';
 import Map from './components/Map';
 import './App.css';
 import List from './components/List';
@@ -11,7 +10,6 @@ import axios  from 'axios';
 import Login from './components/login/Login';
 import CreateLocation from './components/locations/add/CreateLocation';
 
-import {useSession}  from "@inrupt/solid-ui-react";
 
 
 
@@ -21,7 +19,6 @@ function App(): JSX.Element {
   const [isLoading, setIsLoading] = useState(true)
   const [locations, setLocations] = useState<Array<Location>>([]);
 
-  const session = useSession();
 
   useEffect(()=>{
     axios.get( "http://localhost:5000/locations/getAll"
@@ -39,7 +36,7 @@ function App(): JSX.Element {
       });
       
   },[]);
-
+ 
 
   //get the user's current location and save it for the map to use it as a center
   useEffect(()=>{
@@ -49,12 +46,16 @@ function App(): JSX.Element {
     })
   },[]);
 
+  //previous way of deleting 
+  //<button onClick={() => deleteLocation(session.session.info.webId as string, "https://patrigarcia.inrupt.net/profile/card#d8068302-9df2-4e42-a531-e3d39f685f93")}>DELETE</button>
+  //TODO delet this one implemented the correct deletion
+
+
   return (
     <>
       <ChakraProvider>
         <Login/>
         <CreateLocation/>
-        <button onClick={() => deleteLocation(session.session.info.webId as string, "https://patrigarcia.inrupt.net/profile/card#d8068302-9df2-4e42-a531-e3d39f685f93")}>DELETE</button>
         <Flex 
           justifyContent={'center'}
           alignItems={'center'}
@@ -69,7 +70,7 @@ function App(): JSX.Element {
         </Flex>
       </ChakraProvider>
     </>
-
+   
   );
 }
 

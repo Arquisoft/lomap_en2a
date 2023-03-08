@@ -1,6 +1,6 @@
-import type { Location } from "../types/types";
+import type { Location } from "../locations/Location";
 import { fetch } from "@inrupt/solid-client-authn-browser";
-import { Session } from "@inrupt/solid-client-authn-browser";
+
 
 import {
   createThing, removeThing,Thing,getThing, setThing,buildThing,
@@ -11,8 +11,6 @@ import {
 
 import { VCARD } from "@inrupt/vocab-common-rdf"
 
-const session = new Session();
-
 
 // ************** FUNCTIONS *****************
 
@@ -22,12 +20,11 @@ export async function getUserProfile(webID: string) : Promise<Thing>{
     // get the url of the full dataset
     let profile = webID.split("#")[0]; //just in case there is extra information in the url
     // get the dataset from the url
-    let dataSet = await getSolidDataset(profile, {fetch: session.fetch});
+    let dataSet = await getSolidDataset(profile, {});
     // return the dataset as a thing
     return getThing(dataSet, webID) as Thing;
 }
-
-export async function getLocations(webID:string) {
+export async function getLocations(webID:string) : Promise<Array<Location>> {
   
   let locationsURLs = getUrlAll(await getUserProfile(webID), VCARD.hasGeo);
   let locations: Location[] = [];
@@ -54,11 +51,11 @@ export async function getLocations(webID:string) {
     if (location)
       locations.push({
         name: name,
-        longitude: longitude,
-        latitude: latitude,
+        coordinates : {lng: Number(longitude), lat: Number(latitude)},
         description: description,
         url: location
-      });
+      }
+    );
   }
   
   return locations;
@@ -70,16 +67,17 @@ export async function getLocations(webID:string) {
 
 export async function createLocation(webID:string, location:Location) {
     // get the url of the full dataset
-    let profile = webID.split("#")[0]; //just in case there is extra information in the url
+    let profile = String(webID).split("#")[0]; //just in case there is extra information in the url
     // to write to a profile you must be authenticated, that is the role of the fetch
-    let dataSet = await getSolidDataset(profile, {fetch: session.fetch});
+
+    let dataSet = await getSolidDataset(profile, { });
     
     // We create the location
     const newLocation = buildThing(createThing())
-    .addStringNoLocale(VCARD.Name, location.name)
-    .addStringNoLocale(VCARD.longitude, location.longitude)
-    .addStringNoLocale(VCARD.latitude, location.latitude)
-    .addStringNoLocale(VCARD.Text, location.description)
+    .addStringNoLocale(VCARD.Name, location.name.toString())
+    .addStringNoLocale(VCARD.longitude, location.coordinates.lng.toString())
+    .addStringNoLocale(VCARD.latitude, location.coordinates.lat.toString())
+    .addStringNoLocale(VCARD.Text, location.description.toString())
     .addUrl(VCARD.Type, VCARD.Location)
     .build();
 
@@ -99,12 +97,12 @@ export async function createLocation(webID:string, location:Location) {
     // insert/replace the control structure in the dataset
     dataSet = setThing(dataSet, existLocations);
 
-    return await saveSolidDatasetAt(webID, dataSet, {fetch: fetch})
+    return await saveSolidDatasetAt(webID, dataSet, {})
 }
 
 export async function deleteLocation(webID:string, locationUrl: string) {
   let profile = webID.split("#")[0];
-  let dataset = await getSolidDataset(profile, {fetch: session.fetch});
+  let dataset = await getSolidDataset(profile, { });
 
   // obtain the location from the POD
   let location = getThing(dataset, locationUrl) as Thing;
@@ -122,5 +120,38 @@ export async function deleteLocation(webID:string, locationUrl: string) {
   // update the dataset
   dataset = setThing(dataset, existLocations);
 
-  return await saveSolidDatasetAt(webID, dataset, { fetch: fetch });
+  return await saveSolidDatasetAt(webID, dataset, {   });
 }
+
+
+
+export function logIn( podProvider : string){
+
+  let solid = require("solid-auth-client")
+  
+  let session = solid.currentSession();
+  solid.login({
+    redirectUrl: "http://localhost:3000", // after redirect, come to the actual page
+    oidcIssuer: podProvider, // redirect to the url
+    clientName: "Lo Map", 
+  });
+  // let session = useSession()
+
+  // session.login({
+  //   redirectUrl: "http://localhost:3000", // after redirect, come to the actual page
+  //   oidcIssuer: podProvider, // redirect to the url
+  //   clientName: "Lo Map", 
+  // });
+}
+
+async function popupLogin() {
+  
+
+
+  // let session = await solid.currentSession();
+  // let popupUri = 'https://solidcommunity.net/common/popup.html';
+  // if (!session)
+  //   session = await solid.popupLogin({ popupUri });
+  // console.log(`Logged in as ${session.webId}`);
+}
+popupLogin();

@@ -1,18 +1,13 @@
 import { useSession } from '@inrupt/solid-ui-react';
+import axios from 'axios';
 import { useState } from 'react';
-import { createLocation } from '../../../solid/solidManagement';
-import { Location } from '../../../types/types';
+import { Location } from '../../../../../restapi/locations/Location';
 
 
 function CreateLocation() : JSX.Element {
 
     const session = useSession();
     let location : Location;
-
-    const [name, setName] = useState("");
-    const [longitude, setLongitude] = useState("");
-    const [latitude, setLatitude] = useState("");
-    const [description, setDescription] = useState("");
 
     const handleSubmit = (e) => {
         e.preventDefault(); //if not used, the page will reload and data will be lost
@@ -22,21 +17,24 @@ function CreateLocation() : JSX.Element {
         let locLongitude = e.target.longitude.value as string;
         let locLatitude = e.target.latitude.value as string;
         let locDescription = e.target.description.value as string;
-
-        // update the values
-        setName(locName);
-        setLongitude(locLongitude);
-        setLatitude(locLatitude);
-        setDescription(locDescription);
         
         // create location object
         location = {
-            name: name.toString(),
-            longitude: longitude.toString(),
-            latitude: latitude.toString(),
-            description: description.toString()
+            name: locName,
+            coordinates : {lat: Number(locLatitude), lng : Number(locLongitude)},
+            description: locDescription,
+            images:[]
         }
-        createLocation(session.session.info.webId as string, location)
+        //we send to the restapi the request to add the location
+        axios.post( "http://localhost:5000/locations/add", 
+                //we send the webid in the session and the location to the restapi
+                {location : location, webId : session.session.info.webId},
+                //we indicate that the content is in json format
+                {headers: {'Content-Type' : 'application/json'}}
+            ).catch((error) =>{
+                //if the request was not correct    
+                //TODO show an error to the user so he/she can retry
+            });
     }
     
     return(

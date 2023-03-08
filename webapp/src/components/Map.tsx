@@ -29,7 +29,6 @@ const Map = ( props : MapProps) => {
 
   return (
       isLoaded?(
-    // <Box width={'full'} height={'full'}>
       <GoogleMap
       mapContainerStyle={{width: '100%', height: '100%'}}
         center = {{lat: props.center.lat.valueOf(), lng: props.center.lng.valueOf()}}
