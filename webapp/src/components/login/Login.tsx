@@ -1,6 +1,9 @@
 import * as React from "react";
-import { Button, Flex } from "@chakra-ui/react";
-import axios from "axios";
+
+import { LoginButton, useSession } from "@inrupt/solid-ui-react";
+import { SessionInfo } from "@inrupt/solid-ui-react/dist/src/hooks/useSession";
+import { login, handleIncomingRedirect } from '@inrupt/solid-client-authn-browser';
+import { Button } from "@chakra-ui/react";
 
 function Login() : JSX.Element  {
 
@@ -11,12 +14,21 @@ function Login() : JSX.Element  {
         { value: 'https://inrupt.net/', label: 'Inrupt' }
       ]
 
-    const authOptions = {
-        clientName: "Solid Todo App",
-      };
+    const { session } = useSession();
+
 
     const handleChange = (event) => {
         setProvider(event.target.value);
+      };
+
+    
+      const handleSubmit = async (e) => {
+        e.preventDefault()
+        await login({
+          oidcIssuer: podProvider,
+          redirectUrl: window.location.href,
+          clientName: 'LoMap',
+        });
       };
 
 
@@ -32,9 +44,12 @@ function Login() : JSX.Element  {
         );
       };
 
+
+      
+
     return (
-        <Flex direction="column" justifyContent="center" alignItems="center">
-          <form  >
+      <div>
+        
             <Select
                   label="Select your pod provider: "
                   options={providerOptions}
@@ -42,31 +57,22 @@ function Login() : JSX.Element  {
                   onChange={handleChange}
             />
             <br></br>
-            <Button onClick={
-              (e) => {
-                e.preventDefault(); //if not used, the page will reload and data will be lost
-                
-                // we send to the restapi the request to add the location
-                axios.post( "http://localhost:5000/login/login", 
-                        //we send the webid in the session and the location to the restapi
-                        {podProvider : podProvider},
-                        //we indicate that the content is in json format
-                        {headers: {'Content-Type' : 'application/json'}}
-                    ).catch((error) =>{
-                        //if the request was not correct    
-                        //TODO show an error to the user so he/she can retry
-                    });
-        
-                //TODO refactoring
-                // session.login({
-                //   redirectUrl: window.location.href, // after redirect, come to the actual page
-                //   oidcIssuer: podProvider, // redirect to the url
-                //   clientName: "Lo Map",
-                // });
-            }
-            }>Log in</Button>
-          </form>
-        </Flex>
+            <Button  onClick={handleSubmit}>Log in</Button>
+          
+          <p style={{"marginBottom":"15px"}}>Your webId is: {session.info.webId}</p>
+      </div>
+        // <Flex direction="column" justifyContent="center" alignItems="center">
+        //   <form  >
+        //     <Select
+        //           label="Select your pod provider: "
+        //           options={providerOptions}
+        //           value={podProvider}
+        //           onChange={handleChange}
+        //     />
+        //     <br></br>
+            
+        //   </form>
+        // </Flex>
     )
               //TODO delete
           //<p style={{"marginBottom":"15px"}}>Your webId is: {session.session.info.webId}</p>

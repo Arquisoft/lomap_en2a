@@ -56,22 +56,25 @@ function App(): JSX.Element {
       <ChakraProvider>
         <Login/>
         <CreateLocation/>
-        <Flex 
-          justifyContent={'center'}
-          alignItems={'center'}
-          width={'100vw'}
-          height={'100vh'}
-          maxWidth={'100vw'}
-          maxHeight={'100vh'}
-          position={'relative'}
-          >
-            <List places={locations} isLoading= {isLoading} />
-            <Map center = {coordinates} locations={locations}/>
-        </Flex>
+        
+        
       </ChakraProvider>
     </>
    
   );
+
+  // <Flex 
+  //         justifyContent={'center'}
+  //         alignItems={'center'}
+  //         width={'100vw'}
+  //         height={'100vh'}
+  //         maxWidth={'100vw'}
+  //         maxHeight={'100vh'}
+  //         position={'relative'}
+  //         >
+  //           <List places={locations} isLoading= {isLoading} />
+  //           <Map center = {coordinates} locations={locations}/>
+  //       </Flex>
 }
 
 export default App;

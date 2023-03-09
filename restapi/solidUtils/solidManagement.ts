@@ -1,6 +1,9 @@
 import type { Location } from "../locations/Location";
-import { fetch } from "@inrupt/solid-client-authn-browser";
-
+const { 
+  getSessionFromStorage,
+  getSessionIdFromStorageAll,
+  Session
+} = require("@inrupt/solid-client-authn-node");
 
 import {
   createThing, removeThing,Thing,getThing, setThing,buildThing,
@@ -65,11 +68,11 @@ export async function getLocations(webID:string) : Promise<Array<Location>> {
 
 // WRITE FUNCTIONS
 
-export async function createLocation(webID:string, location:Location) {
+export async function createLocation(session: Session, location:Location) {
     // get the url of the full dataset
     let profile = String(webID).split("#")[0]; //just in case there is extra information in the url
     // to write to a profile you must be authenticated, that is the role of the fetch
-
+    console.log("llega hasta aqui y el id es: " + profile)
     let dataSet = await getSolidDataset(profile, { });
     
     // We create the location
@@ -125,33 +128,3 @@ export async function deleteLocation(webID:string, locationUrl: string) {
 
 
 
-export function logIn( podProvider : string){
-
-  let solid = require("solid-auth-client")
-  
-  let session = solid.currentSession();
-  solid.login({
-    redirectUrl: "http://localhost:3000", // after redirect, come to the actual page
-    oidcIssuer: podProvider, // redirect to the url
-    clientName: "Lo Map", 
-  });
-  // let session = useSession()
-
-  // session.login({
-  //   redirectUrl: "http://localhost:3000", // after redirect, come to the actual page
-  //   oidcIssuer: podProvider, // redirect to the url
-  //   clientName: "Lo Map", 
-  // });
-}
-
-async function popupLogin() {
-  
-
-
-  // let session = await solid.currentSession();
-  // let popupUri = 'https://solidcommunity.net/common/popup.html';
-  // if (!session)
-  //   session = await solid.popupLogin({ popupUri });
-  // console.log(`Logged in as ${session.webId}`);
-}
-popupLogin();

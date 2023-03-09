@@ -1,7 +1,8 @@
-import { useSession } from '@inrupt/solid-ui-react';
+
 import axios from 'axios';
 import { useState } from 'react';
 import { Location } from '../../../../../restapi/locations/Location';
+import { useSession } from "@inrupt/solid-ui-react";
 
 
 function CreateLocation() : JSX.Element {
@@ -28,9 +29,14 @@ function CreateLocation() : JSX.Element {
         //we send to the restapi the request to add the location
         axios.post( "http://localhost:5000/locations/add", 
                 //we send the webid in the session and the location to the restapi
-                {location : location, webId : session.session.info.webId},
+                {location},
                 //we indicate that the content is in json format
-                {headers: {'Content-Type' : 'application/json'}}
+                {headers: 
+                    {
+                        'Content-Type' : 'application/json',
+                        "Authorization": JSON.stringify(session),
+                    }
+                }
             ).catch((error) =>{
                 //if the request was not correct    
                 //TODO show an error to the user so he/she can retry
@@ -41,25 +47,25 @@ function CreateLocation() : JSX.Element {
         <form onSubmit={handleSubmit} style={{"border":"2px solid grey", "width":"30%", "margin":"auto", "padding":"20px", "borderRadius":"15px"}}>
             <p style={{"fontSize":"1.5em", "textAlign":"center", "marginTop":"0px"}}>Add a location</p>
             <label>Location name:
-            <input style={{"margin": "10px"}}
+            <input style={{"background":"grey", "margin": "10px"}}
                 type="text" 
                 name="name"  
             /> <br></br>
             </label>
             <label>Location longitude:
-            <input style={{"margin": "10px"}}
+            <input style={{"background":"grey", "margin": "10px"}}
             type="text" 
             name="longitude" 
             /><br></br>
             </label>
             <label>Location latitude:
-            <input style={{"margin": "10px"}}
+            <input style={{"background":"grey", "margin": "10px"}}
             type="text" 
             name="latitude" 
             /><br></br>
             </label>
             <label>Location description:
-            <input style={{"margin": "10px"}}
+            <input style={{"background":"grey", "margin": "10px"}}
             type="text" 
             name="description" 
             /><br></br>
