@@ -59,7 +59,7 @@ function App(): JSX.Element {
           maxHeight={'100vh'}
           position={'relative'}
           >
-            <List places={locations} isLoading= {isLoading} />
+            {/* <List places={locations} isLoading= {isLoading} /> */}
             <Map center = {coordinates} locations={locations}/>
             <ProfileView></ProfileView>
         </Flex>

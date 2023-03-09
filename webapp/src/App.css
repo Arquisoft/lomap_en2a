@@ -32,3 +32,9 @@
     transform: rotate(360deg);
   }
 }
+
+
+.Image {
+  position: absolute;
+  align-self: center;
+}
