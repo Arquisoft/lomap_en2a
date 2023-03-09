@@ -8,6 +8,7 @@ import Map from './components/Map';
 import './App.css';
 import List from './components/List';
 import axios  from 'axios';
+import Menu from './components/Menu';
 
 
 
@@ -58,12 +59,14 @@ function App(): JSX.Element {
           maxHeight={'100vh'}
           position={'relative'}
           >
-            <List places={locations} isLoading= {isLoading} />
+            <Menu/>
+            
             <Map center = {coordinates} locations={locations}/>
         </Flex>
       </ChakraProvider>
     </>
   );
+  //<List places={locations} isLoading= {isLoading} />
 }
 
 export default App;
