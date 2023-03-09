@@ -1,5 +1,5 @@
 import express, { RequestHandler, Router } from "express";
-import * as LocationController from "./LocationController";
+import * as LocationController from "../locations/LocationController";
 
 const api: Router = express.Router();
 

@@ -36,7 +36,6 @@ const Map = ( props : MapProps) => {
         zoom = {11}
         onLoad= {()=>{}}
         onUnmount= {onUnmount}
-        
       >
         {props.locations.map((place, i) => (
           <Marker

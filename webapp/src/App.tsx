@@ -8,6 +8,7 @@ import Map from './components/Map';
 import './App.css';
 import List from './components/List';
 import axios  from 'axios';
+import { ProfileView } from './components/Profile';
 
 
 
@@ -60,6 +61,7 @@ function App(): JSX.Element {
           >
             <List places={locations} isLoading= {isLoading} />
             <Map center = {coordinates} locations={locations}/>
+            <ProfileView></ProfileView>
         </Flex>
       </ChakraProvider>
     </>
