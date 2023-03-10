@@ -12,7 +12,7 @@ export type Location = {
     review ?: Array<Review>,
     ratings ?: Array<Number>, //stars of the location
 
-    images?: Array<File>
+    images?: Array<string>
 
 
 };
