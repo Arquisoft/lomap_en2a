@@ -31,7 +31,6 @@ const Map = ( props : MapProps) => {
 
   return (
       isLoaded?(
-    // <Box width={'full'} height={'full'}>
       <GoogleMap
       mapContainerStyle={{width: '100%', height: '100%'}}
         center = {{lat: props.center.lat.valueOf(), lng: props.center.lng.valueOf()}}
@@ -39,6 +38,7 @@ const Map = ( props : MapProps) => {
         onLoad= {()=>{}}
         onUnmount= {onUnmount}
         options= {{fullscreenControl: false , streetViewControl:false, mapTypeControl:false}}
+        //use inside of the options the styles property and personalyce a style in https://mapstyle.withgoogle.com/
       >
         {props.locations.map((place, i) => (
           <Marker

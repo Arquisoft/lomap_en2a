@@ -65,7 +65,6 @@ function App(): JSX.Element {
           maxHeight={'100vh'}
           position={'relative'}
           >
-            
             {
               selectedView ? 
               views[selectedView]
@@ -73,7 +72,7 @@ function App(): JSX.Element {
               <></>
             }
             <Map center = {coordinates} locations={locations}/>
-            <Menu notifyOption= {(newView : string) => {setselectedView(newView)}}/>
+            <Menu changeViewTo= {(newView : string) => {setselectedView(newView)}}/>
         </Flex>
       </ChakraProvider>
     </>
