@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Box } from "@chakra-ui/react";
 import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
 import {Coordinates, Location} from "../../../restapi/locations/Location"
+import axios from 'axios';
 
 
 type MapProps = {
@@ -10,6 +11,7 @@ type MapProps = {
 }
 
 const Map = ( props : MapProps) => {
+
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: "AIzaSyASYfjo4_435pVgG-kiB3cqaDXp-77j2O8"
