@@ -6,6 +6,7 @@
     "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",
     "@inrupt/solid-ui-react": "^2.8.2",
+    "@inrupt/vocab-common-rdf": "^1.0.5",
     "@react-google-maps/api": "^2.18.1",
     "@solid/react": "^1.10.0",
     "@testing-library/jest-dom": "^5.16.1",

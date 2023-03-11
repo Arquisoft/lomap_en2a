@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useState } from 'react';
 import { Location } from '../../../../../restapi/locations/Location';
 import { useSession } from "@inrupt/solid-ui-react";
+import { createLocation } from '../../../solid/solidManagement';
 
 
 function CreateLocation() : JSX.Element {
@@ -26,21 +27,25 @@ function CreateLocation() : JSX.Element {
             description: locDescription,
             images:[]
         }
-        //we send to the restapi the request to add the location
-        axios.post( "http://localhost:5000/locations/add", 
-                //we send the webid in the session and the location to the restapi
-                {location},
-                //we indicate that the content is in json format
-                {headers: 
-                    {
-                        'Content-Type' : 'application/json',
-                        "Authorization": JSON.stringify(session),
-                    }
-                }
-            ).catch((error) =>{
-                //if the request was not correct    
-                //TODO show an error to the user so he/she can retry
-            });
+        
+        createLocation(session.session.info.webId as string, location)
+
+        //TODO uncoment when refactoring for restapi
+        // //we send to the restapi the request to add the location
+        // axios.post( "http://localhost:5000/locations/add", 
+        //         //we send the webid in the session and the location to the restapi
+        //         {location},
+        //         //we indicate that the content is in json format
+        //         {headers: 
+        //             {
+        //                 'Content-Type' : 'application/json',
+        //                 "Authorization": JSON.stringify(session),
+        //             }
+        //         }
+        //     ).catch((error) =>{
+        //         //if the request was not correct    
+        //         //TODO show an error to the user so he/she can retry
+        //     });
     }
     
     return(

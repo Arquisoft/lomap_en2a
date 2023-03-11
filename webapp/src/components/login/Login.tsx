@@ -4,6 +4,9 @@ import { LoginButton, useSession } from "@inrupt/solid-ui-react";
 import { SessionInfo } from "@inrupt/solid-ui-react/dist/src/hooks/useSession";
 import { login, handleIncomingRedirect } from '@inrupt/solid-client-authn-browser';
 import { Button } from "@chakra-ui/react";
+import axios from "axios";
+import { useState } from "react";
+
 
 function Login() : JSX.Element  {
 
@@ -14,7 +17,7 @@ function Login() : JSX.Element  {
         { value: 'https://inrupt.net/', label: 'Inrupt' }
       ]
 
-    const { session } = useSession();
+    const session = useSession();
 
 
     const handleChange = (event) => {
@@ -23,12 +26,29 @@ function Login() : JSX.Element  {
 
     
       const handleSubmit = async (e) => {
-        e.preventDefault()
-        await login({
-          oidcIssuer: podProvider,
-          redirectUrl: window.location.href,
-          clientName: 'LoMap',
+        //TODO refactor this once the restapi implementation is working
+        e.preventDefault(); //if not used, the page will reload and data will be lost
+        session.login({
+          redirectUrl: window.location.href, // after redirect, come to the actual page
+          oidcIssuer: podProvider, // redirect to the url
+          clientName: "Lo Map",
         });
+        // //we forward the request to the backend to logIn there
+        // axios.get("http://localhost:5000/login/login", {params:{ provider : podProvider }})
+        //   .then((response) => {
+        //     console.log("respuesta ------------------------")
+        //     console.log(response)
+
+        //     //use this to redirect
+        //     window.location.replace(response.data)
+            
+            
+        //     // let url = response.data
+        //     // console.log(url)
+        //   })
+        //   .catch((error) => {
+        //     console.log("error en la webapp")
+        //   })
       };
 
 
@@ -59,23 +79,9 @@ function Login() : JSX.Element  {
             <br></br>
             <Button  onClick={handleSubmit}>Log in</Button>
           
-          <p style={{"marginBottom":"15px"}}>Your webId is: {session.info.webId}</p>
+          <p style={{"marginBottom":"15px"}}>Your webId is: {session.session.info.webId}</p>
       </div>
-        // <Flex direction="column" justifyContent="center" alignItems="center">
-        //   <form  >
-        //     <Select
-        //           label="Select your pod provider: "
-        //           options={providerOptions}
-        //           value={podProvider}
-        //           onChange={handleChange}
-        //     />
-        //     <br></br>
-            
-        //   </form>
-        // </Flex>
     )
-              //TODO delete
-          //<p style={{"marginBottom":"15px"}}>Your webId is: {session.session.info.webId}</p>
 }
 
 export default Login;
