@@ -9,7 +9,7 @@ export function ProfileView() {
         width={"30vw"}
         height={"100vh"}
         position={'absolute'} 
-        left={10}
+        left='5vw'
         top={0}
         zIndex={1}
         overflow='hidden'
