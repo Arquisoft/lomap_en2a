@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Box } from "@chakra-ui/react";
-import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
+import {GoogleMap, InfoWindow, Marker, useJsApiLoader} from '@react-google-maps/api';
 import {Coordinates, Location} from "../../../restapi/locations/Location"
 
 
@@ -9,6 +9,17 @@ type MapProps = {
   locations : Array<Location>
 }
 
+let place : Location = {
+  name: "Estatua de la libertad",
+  coordinates: {
+    lng: -74.044502,
+    lat: 40.689249
+  },
+  description: "Estatua de la libertad en Estados Unidos",
+  images : []
+}
+
+
 const Map = ( props : MapProps) => {
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
@@ -16,35 +27,36 @@ const Map = ( props : MapProps) => {
   })
 
   const center = {
-    lat:  43.37776784391247, 
+    lat:  43.37776784391247,
     lng: -5.874621861782328
   };
 
-
-
   const [map, setMap] = React.useState(null)
 
-  const onUnmount = React.useCallback(function callback(map) { 
+  const onUnmount = React.useCallback(function callback(map) {
     setMap(null)
   }, [])
+
 
   return (
       isLoaded?(
     // <Box width={'full'} height={'full'}>
       <GoogleMap
         mapContainerStyle={{width: '100%', height: '100%'}}
-        center = {{lat: props.center.lat.valueOf(), lng: props.center.lng.valueOf()}}
-        zoom = {2}
+        center = {center}
+        zoom = {4}
         onLoad= {()=>{}}
         onUnmount= {onUnmount}
         options = {{minZoom: 2}}
-        
       >
         {props.locations.map((place, i) => (
-          <Marker
-            position={{lat:Number(place.coordinates.lat), lng: Number(place.coordinates.lng)}}
-          ></Marker>
+            <Marker
+                position={{lat:Number(place.coordinates.lat), lng: Number(place.coordinates.lng)}}
+            ></Marker>
         ))}
+        <Marker position={{lat:Number(place.coordinates.lat), lng:Number(place.coordinates.lng)}}
+                //onClick={}
+        ></Marker>
       </GoogleMap>
     )
     :
@@ -54,5 +66,7 @@ const Map = ( props : MapProps) => {
   )
   
 }
+
+
 
 export default Map
