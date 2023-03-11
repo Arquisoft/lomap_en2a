@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Box } from "@chakra-ui/react";
 import {GoogleMap, InfoWindow, Marker, useJsApiLoader} from '@react-google-maps/api';
 import {Coordinates, Location} from "../../../restapi/locations/Location"
+import axios from 'axios';
 
 
 type MapProps = {
@@ -21,6 +22,7 @@ let place : Location = {
 
 
 const Map = ( props : MapProps) => {
+
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: "AIzaSyASYfjo4_435pVgG-kiB3cqaDXp-77j2O8"
@@ -40,14 +42,15 @@ const Map = ( props : MapProps) => {
 
   return (
       isLoaded?(
-    // <Box width={'full'} height={'full'}>
       <GoogleMap
         mapContainerStyle={{width: '100%', height: '100%'}}
         center = {center}
         zoom = {4}
         onLoad= {()=>{}}
         onUnmount= {onUnmount}
-        options = {{minZoom: 2}}
+        options= {{fullscreenControl: false , streetViewControl:false, mapTypeControl:false,
+                   minZoom:2}}
+        //use inside of the options the styles property and personalyce a style in https://mapstyle.withgoogle.com/
       >
         {props.locations.map((place, i) => (
             <Marker
@@ -64,7 +67,6 @@ const Map = ( props : MapProps) => {
       <h1>An error occurred while loading the map</h1>
     </Box>
   )
-  
 }
 
 
