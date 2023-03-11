@@ -19,7 +19,8 @@ const Map = ( props : MapProps) => {
     lat:  43.37776784391247, 
     lng: -5.874621861782328
   };
-  
+
+
 
   const [map, setMap] = React.useState(null)
 

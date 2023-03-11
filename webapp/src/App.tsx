@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import * as React from 'react';
 import { ChakraProvider } from '@chakra-ui/react';
 import {Flex} from "@chakra-ui/react";
 import { Location } from '../../restapi/locations/Location';
@@ -12,15 +12,15 @@ import axios  from 'axios';
 
 
 function App(): JSX.Element {
-  const [coordinates, setCoordinates] = useState({lng:0, lat:0});
-  const [isLoading, setIsLoading] = useState(true)
-  const [locations, setLocations] = useState<Array<Location>>([]);
+  const [coordinates, setCoordinates] = React.useState({lng:0, lat:0});
+  const [isLoading, setIsLoading] = React.useState(true)
+  const [locations, setLocations] = React.useState<Array<Location>>([]);
 
 
   //Test array of location to test the correctness of the web interface
   //var locations: Array<Location> = [];
   //we get the locations for the user and fetch them to the list
-  useEffect(()=>{
+  React.useEffect(()=>{
     axios.get( "http://localhost:5000/locations/getAll"
       ).then ((response) =>{
         console.log(response)
@@ -39,7 +39,7 @@ function App(): JSX.Element {
 
 
   //get the user's current location and save it for the map to use it as a center
-  useEffect(()=>{
+  React.useEffect(()=>{
     navigator.geolocation.getCurrentPosition(({coords : {latitude,longitude}}) =>{
       //we set the coordinates to be the ones of the user for them to be passed to the map
       setCoordinates({lat: latitude , lng : longitude});
