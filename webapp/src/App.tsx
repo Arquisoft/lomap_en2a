@@ -8,6 +8,7 @@ import Map from './components/Map';
 import './App.css';
 import List from './components/List';
 import axios  from 'axios';
+import Menu from './components/Menu';
 
 
 
@@ -15,10 +16,8 @@ function App(): JSX.Element {
   const [coordinates, setCoordinates] = useState({lng:0, lat:0});
   const [isLoading, setIsLoading] = useState(true)
   const [locations, setLocations] = useState<Array<Location>>([]);
+  const [selectedView, setselectedView] = useState<string>("none")
 
-
-  //Test array of location to test the correctness of the web interface
-  //var locations: Array<Location> = [];
   //we get the locations for the user and fetch them to the list
   useEffect(()=>{
     axios.get( "http://localhost:5000/locations/getAll"
@@ -46,6 +45,14 @@ function App(): JSX.Element {
     })
   },[]);
 
+  //here is where we have to insert the different views that the menu will triger,
+  //see the onclick method on the menu.tsx buttons on how to modify this dictionary to include the 
+  //rest of the views
+  const views: { [id: string]: JSX.Element; } = {
+    "none" : <></>,
+    "list": <List places={locations} isLoading= {isLoading} />
+ }; 
+
   return (
     <>
       <ChakraProvider>
@@ -58,8 +65,14 @@ function App(): JSX.Element {
           maxHeight={'100vh'}
           position={'relative'}
           >
-            <List places={locations} isLoading= {isLoading} />
+            {
+              selectedView ? 
+              views[selectedView]
+              :
+              <></>
+            }
             <Map center = {coordinates} locations={locations}/>
+            <Menu changeViewTo= {(newView : string) => {setselectedView(newView)}}/>
         </Flex>
       </ChakraProvider>
     </>
