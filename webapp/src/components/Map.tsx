@@ -1,8 +1,9 @@
-import React, { useState } from 'react'
 import { Box, useDisclosure } from "@chakra-ui/react";
-import { GoogleMap, Marker, OverlayView, useJsApiLoader } from '@react-google-maps/api';
-import {Coordinates, Location} from "../../../restapi/locations/Location"
+import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
 import { LocationView } from './LocationInfo';
+import React, { useEffect, useState } from 'react'
+import {Coordinates, Location} from "../../../restapi/locations/Location"
+import axios from 'axios';
 
 let pl1 : Location = {
   name: "Estatua de la libertad",
@@ -41,14 +42,15 @@ type MapProps = {
 }
 
 const Map = ( props : MapProps) => {
+
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: "AIzaSyASYfjo4_435pVgG-kiB3cqaDXp-77j2O8"
   })
 
   const init = {
-    lat:  43.37776784391247, 
-    lng: -5.874621861782328
+    lat: 0,
+    lng: 0
   };
 
   const [center, setCenter] = React.useState(init)
@@ -57,7 +59,7 @@ const Map = ( props : MapProps) => {
 
   const { onOpen, isOpen, onClose } = useDisclosure()  // for the markers
 
-  const onUnmountMap = React.useCallback(function callback(map) { 
+  const onUnmount = React.useCallback(function callback(map) { 
     setMap(null)
   }, [])
 
@@ -75,13 +77,14 @@ const Map = ( props : MapProps) => {
 
   return (
       isLoaded?(
-    // <Box width={'full'} height={'full'}>
       <GoogleMap
         mapContainerStyle={{width: '100%', height: '100%'}}
         center = {center}
         zoom = {11}
         onLoad= {()=>{}}
-        onUnmount= {onUnmountMap}
+        onUnmount= {onUnmount}
+        options= {{fullscreenControl: false , streetViewControl:false, mapTypeControl:false}}
+        //use inside of the options the styles property and personalyce a style in https://mapstyle.withgoogle.com/
       >
         {locations.map((place, i) => (
           <Marker
