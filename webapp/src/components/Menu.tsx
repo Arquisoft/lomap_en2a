@@ -8,7 +8,7 @@ type MenuProps = {
 }
 
 function Menu(props: MenuProps): JSX.Element {
-  const [insideMenu, setinsideMenu] = useState(true)
+  const [insideMenu, setinsideMenu] = useState(false)
 
   return (
     <Flex

@@ -3,11 +3,13 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { SessionProvider } from '@inrupt/solid-ui-react';
+import Login from './components/login/Login';
 
 ReactDOM.render(
-  <React.StrictMode>
+  <SessionProvider>
     <App />
-  </React.StrictMode>,
+  </SessionProvider>,
   document.getElementById('root')
 );
 
