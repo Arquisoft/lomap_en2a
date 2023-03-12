@@ -1,7 +1,28 @@
 import { Avatar, Button, Text, Flex, VStack, Box } from "@chakra-ui/react"
 import React from "react"
+import { getNameFromPod } from "../solid/solidManagement"
+import { SessionInfo } from "@inrupt/solid-ui-react/dist/src/hooks/useSession";
+import { Session } from "@inrupt/solid-client-authn-browser";
 
-export function ProfileView() {  
+
+export function ProfileView(props:any) {  
+
+  const [name, setName] = React.useState("");
+
+  React.useEffect(() => {
+    handleName()
+  }, []);
+
+  const handleName = async () => {
+    if (props.webId !== undefined && props.webId !== ""){
+      const n  = await getNameFromPod(props.webId)
+      setName(n)
+    }
+    else{
+      setName("John Doe")
+    }
+  }
+
     return (
       <Flex
         direction={'column'}
@@ -20,7 +41,7 @@ export function ProfileView() {
             marginTop={'20px'}
             bg='red.500'
             size='xl'/>
-          <Text fontSize='1.2em' as="b">Dan Abramov</Text>
+          <Text fontSize='1.2em' as="b">{name}</Text>
         </VStack>
           <Box p={2} shadow='md' borderWidth='1px'>
             <Text as="b">Statistics</Text>

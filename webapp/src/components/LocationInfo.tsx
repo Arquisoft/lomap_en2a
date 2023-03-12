@@ -19,15 +19,15 @@ export function LocationView({isOpen, onClose, place}) : JSX.Element {
               place.images?.length != null ? 
               (
                 place.images?.map((image)=>{
-                    return (
-                      <Image 
-                        src={image as string} 
-                        width='200'
-                        height='200'
-                        borderRadius='lg'
-                        fallbackSrc='https://via.placeholder.com/150'>
-                      </Image>
-                    )
+                  return (
+                    <Image 
+                      src={image as string} 
+                      width='200'
+                      height='200'
+                      borderRadius='lg'
+                      fallbackSrc='https://via.placeholder.com/150'>
+                    </Image>
+                  )
                 })   
               ) 
               : 
