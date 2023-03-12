@@ -9,6 +9,7 @@ import './App.css';
 import List from './components/List';
 import axios  from 'axios';
 import Menu from './components/Menu';
+import AddLocationMenu from "./components/AddLocationMenu";
 
 
 
@@ -50,7 +51,8 @@ function App(): JSX.Element {
   //rest of the views
   const views: { [id: string]: JSX.Element; } = {
     "none" : <></>,
-    "list": <List places={locations} isLoading= {isLoading} />
+    "list": <List places={locations} isLoading= {isLoading} />,
+    "addLocation": <AddLocationMenu isLoading={isLoading} />
  };
 
   return (

@@ -11,93 +11,90 @@ function Menu(props: MenuProps): JSX.Element {
   const [insideMenu, setinsideMenu] = useState(true)
 
   return (
-    <Flex
-      direction={'column'}
-      bg={'white'}
-      width={"fit-content"}
-      minWidth={"5vw"}
-      height={"100vh"}
-      position={'absolute'}
-      left={0}
-      top={0}
-      bottom={-4}
-      zIndex={1}
-      overflow='hidden'
-      px={2}
-      onMouseEnter={() => { setinsideMenu(true) }}
-      onMouseLeave={() => { setinsideMenu(false) }}
-
-    >{
+    <Flex direction={'column'}
+          bg={'white'}
+          width={"fit-content"}
+          minWidth={"5vw"}
+          height={"100vh"}
+          position={'absolute'}
+          left={0}
+          top={0}
+          bottom={-4}
+          zIndex={1}
+          overflow='hidden'
+          px={2}
+          onMouseEnter={() => { setinsideMenu(true) }}
+          onMouseLeave={() => { setinsideMenu(false) }}
+    >
+      {
         insideMenu ?
           (
-            <Flex
-              direction={'column'}
-              bg={'white'}
-              width={"fit-content"}
-              minWidth={"5vw"}
-              height={"100vh"}
-              left={0}
-              top={0}
-              zIndex={1}
-              overflow='hidden'
-              px={2}
-              alignItems='left'
-              marginTop={3}
+            <Flex direction={'column'}
+                  bg={'white'}
+                  width={"fit-content"}
+                  minWidth={"5vw"}
+                  height={"100vh"}
+                  left={0}
+                  top={0}
+                  zIndex={1}
+                  overflow='hidden'
+                  px={2}
+                  alignItems='left'
+                  marginTop={3}
             >
               <Box>
-                <Button
-                  leftIcon={<Icon as={MdMap} width='max-content' height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
-                  bg={'white'}
-                  color={'black'}
-                  size='lg'
-                  height={'5vh'}
-                  onClick={() => { setinsideMenu(false); props.changeViewTo("none"); }}
-
-                >
+                <Button leftIcon={<Icon as={MdMap} width='max-content' height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
+                        bg={'white'}
+                        color={'black'}
+                        size='lg'
+                        height={'5vh'}
+                        onClick={() => { setinsideMenu(false); props.changeViewTo("none"); }}>
                   Visualización del mapa
-                </Button></Box>
+                </Button>
+              </Box>
+
               <Box>
-                <Button
-                  leftIcon={<Icon as={MdList} width='max-content' height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
-                  bg={'white'}
-                  color={'black'}
-                  size='lg'
-                  onClick={() => {
-                    setinsideMenu(false);
-                    props.changeViewTo("list");
-                  }}
-                >
+                <Button leftIcon={<Icon as={MdList} width='max-content' height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
+                        bg={'white'}
+                        color={'black'}
+                        size='lg'
+                        onClick={() => {
+                          setinsideMenu(false);
+                          props.changeViewTo("list");
+                        }}>
                   Listado de Localizaciones
-                </Button></Box>
-              <Box>
-                <Button
-                  leftIcon={<Icon as={MdLocationOn} width='max-content' height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
-                  bg={'white'}
-                  color={'black'}
-                  size='lg'
+                </Button>
+              </Box>
 
-                >
+              <Box>
+                <Button leftIcon={<Icon as={MdLocationOn} width='max-content' height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
+                        bg={'white'}
+                        color={'black'}
+                        size='lg'
+                        onClick={
+                          () => {
+                            setinsideMenu(false);
+                            props.changeViewTo("addLocation");
+                          }
+                        }>
                   Añadir Localización
-                </Button></Box>
-              <Box>
-                <Button
-                  leftIcon={<Icon alignContent={'left'} as={MdPeopleAlt} width='max-content' height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
-                  bg={'white'}
-                  color={'black'}
-                  size='lg'
+                </Button>
+              </Box>
 
-                >
+              <Box>
+                <Button leftIcon={<Icon alignContent={'left'} as={MdPeopleAlt} width='max-content' height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
+                        bg={'white'}
+                        color={'black'}
+                        size='lg'>
                   Añadir amigos
-                </Button></Box>
-              <Box
-                marginTop={'auto'}
-              >
-                <Button
-                  leftIcon={<Icon as={MdPerson} width='max-content' height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
-                  bg={'white'}
-                  color={'black'}
-                  size='lg'
-                >
+                </Button>
+              </Box>
+
+              <Box marginTop={'auto'}>
+                <Button leftIcon={<Icon as={MdPerson} width='max-content' height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
+                        bg={'white'}
+                        color={'black'}
+                        size='lg'>
                   Perfil
                 </Button>
               </Box>
