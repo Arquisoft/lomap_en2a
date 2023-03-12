@@ -1,13 +1,16 @@
+
 import React, { useState, useEffect } from 'react';
 import { ChakraProvider, useDisclosure } from '@chakra-ui/react';
 import {Flex} from "@chakra-ui/react";
 import { Location } from '../../restapi/locations/Location';
-
 import Map from './components/Map';
-
 import './App.css';
 import List from './components/List';
 import axios  from 'axios';
+import Login from './components/login/Login';
+import CreateLocation from './components/locations/add/CreateLocation';
+
+
 import { ProfileView } from './components/ProfileInfo';
 import Menu from './components/Menu';
 
@@ -19,24 +22,23 @@ function App(): JSX.Element {
   const [locations, setLocations] = useState<Array<Location>>([]);
   const [selectedView, setselectedView] = useState<string>("none")
 
-  //we get the locations for the user and fetch them to the list
-  // useEffect(()=>{
-  //   axios.get( "http://localhost:5000/locations/getAll"
-  //     ).then ((response) =>{
-  //       console.log(response)
-  //       if(response.status === 200){ //if no error
-  //         setLocations(response.data); //we store the locations retrieved
-  //         setIsLoading(false);
-  //         console.log(locations)
-  //       }
-  //     }).catch((error) =>{
-  //       //an error occurred while sending the request to the restapi
-  //       setIsLoading(true)
-  //       setLocations([]);
-  //     });
+  useEffect(()=>{
+    axios.get( "http://localhost:5000/locations/getAll"
+      ).then ((response) =>{
+        console.log(response)
+        if(response.status === 200){ //if no error
+          setLocations(response.data); //we store the locations retrieved
+          setIsLoading(false);
+          console.log(locations)
+        }
+      }).catch((error) =>{
+        //an error occurred while sending the request to the restapi
+        setIsLoading(true)
+        setLocations([]);
+      });
       
-  // },[]);
-
+  },[]);
+ 
 
   //get the user's current location and save it for the map to use it as a center
   useEffect(()=>{
@@ -54,6 +56,11 @@ function App(): JSX.Element {
     "list": <List places={locations} isLoading= {isLoading} />,
     "profile" : <ProfileView></ProfileView>
  }; 
+
+  //previous way of deleting 
+  //<button onClick={() => deleteLocation(session.session.info.webId as string, "https://patrigarcia.inrupt.net/profile/card#d8068302-9df2-4e42-a531-e3d39f685f93")}>DELETE</button>
+  //TODO delet this one implemented the correct deletion
+
 
   return (
     <>
@@ -79,6 +86,7 @@ function App(): JSX.Element {
         </Flex>
       </ChakraProvider>
     </>
+   
   );
 }
 
