@@ -73,8 +73,6 @@ const Map = ( props : MapProps) => {
     onOpen();
   }
 
-
-
   return (
       isLoaded?(
       <GoogleMap
@@ -85,7 +83,8 @@ const Map = ( props : MapProps) => {
         onUnmount= {onUnmount}
         options= {{fullscreenControl: false , streetViewControl:false, mapTypeControl:false}}
         //use inside of the options the styles property and personalyce a style in https://mapstyle.withgoogle.com/
-      >
+      > 
+      {/* place the locations in the map */}
         {locations.map((place, i) => (
           <Marker
             position={{lat:Number(place.coordinates.lat), lng: Number(place.coordinates.lng)}}

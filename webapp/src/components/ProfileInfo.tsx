@@ -14,6 +14,7 @@ export function ProfileView(props:any) {
   }, []);
 
   const handleName = async () => {
+    // if we have a valid webid, retrieve the name. Else retrieve generic unidentified name
     if (props.webId !== undefined && props.webId !== ""){
       const n  = await getNameFromPod(props.webId)
       setName(n)
