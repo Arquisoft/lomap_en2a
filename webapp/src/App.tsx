@@ -22,9 +22,8 @@ function App(): JSX.Element {
   const [isLoading, setIsLoading] = useState(true)
   const [locations, setLocations] = useState<Array<Location>>([]);
   const [selectedView, setselectedView] = useState<string>("none")
-  let webIDstore = ""
 
-  const session = new Session();
+  const session = useSession();
  
   const [podProvider, setProvider] = React.useState('https://inrupt.net/');
   
@@ -47,21 +46,22 @@ function App(): JSX.Element {
     });
   };
 
-  const saveWebId = (webId) => {
-    webIDstore = webId;
-  }
+  // const saveWebId = (webId) => {
+  //   webIDstore = webId;
+  // }
 
-  const handleRedirect = async () => {
-    await session.handleIncomingRedirect(window.location.href);
-    if (session.info.isLoggedIn) {
-      const dummy = session.info.webId
-      saveWebId(dummy)
-    }
-  }
+  // const handleRedirect = async () => {
+  //   await session.session.handleIncomingRedirect(window.location.href);
+  //   if (session.session.info.isLoggedIn) {
+  //     const dummy = session.info.webId
+  //     saveWebId(dummy)
+  //   }
+  // }
+
 
   //get the user's current location and save it for the map to use it as a center
   useEffect(()=>{
-    handleRedirect();
+    //handleRedirect();
     navigator.geolocation.getCurrentPosition(({coords : {latitude,longitude}}) =>{
       //we set the coordinates to be the ones of the user for them to be passed to the map
       setCoordinates({lat: latitude , lng : longitude});
@@ -74,7 +74,7 @@ function App(): JSX.Element {
   const views: { [id: string]: JSX.Element; } = {
     "none" : <></>,
     "list": <List places={locations} isLoading= {isLoading} />,
-    "profile" : <ProfileView webId={webIDstore}></ProfileView>
+    "profile" : <ProfileView webId={session.session.info.webId}></ProfileView>
  }; 
 
   //previous way of deleting 
