@@ -14,7 +14,6 @@ import {getLocations} from './solid/solidManagement'
 import Menu from './components/Menu';
 import { useSession } from '@inrupt/solid-ui-react';
 import { ProfileView } from './components/ProfileInfo';
-import lomap_logo from "./lomap_logo.png"
 
 import Friends from './components/Friends';
 
@@ -33,7 +32,6 @@ function App(): JSX.Element {
     ]
 
   const session = useSession();
-  const toast = useToast();
 
   //we get the locations for the user and fetch them to the list
   useEffect(()=>{
@@ -66,26 +64,6 @@ function App(): JSX.Element {
     })
   },[]);
 
-  const handleSubmit =  (event)=> {
-    //we validate not empty url
-    event.preventDefault();
-
-    if(userChoice.trim().length == 0){
-      toast({ //we show an error
-        title:'Choose a valid pod provider',
-        status: 'error',
-        isClosable : true,
-        duration : 3000
-      })
-      return
-    }
-    
-    session.login({
-      redirectUrl: window.location.href, // after redirect, come to the actual page
-      oidcIssuer: userChoice, // redirect to the url
-      clientName: "Lo Map",
-    });
-  }
 
   //here is where we have to insert the different views that the menu will triger,
   //see the onclick method on the menu.tsx buttons on how to modify this dictionary to include the 
@@ -100,63 +78,6 @@ function App(): JSX.Element {
   //previous way of deleting 
   //<button onClick={() => deleteLocation(session.session.info.webId as string, "https://patrigarcia.inrupt.net/profile/card#d8068302-9df2-4e42-a531-e3d39f685f93")}>DELETE</button>
   //TODO delet this one implemented the correct deletion
-
-  const handleLogin= () => {
-    return (
-      !session.session.info.isLoggedIn ? (
-    <Flex
-        flexDirection={'column'}
-        width={'100vw'}
-        height='100vh'
-        zIndex={'2'}
-        position='absolute'
-        justifyContent={'center'}
-        alignItems='center'
-        bg={'whiteAlpha.600'}>
-
-        <Flex
-          direction={'column'}
-          bg={'white'}
-          width={"40vw"}
-          height={"40vh"}
-          position={'relative'} 
-          zIndex={1}
-          overflow='hidden'
-          px={2}
-          alignItems='center'
-          borderRadius={'2vh'}
-          padding='1vh'
-          rowGap={'1vh'}
-          justifyContent='space-evenly'
-> 
-          <Image src={lomap_logo} width='20vw'></Image>
-          <Text fontSize={'2xl'}>Select your Solid pod provider:</Text>
-          <RadioGroup onChange={setuserChoice} value={userChoice}>
-            <Stack direction='row'>
-              {
-                providerOptions.map((element,i) => {
-                  if(i < providerOptions.length - 1) 
-                    return (<Radio value={element.value}  onChange={(e)=>{setcustomSelected(false)}}>{element.label}</Radio>)
-                  else //Last one is the custom one and should trigger the textBox
-                    return (<Radio 
-                              value={element.value} 
-                              onChange={(e)=>{setcustomSelected(true)}}
-                              >
-                                {element.label}</Radio>)
-                })
-              }
-            </Stack>
-          </RadioGroup>
-          <InputGroup  visibility={(customSelected)?"visible":"hidden"} size='sm' width={'80%'} >
-            <Input placeholder='URL of custom pod provider' onChange ={(e)=>setuserChoice(e.target.value.toString())} onBlur={(e)=>e.target.value = ''}/>
-          </InputGroup>
-          <Text>{session.session.info.isLoggedIn ? 'SI' : 'N0'}</Text>
-          <Button onClick={handleSubmit} colorScheme='blue' padding={'1.5vw'} marginTop='auto'>Login</Button>
-          </Flex> 
-        </Flex>
-      ) : <></>
-    )
-  }
 
   return (
     <>
