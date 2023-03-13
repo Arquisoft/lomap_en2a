@@ -10,25 +10,9 @@ This section contains all quality requirements as quality tree with scenarios. T
 
 === Quality Tree
 
-The quality tree uses "quality" as the root while the rest of the quality categories will be displayed as branches. As mindmaps are not supported, we will denote as root Q (Quality) and everything will come out of it. The tree is read from left to right and the arrows indicate the branches of the root:
+The quality tree uses "quality" as the root while the rest of the quality categories will be displayed as branches.
 
-(Quality) as (Q) +
-(Portability) as (P) +
-(Testability) as (T) +
-(Security) as (S) +
-(Performance) as (Pe) +
-(Availability) as (A) +
-(Usability) as (U) +
-(Maintainability) as (M) +
-(Reliability) as (Re) +
-Q --> P +
-Q --> T +
-Q --> S +
-Q --> Pe +
-Q --> A +
-Q --> U +
-Q --> M +
-Q --> Re +
+image:10-Quality-MindMap.png[Quality mindmap]
 
 === Quality Scenarios
 
