@@ -23,20 +23,13 @@ function App(): JSX.Element {
   const [isLoading, setIsLoading] = useState(true)
   const [locations, setLocations] = useState<Array<Location>>([]);
   const [selectedView, setselectedView] = useState<string>("none")
-  const [userChoice, setuserChoice] = useState('https://inrupt.net/')
-  const [customSelected, setcustomSelected] = useState(false)
 
-  const providerOptions = [ //last one must be the custom one, they are auto generated
-      { value: 'https://inrupt.net/', label: 'Inrupt.net' },
-      { value: 'https://solidcommunity.net/', label: 'Solid Community' },
-      { value: String({userChoice}), label : 'Custom provider'}
-    ]
 
   const getNewLocation = (location:Location) => {
-    console.log("coming from AddLocation", location)
+    // console.log("coming from AddLocation", location)
     locations.push(location);
     createLocation(session.session.info.webId as string, location);
-    console.log(locations);
+    // console.log(locations);
   }
 
   const session = useSession();
@@ -57,7 +50,7 @@ function App(): JSX.Element {
     //     setIsLoading(true)
     //     setLocations([]);
     //   });
-    console.log(session)
+    // console.log(session)
     if(session.session.info.webId){
       getLocations(session.session.info.webId).then((result)=>{setLocations(result); setIsLoading(false);  console.log(result)});
     }
@@ -88,9 +81,6 @@ function App(): JSX.Element {
   //previous way of deleting
   //<button onClick={() => deleteLocation(session.session.info.webId as string, "https://patrigarcia.inrupt.net/profile/card#d8068302-9df2-4e42-a531-e3d39f685f93")}>DELETE</button>
   //TODO delet this one implemented the correct deletion
-
-
-
   return (
     <>
       <ChakraProvider>
@@ -111,7 +101,6 @@ function App(): JSX.Element {
               <></>
             }
             <Menu changeViewTo= {(newView : string) => {setselectedView(newView)}}/>
-            {/* {handleLogin()} */}
             {
               !session.session.info.isLoggedIn ? (
                 <Login session={session.session}></Login>

@@ -9,25 +9,21 @@ import { useState } from "react";
 
 function Login(props : any) : JSX.Element  {
 
-  const [podProvider, setProvider] = React.useState('https://inrupt.net/');
   const [userChoice, setuserChoice] = useState('https://inrupt.net/%27');
   const [customSelected, setcustomSelected] = useState(false)
   
   const providerOptions = [
       { value: 'https://solidcommunity.net/', label: 'Solid Community' },
-      { value: 'https://inrupt.net/', label: 'Inrupt' }
+      { value: 'https://inrupt.net/', label: 'Inrupt' },
+      { value: String({userChoice}), label : 'Custom provider'}
   ]
-
-  const handleChange = (event) => {
-    setProvider(event.target.value as string);
-  };
   
   const handleSubmit = async (e) => {
     //TODO refactor this once the restapi implementation is working
     e.preventDefault(); //if not used, the page will reload and data will be lost
     login({
       redirectUrl: window.location.href, // after redirect, come to the actual page
-      oidcIssuer: podProvider, // redirect to the url
+      oidcIssuer: userChoice, // redirect to the url
       clientName: "Lo Map",
     });
   };
@@ -63,14 +59,14 @@ function Login(props : any) : JSX.Element  {
           <Flex direction={'column'} bg={'white'} width={"40vw"} height={"40vh"} position={'relative'} zIndex={1} overflow='hidden' px={2} alignItems='center' borderRadius={'2vh'} padding='1vh' rowGap={'1vh'} justifyContent='space-evenly'> 
             <Image src={lomap_logo} width='20vw'></Image>
             <Text fontSize={'2xl'}>Select your Solid pod provider:</Text>
-            <RadioGroup onChange={setuserChoice} value={userChoice}>
+            <RadioGroup onChange={setuserChoice} value={userChoice} >
               <Stack direction='row'>
                 {
                   providerOptions.map((element,i) => {
                     if(i < providerOptions.length - 1) 
                       return (<Radio value={element.value}  onChange={(e)=>{setcustomSelected(false)}}>{element.label}</Radio>)
                     else //Last one is the custom one and should trigger the textBox
-                      return (<Radio 
+                      return (<Radio
                                 value={element.value} 
                                 onChange={(e)=>{setcustomSelected(true)}}
                                 >
