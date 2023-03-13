@@ -1,5 +1,7 @@
 # lomap_en2a
 
+LoMap is the perfect way to explore and share the world around you with your friends! With its up-to-date mapping and pods for decentralized data, LoMap makes it easy to customize your map by adding and sharing places of interest. Discover new locations and experiences with LoMap, and never worry about data privacy—because with pods, you can be sure that your data is secure.
+
 [![Actions Status](https://github.com/arquisoft/lomap_en2a/workflows/CI%20for%20LOMAP_EN2A/badge.svg)](https://github.com/arquisoft/lomap_en2a/actions)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Arquisoft_lomap_en2a&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=Arquisoft_lomap_en2a)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=Arquisoft_lomap_en2a&metric=coverage)](https://sonarcloud.io/summary/new_code?id=Arquisoft_lomap_en2a)
