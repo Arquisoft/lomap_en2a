@@ -3,7 +3,7 @@ import express, { Application } from 'express';
 import * as http from 'http';
 import bp from 'body-parser';
 import cors from 'cors';
-import api from '../api';
+import api from '../solidUtils/solidApi';
 
 let app:Application;
 let server:http.Server;

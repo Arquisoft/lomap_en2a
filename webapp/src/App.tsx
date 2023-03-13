@@ -20,11 +20,21 @@ import { useSession } from '@inrupt/solid-ui-react';
 function App(): JSX.Element {
   const [coordinates, setCoordinates] = useState({lng:0, lat:0});
   const [isLoading, setIsLoading] = useState(true)
-  const [locations, setLocations] = useState<Array<Location>>([]);
+  const [locations, setLocations] = useState<Array<Location>>([{
+    name: "Estatua de la libertad",
+    coordinates: {
+      lng: -74.044502,
+      lat: 40.689249
+    },
+    description: "Estatua de la libertad en Estados Unidos",
+    images : []
+  }]);
   const [selectedView, setselectedView] = useState<string>("none")
 
   const getNewLocation = (location:Location) => {
     console.log("coming from AddLocation", location)
+    locations.push(location);
+    console.log(locations);
   }
 
   const session = useSession();
