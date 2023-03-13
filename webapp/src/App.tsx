@@ -6,10 +6,14 @@ import { Location } from '../../restapi/locations/Location';
 import Map from './components/Map';
 import './App.css';
 import List from './components/List';
+import axios  from 'axios';
 import Login from './components/login/Login';
-import { useSession } from "@inrupt/solid-ui-react";
-import { ProfileView } from './components/ProfileInfo';
+import {getLocations} from './solid/solidManagement'
+
+
 import Menu from './components/Menu';
+import { useSession } from '@inrupt/solid-ui-react';
+import { ProfileView } from './components/ProfileInfo';
 import lomap_logo from "./lomap_logo.png"
 
 
@@ -22,6 +26,29 @@ function App(): JSX.Element {
 
   const session = useSession();
 
+  //we get the locations for the user and fetch them to the list
+  useEffect(()=>{
+    //TODO refactor once restapi controls locations
+    // axios.get( "http://localhost:5000/locations/getAll"
+    //   ).then ((response) =>{
+    //     console.log(response)
+    //     if(response.status === 200){ //if no error
+    //       setLocations(response.data); //we store the locations retrieved
+    //       setIsLoading(false);
+    //       console.log(locations)
+    //     }
+    //   }).catch((error) =>{
+    //     //an error occurred while sending the request to the restapi
+    //     setIsLoading(true)
+    //     setLocations([]);
+    //   });
+    console.log(session)
+    if(session.session.info.webId){
+      getLocations(session.session.info.webId).then((result)=>{setLocations(result); setIsLoading(false);  console.log(result)});
+    }
+  },[session.session.info.isLoggedIn]);
+ 
+
   //get the user's current location and save it for the map to use it as a center
   useEffect(()=>{
     navigator.geolocation.getCurrentPosition(({coords : {latitude,longitude}}) =>{
@@ -29,16 +56,6 @@ function App(): JSX.Element {
       setCoordinates({lat: latitude , lng : longitude});
     })
   },[]);
-
-  const handleSubmit = async (e) => {
-    //TODO refactor this once the restapi implementation is working
-    e.preventDefault(); //if not used, the page will reload and data will be lost
-    session.login({
-      redirectUrl: window.location.href, // after redirect, come to the actual page
-      oidcIssuer: "https://inrupt.net", // redirect to the url
-      clientName: "Lo Map",
-    });
-  };
 
   //here is where we have to insert the different views that the menu will triger,
   //see the onclick method on the menu.tsx buttons on how to modify this dictionary to include the 
@@ -56,6 +73,7 @@ function App(): JSX.Element {
   return (
     <>
       <ChakraProvider>
+        <Login></Login>
         <Flex 
           justifyContent={'center'}
           alignItems={'center'}
