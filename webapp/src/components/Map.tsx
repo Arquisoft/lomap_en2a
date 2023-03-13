@@ -41,15 +41,16 @@ const Map = ( props : MapProps) => {
 
   if (isLoaded)
     return (
-        <GoogleMap mapContainerStyle={{width: '100%', height: '100%'}}
+        <GoogleMap mapContainerStyle={{width: '100%', height: '90%'}}
             center={center}
-            zoom={4}
+            zoom={8}
             onLoad={() => {
             }}
             onUnmount={onUnmount}
             options={{
               fullscreenControl: false, streetViewControl: false, mapTypeControl: false,
-              minZoom: 2
+              minZoom: 3,
+              restriction: {latLngBounds: { north: 85, south: -85, west: -180, east: 180 },}
             }}
             //use inside of the options the styles property and personalyce a style in https://mapstyle.withgoogle.com/
         >
@@ -58,9 +59,6 @@ const Map = ( props : MapProps) => {
                   position={{lat: Number(place.coordinates.lat), lng: Number(place.coordinates.lng)}}
               ></Marker>
           ))}
-          <Marker position={{lat: Number(place.coordinates.lat), lng: Number(place.coordinates.lng)}}
-              //onClick={}
-          ></Marker>
         </GoogleMap>
     );
 

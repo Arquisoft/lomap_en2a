@@ -9,7 +9,7 @@ import List from './components/List';
 import AddLocationForm from "./components/AddLocationForm";
 import axios  from 'axios';
 import Login from './components/login/Login';
-import {getLocations} from './solid/solidManagement'
+import {getLocations, createLocation} from './solid/solidManagement'
 
 
 import Menu from './components/Menu';
@@ -34,6 +34,7 @@ function App(): JSX.Element {
   const getNewLocation = (location:Location) => {
     console.log("coming from AddLocation", location)
     locations.push(location);
+    createLocation(session.session.info.webId as string, location);
     console.log(locations);
   }
 
