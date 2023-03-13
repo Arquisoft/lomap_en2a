@@ -37,7 +37,7 @@ const Map = ( props : MapProps) => {
 
   const onUnmount = React.useCallback(function callback() {setMap(null)}, [])
 
-
+  
 
   if (isLoaded)
     return (

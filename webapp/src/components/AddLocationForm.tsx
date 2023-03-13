@@ -12,24 +12,12 @@ type AddLocationProps = {
 
 function AddLocationForm(props : any) : JSX.Element {
     const [name, setName] = React.useState('');
-    const handleNameChange = (e:any) => {
-        setName(e.target.value);
-    }
 
-    const [latValue, setLatValue] = React.useState('');
-    const handleLatChange = (e:any) => {
-        setLatValue(e.target.value);
-    }
+    const [latValue, setLatValue] = React.useState('');    
 
     const [lonValue, setLonValue] = React.useState('');
-    const handleLonChange = (e:any) => {
-        setLonValue(e.target.value);
-    }
 
     const [description, setDescription] = React.useState('');
-    const handleDescriptionChange = (e:any) => {
-        setDescription(e.target.value);
-    }
 
     const regexLat = /^(-?[1-8]?\d(?:\.\d{1,18})?|90(?:\.0{1,18})?)$/;
     const regexLon = /^(-?(?:1[0-7]|[1-9])?\d(?:\.\d{1,18})?|180(?:\.0{1,18})?)$/;
@@ -75,7 +63,7 @@ function AddLocationForm(props : any) : JSX.Element {
                 <Text>Nombre:</Text>
                 <Input
                     value={name}
-                    onChange={handleNameChange}
+                    onChange={(e:any) => setName(e.target.value)}                                        
                     placeholder='Nombre'
                     size='sm'
                 />
@@ -85,7 +73,7 @@ function AddLocationForm(props : any) : JSX.Element {
                 <Text>Latitud:</Text>
                 <Input
                     value={latValue}
-                    onChange={handleLatChange}
+                    onChange={(e:any) => setLatValue(e.target.value)}
                     placeholder='Inserte latitud'
                     size='sm'
                 />
@@ -93,7 +81,7 @@ function AddLocationForm(props : any) : JSX.Element {
                 <Text>Longitud:</Text>
                 <Input
                     value={lonValue}
-                    onChange={handleLonChange}
+                    onChange={(e:any) => setLonValue(e.target.value)}
                     placeholder='Inserte longitud'
                     size='sm'
                 />
@@ -103,11 +91,13 @@ function AddLocationForm(props : any) : JSX.Element {
                 <Text>Descripción:</Text>
                 <Textarea
                     value={description}
-                    onChange={handleDescriptionChange}
+                    onChange={(e:any) => setDescription(e.target.value)}
                     placeholder='Inserte una descripción del lugar'
                     size='sm'
                 />
             </Flex>
+
+            <input type="file" accept='image/*' multiple></input>
 
             <Button colorScheme={'orange'}
                     variant={'outline'}
