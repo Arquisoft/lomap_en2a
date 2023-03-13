@@ -14,6 +14,7 @@ import {
 
 import { VCARD } from "@inrupt/vocab-common-rdf"
 
+const session = new Session();
 
 // ************** FUNCTIONS *****************
 
@@ -68,34 +69,30 @@ export async function getLocations(webID:string) : Promise<Array<Location>> {
 
 // WRITE FUNCTIONS
 
-export async function createLocation(session: Session, location:Location) {
+export async function createLocation(webID: string, location:Location) {
     // get the url of the full dataset
-    let profile = String(session.info.webId).split("#")[0]; //just in case there is extra information in the url
+    let profile = webID.split("#")[0]; //just in case there is extra information in the url
     // to write to a profile you must be authenticated, that is the role of the fetch
-    let dataSet = await getSolidDataset(profile, {});
-    
-    let ses = getSessionFromStorage(session.info.sessionId)
-    console.log(ses)
+    let dataSet = await getSolidDataset(profile, {fetch: session.fetch});
+
     // We create the location
     const newLocation = buildThing(createThing())
-    .addStringNoLocale(VCARD.Name, location.name.toString())
-    .addStringNoLocale(VCARD.longitude, location.coordinates.lng.toString())
-    .addStringNoLocale(VCARD.latitude, location.coordinates.lat.toString())
-    .addStringNoLocale(VCARD.Text, location.description.toString())
-    .addUrl(VCARD.Type, VCARD.Location)
-    .build();
-  
-
+        .addStringNoLocale(VCARD.Name, location.name.toString())
+        .addStringNoLocale(VCARD.longitude, location.coordinates.lng.toString())
+        .addStringNoLocale(VCARD.latitude, location.coordinates.lat.toString())
+        .addStringNoLocale(VCARD.Text, location.description.toString())
+        .addUrl(VCARD.Type, VCARD.Location)
+        .build();
 
     // check if there exists any location
     let existLocations = await getThing(dataSet, VCARD.hasGeo) as Thing;
     // if they do not exist, create it
     if (existLocations === null){
-      existLocations = buildThing(await getUserProfile(String(session.info.webId))).addUrl(VCARD.hasGeo, newLocation.url).build();
+        existLocations = buildThing(await getUserProfile(webID)).addUrl(VCARD.hasGeo, newLocation.url).build();
     }
     // add the location to the existing ones
     else{
-      existLocations = buildThing(existLocations).addUrl(VCARD.hasGeo, newLocation.url).build();
+        existLocations = buildThing(existLocations).addUrl(VCARD.hasGeo, newLocation.url).build();
     }
 
     // insert the new location in the dataset
@@ -103,7 +100,10 @@ export async function createLocation(session: Session, location:Location) {
     // insert/replace the control structure in the dataset
     dataSet = setThing(dataSet, existLocations);
 
-    return await saveSolidDatasetAt(String(session.info.webId), dataSet, {})
+    console.log("creando localiz")
+    console.log(location)
+
+    return await saveSolidDatasetAt(webID, dataSet, {fetch: fetch})
 }
 
 export async function deleteLocation(webID:string, locationUrl: string) {
