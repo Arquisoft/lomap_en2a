@@ -1,19 +1,16 @@
 
 import React, { useState, useEffect } from 'react';
-import { Button, ChakraProvider, Text, useDisclosure } from '@chakra-ui/react';
+import {  Button, ChakraProvider, Image, Input, InputGroup, Radio, RadioGroup, Stack, Text } from '@chakra-ui/react';
 import {Flex} from "@chakra-ui/react";
 import { Location } from '../../restapi/locations/Location';
 import Map from './components/Map';
 import './App.css';
 import List from './components/List';
-import axios  from 'axios';
 import Login from './components/login/Login';
-import CreateLocation from './components/locations/add/CreateLocation';
-import { LoginButton, SessionProvider, useSession } from "@inrupt/solid-ui-react";
+import { useSession } from "@inrupt/solid-ui-react";
 import { ProfileView } from './components/ProfileInfo';
 import Menu from './components/Menu';
-import { handleIncomingRedirect, Session } from "@inrupt/solid-client-authn-browser";
-import { getLocations, getNameFromPod } from './solid/solidManagement';
+import lomap_logo from "./lomap_logo.png"
 
 
 
@@ -32,6 +29,16 @@ function App(): JSX.Element {
       setCoordinates({lat: latitude , lng : longitude});
     })
   },[]);
+
+  const handleSubmit = async (e) => {
+    //TODO refactor this once the restapi implementation is working
+    e.preventDefault(); //if not used, the page will reload and data will be lost
+    session.login({
+      redirectUrl: window.location.href, // after redirect, come to the actual page
+      oidcIssuer: "https://inrupt.net", // redirect to the url
+      clientName: "Lo Map",
+    });
+  };
 
   //here is where we have to insert the different views that the menu will triger,
   //see the onclick method on the menu.tsx buttons on how to modify this dictionary to include the 
@@ -59,7 +66,7 @@ function App(): JSX.Element {
           position={'relative'}
           >
             {/* <List places={locations} isLoading= {isLoading} /> */}
-            <Map center = {coordinates} /*locations={locations}*//>
+            <Map center = {coordinates} locations={locations}/>
             {
               selectedView ? 
               views[selectedView]
@@ -67,7 +74,7 @@ function App(): JSX.Element {
               <></>
             }
             <Menu changeViewTo= {(newView : string) => {setselectedView(newView)}}/>
-          <Login></Login>
+            <Login></Login>
         </Flex>
       </ChakraProvider>
     </>

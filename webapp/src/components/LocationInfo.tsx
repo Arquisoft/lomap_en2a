@@ -35,7 +35,7 @@ export function LocationView({isOpen, onClose, place}) : JSX.Element {
                   No photos available
               </Text>
               }
-              </HStack>
+            </HStack>
           </Stack>
         </DrawerBody>
       </DrawerContent>

@@ -1,13 +1,17 @@
 import * as React from "react";
 import { useSession } from "@inrupt/solid-ui-react";
-import { Button } from "@chakra-ui/react";
+import { Button, Flex, Input, InputGroup, Radio, RadioGroup, Stack, Image, Text } from "@chakra-ui/react";
 import { SessionInfo } from "@inrupt/solid-ui-react/dist/src/hooks/useSession";
 import { login } from "@inrupt/solid-client-authn-browser";
+import lomap_logo from "../../lomap_logo.png"
+import { useState } from "react";
 
 
 function Login(props : any) : JSX.Element  {
 
   const [podProvider, setProvider] = React.useState('https://inrupt.net/');
+  const [userChoice, setuserChoice] = useState('https://inrupt.net/%27');
+  const [customSelected, setcustomSelected] = useState(false)
   
   const providerOptions = [
       { value: 'https://solidcommunity.net/', label: 'Solid Community' },

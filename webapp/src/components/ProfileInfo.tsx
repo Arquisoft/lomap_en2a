@@ -1,8 +1,7 @@
-import { Avatar, Button, Text, Flex, VStack, Box } from "@chakra-ui/react"
+import { Avatar, Text, Flex, VStack, Box } from "@chakra-ui/react"
 import React from "react"
 import { getNameFromPod } from "../solid/solidManagement"
-import { SessionInfo } from "@inrupt/solid-ui-react/dist/src/hooks/useSession";
-import { Session } from "@inrupt/solid-client-authn-browser";
+
 
 
 export function ProfileView(props:any) {  
