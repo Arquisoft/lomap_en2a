@@ -9,7 +9,8 @@ import './App.css';
 import List from './components/List';
 import axios  from 'axios';
 import Menu from './components/Menu';
-
+import Login from './components/login/Login';
+import {  useSession } from "@inrupt/solid-ui-react";
 
 
 function App(): JSX.Element {
@@ -17,6 +18,9 @@ function App(): JSX.Element {
   const [isLoading, setIsLoading] = useState(true)
   const [locations, setLocations] = useState<Array<Location>>([]);
   const [selectedView, setselectedView] = useState<string>("none")
+  const [loggedIn, setloggedIn] = useState(false)
+
+  const session = useSession()
 
   //we get the locations for the user and fetch them to the list
   useEffect(()=>{
@@ -36,6 +40,10 @@ function App(): JSX.Element {
       
   },[]);
 
+  useEffect(()=>{
+    console.log(session.session.info.isLoggedIn)
+    setloggedIn(session.session.info.isLoggedIn);
+  },[session.session.info.isLoggedIn])
 
   //get the user's current location and save it for the map to use it as a center
   useEffect(()=>{
@@ -56,7 +64,7 @@ function App(): JSX.Element {
   return (
     <>
       <ChakraProvider>
-        <Flex 
+          <Flex 
           justifyContent={'center'}
           alignItems={'center'}
           width={'100vw'}
@@ -71,9 +79,16 @@ function App(): JSX.Element {
               :
               <></>
             }
+            {
+              loggedIn?
+              <></>
+              :
+              <Login />
+            }
             <Map center = {coordinates} locations={locations}/>
             <Menu changeViewTo= {(newView : string) => {setselectedView(newView)}}/>
         </Flex>
+
       </ChakraProvider>
     </>
   );

@@ -8,7 +8,7 @@ type MenuProps = {
 }
 
 function Menu(props: MenuProps): JSX.Element {
-  const [insideMenu, setinsideMenu] = useState(true)
+  const [insideMenu, setinsideMenu] = useState(false)
 
   return (
     <Flex
@@ -54,7 +54,7 @@ function Menu(props: MenuProps): JSX.Element {
                   onClick={() => { setinsideMenu(false); props.changeViewTo("none"); }}
 
                 >
-                  Visualización del mapa
+                  Map view
                 </Button></Box>
               <Box>
                 <Button
@@ -67,7 +67,7 @@ function Menu(props: MenuProps): JSX.Element {
                     props.changeViewTo("list");
                   }}
                 >
-                  Listado de Localizaciones
+                  List locations
                 </Button></Box>
               <Box>
                 <Button
@@ -77,7 +77,7 @@ function Menu(props: MenuProps): JSX.Element {
                   size='lg'
 
                 >
-                  Añadir Localización
+                  Add a location
                 </Button></Box>
               <Box>
                 <Button
@@ -87,7 +87,7 @@ function Menu(props: MenuProps): JSX.Element {
                   size='lg'
 
                 >
-                  Añadir amigos
+                  Add friends
                 </Button></Box>
               <Box
                 marginTop={'auto'}
@@ -98,7 +98,7 @@ function Menu(props: MenuProps): JSX.Element {
                   color={'black'}
                   size='lg'
                 >
-                  Perfil
+                  My profile
                 </Button>
               </Box>
             </Flex>
