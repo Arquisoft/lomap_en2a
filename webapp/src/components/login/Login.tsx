@@ -33,31 +33,59 @@ function Login(props : any) : JSX.Element  {
   };
 
 
-  const Select = ({ label, value, options, onChange }) => {
-      return (
-          <label> {label}
-              <select value={value} onChange={onChange} style={{"fontSize":"0.9em"}}>
-              {options.map((option) => (
-                  <option value={option.value}>{option.label}</option>
-              ))}
-              </select>
-          </label>
-      );
-  };
+  // const Select = ({ label, value, options, onChange }) => {
+  //     return (
+  //         <label> {label}
+  //             <select value={value} onChange={onChange} style={{"fontSize":"0.9em"}}>
+  //             {options.map((option) => (
+  //                 <option value={option.value}>{option.label}</option>
+  //             ))}
+  //             </select>
+  //         </label>
+  //     );
+  // };
 
   return (
-    <div>
-      <Select
-            label="Select your pod provider: "
-            options={providerOptions}
-            value={podProvider}
-            onChange={handleChange}
-      />
-      <br></br>
-      <Button  onClick={handleSubmit}>Log in</Button>
+    // <div>
+    //   <Select
+    //         label="Select your pod provider: "
+    //         options={providerOptions}
+    //         value={podProvider}
+    //         onChange={handleChange}
+    //   />
+    //   <br></br>
+    //   <Button  onClick={handleSubmit}>Log in</Button>
     
-    {/* <p style={{"marginBottom":"15px"}}>Your webId is: {session.session.info.webId}</p> */}
-    </div>
+    // {/* <p style={{"marginBottom":"15px"}}>Your webId is: {session.session.info.webId}</p> */}
+    // </div> 
+      (!props.session.info.isLoggedIn) ? (
+        <Flex flexDirection={'column'} width={'100vw'} height='100vh' zIndex={'2'}position='absolute'justifyContent={'center'}alignItems='center'bg={'whiteAlpha.600'}>
+          <Flex direction={'column'} bg={'white'} width={"40vw"} height={"40vh"} position={'relative'} zIndex={1} overflow='hidden' px={2} alignItems='center' borderRadius={'2vh'} padding='1vh' rowGap={'1vh'} justifyContent='space-evenly'> 
+            <Image src={lomap_logo} width='20vw'></Image>
+            <Text fontSize={'2xl'}>Select your Solid pod provider:</Text>
+            <RadioGroup onChange={setuserChoice} value={userChoice}>
+              <Stack direction='row'>
+                {
+                  providerOptions.map((element,i) => {
+                    if(i < providerOptions.length - 1) 
+                      return (<Radio value={element.value}  onChange={(e)=>{setcustomSelected(false)}}>{element.label}</Radio>)
+                    else //Last one is the custom one and should trigger the textBox
+                      return (<Radio 
+                                value={element.value} 
+                                onChange={(e)=>{setcustomSelected(true)}}
+                                >
+                                  {element.label}</Radio>)
+                  })
+                }
+              </Stack>
+            </RadioGroup>
+            <InputGroup  visibility={(customSelected)?"visible":"hidden"} size='sm' width={'80%'} >
+              <Input placeholder='URL of custom pod provider' onChange ={(e)=>setuserChoice(e.target.value.toString())} onBlur={(e)=>e.target.value = ''}/>
+            </InputGroup>
+            <Button onClick={handleSubmit} colorScheme='blue' padding={'1.5vw'} marginTop='auto'>Login</Button>
+          </Flex> 
+        </Flex>
+      ) : <></>
   )
 }
 
