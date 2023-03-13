@@ -162,6 +162,7 @@ export async function addFriend(webID:string, friend:Friend): Promise<{ error: b
     // to write to a profile you must be authenticated, that is the role of the fetch
     let dataSet = await getSolidDataset(profile, {fetch: session.fetch});
   
+
     // We create the location
     const newFriend = buildThing(createThing())
     .addStringNoLocale(VCARD.Name, friend.username.toString())
@@ -184,9 +185,11 @@ export async function addFriend(webID:string, friend:Friend): Promise<{ error: b
         //existFriends = buildThing(existFriends).addUrl(VCARD.Contact, newFriend.url).build();
       }
       existFriends = buildThing(await getUserProfile(webID)).addUrl(VCARD.Contact, newFriend.url).build();
+
     }
     // add the location to the existing ones
     else{
+
       const friends  = await getFriends(webID).then(friendsPromise => {return friendsPromise});
       console.log(friends);
       if(friends.some(f=>  f.webID.toString() === friend.webID.toString())){
@@ -208,4 +211,5 @@ export async function addFriend(webID:string, friend:Friend): Promise<{ error: b
   
     await saveSolidDatasetAt(webID, dataSet, {fetch: fetch})
     return{error:false,errorMessage:""}
+
 }
