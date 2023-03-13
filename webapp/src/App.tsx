@@ -63,7 +63,7 @@ function App(): JSX.Element {
   const views: { [id: string]: JSX.Element; } = {
     "none" : <></>,
     "list": <List places={locations} isLoading= {isLoading} />,
-    "friends": <Friends webId={session.session.info.webId} session={session}/>
+    "friends": <Friends webId={session.session.info.webId} session={session}/>,
     "profile" : <ProfileView webId={session.session.info.webId}></ProfileView>
  }; 
 
@@ -93,7 +93,6 @@ function App(): JSX.Element {
               <></>
             }
             <Menu changeViewTo= {(newView : string) => {setselectedView(newView)}}/>
-            <Login></Login>
         </Flex>
       </ChakraProvider>
     </>

@@ -24,6 +24,7 @@ const Map = ( props : MapProps) => {
   const [center, setCenter] = React.useState(init)
   const [map, setMap] = React.useState(null)
   const [markedLocation, setMarkedLocation] = React.useState('')
+  const [firstMark, setYes] = React.useState(false)
 
   const { onOpen, isOpen, onClose } = useDisclosure()  // for the markers
 
@@ -32,6 +33,7 @@ const Map = ( props : MapProps) => {
   }, [])
 
   const handleMapClick = (location) => {
+    !firstMark ? setYes(true) : //
     setMarkedLocation(location);
     const newCenter = {
       lat: location.coordinates.lat,
@@ -59,7 +61,7 @@ const Map = ( props : MapProps) => {
             onClick={() => handleMapClick(place)}
           ></Marker>
         ))}
-        <LocationView isOpen={isOpen} onClose={onClose} place={markedLocation}></LocationView>
+        <LocationView isOpen={isOpen} onClose={onClose} place={ !firstMark ? markedLocation : null}></LocationView>
       </GoogleMap>
     )
     :

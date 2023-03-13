@@ -13,7 +13,6 @@ import {
   FormErrorMessage,
   FormHelperText,
 } from '@chakra-ui/react'
-import { event } from 'jquery';
 function Friends(props : any) : JSX.Element {
 
     
