@@ -9,7 +9,7 @@ import './App.css';
 import List from './components/List';
 import axios  from 'axios';
 import Menu from './components/Menu';
-import AddLocationMenu from "./components/AddLocationMenu";
+import AddLocationForm from "./components/AddLocationForm";
 
 
 
@@ -18,6 +18,10 @@ function App(): JSX.Element {
   const [isLoading, setIsLoading] = React.useState(true)
   const [locations, setLocations] = React.useState<Array<Location>>([]);
   const [selectedView, setselectedView] = React.useState<string>("none")
+
+  const getNewLocation = (location:Location) => {
+    console.log("coming from AddLocation", location.name)
+  }
 
   //we get the locations for the user and fetch them to the list
   React.useEffect(()=>{
@@ -52,8 +56,10 @@ function App(): JSX.Element {
   const views: { [id: string]: JSX.Element; } = {
     "none" : <></>,
     "list": <List places={locations} isLoading= {isLoading} />,
-    "addLocation": <AddLocationMenu isLoading={isLoading} />
- };
+    "addLocation": <AddLocationForm onSubmit={getNewLocation}/>
+  };
+
+
 
   return (
     <>
@@ -73,7 +79,7 @@ function App(): JSX.Element {
               :
               <></>
             }
-            <Map center = {coordinates} locations={locations}/>
+            <Map /*center = {coordinates}*/ locations={locations}/>
             <Menu changeViewTo= {(newView : string) => {setselectedView(newView)}}/>
         </Flex>
       </ChakraProvider>

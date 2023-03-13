@@ -3,14 +3,33 @@ import { Location } from '../../../restapi/locations/Location'
 import {Box, Button, Flex, HStack, Input, Spacer, Text, Textarea, VStack, Wrap, WrapItem} from "@chakra-ui/react";
 import {  SkeletonCircle, SkeletonText } from '@chakra-ui/react'
 import  PlaceDetail  from './PlaceDetail';
+import Map from './Map';
 
-type ListProps = {
-    isLoading : boolean;
+type AddLocationProps = {
+    onSubmit: (location: Location) => void
 }
 
-function AddLocationMenu(props : ListProps) : JSX.Element {
-    const [latValue, setLatValue] = React.useState('')
-    const [lonValue, setLonValue] = React.useState('')
+
+function AddLocationForm(props : any) : JSX.Element {
+    const [name, setName] = React.useState('');
+    const handleNameChange = (e:any) => {
+        setName(e.target.value);
+    }
+
+    const [latValue, setLatValue] = React.useState('');
+    const handleLatChange = (e:any) => {
+        setLatValue(e.target.value);
+    }
+
+    const [lonValue, setLonValue] = React.useState('');
+    const handleLonChange = (e:any) => {
+        setLonValue(e.target.value);
+    }
+
+    const [description, setDescription] = React.useState('');
+    const handleDescriptionChange = (e:any) => {
+        setDescription(e.target.value);
+    }
 
     const regexLat = /^(-?[1-8]?\d(?:\.\d{1,18})?|90(?:\.0{1,18})?)$/;
     const regexLon = /^(-?(?:1[0-7]|[1-9])?\d(?:\.\d{1,18})?|180(?:\.0{1,18})?)$/;
@@ -20,9 +39,24 @@ function AddLocationMenu(props : ListProps) : JSX.Element {
         return validLat && validLon;
     }
 
+    const handleSubmit = (e:any) => {
+        e.preventDefault();
 
-    if(props.isLoading)
-        return(
+        //if (checkCoordinates(latValue, lonValue)) {
+            let l : Location = {name: name,
+                                coordinates: {
+                                    lng: Number(lonValue),
+                                    lat: Number(latValue)
+                                },
+                                description: description,
+                                images : []}
+            props.onSubmit(l);
+            return;
+        //}
+
+    };
+
+    return (
         <Flex
             direction={'column'}
             bg={'whiteAlpha.900'}
@@ -35,26 +69,31 @@ function AddLocationMenu(props : ListProps) : JSX.Element {
             overflow='hidden'
             px={2}
             rowGap="2em"
+            onSubmit={handleSubmit}
         >
             <Flex direction={'column'}>
                 <Text>Nombre:</Text>
                 <Input
+                    value={name}
+                    onChange={handleNameChange}
                     placeholder='Nombre'
                     size='sm'
                 />
             </Flex>
 
             <Flex direction={'column'}>
-                <Text>Latitud: {latValue}</Text>
+                <Text>Latitud:</Text>
                 <Input
                     value={latValue}
+                    onChange={handleLatChange}
                     placeholder='Inserte latitud'
                     size='sm'
                 />
 
-                <Text>Longitud: {lonValue}</Text>
+                <Text>Longitud:</Text>
                 <Input
                     value={lonValue}
+                    onChange={handleLonChange}
                     placeholder='Inserte longitud'
                     size='sm'
                 />
@@ -63,6 +102,8 @@ function AddLocationMenu(props : ListProps) : JSX.Element {
             <Flex direction={'column'}>
                 <Text>Descripción:</Text>
                 <Textarea
+                    value={description}
+                    onChange={handleDescriptionChange}
                     placeholder='Inserte una descripción del lugar'
                     size='sm'
                 />
@@ -70,24 +111,15 @@ function AddLocationMenu(props : ListProps) : JSX.Element {
 
             <Button colorScheme={'orange'}
                     variant={'outline'}
-                    onClick={}
-            >Añadir</Button>
+                    //onClick={() => {addLocation()}}
+                    type={'submit'}
+            >
+                Añadir
+            </Button>
         </Flex>
     );
-
-    return(
-        <Flex
-            direction={'column'}
-            bg={'whiteAlpha.900'}
-            width={"30vw"}
-            height={"100vh"}
-            position={'absolute'}
-            left={10}
-            top={0}
-            zIndex={1}
-            overflow='hidden'
-            px={2}
-        >
-        </Flex>);
 }
-export default AddLocationMenu;
+
+
+
+export default AddLocationForm;
