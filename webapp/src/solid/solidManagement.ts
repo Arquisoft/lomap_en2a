@@ -10,7 +10,7 @@ import {
   getStringNoLocale
 } from "@inrupt/solid-client";
 
-import { VCARD } from "@inrupt/vocab-common-rdf"
+import { FOAF, VCARD } from "@inrupt/vocab-common-rdf"
 
 const session = new Session();
 
@@ -26,6 +26,12 @@ export async function getUserProfile(webID: string) : Promise<Thing>{
     let dataSet = await getSolidDataset(profile, {fetch: session.fetch});
     // return the dataset as a thing
     return getThing(dataSet, webID) as Thing;
+}
+
+export async function getNameFromPod(webID: string){
+  if (webID === "" || webID === undefined) return "Name not found";
+  let name = getStringNoLocale(await getUserProfile(webID), FOAF.name);
+  return name !== null ? name : "John Doe";
 }
 
 export async function getLocations(webID:string) {

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Flex, Button, Icon, Text, IconButton, ButtonGroup, Box } from "@chakra-ui/react";
-import { MdList, MdLocationOn, MdMap, MdPeopleAlt, MdPerson } from "react-icons/md"
+import { MdList, MdLocationOn, MdMap, MdOutlineOpenInBrowser, MdPeopleAlt, MdPerson } from "react-icons/md"
 import { start } from 'repl';
 
 type MenuProps = {
@@ -100,6 +100,10 @@ function Menu(props: MenuProps): JSX.Element {
                   bg={'white'}
                   color={'black'}
                   size='lg'
+                  onClick={() => {
+                    setinsideMenu(false);
+                    props.changeViewTo("profile");
+                  }}
                 >
                   Perfil
                 </Button>

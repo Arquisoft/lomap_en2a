@@ -1,9 +1,8 @@
-import React, { useEffect, useState } from 'react'
-import { Box } from "@chakra-ui/react";
+import { Box, useDisclosure } from "@chakra-ui/react";
 import { GoogleMap, Marker, useJsApiLoader } from '@react-google-maps/api';
+import { LocationView } from './LocationInfo';
+import React from 'react'
 import {Coordinates, Location} from "../../../restapi/locations/Location"
-import axios from 'axios';
-
 
 type MapProps = {
   center: Coordinates;
@@ -17,34 +16,50 @@ const Map = ( props : MapProps) => {
     googleMapsApiKey: "AIzaSyASYfjo4_435pVgG-kiB3cqaDXp-77j2O8"
   })
 
-  const center = {
-    lat:  43.37776784391247, 
-    lng: -5.874621861782328
+  const init = {
+    lat: 0,
+    lng: 0
   };
-  
 
+  const [center, setCenter] = React.useState(init)
   const [map, setMap] = React.useState(null)
+  const [markedLocation, setMarkedLocation] = React.useState('')
+
+  const { onOpen, isOpen, onClose } = useDisclosure()  // for the markers
 
   const onUnmount = React.useCallback(function callback(map) { 
     setMap(null)
   }, [])
 
+  const handleMapClick = (location) => {
+    setMarkedLocation(location);
+    const newCenter = {
+      lat: location.coordinates.lat,
+      lng: location.coordinates.lng
+    }
+    setCenter(newCenter)
+    onOpen();
+  }
+
   return (
       isLoaded?(
       <GoogleMap
-      mapContainerStyle={{width: '100%', height: '100%'}}
-        center = {{lat: props.center.lat.valueOf(), lng: props.center.lng.valueOf()}}
+        mapContainerStyle={{width: '100%', height: '100%'}}
+        center = {center}
         zoom = {11}
         onLoad= {()=>{}}
         onUnmount= {onUnmount}
         options= {{fullscreenControl: false , streetViewControl:false, mapTypeControl:false}}
         //use inside of the options the styles property and personalyce a style in https://mapstyle.withgoogle.com/
-      >
+      > 
+      {/* place the locations in the map */}
         {props.locations.map((place, i) => (
           <Marker
             position={{lat:Number(place.coordinates.lat), lng: Number(place.coordinates.lng)}}
+            onClick={() => handleMapClick(place)}
           ></Marker>
         ))}
+        <LocationView isOpen={isOpen} onClose={onClose} place={markedLocation}></LocationView>
       </GoogleMap>
     )
     :

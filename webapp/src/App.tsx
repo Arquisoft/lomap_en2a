@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { ChakraProvider } from '@chakra-ui/react';
+import {  Button, ChakraProvider, Image, Input, InputGroup, Radio, RadioGroup, Stack, Text } from '@chakra-ui/react';
 import {Flex} from "@chakra-ui/react";
 import { Location } from '../../restapi/locations/Location';
 import Map from './components/Map';
@@ -13,6 +13,8 @@ import {getLocations} from './solid/solidManagement'
 
 import Menu from './components/Menu';
 import { useSession } from '@inrupt/solid-ui-react';
+import { ProfileView } from './components/ProfileInfo';
+import lomap_logo from "./lomap_logo.png"
 
 import Friends from './components/Friends';
 
@@ -61,9 +63,13 @@ function App(): JSX.Element {
   const views: { [id: string]: JSX.Element; } = {
     "none" : <></>,
     "list": <List places={locations} isLoading= {isLoading} />,
-
     "friends": <Friends webId={session.session.info.webId} session={session}/>
+    "profile" : <ProfileView webId={session.session.info.webId}></ProfileView>
  }; 
+
+  //previous way of deleting 
+  //<button onClick={() => deleteLocation(session.session.info.webId as string, "https://patrigarcia.inrupt.net/profile/card#d8068302-9df2-4e42-a531-e3d39f685f93")}>DELETE</button>
+  //TODO delet this one implemented the correct deletion
 
   return (
     <>
@@ -77,21 +83,22 @@ function App(): JSX.Element {
           maxWidth={'100vw'}
           maxHeight={'100vh'}
           position={'relative'}
-          >       
+          >
+            {/* <List places={locations} isLoading= {isLoading} /> */}
+            <Map center = {coordinates} locations={locations}/>
             {
               selectedView ? 
               views[selectedView]
               :
               <></>
             }
-            <Map center = {coordinates} locations={locations}/>
             <Menu changeViewTo= {(newView : string) => {setselectedView(newView)}}/>
+            <Login></Login>
         </Flex>
       </ChakraProvider>
     </>
    
   );
-
 }
 
 export default App;
