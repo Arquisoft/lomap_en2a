@@ -85,7 +85,10 @@ function Menu(props: MenuProps): JSX.Element {
                   bg={'white'}
                   color={'black'}
                   size='lg'
-
+                  onClick={() => {
+                    setinsideMenu(false);
+                    props.changeViewTo("friends");
+                  }}
                 >
                   Añadir amigos
                 </Button></Box>

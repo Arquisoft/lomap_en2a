@@ -16,7 +16,7 @@ import { useSession } from '@inrupt/solid-ui-react';
 import { ProfileView } from './components/ProfileInfo';
 import lomap_logo from "./lomap_logo.png"
 
-
+import Friends from './components/Friends';
 
 function App(): JSX.Element {
   const [coordinates, setCoordinates] = useState({lng:0, lat:0});
@@ -63,6 +63,7 @@ function App(): JSX.Element {
   const views: { [id: string]: JSX.Element; } = {
     "none" : <></>,
     "list": <List places={locations} isLoading= {isLoading} />,
+    "friends": <Friends webId={session.session.info.webId} session={session}/>
     "profile" : <ProfileView webId={session.session.info.webId}></ProfileView>
  }; 
 
@@ -74,7 +75,7 @@ function App(): JSX.Element {
     <>
       <ChakraProvider>
         <Login></Login>
-        <Flex 
+        <Flex
           justifyContent={'center'}
           alignItems={'center'}
           width={'100vw'}
