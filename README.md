@@ -1,10 +1,30 @@
-# lomap_en2a
+# 🗺️Lomap_en2a🗺️
 
-LoMap is the perfect way to explore and share the world around you with your friends! With its up-to-date mapping and pods for decentralized data, LoMap makes it easy to customize your map by adding and sharing places of interest. Discover new locations and experiences with LoMap, and never worry about data privacy—because with pods, you can be sure that your data is secure.
+LoMap is the perfect way to explore🔍 and share the world around you with your 🎅👮friends🤴🐒! With its up-to-date mapping and pods from the [Solid Project](https://solidproject.org/)<img src="https://solidproject.org/assets/img/solid-emblem.svg" height="20"> for decentralized data🔑, LoMap makes it easy to customize your map by adding and sharing places of interest🎢. Discover new locations and experiences with LoMap, and never worry about data privacy—because with pods, you are in 🔫control🔫.
+
+
+1. 🔭[ LoMap ](#lomap)
+2. 🏁[ Quick start guide ](#guide)
+3. ☝️[ More information ](#more)
+4. ⛽[ Deployment ](#deployment)
+5. 😶‍🌫️[ Team members ](#team)
+
 
 [![Actions Status](https://github.com/arquisoft/lomap_en2a/workflows/CI%20for%20LOMAP_EN2A/badge.svg)](https://github.com/arquisoft/lomap_en2a/actions)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Arquisoft_lomap_en2a&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=Arquisoft_lomap_en2a)
 [![Coverage](https://sonarcloud.io/api/project_badges/measure?project=Arquisoft_lomap_en2a&metric=coverage)](https://sonarcloud.io/summary/new_code?id=Arquisoft_lomap_en2a)
+
+
+<a name="lomap"></a>
+## 🔭LoMap
+With the initiative of the Council of Brussels and the collaboration of the <b>Solid community<b>, we are eager to present you THE maps software system: LoMap.  
+This application allows our users to have personalized maps about places and local businesses in a city, wherever they may be. ALl the users personal data will be stored in their personal pods, that could be provided by <b>Inrupt<b>, <b>Solid<b> or any other pod supplier. In addition to this, users can have the chance to share their map and information with their friends.
+
+To start using LoMap, just follow the steps below and 🔮 may the map be with you 🔮
+
+
+<a name="guide"></a>
+## 🏁Quick start guide
 
 <p float="left">
 <img src="https://blog.wildix.com/wp-content/uploads/2020/06/react-logo.jpg" height="100">
@@ -15,7 +35,6 @@ LoMap is the perfect way to explore and share the world around you with your fri
 
 This project is a basic example of website using **React** with **Typescript** and an endpoint using **NodeJS** with **express**.
 
-## Quick start guide
 <mark>In case you already have node.js and npm, make sure you update them before attempting to build the images</mark>
 
 If you want to execute the project you will need [git](https://git-scm.com/downloads), [Node.js and npm](https://www.npmjs.com/get-npm) and [Docker](https://docs.docker.com/get-docker/). Make sure the three of them are installed in your system. Download the project with `git clone https://github.com/arquisoft/lomap_en2a`. The fastest way to launch everything is with docker:
@@ -46,14 +65,16 @@ npm start
 
 You should be able to access the application in [http://localhost:3000](http://localhost:3000).
 
-## More information
+<a name="more"></a>
+## ☝️More information
 You can get more information about the repository in the other README files:
 - Documentation: https://github.com/arquisoft/lomap_en2a/tree/master/docs
 - Webapp: https://github.com/arquisoft/lomap_en2a/tree/master/webapp
 - Restapi: https://github.com/arquisoft/lomap_en2a/tree/master/restapi
 
 
-## Deployment
+<a name="deployment"></a>
+## ⛽Deployment
 For the deployment, we have several options. The first and more flexible is to deploy to a virtual machine using SSH. This will work with any cloud service (or with our own server). Other options include using the container services that all the cloud services provide. This means, deploying our Docker containers directly. Here I am going to use the first approach. I am going to create a virtual machine in a cloud service and after installing docker and docker-compose, deploy our containers there using GitHub Actions and SSH.
 
 ### Create the virtual machine [Option 1 - Microsoft Azure]For this example, I am going to create a virtual machine in Azure. Other services like Amazon AWS or Google Cloud, work in the same way.
@@ -258,11 +279,14 @@ After the actions process is finished, we can access the application using the I
 
 ![image](https://user-images.githubusercontent.com/10683040/155297402-41c09d54-8160-4832-be04-21951d18bc28.png)
 
-# TEAM MEMBERS (COLLABORATORS)
+<a name="team"></a>
+# 😶‍🌫️TEAM MEMBERS (COLLABORATORS)
 
-Adrián Vega Sánchez UO282365@uniovi.es<br>
-Patricia Garcia Fernandez uo282210@uniovi.es <br>
-Pablo Argallero Fernandez uo283216@uniovi.es <br>
-Santiago Fernández Carballal uo283523@uniovi.es
+🤓☝️ Adrián Vega Sánchez UO282365@uniovi.es<br>
+🤯💸 Patricia Garcia Fernandez uo282210@uniovi.es <br>
+🦍🦧 Pablo Argallero Fernandez uo283216@uniovi.es <br>
+🗿🍪 Santiago Fernández Carballal uo283523@uniovi.es
+
+
 
 
