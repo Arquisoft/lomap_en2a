@@ -6,7 +6,7 @@ import axios from 'axios';
 
 
 type MapProps = {
-  center: Coordinates;
+  //center: Coordinates;
   locations : Array<Location>
 }
 
@@ -35,38 +35,40 @@ const Map = ( props : MapProps) => {
 
   const [map, setMap] = React.useState(null)
 
-  const onUnmount = React.useCallback(function callback(map) {
-    setMap(null)
-  }, [])
+  const onUnmount = React.useCallback(function callback() {setMap(null)}, [])
 
+
+
+  if (isLoaded)
+    return (
+        <GoogleMap mapContainerStyle={{width: '100%', height: '100%'}}
+            center={center}
+            zoom={4}
+            onLoad={() => {
+            }}
+            onUnmount={onUnmount}
+            options={{
+              fullscreenControl: false, streetViewControl: false, mapTypeControl: false,
+              minZoom: 2
+            }}
+            //use inside of the options the styles property and personalyce a style in https://mapstyle.withgoogle.com/
+        >
+          {props.locations.map((place, i) => (
+              <Marker
+                  position={{lat: Number(place.coordinates.lat), lng: Number(place.coordinates.lng)}}
+              ></Marker>
+          ))}
+          <Marker position={{lat: Number(place.coordinates.lat), lng: Number(place.coordinates.lng)}}
+              //onClick={}
+          ></Marker>
+        </GoogleMap>
+    );
 
   return (
-      isLoaded?(
-      <GoogleMap
-        mapContainerStyle={{width: '100%', height: '100%'}}
-        center = {center}
-        zoom = {4}
-        onLoad= {()=>{}}
-        onUnmount= {onUnmount}
-        options= {{fullscreenControl: false , streetViewControl:false, mapTypeControl:false,
-                   minZoom:2}}
-        //use inside of the options the styles property and personalyce a style in https://mapstyle.withgoogle.com/
-      >
-        {props.locations.map((place, i) => (
-            <Marker
-                position={{lat:Number(place.coordinates.lat), lng: Number(place.coordinates.lng)}}
-            ></Marker>
-        ))}
-        <Marker position={{lat:Number(place.coordinates.lat), lng:Number(place.coordinates.lng)}}
-                //onClick={}
-        ></Marker>
-      </GoogleMap>
-    )
-    :
-    <Box>
-      <h1>An error occurred while loading the map</h1>
-    </Box>
-  )
+      <Box>
+        <h1>An error occurred while loading the map</h1>
+      </Box>
+  );
 }
 
 
