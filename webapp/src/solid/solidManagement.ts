@@ -70,7 +70,7 @@ export async function getFriends(webID:string) {
   let friendURLs = getUrlAll(await getUserProfile(webID), VCARD.Contact);
   let friends: Friend[] = [];
 
-  // for each location url, get the fields of the object
+  // for each friend url, get the fields of the object
   for (let friend of friendURLs) {
     let name = getStringNoLocale(
       await getUserProfile(friend),
@@ -162,17 +162,17 @@ export async function addFriend(webID:string, friend:Friend) {
   // to write to a profile you must be authenticated, that is the role of the fetch
   let dataSet = await getSolidDataset(profile, {fetch: session.fetch});
   
-  // We create the location
-  const newLocation = buildThing(createThing())
+  // We create the friend
+  const newFriend = buildThing(createThing())
   .addStringNoLocale(VCARD.Name, friend.username.toString())
   .addStringNoLocale(VCARD.url, friend.webID.toString())
   .addUrl(VCARD.Type, VCARD.Friend)
   .build();
 
   // check if there exists any 
-  let existLocations = await getThing(dataSet, VCARD.Contact) as Thing;
+  let existFriends = await getThing(dataSet, VCARD.Contact) as Thing;
   // if they do not exist, create it
-  if (existLocations === null){
+  if (existFriends === null){
     const friends  = await getFriends(webID).then(friendsPromise => {return friendsPromise});
     console.log(friends);
     if(friends.some(f=>  f.webID.toString() === friend.webID.toString())){
@@ -180,9 +180,9 @@ export async function addFriend(webID:string, friend:Friend) {
     }
     else{
 
-      existLocations = buildThing(existLocations).addUrl(VCARD.Contact, newLocation.url).build();
+      existFriends = buildThing(existFriends).addUrl(VCARD.Contact, newFriend.url).build();
     }
-    existLocations = buildThing(await getUserProfile(webID)).addUrl(VCARD.Contact, newLocation.url).build();
+    existFriends = buildThing(await getUserProfile(webID)).addUrl(VCARD.Contact, newFriend.url).build();
   }
   // add the location to the existing ones
   else{
@@ -193,14 +193,14 @@ export async function addFriend(webID:string, friend:Friend) {
     }
     else{
 
-      existLocations = buildThing(existLocations).addUrl(VCARD.Contact, newLocation.url).build();
+      existFriends = buildThing(existFriends).addUrl(VCARD.Contact, newFriend.url).build();
     }
   }
 
   // insert the new location in the dataset
-  dataSet = setThing(dataSet, newLocation);
+  dataSet = setThing(dataSet, newFriend);
   // insert/replace the control structure in the dataset
-  dataSet = setThing(dataSet, existLocations);
+  dataSet = setThing(dataSet, existFriends);
 
   console.log("adding friend")
 
