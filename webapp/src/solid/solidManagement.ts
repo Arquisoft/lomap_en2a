@@ -70,7 +70,7 @@ export async function getFriends(webID:string) {
   let friendURLs = getUrlAll(await getUserProfile(webID), VCARD.Contact);
   let friends: Friend[] = [];
 
-  // for each location url, get the fields of the object
+  // for each friend url, get the fields of the object
   for (let friend of friendURLs) {
     let name = getStringNoLocale(
       await getUserProfile(friend),
@@ -156,53 +156,56 @@ export async function deleteLocation(webID:string, locationUrl: string) {
   return await saveSolidDatasetAt(webID, dataset, { fetch: fetch });
 }
 
-export async function addFriend(webID:string, friend:Friend) {
-  // get the url of the full dataset
-  let profile = webID.split("#")[0]; //just in case there is extra information in the url
-  // to write to a profile you must be authenticated, that is the role of the fetch
-  let dataSet = await getSolidDataset(profile, {fetch: session.fetch});
+export async function addFriend(webID:string, friend:Friend): Promise<{ error: boolean, errorMessage: string }> {
+    // get the url of the full dataset
+    let profile = webID.split("#")[0]; //just in case there is extra information in the url
+    // to write to a profile you must be authenticated, that is the role of the fetch
+    let dataSet = await getSolidDataset(profile, {fetch: session.fetch});
   
-  // We create the location
-  const newLocation = buildThing(createThing())
-  .addStringNoLocale(VCARD.Name, friend.username.toString())
-  .addStringNoLocale(VCARD.url, friend.webID.toString())
-  .addUrl(VCARD.Type, VCARD.Friend)
-  .build();
-
-  // check if there exists any 
-  let existLocations = await getThing(dataSet, VCARD.Contact) as Thing;
-  // if they do not exist, create it
-  if (existLocations === null){
-    const friends  = await getFriends(webID).then(friendsPromise => {return friendsPromise});
-    console.log(friends);
-    if(friends.some(f=>  f.webID.toString() === friend.webID.toString())){
-      console.log("The value is present");
+    // We create the location
+    const newFriend = buildThing(createThing())
+    .addStringNoLocale(VCARD.Name, friend.username.toString())
+    .addStringNoLocale(VCARD.url, friend.webID.toString())
+    .addUrl(VCARD.Type, VCARD.Friend)
+    .build();
+  
+    // check if there exists any 
+    let existFriends = await getThing(dataSet, VCARD.Contact) as Thing;
+    // if they do not exist, create it
+    if (existFriends === null){
+      const friends  = await getFriends(webID).then(friendsPromise => {return friendsPromise});
+      console.log(friends);
+      if(friends.some(f=>  f.webID.toString() === friend.webID.toString())){
+        console.log("The value is present");
+        return {error:true,errorMessage:"You are already friends"};
+      }
+      else{
+  
+        //existFriends = buildThing(existFriends).addUrl(VCARD.Contact, newFriend.url).build();
+      }
+      existFriends = buildThing(await getUserProfile(webID)).addUrl(VCARD.Contact, newFriend.url).build();
     }
+    // add the location to the existing ones
     else{
-
-      existLocations = buildThing(existLocations).addUrl(VCARD.Contact, newLocation.url).build();
+      const friends  = await getFriends(webID).then(friendsPromise => {return friendsPromise});
+      console.log(friends);
+      if(friends.some(f=>  f.webID.toString() === friend.webID.toString())){
+        console.log("The value is present");
+        return{error:true,errorMessage:""};
+      }
+      else{
+  
+        existFriends = buildThing(existFriends).addUrl(VCARD.Contact, newFriend.url).build();
+      }
     }
-    existLocations = buildThing(await getUserProfile(webID)).addUrl(VCARD.Contact, newLocation.url).build();
-  }
-  // add the location to the existing ones
-  else{
-    const friends  = await getFriends(webID).then(friendsPromise => {return friendsPromise});
-    console.log(friends);
-    if(friends.some(f=>  f.webID.toString() === friend.webID.toString())){
-      console.log("The value is present");
-    }
-    else{
-
-      existLocations = buildThing(existLocations).addUrl(VCARD.Contact, newLocation.url).build();
-    }
-  }
-
-  // insert the new location in the dataset
-  dataSet = setThing(dataSet, newLocation);
-  // insert/replace the control structure in the dataset
-  dataSet = setThing(dataSet, existLocations);
-
-  console.log("adding friend")
-
-  return await saveSolidDatasetAt(webID, dataSet, {fetch: fetch})
+  
+    // insert the new location in the dataset
+    dataSet = setThing(dataSet, newFriend);
+    // insert/replace the control structure in the dataset
+    dataSet = setThing(dataSet, existFriends);
+  
+    console.log("adding friend")
+  
+    await saveSolidDatasetAt(webID, dataSet, {fetch: fetch})
+    return{error:false,errorMessage:""}
 }

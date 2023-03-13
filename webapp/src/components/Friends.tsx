@@ -20,6 +20,10 @@ function Friends(props : any) : JSX.Element {
   const [friends, setFriends] = React.useState<Friend[]>([]);
   const[isLoged, setLogged] = React.useState(false);
   const[isLoading,setLoading] = React.useState(true);
+
+  const[error, setError]=React.useState(false);
+  const[errorMessage,setErrorMessage]=React.useState("");
+
   React.useEffect(() => {
     handleFriends()
   }, [friends]);
@@ -27,6 +31,7 @@ function Friends(props : any) : JSX.Element {
   const handleFriends = async () => {
     if (props.webId !== undefined && props.webId !== ""){
       const n  = await getFriends(props.webId).then(friendsPromise => {return friendsPromise});
+      
       setFriends(n);
       setLogged(true);
     }
@@ -38,7 +43,8 @@ function Friends(props : any) : JSX.Element {
     event.preventDefault();
     let value = (document.getElementById("newFriend")as HTMLInputElement).value;
     console.log(value);
-    addFriend(props.webId,{username:value,webID:value+"url"})
+    const result = addFriend(props.webId,{username:value,webID:value+"url"});
+    result.then(r=>{setError(r.error);setErrorMessage(r.errorMessage);})
     handleFriends();
     
   }
@@ -67,7 +73,11 @@ function Friends(props : any) : JSX.Element {
                 <Input placeholder='Friend URL' type='text' id="newFriend" name="newFriend"required/>
                 <InputRightElement>
                 <Button type='submit'>+</Button> 
-                </InputRightElement></InputGroup>
+                </InputRightElement>
+                
+                </InputGroup>
+                {error && <Text>{errorMessage}</Text> }
+                
               </form>
               <Text fontSize='1.2em' borderBottomWidth='1px' margin={'20px'}>Friends</Text>
               <Flex flex={1} overflowY={'scroll'} mt={3} direction={'column'} >
@@ -77,7 +87,7 @@ function Friends(props : any) : JSX.Element {
               </Flex>
             </Flex>
             :
-            <text>You are not logged.</text>
+            <Text fontSize='1.2em' borderBottomWidth='1px' margin={'20px'}>You are not logged in</Text>
 
             
           }
