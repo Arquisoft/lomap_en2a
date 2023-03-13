@@ -18,8 +18,8 @@ const Map = ( props : MapProps) => {
   })
 
   const init = {
-    lat: 0,
-    lng: 0
+    lat: 43.37776784391247,
+    lng: -5.874621861782328
   };
 
   const [center, setCenter] = React.useState(init)
