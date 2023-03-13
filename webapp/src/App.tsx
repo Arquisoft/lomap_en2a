@@ -24,26 +24,26 @@ function App(): JSX.Element {
 
   //we get the locations for the user and fetch them to the list
   useEffect(()=>{
-    axios.get( "http://localhost:5000/locations/getAll"
-      ).then ((response) =>{
-        console.log(response)
-        if(response.status === 200){ //if no error
-          setLocations(response.data); //we store the locations retrieved
-          setIsLoading(false);
-          console.log(locations)
-        }
-      }).catch((error) =>{
-        //an error occurred while sending the request to the restapi
-        setIsLoading(true)
-        setLocations([]);
-      });
+    // axios.get( "http://localhost:5000/locations/getAll"
+    //   ).then ((response) =>{
+    //     console.log(response)
+    //     if(response.status === 200){ //if no error
+    //       setLocations(response.data); //we store the locations retrieved
+    //       setIsLoading(false);
+    //       console.log(locations)
+    //     }
+    //   }).catch((error) =>{
+    //     //an error occurred while sending the request to the restapi
+    //     setIsLoading(true)
+    //     setLocations([]);
+    //   });
       
   },[]);
 
-  useEffect(()=>{
-    console.log(session.session.info.isLoggedIn)
-    setloggedIn(session.session.info.isLoggedIn);
-  },[session.session.info.isLoggedIn])
+  // useEffect(()=>{
+  //   console.log(session.session.info.isLoggedIn)
+  //   setloggedIn(session.session.info.isLoggedIn);
+  // },[session.session.info.isLoggedIn])
 
   //get the user's current location and save it for the map to use it as a center
   useEffect(()=>{
