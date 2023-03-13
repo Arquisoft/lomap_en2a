@@ -20,7 +20,7 @@ function App(): JSX.Element {
   const [selectedView, setselectedView] = React.useState<string>("none")
 
   const getNewLocation = (location:Location) => {
-    console.log("coming from AddLocation", location.name)
+    console.log("coming from AddLocation", location)
   }
 
   //we get the locations for the user and fetch them to the list

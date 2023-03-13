@@ -57,6 +57,7 @@ function AddLocationForm(props : any) : JSX.Element {
     };
 
     return (
+        <form onSubmit={handleSubmit}>
         <Flex
             direction={'column'}
             bg={'whiteAlpha.900'}
@@ -68,8 +69,7 @@ function AddLocationForm(props : any) : JSX.Element {
             zIndex={1}
             overflow='hidden'
             px={2}
-            rowGap="2em"
-            onSubmit={handleSubmit}
+            rowGap="2em"            
         >
             <Flex direction={'column'}>
                 <Text>Nombre:</Text>
@@ -117,6 +117,7 @@ function AddLocationForm(props : any) : JSX.Element {
                 Añadir
             </Button>
         </Flex>
+        </form>
     );
 }
 

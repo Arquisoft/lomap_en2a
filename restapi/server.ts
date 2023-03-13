@@ -1,8 +1,7 @@
 import express, { Application, RequestHandler } from "express";
 import cors from 'cors';
 import bp from 'body-parser';
-import promBundle from 'express-prom-bundle';
-import api from "./api"; 
+import promBundle from 'express-prom-bundle'; 
 
 import apiLocations from "./locations/locationRoutes"
 
@@ -15,7 +14,6 @@ app.use(metricsMiddleware);
 app.use(cors());
 app.use(bp.json());
 
-app.use("/api", api)
 app.use("/locations",apiLocations)
 
 app.listen(port, ():void => {
