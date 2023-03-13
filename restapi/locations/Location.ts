@@ -2,15 +2,13 @@
 
 export type Location = {
     url? : String,
-    
     name : String,
     coordinates : Coordinates,
     description : String,
     
     review ?: Array<Review>,
     ratings ?: Array<Number>, //stars of the location
-
-    images? : Array<File>
+    images?: Array<string>
 };
 
 export type Coordinates = {

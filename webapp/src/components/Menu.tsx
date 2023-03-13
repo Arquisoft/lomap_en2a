@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Flex, Button, Icon, Text, IconButton, ButtonGroup, Box } from "@chakra-ui/react";
-import { MdList, MdLocationOn, MdMap, MdPeopleAlt, MdPerson } from "react-icons/md"
+import { MdList, MdLocationOn, MdMap, MdOutlineOpenInBrowser, MdPeopleAlt, MdPerson } from "react-icons/md"
 import { start } from 'repl';
 
 type MenuProps = {
@@ -85,7 +85,12 @@ function Menu(props: MenuProps): JSX.Element {
                 <Button leftIcon={<Icon alignContent={'left'} as={MdPeopleAlt} width='max-content' height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
                         bg={'white'}
                         color={'black'}
-                        size='lg'>
+                        size='lg'
+                        onClick={() => {
+                          setinsideMenu(false);
+                          props.changeViewTo("friends");
+                        }}
+                >
                   Añadir amigos
                 </Button>
               </Box>
@@ -94,7 +99,12 @@ function Menu(props: MenuProps): JSX.Element {
                 <Button leftIcon={<Icon as={MdPerson} width='max-content' height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
                         bg={'white'}
                         color={'black'}
-                        size='lg'>
+                        size='lg'
+                        onClick={() => {
+                          setinsideMenu(false);
+                          props.changeViewTo("profile");
+                        }}
+                >
                   Perfil
                 </Button>
               </Box>
