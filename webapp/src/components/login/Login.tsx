@@ -1,18 +1,23 @@
 import * as React from "react";
 
-
-import {  useSession } from "@inrupt/solid-ui-react";
-
+import {login} from "@inrupt/solid-client-authn-browser"
 import { Button ,Flex, Image,Text, Stack, Radio, RadioGroup, InputGroup, Input,  useToast} from "@chakra-ui/react";
-import axios from "axios";
 import { useState } from "react";
 import logo from "../../lomap_logo.png"
+import {SessionInfo} from "@inrupt/solid-ui-react/dist/src/hooks/useSession"
+import {useSession} from "@inrupt/solid-ui-react"
 
-function Login() : JSX.Element  {
+type sessionProps = {
+  //s : SessionInfo
+  s :  (s:SessionInfo) => void
+}
+
+function Login(props : sessionProps) : JSX.Element  {
     const [userChoice, setuserChoice] = useState('https://inrupt.net/')
     const [customSelected, setcustomSelected] = useState(false)
 
     const toast = useToast();
+    
     const session = useSession();
     
     const providerOptions = [ //last one must be the custom one, they are auto generated
@@ -20,15 +25,11 @@ function Login() : JSX.Element  {
         { value: 'https://solidcommunity.net/', label: 'Solid Community' },
         { value: String({userChoice}), label : 'Custom provider'}
       ]
-
-    React.useEffect(() => {
-      console.log(session.session.info)
-    },[])
         
-    const handleSubmit = async ()=> {
+    const handleSubmit =  (event)=> {
       //we validate not empty url
-      //console.log(userChoice.toString())
-      
+      event.preventDefault();
+
       if(userChoice.trim().length == 0){
         toast({ //we show an error
           title:'Choose a valid pod provider',
@@ -38,21 +39,15 @@ function Login() : JSX.Element  {
         })
         return
       }
-      await session.login({
+
+      session.login({
         redirectUrl: window.location.href, // after redirect, come to the actual page
         oidcIssuer: userChoice, // redirect to the url
         clientName: "Lo Map",
       });
-      console.log(session.session)
 
-      if(!session.session.info.isLoggedIn){
-        toast({ //we show an error
-          title:'An error ocurred while logging in, please try again',
-          status: 'error',
-          isClosable : true,
-          duration : 3000
-        })
-      }
+      //we pass the app component the session for it to be stored
+      props.s(session)
         
 
         //TODO refactor this once the restapi implementation is working
@@ -122,8 +117,10 @@ function Login() : JSX.Element  {
           <InputGroup  visibility={(customSelected)?"visible":"hidden"} size='sm' width={'80%'} >
             <Input placeholder='URL of custom pod provider' onChange ={(e)=>setuserChoice(e.target.value.toString())} onBlur={(e)=>e.target.value = ''}/>
           </InputGroup>
-          <Button onClick={(e)=>{e.preventDefault();handleSubmit()}} colorScheme='blue' padding={'1.5vw'} marginTop='auto'>Login</Button>
-          <Button onClick={(e)=>{console.log(session.session)}} colorScheme='red' padding={'1.5vw'} marginTop='auto'>Cheat</Button>
+
+          <Button onClick={handleSubmit} colorScheme='blue' padding={'1.5vw'} marginTop='auto'>Login</Button>
+          <Button onClick={(e)=>{console.log(session.session.info)}} colorScheme='red' padding={'1.5vw'} marginTop='auto'>Cheat</Button>
+          {session.session.info.isLoggedIn? <Text>Si</Text> : <Text>No</Text>}
           </Flex> 
         </Flex>
     )

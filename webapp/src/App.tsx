@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ChakraProvider } from '@chakra-ui/react';
-import {Flex} from "@chakra-ui/react";
+import { ChakraProvider,Text,Flex,Radio,RadioGroup,useToast,Image,Stack,Input,InputGroup,Button } from '@chakra-ui/react';
 import { Location } from '../../restapi/locations/Location';
 
 import Map from './components/Map';
@@ -9,18 +8,51 @@ import './App.css';
 import List from './components/List';
 import axios  from 'axios';
 import Menu from './components/Menu';
-import Login from './components/login/Login';
 import {  useSession } from "@inrupt/solid-ui-react";
+import {SessionInfo} from "@inrupt/solid-ui-react/dist/src/hooks/useSession"
+import logo from "./lomap_logo.png"
 
 
-function App(): JSX.Element {
+
+function App() :JSX.Element {
   const [coordinates, setCoordinates] = useState({lng:0, lat:0});
   const [isLoading, setIsLoading] = useState(true)
   const [locations, setLocations] = useState<Array<Location>>([]);
   const [selectedView, setselectedView] = useState<string>("none")
-  const [loggedIn, setloggedIn] = useState(false)
 
-  const session = useSession()
+  const [userChoice, setuserChoice] = useState('https://inrupt.net/')
+  const [customSelected, setcustomSelected] = useState(false)
+
+  const toast = useToast();
+  const session = useSession();
+
+  const providerOptions = [ //last one must be the custom one, they are auto generated
+      { value: 'https://inrupt.net/', label: 'Inrupt.net' },
+      { value: 'https://solidcommunity.net/', label: 'Solid Community' },
+      { value: String({userChoice}), label : 'Custom provider'}
+    ]
+      
+  const handleSubmit =  (event)=> {
+    //we validate not empty url
+    event.preventDefault();
+
+    if(userChoice.trim().length == 0){
+      toast({ //we show an error
+        title:'Choose a valid pod provider',
+        status: 'error',
+        isClosable : true,
+        duration : 3000
+      })
+      return
+    }
+    
+
+    session.login({
+      redirectUrl: window.location.href, // after redirect, come to the actual page
+      oidcIssuer: userChoice, // redirect to the url
+      clientName: "Lo Map",
+    });
+  }
 
   //we get the locations for the user and fetch them to the list
   useEffect(()=>{
@@ -39,11 +71,6 @@ function App(): JSX.Element {
     //   });
       
   },[]);
-
-  // useEffect(()=>{
-  //   console.log(session.session.info.isLoggedIn)
-  //   setloggedIn(session.session.info.isLoggedIn);
-  // },[session.session.info.isLoggedIn])
 
   //get the user's current location and save it for the map to use it as a center
   useEffect(()=>{
@@ -80,10 +107,61 @@ function App(): JSX.Element {
               <></>
             }
             {
-              loggedIn?
+              session.session.info.isLoggedIn?
               <></>
               :
-              <Login />
+              //login view
+              (<Flex
+                flexDirection={'column'}
+                width={'100vw'}
+                height='100vh'
+                zIndex={'2'}
+                position='absolute'
+                justifyContent={'center'}
+                alignItems='center'
+                bg={'whiteAlpha.600'}>
+          
+                <Flex
+                  direction={'column'}
+                  bg={'white'}
+                  width={"40vw"}
+                  height={"40vh"}
+                  position={'relative'} 
+                  zIndex={1}
+                  overflow='hidden'
+                  px={2}
+                  alignItems='center'
+                  borderRadius={'2vh'}
+                  padding='1vh'
+                  rowGap={'1vh'}
+                  justifyContent='space-evenly'
+                > 
+                  <Image src={logo} width='20vw'></Image>
+                  <Text fontSize={'2xl'}>Select your Solid pod provider:</Text>
+                  {/* <RadioGroup onChange={setuserChoice} value={userChoice}>
+                    <Stack direction='row'>
+                      {
+                        providerOptions.map((element,i) => {
+                          if(i < providerOptions.length - 1) 
+                            return (<Radio value={element.value}  onChange={(e)=>{setcustomSelected(false)}}>{element.label}</Radio>)
+                          else //Last one is the custom one and should trigger the textBox
+                            return (<Radio 
+                                      value={element.value} 
+                                      onChange={(e)=>{setcustomSelected(true)}}
+                                      >
+                                        {element.label}</Radio>)
+                        })
+                      }
+                    </Stack>
+                  </RadioGroup>
+                  <InputGroup  visibility={(customSelected)?"visible":"hidden"} size='sm' width={'80%'} >
+                    <Input placeholder='URL of custom pod provider' onChange ={(e)=>setuserChoice(e.target.value.toString())} onBlur={(e)=>e.target.value = ''}/>
+                  </InputGroup> */}
+          
+                  <Button onClick={handleSubmit} colorScheme='blue' padding={'1.5vw'} marginTop='auto'>Login</Button>
+                  {session.session.info.isLoggedIn? <Text>Si</Text> : <Text>No</Text>}
+                  </Flex> 
+                </Flex>)
             }
             <Map center = {coordinates} locations={locations}/>
             <Menu changeViewTo= {(newView : string) => {setselectedView(newView)}}/>
@@ -94,4 +172,5 @@ function App(): JSX.Element {
   );
 }
 
-export default App;
+
+export default App
