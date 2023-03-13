@@ -32,8 +32,8 @@ const Map = ( props : MapProps) => {
   const onUnmount = React.useCallback(function callback() {setMap(null)}, [])
 
   const handleMapClick = (location) => {
-    !firstMark ? setYes(true) : //
-        setMarkedLocation(location);
+    !firstMark ? setYes(true) : setYes(false)
+    setMarkedLocation(location);
     const newCenter = {
       lat: location.coordinates.lat,
       lng: location.coordinates.lng
@@ -64,7 +64,7 @@ const Map = ( props : MapProps) => {
                   onClick={() => handleMapClick(place)}
               ></Marker>
           ))}
-          <LocationView isOpen={isOpen} onClose={onClose} place={ !firstMark ? markedLocation : null}></LocationView>
+          <LocationView isOpen={isOpen} onClose={onClose} place={ firstMark ? markedLocation : ''}></LocationView>
         </GoogleMap>
     );
 
