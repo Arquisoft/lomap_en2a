@@ -1,49 +1,60 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import { ChakraProvider } from '@chakra-ui/react';
 import {Flex} from "@chakra-ui/react";
 import { Location } from '../../restapi/locations/Location';
-
 import Map from './components/Map';
 
 import './App.css';
 import List from './components/List';
-import axios  from 'axios';
-import Menu from './components/Menu';
 import AddLocationForm from "./components/AddLocationForm";
+import axios  from 'axios';
+import Login from './components/login/Login';
+import {getLocations} from './solid/solidManagement'
+
+
+import Menu from './components/Menu';
+import { useSession } from '@inrupt/solid-ui-react';
 
 
 
 function App(): JSX.Element {
-  const [coordinates, setCoordinates] = React.useState({lng:0, lat:0});
-  const [isLoading, setIsLoading] = React.useState(true)
-  const [locations, setLocations] = React.useState<Array<Location>>([]);
-  const [selectedView, setselectedView] = React.useState<string>("none")
+  const [coordinates, setCoordinates] = useState({lng:0, lat:0});
+  const [isLoading, setIsLoading] = useState(true)
+  const [locations, setLocations] = useState<Array<Location>>([]);
+  const [selectedView, setselectedView] = useState<string>("none")
 
   const getNewLocation = (location:Location) => {
     console.log("coming from AddLocation", location)
   }
 
+  const session = useSession();
+
   //we get the locations for the user and fetch them to the list
-  React.useEffect(()=>{
-    axios.get( "http://localhost:5000/locations/getAll"
-      ).then ((response) =>{
-        console.log(response)
-        if(response.status === 200){ //if no error
-          setLocations(response.data); //we store the locations retrieved
-          setIsLoading(false);
-          console.log(locations)
-        }
-      }).catch((error) =>{
-        //an error occurred while sending the request to the restapi
-        setIsLoading(true)
-        setLocations([]);
-      });
-      
-  },[]);
+  useEffect(()=>{
+    //TODO refactor once restapi controls locations
+    // axios.get( "http://localhost:5000/locations/getAll"
+    //   ).then ((response) =>{
+    //     console.log(response)
+    //     if(response.status === 200){ //if no error
+    //       setLocations(response.data); //we store the locations retrieved
+    //       setIsLoading(false);
+    //       console.log(locations)
+    //     }
+    //   }).catch((error) =>{
+    //     //an error occurred while sending the request to the restapi
+    //     setIsLoading(true)
+    //     setLocations([]);
+    //   });
+    console.log(session)
+    if(session.session.info.webId){
+      getLocations(session.session.info.webId).then((result)=>{setLocations(result); setIsLoading(false);  console.log(result)});
+    }
+  },[session.session.info.isLoggedIn]);
+
 
 
   //get the user's current location and save it for the map to use it as a center
-  React.useEffect(()=>{
+  useEffect(()=>{
     navigator.geolocation.getCurrentPosition(({coords : {latitude,longitude}}) =>{
       //we set the coordinates to be the ones of the user for them to be passed to the map
       setCoordinates({lat: latitude , lng : longitude});
@@ -64,7 +75,8 @@ function App(): JSX.Element {
   return (
     <>
       <ChakraProvider>
-        <Flex 
+        <Login></Login>
+        <Flex
           justifyContent={'center'}
           alignItems={'center'}
           width={'100vw'}
@@ -74,7 +86,7 @@ function App(): JSX.Element {
           position={'relative'}
           >
             {
-              selectedView ?
+              selectedView ? 
               views[selectedView]
               :
               <></>
