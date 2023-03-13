@@ -8,3 +8,9 @@ type User ={
 
     friendRequests :  Array<String> //array de webId
 }
+
+export type Friend={
+    username : String,
+
+    webID : String,
+}

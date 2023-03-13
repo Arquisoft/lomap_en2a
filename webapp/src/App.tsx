@@ -14,7 +14,7 @@ import {getLocations} from './solid/solidManagement'
 import Menu from './components/Menu';
 import { useSession } from '@inrupt/solid-ui-react';
 
-
+import Friends from './components/Friends';
 
 function App(): JSX.Element {
   const [coordinates, setCoordinates] = useState({lng:0, lat:0});
@@ -60,14 +60,16 @@ function App(): JSX.Element {
   //rest of the views
   const views: { [id: string]: JSX.Element; } = {
     "none" : <></>,
-    "list": <List places={locations} isLoading= {isLoading} />
+    "list": <List places={locations} isLoading= {isLoading} />,
+
+    "friends": <Friends webId={session.session.info.webId} session={session}/>
  }; 
 
   return (
     <>
       <ChakraProvider>
         <Login></Login>
-        <Flex 
+        <Flex
           justifyContent={'center'}
           alignItems={'center'}
           width={'100vw'}
