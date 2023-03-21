@@ -1,9 +1,11 @@
-name: Release for LOMAP_EN2A
+name: CI for LOMAP_EN2A
 
 on:
-  release:
-    types: [published]
-
+  pull_request:
+    branches: ['**']
+  push:
+    branches: ['**']
+    
 jobs:
   unit-test-webapp:
     runs-on: ubuntu-latest
