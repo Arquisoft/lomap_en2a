@@ -1,17 +1,25 @@
 import { Text, Drawer, DrawerBody, DrawerCloseButton, Stack, StackDivider,
-  DrawerContent, DrawerHeader, DrawerOverlay, HStack, Image, Box, Divider} from "@chakra-ui/react"
+  DrawerContent, DrawerHeader, DrawerOverlay, HStack, Image, Box, Divider, Flex} from "@chakra-ui/react"
 
 
 
-export function LocationView({isOpen, onClose, place}) : JSX.Element {  
+export default function LocationView({place}) : JSX.Element {  
 
   return (
-    <Drawer placement='left' onClose={onClose} isOpen={isOpen} size='md'>
-      <DrawerOverlay/>
-      <DrawerContent>
-        <DrawerCloseButton />
-        <DrawerHeader borderBottomWidth='1px'>{place.name}</DrawerHeader>
-        <DrawerBody mx='5px' marginTop='5px'>
+    <Flex
+          direction={'column'}
+          bg={'white'}
+          width={"30vw"}
+          height={"100vh"}
+          position={'absolute'} 
+          left={'5vw'}
+          top={0}
+          zIndex={1}
+          overflow='hidden'
+          px={2}
+          >
+        <Text borderBottomWidth='1px'>{place.name}</Text>
+        <Flex mx='5px' marginTop='5px'>
           <Stack spacing='20px'>
             <Text textAlign={'justify'}>{place.description}</Text>  
             <HStack shouldWrapChildren={true} display='flex' overflowX='scroll'> 
@@ -37,9 +45,8 @@ export function LocationView({isOpen, onClose, place}) : JSX.Element {
               }
             </HStack>
           </Stack>
-        </DrawerBody>
-      </DrawerContent>
-    </Drawer>
+          </Flex>
+    </Flex>
   )
 }
 

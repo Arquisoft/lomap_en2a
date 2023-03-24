@@ -22,7 +22,10 @@ function App(): JSX.Element {
   const [coordinates, setCoordinates] = useState({lng:0, lat:0});
   const [isLoading, setIsLoading] = useState(true)
   const [locations, setLocations] = useState<Array<Location>>([]);
-  const [selectedView, setselectedView] = useState<string>("none")
+  //shortcut to define views that do not vary from the menu see map called 'views'
+  const [nameOfSelectedView, setNameOfSelectedView] = useState<string>("none");
+  //stores the actual view currently selected
+  const [selectedView, setselectedView] = useState(<></>);
 
 
   const getNewLocation = (location:Location) => {
@@ -72,11 +75,26 @@ function App(): JSX.Element {
   //rest of the views
   const views: { [id: string]: JSX.Element; } = {
     "none" : <></>,
-    "list": <List places={locations} isLoading= {isLoading} />,
+    "list": <List changeViewTo={(view)=>setselectedView(view)} places={locations} isLoading= {isLoading} />,
     "addLocation": <AddLocationForm onSubmit={getNewLocation}/>,
     "friends": <Friends webId={session.session.info.webId} session={session}/>,
     "profile" : <ProfileView webId={session.session.info.webId}></ProfileView>
  };
+
+ /*
+  This effect triggered when name of the view is changed will set the current selected view to the one
+  in the map of views
+ */
+  useEffect(() => {
+    console.log("Cambio a: " +  nameOfSelectedView)
+    setselectedView(views[nameOfSelectedView])
+  }, [nameOfSelectedView])
+
+  useEffect(() => {
+    
+  }, [selectedView])
+  
+ 
 
   //previous way of deleting
   //<button onClick={() => deleteLocation(session.session.info.webId as string, "https://patrigarcia.inrupt.net/profile/card#d8068302-9df2-4e42-a531-e3d39f685f93")}>DELETE</button>
@@ -93,19 +111,18 @@ function App(): JSX.Element {
           maxHeight={'100vh'}
           position={'relative'}
           >
-            <Map /*center = {coordinates}*/ locations={locations}/>
+            <Map /*center = {coordinates}*/ locations={locations} 
+              changeViewTo= {(newView : JSX.Element) => {setselectedView(newView)}}/>
             {
-              selectedView ? 
-              views[selectedView]
-              :
-              <></>
+              selectedView ?  selectedView  :  <></>
             }
-            <Menu changeViewTo= {(newView : string) => {setselectedView(newView)}}/>
+            <Menu changeViewTo= {(newView : string) => {setNameOfSelectedView(newView)}}/>
             {
               !session.session.info.isLoggedIn ? (
                 <Login session={session.session}></Login>
               ) : <></>
             }
+            
         </Flex>
       </ChakraProvider>
     </>

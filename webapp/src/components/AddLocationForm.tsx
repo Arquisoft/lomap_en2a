@@ -48,7 +48,7 @@ function AddLocationForm(props : any) : JSX.Element {
         <form onSubmit={handleSubmit}>
         <Flex
             direction={'column'}
-            bg={'whiteAlpha.900'}
+            bg={'white'}
             width={"30vw"}
             height={"100vh"}
             position={'absolute'}

@@ -7,13 +7,14 @@ import  PlaceDetail  from './PlaceDetail';
 type ListProps = {
     places : Array<Location>;
     isLoading : boolean;
+    changeViewTo: (viewName: JSX.Element) => void //function to change the selected view on the left
 }
 
 function List(props : ListProps) : JSX.Element {
     if(props.isLoading)return(
         <Flex
           direction={'column'}
-          bg={'whiteAlpha.900'}
+          bg={'white'}
           width={"30vw"}
           height={"100vh"}
           position={'absolute'} 
@@ -58,9 +59,9 @@ function List(props : ListProps) : JSX.Element {
         overflow='hidden'
         px={2}
         >
-        <Flex flex={1} overflowY={'scroll'} mt={16} direction={'column'} >
+        <Flex flex={1} overflowY={'scroll'} mt={16} direction={'column'}>
         {
-            props.places && props.places.map((place,i) => <PlaceDetail place={place} key ={i}/>)
+            props.places && props.places.map((place,i) => <PlaceDetail changeViewTo={props.changeViewTo} place={place} key ={i}/>)
         }
         </Flex>
     </Flex>);
