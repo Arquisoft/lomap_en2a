@@ -19,6 +19,8 @@ function AddLocationForm(props : any) : JSX.Element {
 
     const [description, setDescription] = React.useState('');
 
+    const [images, setImages] = React.useState([]);
+
     const regexLat = /^(-?[1-8]?\d(?:\.\d{1,18})?|90(?:\.0{1,18})?)$/;
     const regexLon = /^(-?(?:1[0-7]|[1-9])?\d(?:\.\d{1,18})?|180(?:\.0{1,18})?)$/;
     function checkCoordinates(lat: string, lon: string): boolean {
@@ -37,7 +39,7 @@ function AddLocationForm(props : any) : JSX.Element {
                                     lat: Number(latValue)
                                 },
                                 description: description,
-                                images : []}
+                                images : images}
             props.onSubmit(l);
             return;
         //}
@@ -97,7 +99,9 @@ function AddLocationForm(props : any) : JSX.Element {
                 />
             </Flex>
 
-            <input type="file" accept='image/*' multiple></input>
+            
+            <input type="file" accept='image/*' multiple onChange={(e:any) => setImages(e.target.files)}></input>
+            
 
             <Button colorScheme={'orange'}
                     variant={'outline'}

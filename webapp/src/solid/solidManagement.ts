@@ -12,7 +12,7 @@ import {
   createSolidDataset
 } from "@inrupt/solid-client";
 
-import { FOAF, VCARD , RDF} from "@inrupt/vocab-common-rdf"
+import { FOAF, VCARD, SCHEMA_INRUPT} from "@inrupt/vocab-common-rdf"
 
 // const session = new Session();
 
@@ -49,6 +49,7 @@ export async function getLocations(webID:string) {
       let longitude = getStringNoLocale(location, VCARD.longitude) as string;
       let latitude = getStringNoLocale(location, VCARD.latitude) as string;
       let description = getStringNoLocale(location, VCARD.Text) as string;
+      // let image = getStringNoLocale(location, SCHEMA_INRUPT.image) as string;
   
       // if location is not null, add it to the return array
       if (location)
@@ -116,6 +117,7 @@ export async function addLocationToDataSet(folderURL:string, location:Location){
     .addStringNoLocale(VCARD.longitude, location.coordinates.lng.toString())
     .addStringNoLocale(VCARD.latitude, location.coordinates.lat.toString())
     .addStringNoLocale(VCARD.Text, location.description.toString())
+    // .addStringNoLocale(SCHEMA_INRUPT.image, location.images[0])
     .addUrl(VCARD.Type, VCARD.Location)
     .build();
 
@@ -139,6 +141,7 @@ export async function createLocationDataSet(folderURL:string, location:Location)
     .addUrl(VCARD.Type, VCARD.Location)
     .build();
 
+
     dataSet = setThing(dataSet, newLocation); // store thing in dataset
     try {
       await saveSolidDatasetAt(folderURL, dataSet, {fetch: fetch}) // save dataset 
@@ -149,7 +152,7 @@ export async function createLocationDataSet(folderURL:string, location:Location)
 
 export async function deleteLocation(webID:string, locationUrl: string) {
   let baseURL = webID.split("profile")[0]; // url of the type https://<nombre>.inrupt.net/
-  let locationsFolderURL = `${baseURL}public/lomap/locations/`;
+  let locationsFolderURL = `${baseURL}public/lomap/locations/index.ttl`;
   try {
     let dataSet = await getSolidDataset(locationsFolderURL, {fetch: fetch}); // fetch locations dataset
     // obtain the location from the POD

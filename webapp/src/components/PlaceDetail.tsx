@@ -51,7 +51,7 @@ function PlaceDetail (props : PlaceDetailProps ) : JSX.Element{
                 rounded='lg'
                 src={
                     //TODO add here the condition on the image to be added to the locations
-                    //{props.place.img} == null ? {props.place.img} : default
+                    //props.place.images[0] != null ? props.place.images[0] : 'https://media.newyorker.com/photos/59095bb86552fa0be682d9d0/master/w_2560%2Cc_limit/Monkey-Selfie.jpg'
 
                     //for now we place a default image
                     'https://media.newyorker.com/photos/59095bb86552fa0be682d9d0/master/w_2560%2Cc_limit/Monkey-Selfie.jpg'

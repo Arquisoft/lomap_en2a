@@ -26,6 +26,14 @@ function App(): JSX.Element {
 
 
   const getNewLocation = (location:Location) => {
+    // let images :string[] = [];
+    // location.images.forEach((file) => {
+    //   let fileReader = new FileReader();
+    //   fileReader.onload = function(fileLoadedEvent) {
+    //     let srcData = fileLoadedEvent.target?.result; // base64
+    //     images.push(srcData as string);
+    //   }
+    // })
     locations.push(location);
     createLocation(session.session.info.webId as string, location);
   }
