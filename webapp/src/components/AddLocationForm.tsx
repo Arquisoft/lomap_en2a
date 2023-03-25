@@ -60,39 +60,38 @@ function AddLocationForm(props : any) : JSX.Element {
             rowGap="2em"            
         >
             <Flex direction={'column'}>
-                <Text>Nombre:</Text>
+                <Text>Name:</Text>
                 <Input
                     value={name}
                     onChange={(e:any) => setName(e.target.value)}                                        
-                    placeholder='Nombre'
+                    placeholder="Location's name"
                     size='sm'
                 />
             </Flex>
 
             <Flex direction={'column'}>
-                <Text>Latitud:</Text>
+                <Text>Coordinates:</Text>
                 <Input
                     value={latValue}
                     onChange={(e:any) => setLatValue(e.target.value)}
-                    placeholder='Inserte latitud'
+                    placeholder='Ej: 43.35484910218162, -5.851277716083629'
                     size='sm'
                 />
-
-                <Text>Longitud:</Text>
+                {/*<Text>Longitud:</Text>
                 <Input
                     value={lonValue}
                     onChange={(e:any) => setLonValue(e.target.value)}
                     placeholder='Inserte longitud'
                     size='sm'
-                />
+                />*/}
             </Flex>
 
             <Flex direction={'column'}>
-                <Text>Descripción:</Text>
+                <Text>Description:</Text>
                 <Textarea
                     value={description}
                     onChange={(e:any) => setDescription(e.target.value)}
-                    placeholder='Inserte una descripción del lugar'
+                    placeholder='Insert a description of the location'
                     size='sm'
                 />
             </Flex>
@@ -104,7 +103,7 @@ function AddLocationForm(props : any) : JSX.Element {
                     //onClick={() => {addLocation()}}
                     type={'submit'}
             >
-                Añadir
+                Add location
             </Button>
         </Flex>
         </form>

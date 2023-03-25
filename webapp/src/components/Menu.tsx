@@ -49,7 +49,7 @@ function Menu(props: MenuProps): JSX.Element {
                         size='lg'
                         height={'5vh'}
                         onClick={() => { setinsideMenu(false); props.changeViewTo("none"); }}>
-                  Visualización del mapa
+                  Map View
                 </Button>
               </Box>
 
@@ -62,7 +62,7 @@ function Menu(props: MenuProps): JSX.Element {
                           setinsideMenu(false);
                           props.changeViewTo("list");
                         }}>
-                  Listado de Localizaciones
+                  List of Locations
                 </Button>
               </Box>
 
@@ -77,7 +77,7 @@ function Menu(props: MenuProps): JSX.Element {
                             props.changeViewTo("addLocation");
                           }
                         }>
-                  Añadir Localización
+                  Add Location
                 </Button>
               </Box>
 
@@ -91,7 +91,7 @@ function Menu(props: MenuProps): JSX.Element {
                           props.changeViewTo("friends");
                         }}
                 >
-                  Añadir amigos
+                  Add friends
                 </Button>
               </Box>
 
@@ -105,7 +105,7 @@ function Menu(props: MenuProps): JSX.Element {
                           props.changeViewTo("profile");
                         }}
                 >
-                  Perfil
+                  Profile
                 </Button>
               </Box>
             </Flex>
