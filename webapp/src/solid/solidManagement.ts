@@ -7,10 +7,12 @@ import {
   createThing, removeThing,Thing,getThing, setThing,buildThing,
   getSolidDataset, saveSolidDatasetAt, 
   removeUrl, getUrlAll,
-  getStringNoLocale
+  getStringNoLocale,
+  createContainerAt,
+  createSolidDataset
 } from "@inrupt/solid-client";
 
-import { FOAF, VCARD } from "@inrupt/vocab-common-rdf"
+import { FOAF, VCARD , RDF} from "@inrupt/vocab-common-rdf"
 
 const session = new Session();
 
@@ -35,7 +37,11 @@ export async function getNameFromPod(webID: string){
 }
 
 export async function getLocations(webID:string) {
+    let baseURL = webID.split("#")[0]; // url of the type https://<nombre>.inrupt.net/profile/
+    // create a LoMap folder inside of this url to store LoMap related information
+    let newFolderURL = `${baseURL}/lomap/locations/`;
   
+  // get all the locations (has Geo)
   let locationsURLs = getUrlAll(await getUserProfile(webID), VCARD.hasGeo);
   let locations: Location[] = [];
 
@@ -58,6 +64,7 @@ export async function getLocations(webID:string) {
       VCARD.Text
     ) as string;
 
+    // if location is not null, add it to the return array
     if (location)
       locations.push({
         name: name,
@@ -103,13 +110,20 @@ export async function getFriends(webID:string) {
 // WRITE FUNCTIONS
 
 export async function createLocation(webID:string, location:Location) {
-    // get the url of the full dataset
-    let profile = webID.split("#")[0]; //just in case there is extra information in the url
-    // to write to a profile you must be authenticated, that is the role of the fetch
-    let dataSet = await getSolidDataset(profile, {fetch: session.fetch});
-    
-    // We create the location
-    const newLocation = buildThing(createThing())
+  let baseURL = webID.split("profile")[0]; // url of the type https://<nombre>.inrupt.net/
+  let newFolderURL = `${baseURL}public/lomap/locations/`;
+  try {
+    await addLocationToDataSet(newFolderURL, location)
+  } catch (error) {
+    await createLocationDataSet(newFolderURL, location)
+  }
+}
+
+export async function addLocationToDataSet(folderURL:string, location:Location){
+  let locationID = location.name.trim();
+  let dataSet = await getSolidDataset(folderURL, {fetch: session.fetch});
+
+  let newLocation = buildThing(createThing({name: locationID})) // give the thing a name
     .addStringNoLocale(VCARD.Name, location.name.toString())
     .addStringNoLocale(VCARD.longitude, location.coordinates.lng.toString())
     .addStringNoLocale(VCARD.latitude, location.coordinates.lat.toString())
@@ -117,27 +131,60 @@ export async function createLocation(webID:string, location:Location) {
     .addUrl(VCARD.Type, VCARD.Location)
     .build();
 
-    // check if there exists any location
-    let existLocations = await getThing(dataSet, VCARD.hasGeo) as Thing;
-    // if they do not exist, create it
-    if (existLocations === null){
-      existLocations = buildThing(await getUserProfile(webID)).addUrl(VCARD.hasGeo, newLocation.url).build();
-    }
-    // add the location to the existing ones
-    else{
-      existLocations = buildThing(existLocations).addUrl(VCARD.hasGeo, newLocation.url).build();
-    }
-
-    // insert the new location in the dataset
-    dataSet = setThing(dataSet, newLocation);
-    // insert/replace the control structure in the dataset
-    dataSet = setThing(dataSet, existLocations);
-
-    console.log("creando localiz")
-    console.log(location)
-
-    return await saveSolidDatasetAt(webID, dataSet, {fetch: fetch})
+  dataSet = setThing(dataSet, newLocation);
+  await saveSolidDatasetAt(folderURL, dataSet, {fetch: fetch})
 }
+
+export async function createLocationDataSet(folderURL:string, location:Location) {
+    let locationID = location.name.trim(); //location id
+    let dataSet = createSolidDataset(); // create solid dataset
+    // build location thing
+    let newLocation = buildThing(createThing({name: locationID})) 
+    .addStringNoLocale(VCARD.Name, location.name.toString())
+    .addStringNoLocale(VCARD.longitude, location.coordinates.lng.toString())
+    .addStringNoLocale(VCARD.latitude, location.coordinates.lat.toString())
+    .addStringNoLocale(VCARD.Text, location.description.toString())
+    .addUrl(VCARD.Type, VCARD.Location)
+    .build();
+
+    dataSet = setThing(dataSet, newLocation); // store thing in dataset
+    await saveSolidDatasetAt(folderURL, dataSet, {fetch: session.fetch}) // save dataset
+}
+
+// export async function createLocationJ(webID:string, location:Location) {
+//   // make the folder for the location
+    
+
+//     let locationsDataSet;
+    
+//     // get dataset if it exists
+//     try {
+//       locationsDataSet = await getSolidDataset(locationsURL, {fetch: session.fetch});
+//     } catch (error){
+//       locationsDataSet = createSolidDataset();
+//     }
+
+//     let name = location.name.trim() // remove blank spaces
+
+//     // We create the location
+//     const newLocation = buildThing(createThing({name: name})) // give the thing a name
+//     .addStringNoLocale(VCARD.Name, location.name.toString())
+//     .addStringNoLocale(VCARD.longitude, location.coordinates.lng.toString())
+//     .addStringNoLocale(VCARD.latitude, location.coordinates.lat.toString())
+//     .addStringNoLocale(VCARD.Text, location.description.toString())
+//     .addUrl(VCARD.Type, VCARD.Location)
+//     .build();
+
+//     // insert the new location in the dataset
+//     locationsDataSet = setThing(locationsDataSet, newLocation);
+//     try {
+//       locationsDataSet = await saveSolidDatasetAt(locationsURL, locationsDataSet, {fetch: fetch})
+//     } catch (error) {
+//         console.log(error)
+//     }
+    
+//     return locationsDataSet;
+// }
 
 export async function deleteLocation(webID:string, locationUrl: string) {
   let profile = webID.split("#")[0];

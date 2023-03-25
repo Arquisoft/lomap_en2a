@@ -26,10 +26,8 @@ function App(): JSX.Element {
 
 
   const getNewLocation = (location:Location) => {
-    // console.log("coming from AddLocation", location)
     locations.push(location);
     createLocation(session.session.info.webId as string, location);
-    // console.log(locations);
   }
 
   const session = useSession();
