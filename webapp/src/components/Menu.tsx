@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
-import { Flex, Button, Icon, Text, IconButton, ButtonGroup, Box } from "@chakra-ui/react";
-import { MdList, MdLocationOn, MdMap, MdOutlineOpenInBrowser, MdPeopleAlt, MdPerson } from "react-icons/md"
-import { start } from 'repl';
+import { Flex, Button, Icon, Box } from "@chakra-ui/react";
+import { MdList, MdLocationOn, MdMap, MdPeopleAlt, MdPerson } from "react-icons/md"
 import { Location } from '../../../restapi/locations/Location';
 import { SessionInfo } from '@inrupt/solid-ui-react/dist/src/hooks/useSession';
 import List from './List';
@@ -32,6 +31,7 @@ function Menu(props: MenuProps): JSX.Element {
           zIndex={1}
           overflow='hidden'
           px={2}
+          boxShadow ='lg'
           onMouseOver={()=> {setinsideMenu(true)}}
           onMouseLeave={() => { setinsideMenu(false)}}
     >
@@ -70,8 +70,7 @@ function Menu(props: MenuProps): JSX.Element {
                         onClick={() => {
                           setinsideMenu(false);
                           props.setSelectedView(
-                            <List setSelectedView={(view)=> props.setSelectedView(view)} places={props.locations} 
-                              /*TODO check el loading*/ isLoading= {false} />
+                            <List setSelectedView={(view)=> props.setSelectedView(view)} places={props.locations}  />
                             );
                         }}>
                   Listado de Localizaciones

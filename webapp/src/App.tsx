@@ -1,29 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import {  Button, ChakraProvider, Image, Input, InputGroup, Radio, RadioGroup, Stack, Text, useToast } from '@chakra-ui/react';
+import { ChakraProvider } from '@chakra-ui/react';
 import {Flex} from "@chakra-ui/react";
 import { Location } from '../../restapi/locations/Location';
 import Map from './components/Map';
 
 import './App.css';
-import List from './components/List';
-import AddLocationForm from "./components/AddLocationForm";
-import axios  from 'axios';
 import Login from './components/login/Login';
-import {getLocations, createLocation} from './solid/solidManagement'
-
+import {getLocations} from './solid/solidManagement'
 
 import Menu from './components/Menu';
 import { useSession } from '@inrupt/solid-ui-react';
-import { ProfileView } from './components/ProfileInfo';
 
-import Friends from './components/Friends';
 
 function App(): JSX.Element {
   const [coordinates, setCoordinates] = useState({lng:0, lat:0});
-  const [isLoading, setIsLoading] = useState(true)
   const [locations, setLocations] = useState<Array<Location>>([]);
-  //shortcut to define views that do not vary from the menu see map called 'views'
-  const [nameOfSelectedView, setNameOfSelectedView] = useState<string>("none");
   //stores the actual view currently selected
   const [selectedView, setselectedView] = useState(<></>);
 
@@ -52,8 +43,9 @@ function App(): JSX.Element {
         .then((result)=>
         {
           setLocations(result);
-          setIsLoading(false);
-          console.log(result);
+          //we close if any selected to force reload of elements 
+          //TODO improve this to have leave the same view that was before but reloaded (try with location list, if no locations loaded must be loading and if not list must appear)
+          setselectedView(<></>);
         });
     }
   },[session.session.info.isLoggedIn]);

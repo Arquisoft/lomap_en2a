@@ -1,4 +1,3 @@
-import React from 'react'
 import { Location } from '../../../restapi/locations/Location'
 import {Flex, Box} from "@chakra-ui/react";
 import {  SkeletonCircle, SkeletonText } from '@chakra-ui/react'
@@ -6,12 +5,13 @@ import  PlaceDetail  from './PlaceDetail';
 
 type ListProps = {
     places : Array<Location>;
-    isLoading : boolean;
     setSelectedView: (viewName: JSX.Element) => void //function to change the selected view on the left
 }
 
 function List(props : ListProps) : JSX.Element {
-    if(props.isLoading)return(
+
+   if(props.places.length == 0)
+    return(
         <Flex
           direction={'column'}
           bg={'white'}
@@ -24,6 +24,11 @@ function List(props : ListProps) : JSX.Element {
           overflow='hidden'
           px={2}
           >
+            <Box padding ="6" boxShadow ='lg' bg='white' mt={3}>
+                <SkeletonCircle size = '10'/>
+                <SkeletonText mt='4' noOfLines={4} spacing='4'/>
+            </Box>
+            
             <Box padding ="6" boxShadow ='lg' bg='white' mt={3}>
                 <SkeletonCircle size = '10'/>
                 <SkeletonText mt='4' noOfLines={4} spacing='4'/>
