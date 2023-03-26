@@ -7,7 +7,7 @@ import  PlaceDetail  from './PlaceDetail';
 type ListProps = {
     places : Array<Location>;
     isLoading : boolean;
-    changeViewTo: (viewName: JSX.Element) => void //function to change the selected view on the left
+    setSelectedView: (viewName: JSX.Element) => void //function to change the selected view on the left
 }
 
 function List(props : ListProps) : JSX.Element {
@@ -61,7 +61,7 @@ function List(props : ListProps) : JSX.Element {
         >
         <Flex flex={1} overflowY={'scroll'} mt={16} direction={'column'}>
         {
-            props.places && props.places.map((place,i) => <PlaceDetail changeViewTo={props.changeViewTo} place={place} key ={i}/>)
+            props.places && props.places.map((place,i) => <PlaceDetail setSelectedView={props.setSelectedView} place={place} key ={i}/>)
         }
         </Flex>
     </Flex>);

@@ -28,13 +28,6 @@ function App(): JSX.Element {
   const [selectedView, setselectedView] = useState(<></>);
 
 
-  const getNewLocation = (location:Location) => {
-    // console.log("coming from AddLocation", location)
-    locations.push(location);
-    createLocation(session.session.info.webId as string, location);
-    // console.log(locations);
-  }
-
   const session = useSession();
 
   //we get the locations for the user and fetch them to the list
@@ -55,7 +48,13 @@ function App(): JSX.Element {
     //   });
     // console.log(session)
     if(session.session.info.webId){
-      getLocations(session.session.info.webId).then((result)=>{setLocations(result); setIsLoading(false);  console.log(result)});
+      getLocations(session.session.info.webId)
+        .then((result)=>
+        {
+          setLocations(result);
+          setIsLoading(false);
+          console.log(result);
+        });
     }
   },[session.session.info.isLoggedIn]);
 
@@ -68,34 +67,7 @@ function App(): JSX.Element {
       setCoordinates({lat: latitude , lng : longitude});
     })
   },[]);
-
-
-  //here is where we have to insert the different views that the menu will triger,
-  //see the onclick method on the menu.tsx buttons on how to modify this dictionary to include the
-  //rest of the views
-  const views: { [id: string]: JSX.Element; } = {
-    "none" : <></>,
-    "list": <List changeViewTo={(view)=>setselectedView(view)} places={locations} isLoading= {isLoading} />,
-    "addLocation": <AddLocationForm onSubmit={getNewLocation}/>,
-    "friends": <Friends webId={session.session.info.webId} session={session}/>,
-    "profile" : <ProfileView webId={session.session.info.webId}></ProfileView>
- };
-
- /*
-  This effect triggered when name of the view is changed will set the current selected view to the one
-  in the map of views
- */
-  useEffect(() => {
-    console.log("Cambio a: " +  nameOfSelectedView)
-    setselectedView(views[nameOfSelectedView])
-  }, [nameOfSelectedView])
-
-  useEffect(() => {
-    
-  }, [selectedView])
   
- 
-
   //previous way of deleting
   //<button onClick={() => deleteLocation(session.session.info.webId as string, "https://patrigarcia.inrupt.net/profile/card#d8068302-9df2-4e42-a531-e3d39f685f93")}>DELETE</button>
   //TODO delet this one implemented the correct deletion
@@ -116,7 +88,10 @@ function App(): JSX.Element {
             {
               selectedView ?  selectedView  :  <></>
             }
-            <Menu changeViewTo= {(newView : string) => {setNameOfSelectedView(newView)}}/>
+            <Menu setSelectedView= {(newView : JSX.Element) => {setselectedView(newView)}} 
+                  locations = {locations}
+                  session = {session}
+                  />
             {
               !session.session.info.isLoggedIn ? (
                 <Login session={session.session}></Login>

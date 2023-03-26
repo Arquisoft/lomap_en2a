@@ -6,7 +6,7 @@ import LocationView from './LocationInfo';
 type PlaceDetailProps = {
     place : Location;
     key : number;
-    changeViewTo: (viewName: JSX.Element) => void //function to change the selected view on the left
+    setSelectedView: (viewName: JSX.Element) => void //function to change the selected view on the left
 }
 
 function PlaceDetail (props : PlaceDetailProps ) : JSX.Element{
@@ -21,7 +21,7 @@ function PlaceDetail (props : PlaceDetailProps ) : JSX.Element{
         alignItems={'start'}
         justifyContent = 'space-between'
         //change the view to the information view of the location being clicked
-        onClick={() => props.changeViewTo(<LocationView place={props.place}></LocationView>)}
+        onClick={() => props.setSelectedView(<LocationView place={props.place}></LocationView>)}
         >
         <Flex justifyContent={'space-between'} width ='full'>
             <Flex

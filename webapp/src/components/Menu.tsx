@@ -2,9 +2,18 @@ import React, { useState } from 'react'
 import { Flex, Button, Icon, Text, IconButton, ButtonGroup, Box } from "@chakra-ui/react";
 import { MdList, MdLocationOn, MdMap, MdOutlineOpenInBrowser, MdPeopleAlt, MdPerson } from "react-icons/md"
 import { start } from 'repl';
+import { Location } from '../../../restapi/locations/Location';
+import { SessionInfo } from '@inrupt/solid-ui-react/dist/src/hooks/useSession';
+import List from './List';
+import { createLocation } from '../solid/solidManagement';
+import AddLocationForm from './AddLocationForm';
+import Friends from './Friends';
+import { ProfileView } from './ProfileInfo';
 
 type MenuProps = {
-  changeViewTo: (viewName: string) => void
+  setSelectedView: (view: JSX.Element) => void,
+  locations : Array<Location>,
+  session : SessionInfo
 }
 
 function Menu(props: MenuProps): JSX.Element {
@@ -48,7 +57,7 @@ function Menu(props: MenuProps): JSX.Element {
                         color={'black'}
                         size='lg'
                         height={'5vh'}
-                        onClick={() => { setinsideMenu(false); props.changeViewTo("none"); }}>
+                        onClick={() => { setinsideMenu(false); props.setSelectedView(<></>); }}>
                   Visualización del mapa
                 </Button>
               </Box>
@@ -60,7 +69,10 @@ function Menu(props: MenuProps): JSX.Element {
                         size='lg'
                         onClick={() => {
                           setinsideMenu(false);
-                          props.changeViewTo("list");
+                          props.setSelectedView(
+                            <List setSelectedView={(view)=> props.setSelectedView(view)} places={props.locations} 
+                              /*TODO check el loading*/ isLoading= {false} />
+                            );
                         }}>
                   Listado de Localizaciones
                 </Button>
@@ -74,7 +86,13 @@ function Menu(props: MenuProps): JSX.Element {
                         onClick={
                           () => {
                             setinsideMenu(false);
-                            props.changeViewTo("addLocation");
+                            props.setSelectedView(
+                              <AddLocationForm onSubmit={
+                                (location:Location) => {
+                                  props.locations.push(location);
+                                  createLocation(props.session.session.info.webId as string, location);
+                              }}/>
+                            );
                           }
                         }>
                   Añadir Localización
@@ -88,7 +106,9 @@ function Menu(props: MenuProps): JSX.Element {
                         size='lg'
                         onClick={() => {
                           setinsideMenu(false);
-                          props.changeViewTo("friends");
+                          props.setSelectedView(
+                            <Friends session={props.session}/>
+                          );
                         }}
                 >
                   Añadir amigos
@@ -102,7 +122,9 @@ function Menu(props: MenuProps): JSX.Element {
                         size='lg'
                         onClick={() => {
                           setinsideMenu(false);
-                          props.changeViewTo("profile");
+                          props.setSelectedView(
+                            <ProfileView webId={props.session.session.info.webId}></ProfileView>
+                          );
                         }}
                 >
                   Perfil
