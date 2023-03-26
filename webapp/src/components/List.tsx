@@ -49,7 +49,7 @@ function List(props : ListProps) : JSX.Element {
     return(
     <Flex
         direction={'column'}
-        bg={'whiteAlpha.900'}
+        bg={'white'}
         width={"30vw"}
         height={"100vh"}
         position={'absolute'} 

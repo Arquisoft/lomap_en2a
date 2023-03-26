@@ -23,8 +23,8 @@ function Menu(props: MenuProps): JSX.Element {
           zIndex={1}
           overflow='hidden'
           px={2}
-          onMouseEnter={() => { setinsideMenu(true) }}
-          onMouseLeave={() => { setinsideMenu(false) }}
+          onMouseOver={()=> {setinsideMenu(true)}}
+          onMouseLeave={() => { setinsideMenu(false)}}
     >
       {
         insideMenu ?

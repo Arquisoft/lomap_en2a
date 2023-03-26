@@ -1,6 +1,6 @@
 import React from 'react'
 import { Location } from '../../../restapi/locations/Location';
-import {Flex, Text,Image, CloseButton} from '@chakra-ui/react'
+import {Flex, Text,Image} from '@chakra-ui/react'
 import LocationView from './LocationInfo';
 
 type PlaceDetailProps = {
@@ -23,7 +23,6 @@ function PlaceDetail (props : PlaceDetailProps ) : JSX.Element{
         //change the view to the information view of the location being clicked
         onClick={() => props.changeViewTo(<LocationView place={props.place}></LocationView>)}
         >
-        <CloseButton/>
         <Flex justifyContent={'space-between'} width ='full'>
             <Flex
                 direction={'column'}
@@ -39,7 +38,7 @@ function PlaceDetail (props : PlaceDetailProps ) : JSX.Element{
                     <Text 
                      textTransform={'capitalize'} 
                      width={'40'}
-                     fontSize={'lg'}
+                     fontSize={'large'}
                      fontWeight={'500'}
                      isTruncated>
                         {props.place.name}
