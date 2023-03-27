@@ -70,7 +70,7 @@ function Menu(props: MenuProps): JSX.Element {
                         onClick={() => {
                           setinsideMenu(false);
                           props.setSelectedView(
-                            <List setSelectedView={(view)=> props.setSelectedView(view)} places={props.locations}  />
+                            <List session={props.session} setSelectedView={(view)=> props.setSelectedView(view)} places={props.locations}  />
                             );
                         }}>
                   Listado de Localizaciones

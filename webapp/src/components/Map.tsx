@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from 'react'
 import { Box, useDisclosure } from "@chakra-ui/react";
 import {GoogleMap, InfoWindow, Marker, useJsApiLoader} from '@react-google-maps/api';
-import  LocationView  from './LocationInfo';
+import  LocationInfo  from './LocationInfo';
 import {Coordinates, Location} from "../../../restapi/locations/Location"
+import { SessionInfo } from '@inrupt/solid-ui-react/dist/src/hooks/useSession';
 
 
 type MapProps = {
   //center: Coordinates;
   locations : Array<Location>
   changeViewTo: (viewName: JSX.Element) => void //function to change the selected view on the left
+  session : SessionInfo
 }
 
 const Map = ( props : MapProps) => {
@@ -36,7 +38,7 @@ const Map = ( props : MapProps) => {
     }
     setCenter(newCenter)
     //we display the info tab in the left part of the window
-    props.changeViewTo(<LocationView place={location}></LocationView>);
+    props.changeViewTo(<LocationInfo location session = {props.session}></LocationInfo>);
   }
 
 

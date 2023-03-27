@@ -2,10 +2,12 @@ import { Location } from '../../../restapi/locations/Location'
 import {Flex, Box} from "@chakra-ui/react";
 import {  SkeletonCircle, SkeletonText } from '@chakra-ui/react'
 import  PlaceDetail  from './PlaceDetail';
+import { SessionInfo } from '@inrupt/solid-ui-react/dist/src/hooks/useSession';
 
 type ListProps = {
     places : Array<Location>;
     setSelectedView: (viewName: JSX.Element) => void //function to change the selected view on the left
+    session : SessionInfo
 }
 
 function List(props : ListProps) : JSX.Element {
@@ -66,7 +68,7 @@ function List(props : ListProps) : JSX.Element {
         >
         <Flex flex={1} overflowY={'scroll'} mt={16} direction={'column'}>
         {
-            props.places && props.places.map((place,i) => <PlaceDetail setSelectedView={props.setSelectedView} place={place} key ={i}/>)
+            props.places && props.places.map((place,i) => <PlaceDetail session={props.session} setSelectedView={props.setSelectedView} place={place} key ={i}/>)
         }
         </Flex>
     </Flex>);

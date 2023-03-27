@@ -1,11 +1,13 @@
 import React from 'react'
 import { Location } from '../../../restapi/locations/Location';
 import {Flex, Text,Image} from '@chakra-ui/react'
-import LocationView from './LocationInfo';
+import LocationInfo from './LocationInfo';
+import { SessionInfo } from '@inrupt/solid-ui-react/dist/src/hooks/useSession';
 
 type PlaceDetailProps = {
     place : Location;
     key : number;
+    session : SessionInfo,
     setSelectedView: (viewName: JSX.Element) => void //function to change the selected view on the left
 }
 
@@ -21,7 +23,7 @@ function PlaceDetail (props : PlaceDetailProps ) : JSX.Element{
         alignItems={'start'}
         justifyContent = 'space-between'
         //change the view to the information view of the location being clicked
-        onClick={() => props.setSelectedView(<LocationView place={props.place}></LocationView>)}
+        onClick={() => props.setSelectedView(<LocationInfo location={props.place} session = {props.session}></LocationInfo>)}
         >
         <Flex justifyContent={'space-between'} width ='full'>
             <Flex

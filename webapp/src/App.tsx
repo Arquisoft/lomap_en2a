@@ -75,7 +75,7 @@ function App(): JSX.Element {
           maxHeight={'100vh'}
           position={'relative'}
           >
-            <Map /*center = {coordinates}*/ locations={locations} 
+            <Map /*center = {coordinates}*/ session = {session} locations={locations} 
               changeViewTo= {(newView : JSX.Element) => {setselectedView(newView)}}/>
             {
               selectedView ?  selectedView  :  <></>
