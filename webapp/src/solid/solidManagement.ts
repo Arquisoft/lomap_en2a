@@ -12,9 +12,7 @@ import {
   createSolidDataset
 } from "@inrupt/solid-client";
 
-import { FOAF, VCARD, SCHEMA_INRUPT} from "@inrupt/vocab-common-rdf"
-
-// const session = new Session();
+import { FOAF, VCARD, SCHEMA_INRUPT, RDF} from "@inrupt/vocab-common-rdf"
 
 
 // ************** FUNCTIONS *****************
@@ -38,26 +36,29 @@ export async function getNameFromPod(webID: string){
 
 export async function getLocations(webID:string) {
   let baseURL = webID.split("profile")[0]; // url of the type https://<nombre>.provider/
-  let newFolderURL = `${baseURL}public/lomap/locations/index.ttl`;
-  let locations: Location[] = [];
-  let locationThings;
+  let newFolderURL = `${baseURL}private/lomap/locations/index.ttl`; // locations contained in index.ttl 
+  let locations: Location[] = []; // initialize array of locations
+  let locationThings; 
   try {
-    let dataSet = await getSolidDataset(newFolderURL, {fetch: fetch});
-    locationThings = getThingAll(dataSet)
-    for (let location of locationThings) {
-      let name = getStringNoLocale(location, VCARD.Name) as string;
-      let longitude = getStringNoLocale(location, VCARD.longitude) as string;
-      let latitude = getStringNoLocale(location, VCARD.latitude) as string;
-      let description = getStringNoLocale(location, VCARD.Text) as string;
-      // let image = getStringNoLocale(location, SCHEMA_INRUPT.image) as string;
+    let dataSet = await getSolidDataset(newFolderURL, {fetch: fetch}); // get the dataset
+    locationThings = getThingAll(dataSet) // get the things from the dataset
+    for (let location of locationThings) { // for each location in the dataset
+      let name = getStringNoLocale(location, SCHEMA_INRUPT.name) as string; 
+      let longitude = getStringNoLocale(location, SCHEMA_INRUPT.longitude) as string; 
+      let latitude = getStringNoLocale(location, SCHEMA_INRUPT.latitude) as string; 
+      let description = getStringNoLocale(location, SCHEMA_INRUPT.description) as string; 
+      let imagesFolder = getStringNoLocale(location, SCHEMA_INRUPT.URL) as string; // get the path of the images folder
+      let locationImages: string [] = [];
+      getLocationImage(imagesFolder).then((result) => locationImages = result) // obtain the string[] from Promise<string[]>
   
-      // if location is not null, add it to the return array
+      // if location is not null, add it to the location array
       if (location)
         locations.push({
           name: name,
           coordinates : {lng: new Number(longitude), lat: new Number(latitude)},
           description: description,
-          url: location
+          url: location,
+          images: locationImages
         });
     }
   } catch (error) {
@@ -65,6 +66,27 @@ export async function getLocations(webID:string) {
   }
   
   return locations;
+}
+
+/**
+ * Given the folder containing the images of the locations, gets the images (things) inside the dataset.
+ * @param imagesFolderUrl url of the images folder
+ * @returns string[] containing the images
+ */
+export async function getLocationImage(imagesFolderUrl:string){
+  let images: string[] = [];
+  let imagesThings;
+  try {
+    let imagesDataSet = await getSolidDataset(imagesFolderUrl, {fetch: fetch}); // get images dataset
+    imagesThings = getThingAll(imagesDataSet)
+    for (let image of imagesThings){
+      let img = getStringNoLocale(image, SCHEMA_INRUPT.image) as string;
+      images.push(img);
+    }
+  } catch (error){
+    images = [];
+  }
+return images;
 }
 
 export async function getFriends(webID:string) {
@@ -100,49 +122,58 @@ export async function getFriends(webID:string) {
 
 export async function createLocation(webID:string, location:Location) {
   let baseURL = webID.split("profile")[0]; // url of the type https://<nombre>.inrupt.net/
-  let newFolderURL = `${baseURL}public/lomap/locations/index.ttl`;
+  let newFolderURL = `${baseURL}private/lomap/locations/index.ttl`;
+
   try {
     await addLocationToDataSet(newFolderURL, location)
   } catch (error) {
+    // error because the dataset does not exist -> create it
     await createLocationDataSet(newFolderURL, location)
   }
 }
 
 export async function addLocationToDataSet(folderURL:string, location:Location){
+  let baseURL = folderURL.split("private")[0];
   let locationID = location.name.trim();
   let dataSet = await getSolidDataset(folderURL, {fetch: fetch});
+  let imagesURL = `${baseURL}private/lomap/images/${locationID}/index.ttl`;
 
   let newLocation = buildThing(createThing({name: locationID})) // give the thing a name
-    .addStringNoLocale(VCARD.Name, location.name.toString())
-    .addStringNoLocale(VCARD.longitude, location.coordinates.lng.toString())
-    .addStringNoLocale(VCARD.latitude, location.coordinates.lat.toString())
-    .addStringNoLocale(VCARD.Text, location.description.toString())
-    // .addStringNoLocale(SCHEMA_INRUPT.image, location.images[0])
-    .addUrl(VCARD.Type, VCARD.Location)
+    .addStringNoLocale(SCHEMA_INRUPT.name, location.name.toString())
+    .addStringNoLocale(SCHEMA_INRUPT.longitude, location.coordinates.lng.toString())
+    .addStringNoLocale(SCHEMA_INRUPT.latitude, location.coordinates.lat.toString())
+    .addStringNoLocale(SCHEMA_INRUPT.description, location.description.toString())
+    .addStringNoLocale(SCHEMA_INRUPT.URL, imagesURL)
+    .addUrl(RDF.type, "https://schema.org/Place")
     .build();
 
   dataSet = setThing(dataSet, newLocation);
+  addLocationImage(imagesURL, location);
   try {
     await saveSolidDatasetAt(folderURL, dataSet, {fetch: fetch})
-  } catch (error){
+  } catch (error){ 
     console.log(error)
   }
 }
 
 export async function createLocationDataSet(folderURL:string, location:Location) {
+    let baseURL = folderURL.split("private")[0];
     let locationID = location.name.trim(); //location id
     let dataSet = createSolidDataset(); // create solid dataset
+    let imagesURL = `${baseURL}private/lomap/images/${locationID}/index.ttl`; // create images url
     // build location thing
     let newLocation = buildThing(createThing({name: locationID})) 
-    .addStringNoLocale(VCARD.Name, location.name.toString())
-    .addStringNoLocale(VCARD.longitude, location.coordinates.lng.toString())
-    .addStringNoLocale(VCARD.latitude, location.coordinates.lat.toString())
-    .addStringNoLocale(VCARD.Text, location.description.toString())
-    .addUrl(VCARD.Type, VCARD.Location)
+    .addStringNoLocale(SCHEMA_INRUPT.name, location.name.toString())
+    .addStringNoLocale(SCHEMA_INRUPT.longitude, location.coordinates.lng.toString())
+    .addStringNoLocale(SCHEMA_INRUPT.latitude, location.coordinates.lat.toString())
+    .addStringNoLocale(SCHEMA_INRUPT.description, location.description.toString())
+    .addStringNoLocale(SCHEMA_INRUPT.URL, imagesURL)
+    .addUrl(RDF.type, "https://schema.org/Place")
     .build();
 
 
     dataSet = setThing(dataSet, newLocation); // store thing in dataset
+    addLocationImage(imagesURL, location);
     try {
       await saveSolidDatasetAt(folderURL, dataSet, {fetch: fetch}) // save dataset 
     } catch (error) {
@@ -150,9 +181,26 @@ export async function createLocationDataSet(folderURL:string, location:Location)
     }
 }
 
+export async function addLocationImage(url: string, location:Location) {
+  let imagesDataSet = createSolidDataset();
+  location.images?.forEach(async image => {
+      let newImage = buildThing(createThing({name: image}))
+      .addStringNoLocale(SCHEMA_INRUPT.image, image)
+      .build();
+      imagesDataSet = setThing(imagesDataSet, newImage);
+      try {
+        imagesDataSet = await saveSolidDatasetAt(url, imagesDataSet, {fetch: fetch});
+      } catch (error){
+        console.log(error);
+      }
+    }
+  );
+}
+
+
 export async function deleteLocation(webID:string, locationUrl: string) {
   let baseURL = webID.split("profile")[0]; // url of the type https://<nombre>.inrupt.net/
-  let locationsFolderURL = `${baseURL}public/lomap/locations/index.ttl`;
+  let locationsFolderURL = `${baseURL}private/lomap/locations/index.ttl`;
   try {
     let dataSet = await getSolidDataset(locationsFolderURL, {fetch: fetch}); // fetch locations dataset
     // obtain the location from the POD

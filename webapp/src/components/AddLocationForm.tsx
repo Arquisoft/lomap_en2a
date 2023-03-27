@@ -9,7 +9,6 @@ type AddLocationProps = {
     onSubmit: (location: Location) => void
 }
 
-
 function AddLocationForm(props : any) : JSX.Element {
     const [name, setName] = React.useState('');
 
@@ -19,7 +18,7 @@ function AddLocationForm(props : any) : JSX.Element {
 
     const [description, setDescription] = React.useState('');
 
-    const [images, setImages] = React.useState([]);
+    let imgs: string[] = [];
 
     const regexLat = /^(-?[1-8]?\d(?:\.\d{1,18})?|90(?:\.0{1,18})?)$/;
     const regexLon = /^(-?(?:1[0-7]|[1-9])?\d(?:\.\d{1,18})?|180(?:\.0{1,18})?)$/;
@@ -39,7 +38,7 @@ function AddLocationForm(props : any) : JSX.Element {
                                     lat: Number(latValue)
                                 },
                                 description: description,
-                                images : images}
+                                images : imgs}
             props.onSubmit(l);
             return;
         //}
@@ -100,7 +99,25 @@ function AddLocationForm(props : any) : JSX.Element {
             </Flex>
 
             
-            <input type="file" accept='image/*' multiple onChange={(e:any) => setImages(e.target.files)}></input>
+            <Input 
+                type="file" 
+                accept='image/*' 
+                onChange={(e) => {
+                    var reader = new FileReader();
+                    let files = e.target.files !== null ? e.target.files : [];
+                    for (let image of files){
+                        reader.readAsDataURL(image)
+                        let result = new Promise((resolve, reject) => {
+                            reader.onload = function(event) {
+                                resolve(reader.result)
+                            }
+                        })
+                        imgs.push(result as unknown as string)
+                    }
+                }} 
+                multiple>
+
+            </Input>
             
 
             <Button colorScheme={'orange'}
