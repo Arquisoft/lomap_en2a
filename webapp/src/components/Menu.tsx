@@ -30,6 +30,7 @@ function Menu(props: MenuProps): JSX.Element {
           bottom={-4}
           zIndex={1}
           overflow='hidden'
+          border={"1px solid black"}
           px={2}
           boxShadow ='lg'
           onMouseOver={()=> {setinsideMenu(true)}}
@@ -58,7 +59,7 @@ function Menu(props: MenuProps): JSX.Element {
                         size='lg'
                         height={'5vh'}
                         onClick={() => { setinsideMenu(false); props.setSelectedView(<></>); }}>
-                  Visualización del mapa
+                  Map View
                 </Button>
               </Box>
 

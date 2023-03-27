@@ -29,7 +29,7 @@ const Map = ( props : MapProps) => {
 
   const onUnmount = React.useCallback(function callback() {setMap(null)}, [])
 
-  const handleMapClick = (location) => {
+  const handlePlaceClick = (location) => {
     const newCenter = {
       lat: location.coordinates.lat,
       lng: location.coordinates.lng
@@ -39,10 +39,13 @@ const Map = ( props : MapProps) => {
     props.changeViewTo(<LocationView place={location}></LocationView>);
   }
 
+  function handleMapClick():void {
+
+  }
 
   if (isLoaded)
     return (
-        <GoogleMap mapContainerStyle={{width: '100%', height: '100%'}}
+        <GoogleMap mapContainerStyle={{width: '100%', height: '90%'}}
             center={center}
             zoom={10}
             onLoad={() => {}}
@@ -52,6 +55,7 @@ const Map = ( props : MapProps) => {
               minZoom: 3,
               restriction: {latLngBounds: { north: 85, south: -85, west: -180, east: 180 },}
             }}
+            onClick={() => handleMapClick()}
             //use inside of the options the styles property and personalyce a style in https://mapstyle.withgoogle.com/
         >
           {
@@ -59,7 +63,7 @@ const Map = ( props : MapProps) => {
           props.locations.map((place, i) => (
               <Marker
                   position={{lat: Number(place.coordinates.lat), lng: Number(place.coordinates.lng)}}
-                  onClick={() => handleMapClick(place)}
+                  onClick={() => handlePlaceClick(place)}
               ></Marker>
           ))}
         </GoogleMap>

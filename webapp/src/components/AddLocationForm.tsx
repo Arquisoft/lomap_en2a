@@ -13,8 +13,8 @@ type AddLocationProps = {
 function AddLocationForm(props : any) : JSX.Element {
     const [name, setName] = React.useState('');
 
-    const [latValue, setLatValue] = React.useState('');    
-
+    const [coordsValue, setCoordsValue] = React.useState('');
+    const [latValue, setLatValue] = React.useState('');
     const [lonValue, setLonValue] = React.useState('');
 
     const [description, setDescription] = React.useState('');
@@ -27,9 +27,17 @@ function AddLocationForm(props : any) : JSX.Element {
         return validLat && validLon;
     }
 
+    function handleCoordsValue(coords: string):void {
+        let separatedCoords = coords.split(',');
+        console.log(separatedCoords);
+        setLatValue(separatedCoords[0]);
+        setLonValue(separatedCoords[1]);
+    }
+
     const handleSubmit = (e:any) => {
         e.preventDefault();
 
+        handleCoordsValue(coordsValue);
         //if (checkCoordinates(latValue, lonValue)) {
             let l : Location = {name: name,
                                 coordinates: {
@@ -72,8 +80,8 @@ function AddLocationForm(props : any) : JSX.Element {
             <Flex direction={'column'}>
                 <Text>Coordinates:</Text>
                 <Input
-                    value={latValue}
-                    onChange={(e:any) => setLatValue(e.target.value)}
+                    value={coordsValue}
+                    onChange={(e:any) => setCoordsValue(e.target.value)}
                     placeholder='Ej: 43.35484910218162, -5.851277716083629'
                     size='sm'
                 />
