@@ -6,10 +6,11 @@ import Map from './components/Map';
 
 import './App.css';
 import Login from './components/login/Login';
-import {getLocations} from './solid/solidManagement'
+import {createLocation, deleteLocation, getLocations} from './solid/solidManagement'
 
 import Menu from './components/Menu';
 import { useSession } from '@inrupt/solid-ui-react';
+import { SessionInfo } from '@inrupt/solid-ui-react/dist/src/hooks/useSession';
 
 
 function App(): JSX.Element {
@@ -38,6 +39,11 @@ function App(): JSX.Element {
     //     setLocations([]);
     //   });
     // console.log(session)
+    loadLocations();
+  },[session.session.info.isLoggedIn]);
+
+
+  function loadLocations(){
     if(session.session.info.webId){
       getLocations(session.session.info.webId)
         .then((result)=>
@@ -48,8 +54,23 @@ function App(): JSX.Element {
           setselectedView(<></>);
         });
     }
-  },[session.session.info.isLoggedIn]);
+  }
 
+  function deleteLoc( location:Location){
+    if(session.session.info.webId && location.url)
+      deleteLocation(session.session.info.webId ,location.url.toString()).then(
+        ()=> loadLocations()
+      )
+    
+  }
+  
+  function addLocation(location:Location){
+    if(session.session.info.webId)
+      createLocation(session.session.info.webId ,location).then(
+        ()=> loadLocations()
+      )
+
+  }
 
 
   //get the user's current location and save it for the map to use it as a center
@@ -75,12 +96,16 @@ function App(): JSX.Element {
           maxHeight={'100vh'}
           position={'relative'}
           >
-            <Map /*center = {coordinates}*/ session = {session} locations={locations} 
+            <Map /*center = {coordinates}*/ 
+            deleteLocation={deleteLoc} 
+            locations={locations} 
               changeViewTo= {(newView : JSX.Element) => {setselectedView(newView)}}/>
             {
               selectedView ?  selectedView  :  <></>
             }
-            <Menu setSelectedView= {(newView : JSX.Element) => {setselectedView(newView)}} 
+            <Menu deleteLoc={deleteLoc}
+                  addLocation={addLocation}
+                  setSelectedView= {(newView : JSX.Element) => {setselectedView(newView)}} 
                   locations = {locations}
                   session = {session}
                   />

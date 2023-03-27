@@ -100,9 +100,6 @@ export async function createLocation(webID: string, location:Location) {
     // insert/replace the control structure in the dataset
     dataSet = setThing(dataSet, existLocations);
 
-    console.log("creando localiz")
-    console.log(location)
-
     return await saveSolidDatasetAt(webID, dataSet, {fetch: fetch})
 }
 

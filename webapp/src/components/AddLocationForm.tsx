@@ -10,7 +10,7 @@ type AddLocationProps = {
 }
 
 
-function AddLocationForm(props : any) : JSX.Element {
+function AddLocationForm(props : AddLocationProps) : JSX.Element {
     const [name, setName] = React.useState('');
 
     const [latValue, setLatValue] = React.useState('');    
