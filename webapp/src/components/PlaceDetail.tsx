@@ -1,16 +1,18 @@
 import React from 'react'
 import { Location } from '../../../restapi/locations/Location';
 import {Flex, Text,Image} from '@chakra-ui/react'
+import LocationView from './LocationInfo';
 
 type PlaceDetailProps = {
     place : Location;
     key : number;
+    setSelectedView: (viewName: JSX.Element) => void //function to change the selected view on the left
 }
 
 function PlaceDetail (props : PlaceDetailProps ) : JSX.Element{
   return (
     <Flex
-        bg= {'whiteAlpha.900'}
+        bg= {'white'}
         px={4}
         py={2}
         mb={2}
@@ -18,6 +20,8 @@ function PlaceDetail (props : PlaceDetailProps ) : JSX.Element{
         direction={'column'}
         alignItems={'start'}
         justifyContent = 'space-between'
+        //change the view to the information view of the location being clicked
+        onClick={() => props.setSelectedView(<LocationView place={props.place}></LocationView>)}
         >
         <Flex justifyContent={'space-between'} width ='full'>
             <Flex
@@ -34,7 +38,7 @@ function PlaceDetail (props : PlaceDetailProps ) : JSX.Element{
                     <Text 
                      textTransform={'capitalize'} 
                      width={'40'}
-                     fontSize={'lg'}
+                     fontSize={'large'}
                      fontWeight={'500'}
                      isTruncated>
                         {props.place.name}
