@@ -1,13 +1,27 @@
 import React from 'react'
 import { Location } from '../../../restapi/locations/Location'
-import {Box, Button, Flex, HStack, Input, Spacer, Text, Textarea, VStack, Wrap, WrapItem} from "@chakra-ui/react";
-import {  SkeletonCircle, SkeletonText } from '@chakra-ui/react'
-import  PlaceDetail  from './PlaceDetail';
-import Map from './Map';
+import {Button, Flex, Input, Text, Textarea} from "@chakra-ui/react";
 
 type AddLocationProps = {
     onSubmit: (location: Location) => void
 }
+
+/**
+ * Read the file and obtain its base64 encoding.
+ * @param file contains the file
+ * @param reader FileReader object to do the reading
+ * @returns Promise<string> containing the base64 encoding of the file
+ */
+async function readFileAsync(file, reader) : Promise<string> {
+    return new Promise((resolve, reject) => {
+        reader.onload = () => {
+            alert(reader.result)
+            resolve(reader.result);
+        }
+        reader.readAsDataURL(file);
+    })
+}
+
 
 function AddLocationForm(props : any) : JSX.Element {
     const [name, setName] = React.useState('');
@@ -44,6 +58,7 @@ function AddLocationForm(props : any) : JSX.Element {
         //}
 
     };
+
 
     return (
         <form onSubmit={handleSubmit}>
@@ -102,17 +117,13 @@ function AddLocationForm(props : any) : JSX.Element {
             <Input 
                 type="file" 
                 accept='image/*' 
-                onChange={(e) => {
-                    var reader = new FileReader();
-                    let files = e.target.files !== null ? e.target.files : [];
+                onChange={async function(e) {
+                    imgs = []; // array of images empty
+                    var reader = new FileReader(); // create reader
+                    let files = e.target.files !== null ? e.target.files : []; // obtain files
                     for (let image of files){
-                        reader.readAsDataURL(image)
-                        let result = new Promise((resolve, reject) => {
-                            reader.onload = function(event) {
-                                resolve(reader.result)
-                            }
-                        })
-                        imgs.push(result as unknown as string)
+                        let res = await readFileAsync(image, reader); // wait for the result
+                        imgs.push(res); // add file to array
                     }
                 }} 
                 multiple>

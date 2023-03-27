@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { Box, useDisclosure } from "@chakra-ui/react";
 import {GoogleMap, InfoWindow, Marker, useJsApiLoader} from '@react-google-maps/api';
-import { LocationView } from './LocationInfo';
-import {Coordinates, Location} from "../../../restapi/locations/Location"
+import { LocationInfo } from './LocationInfo';
+import {Location} from "../../../restapi/locations/Location"
 
 
 type MapProps = {
@@ -25,14 +25,12 @@ const Map = ( props : MapProps) => {
   const [center, setCenter] = React.useState(init)
   const [map, setMap] = React.useState(null)
   const [markedLocation, setMarkedLocation] = React.useState('')
-  const [firstMark, setYes] = React.useState(false)
 
   const { onOpen, isOpen, onClose } = useDisclosure()  // for the markers
 
   const onUnmount = React.useCallback(function callback() {setMap(null)}, [])
 
   const handleMapClick = (location) => {
-    !firstMark ? setYes(true) : setYes(false)
     setMarkedLocation(location);
     const newCenter = {
       lat: location.coordinates.lat,
@@ -64,7 +62,7 @@ const Map = ( props : MapProps) => {
                   onClick={() => handleMapClick(place)}
               ></Marker>
           ))}
-          <LocationView isOpen={isOpen} onClose={onClose} place={ firstMark ? markedLocation : ''}></LocationView>
+          <LocationInfo isOpen={isOpen} onClose={onClose} place={ markedLocation }></LocationInfo>
         </GoogleMap>
     );
 
