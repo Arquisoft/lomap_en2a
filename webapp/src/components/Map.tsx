@@ -1,13 +1,15 @@
 import React from 'react'
-import { Box, useDisclosure } from "@chakra-ui/react";
-import {GoogleMap, InfoWindow, Marker, useJsApiLoader} from '@react-google-maps/api';
-import { LocationInfo } from './LocationInfo';
+import { Box } from "@chakra-ui/react";
+import {GoogleMap, Marker, useJsApiLoader} from '@react-google-maps/api';
+import  LocationInfo  from './LocationInfo';
 import {Location} from "../../../restapi/locations/Location"
 
 
 type MapProps = {
   //center: Coordinates;
   locations : Array<Location>
+  changeViewTo: (viewName: JSX.Element) => void //function to change the selected view on the left
+  deleteLocation : (loc : Location) => void
 }
 
 const Map = ( props : MapProps) => {
@@ -24,26 +26,24 @@ const Map = ( props : MapProps) => {
 
   const [center, setCenter] = React.useState(init)
   const [map, setMap] = React.useState(null)
-  const [markedLocation, setMarkedLocation] = React.useState('')
 
-  const { onOpen, isOpen, onClose } = useDisclosure()  // for the markers
 
   const onUnmount = React.useCallback(function callback() {setMap(null)}, [])
 
   const handleMapClick = (location) => {
-    setMarkedLocation(location);
     const newCenter = {
       lat: location.coordinates.lat,
       lng: location.coordinates.lng
     }
     setCenter(newCenter)
-    onOpen();
+    //we display the info tab in the left part of the window
+    props.changeViewTo(<LocationInfo location={location} deleteLocation={props.deleteLocation}></LocationInfo>);
   }
 
 
   if (isLoaded)
     return (
-        <GoogleMap mapContainerStyle={{width: '100%', height: '90%'}}
+        <GoogleMap mapContainerStyle={{width: '100%', height: '100%'}}
             center={center}
             zoom={10}
             onLoad={() => {}}
@@ -55,14 +55,14 @@ const Map = ( props : MapProps) => {
             }}
             //use inside of the options the styles property and personalyce a style in https://mapstyle.withgoogle.com/
         >
-          {/* place the locations in the map */}
-          {props.locations.map((place, i) => (
+          {
+          /* place the locations in the map */
+          props.locations.map((place, i) => (
               <Marker
                   position={{lat: Number(place.coordinates.lat), lng: Number(place.coordinates.lng)}}
                   onClick={() => handleMapClick(place)}
               ></Marker>
           ))}
-          <LocationInfo isOpen={isOpen} onClose={onClose} place={ markedLocation }></LocationInfo>
         </GoogleMap>
     );
 

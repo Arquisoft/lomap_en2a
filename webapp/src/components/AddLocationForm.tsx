@@ -22,7 +22,7 @@ async function readFileAsync(file, reader) : Promise<string> {
 }
 
 
-function AddLocationForm(props : any) : JSX.Element {
+function AddLocationForm(props : AddLocationProps) : JSX.Element {
     const [name, setName] = React.useState('');
 
     const [latValue, setLatValue] = React.useState('');    
@@ -63,7 +63,7 @@ function AddLocationForm(props : any) : JSX.Element {
         <form onSubmit={handleSubmit}>
         <Flex
             direction={'column'}
-            bg={'whiteAlpha.900'}
+            bg={'white'}
             width={"30vw"}
             height={"100vh"}
             position={'absolute'}

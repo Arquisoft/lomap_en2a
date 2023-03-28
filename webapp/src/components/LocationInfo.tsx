@@ -1,35 +1,38 @@
-import { Text, Drawer, DrawerBody, DrawerCloseButton, Stack, 
-  DrawerContent, DrawerHeader, DrawerOverlay, HStack, Image } from "@chakra-ui/react"
+import { Text,Stack, HStack, Image, Box, Flex, Button, Icon} from "@chakra-ui/react"
+import {RxCross2}  from "react-icons/rx";
+import { Location } from "../../../restapi/locations/Location";
 
 
-/**
- * Panel to view the location information
- * @param param place contains the location to show
- * @returns renderized component
- */
-export function LocationInfo({isOpen, onClose, place}) : JSX.Element {  
+type LocationInfoProps = {
+  location : Location
+  deleteLocation : (loc : Location) => void
+};
+
+export default function LocationInfo (props : LocationInfoProps) : JSX.Element {  
 
   return (
-    <Drawer placement='left' onClose={onClose} isOpen={isOpen} size='md'>
-      <DrawerOverlay/>
-      <DrawerContent>
-        <DrawerCloseButton />
-        <DrawerHeader borderBottomWidth='1px'>
-          {
-            place.name != "" && place.name != null ? place.name : "No name"
-          }
-          </DrawerHeader>
-        <DrawerBody mx='5px' marginTop='5px'>
+    <Flex
+        direction={'column'}
+        bg={'white'}
+        width={"30vw"}
+        height={"100vh"}
+        position={'absolute'} 
+        left={'5vw'}
+        top={0}
+        bottom={-4}
+        zIndex={1}
+        overflow='hidden'
+        px={2}
+        >
+        <Text borderBottomWidth='1px'>{props.location.name}</Text>
+        <Flex mx='5px' marginTop='5px'>
           <Stack spacing='20px'>
-            <Text textAlign={'justify'}>
-            {
-              place.description != "" && place.description != null ? place.description : "No description"
-            }</Text>  
+            <Text textAlign={'justify'}>{props.location.description}</Text>  
             <HStack shouldWrapChildren={true} display='flex' overflowX='scroll'> 
             {
-              place.images?.length != null ? 
+              props.location.images?.length != null ? 
               (
-                place.images?.map((image)=>{
+                props.location.images?.map((image)=>{
                   return (
                     <Image 
                       src={image as string} 
@@ -49,9 +52,21 @@ export function LocationInfo({isOpen, onClose, place}) : JSX.Element {
               }
             </HStack>
           </Stack>
-        </DrawerBody>
-      </DrawerContent>
-    </Drawer>
+          </Flex>
+          <Box marginTop={'auto'} marginLeft='auto' marginEnd={'1em'}>
+            <Button colorScheme='red' leftIcon={<Icon as={RxCross2} width='max-content' height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
+              size='lg'
+              onClick={() => {
+                //we show a 
+
+                //we delete the props.location that is being showed
+                props.deleteLocation(props.location);
+              }}
+            >
+              Delete location
+            </Button>
+          </Box>
+    </Flex>
   )
 }
 

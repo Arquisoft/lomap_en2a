@@ -273,9 +273,7 @@ export async function addFriend(webID:string, friend:Friend): Promise<{ error: b
     // if they do not exist, create it
     if (existFriends === null){
       const friends  = await getFriends(webID).then(friendsPromise => {return friendsPromise});
-      console.log(friends);
       if(friends.some(f=>  f.webID.toString() === friend.webID.toString())){
-        console.log("The value is present");
         return {error:true,errorMessage:"You are already friends"};
       }
       else{
@@ -289,9 +287,7 @@ export async function addFriend(webID:string, friend:Friend): Promise<{ error: b
     else{
 
       const friends  = await getFriends(webID).then(friendsPromise => {return friendsPromise});
-      console.log(friends);
       if(friends.some(f=>  f.webID.toString() === friend.webID.toString())){
-        console.log("The value is present");
         return{error:true,errorMessage:""};
       }
       else{
@@ -304,8 +300,6 @@ export async function addFriend(webID:string, friend:Friend): Promise<{ error: b
     dataSet = setThing(dataSet, newFriend);
     // insert/replace the control structure in the dataset
     dataSet = setThing(dataSet, existFriends);
-  
-    console.log("adding friend")
   
     await saveSolidDatasetAt(webID, dataSet, {fetch: fetch})
     return{error:false,errorMessage:""}
