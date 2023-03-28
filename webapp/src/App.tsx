@@ -6,10 +6,11 @@ import Map from './components/Map';
 
 import './App.css';
 import Login from './components/login/Login';
-import {getLocations} from './solid/solidManagement'
+import {createLocation, deleteLocation, getLocations} from './solid/solidManagement'
 
 import Menu from './components/Menu';
 import { useSession } from '@inrupt/solid-ui-react';
+import { SessionInfo } from '@inrupt/solid-ui-react/dist/src/hooks/useSession';
 
 
 function App(): JSX.Element {
@@ -23,33 +24,33 @@ function App(): JSX.Element {
 
   //we get the locations for the user and fetch them to the list
   useEffect(()=>{
-    //TODO refactor once restapi controls locations
-    // axios.get( "http://localhost:5000/locations/getAll"
-    //   ).then ((response) =>{
-    //     console.log(response)
-    //     if(response.status === 200){ //if no error
-    //       setLocations(response.data); //we store the locations retrieved
-    //       setIsLoading(false);
-    //       console.log(locations)
-    //     }
-    //   }).catch((error) =>{
-    //     //an error occurred while sending the request to the restapi
-    //     setIsLoading(true)
-    //     setLocations([]);
-    //   });
-    // console.log(session)
-    if(session.session.info.webId){
-      getLocations(session.session.info.webId)
-        .then((result)=>
-        {
-          setLocations(result);
-          //we close if any selected to force reload of elements 
-          //TODO improve this to have leave the same view that was before but reloaded (try with location list, if no locations loaded must be loading and if not list must appear)
-          setselectedView(<></>);
-        });
-    }
+    loadLocations();
   },[session.session.info.isLoggedIn]);
 
+
+  async function loadLocations(){
+    if(session.session.info.webId){
+      let locationList = await getLocations(session.session.info.webId)
+      setLocations(locationList);
+      setselectedView(<></>);
+    }
+  }
+
+  function deleteLoc( location:Location){
+    if(session.session.info.webId && location.url)
+      deleteLocation(session.session.info.webId ,location.url.toString()).then(
+        ()=> loadLocations()
+      )
+    
+  }
+  
+  function addLocation(location:Location){
+    if(session.session.info.webId)
+      createLocation(session.session.info.webId ,location).then(
+        ()=> loadLocations()
+      )
+
+  }
 
 
   //get the user's current location and save it for the map to use it as a center
@@ -75,12 +76,16 @@ function App(): JSX.Element {
           maxHeight={'100vh'}
           position={'relative'}
           >
-            <Map /*center = {coordinates}*/ locations={locations} 
+            <Map /*center = {coordinates}*/ 
+            deleteLocation={deleteLoc} 
+            locations={locations} 
               changeViewTo= {(newView : JSX.Element) => {setselectedView(newView)}}/>
             {
               selectedView ?  selectedView  :  <></>
             }
-            <Menu setSelectedView= {(newView : JSX.Element) => {setselectedView(newView)}} 
+            <Menu deleteLoc={deleteLoc}
+                  addLocation={addLocation}
+                  setSelectedView= {(newView : JSX.Element) => {setselectedView(newView)}} 
                   locations = {locations}
                   session = {session}
                   />
