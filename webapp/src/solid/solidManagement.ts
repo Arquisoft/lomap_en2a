@@ -13,6 +13,8 @@ import {
 
 import { FOAF, VCARD, SCHEMA_INRUPT, RDF} from "@inrupt/vocab-common-rdf"
 
+import {v4 as uuid} from "uuid"
+
 
 // ************** FUNCTIONS *****************
 
@@ -61,6 +63,7 @@ export async function getLocations(webID:string) {
       let longitude = getStringNoLocale(location, SCHEMA_INRUPT.longitude) as string; 
       let latitude = getStringNoLocale(location, SCHEMA_INRUPT.latitude) as string; 
       let description = getStringNoLocale(location, SCHEMA_INRUPT.description) as string; 
+      let url = getStringNoLocale(location, SCHEMA_INRUPT.identifier) as string;
       let imagesFolder = getStringNoLocale(location, SCHEMA_INRUPT.URL) as string; // get the path of the images folder
       let locationImages: string [] = []; // initialize array to store the images as strings
       locationImages = await getLocationImage(imagesFolder);
@@ -72,7 +75,7 @@ export async function getLocations(webID:string) {
           name: name,
           coordinates : {lng: new Number(longitude), lat: new Number(latitude)},
           description: description,
-          url: location,
+          url: url,
           images: locationImages
         });
     }
@@ -160,10 +163,13 @@ export async function createLocation(webID:string, location:Location) {
  * @param location contains the location
  */
 export async function addLocationToDataSet(folderURL:string, location:Location){
+  let locationID = "LOC_" + uuid(); // ID of the location
+
   let baseURL = folderURL.split("private")[0]; // take the www.<nombre>.provider/ to store the image folder
-  let locationID = location.name.trim(); // ID of the location
-  let dataSet = await getSolidDataset(folderURL, {fetch: fetch}); // get the locations dataset
   let imagesURL = `${baseURL}private/lomap/images/${locationID}/index.ttl`; // create the image folder path
+  let locationIdUrl = folderURL += ("#" + locationID) 
+
+  let dataSet = await getSolidDataset(folderURL, {fetch: fetch}); // get the locations dataset
 
   let newLocation = buildThing(createThing({name: locationID})) // give the thing a name
     .addStringNoLocale(SCHEMA_INRUPT.name, location.name.toString())
@@ -171,6 +177,7 @@ export async function addLocationToDataSet(folderURL:string, location:Location){
     .addStringNoLocale(SCHEMA_INRUPT.latitude, location.coordinates.lat.toString())
     .addStringNoLocale(SCHEMA_INRUPT.description, location.description.toString())
     .addStringNoLocale(SCHEMA_INRUPT.URL, imagesURL) // store the image path
+    .addStringNoLocale(SCHEMA_INRUPT.identifier, locationIdUrl) // store the url of the location
     .addUrl(RDF.type, "https://schema.org/Place")
     .build();
 
@@ -189,28 +196,34 @@ export async function addLocationToDataSet(folderURL:string, location:Location){
  * @param location contains the location to be created
  */
 export async function createLocationDataSet(folderURL:string, location:Location) {
-    let baseURL = folderURL.split("private")[0];
-    let locationID = location.name.trim(); //location id
-    let dataSet = createSolidDataset(); // create solid dataset
-    let imagesURL = `${baseURL}private/lomap/images/${locationID}/index.ttl`; // create images url
-    // build location thing
-    let newLocation = buildThing(createThing({name: locationID})) 
-    .addStringNoLocale(SCHEMA_INRUPT.name, location.name.toString())
-    .addStringNoLocale(SCHEMA_INRUPT.longitude, location.coordinates.lng.toString())
-    .addStringNoLocale(SCHEMA_INRUPT.latitude, location.coordinates.lat.toString())
-    .addStringNoLocale(SCHEMA_INRUPT.description, location.description.toString())
-    .addStringNoLocale(SCHEMA_INRUPT.URL, imagesURL) // add image folder path
-    .addUrl(RDF.type, "https://schema.org/Place")
-    .build();
+  let locationID = "LOC_" + uuid(); // ID of the location
+
+  let baseURL = folderURL.split("private")[0]; // take the www.<nombre>.provider/ to store the image folder
+  let imagesURL = `${baseURL}private/lomap/images/${locationID}/index.ttl`; // create the image folder path
+  let locationIdUrl = folderURL += ("#" + locationID) // construct the url of the location
+
+  let dataSet = createSolidDataset();
+
+    
+  // build location thing
+  let newLocation = buildThing(createThing({name: locationID})) 
+  .addStringNoLocale(SCHEMA_INRUPT.name, location.name.toString())
+  .addStringNoLocale(SCHEMA_INRUPT.longitude, location.coordinates.lng.toString())
+  .addStringNoLocale(SCHEMA_INRUPT.latitude, location.coordinates.lat.toString())
+  .addStringNoLocale(SCHEMA_INRUPT.description, location.description.toString())
+  .addStringNoLocale(SCHEMA_INRUPT.URL, imagesURL) // add image folder path
+  .addStringNoLocale(SCHEMA_INRUPT.identifier, locationIdUrl) // store the url of the location
+  .addUrl(RDF.type, "https://schema.org/Place")
+  .build();
 
 
-    dataSet = setThing(dataSet, newLocation); // store thing in dataset
-    addLocationImage(imagesURL, location); // store the images
-    try {
-      await saveSolidDatasetAt(folderURL, dataSet, {fetch: fetch}) // save dataset 
-    } catch (error) {
-      console.log(error)
-    }
+  dataSet = setThing(dataSet, newLocation); // store thing in dataset
+  addLocationImage(imagesURL, location); // store the images
+  try {
+    await saveSolidDatasetAt(folderURL, dataSet, {fetch: fetch}) // save dataset 
+  } catch (error) {
+    console.log(error)
+  }
 }
 
 /**
