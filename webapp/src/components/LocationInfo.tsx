@@ -1,4 +1,4 @@
-import { Text,Stack, HStack, Image, Box, Flex, Button, Icon} from "@chakra-ui/react"
+import { Text,Stack, HStack, Image, Box, Flex, Button, Icon, Heading, Divider} from "@chakra-ui/react"
 import {RxCross2}  from "react-icons/rx";
 import { Location } from "../../../restapi/locations/Location";
 
@@ -24,47 +24,64 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
         overflow='hidden'
         px={2}
         >
-        <Text borderBottomWidth='1px'>{props.location.name}</Text>
-        <Flex mx='5px' marginTop='5px'>
-          <Stack spacing='20px'>
-            <Text textAlign={'justify'}>{props.location.description}</Text>  
-            <HStack shouldWrapChildren={true} display='flex' overflowX='scroll'> 
-            {
-              props.location.images?.length != null ? 
-              (
-                props.location.images?.map((image)=>{
-                  return (
-                    <Image 
-                      src={image as string} 
-                      width='200'
-                      height='200'
-                      borderRadius='lg'
-                      fallbackSrc='https://via.placeholder.com/150'>
-                    </Image>
-                  )
-                })   
-              ) 
-              : 
-              <Text>
-                  No photos available
-              </Text>
-              }
-            </HStack>
-          </Stack>
-          </Flex>
-          <Box marginTop={'auto'} marginLeft='auto' marginEnd={'1em'}>
-            <Button colorScheme='red' leftIcon={<Icon as={RxCross2} width='max-content' height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
-              size='lg'
-              onClick={() => {
-                //we show a 
+      <Heading
+        fontSize='xx-large'
+        as='b'  
+        isTruncated
+        paddingLeft={'0.6em'}
+        paddingBottom={'0.5em'} 
+        >
+        {props.location.name}
+      </Heading>
 
-                //we delete the props.location that is being showed
-                props.deleteLocation(props.location);
-              }}
-            >
-              Delete location
-            </Button>
-          </Box>
+      <Divider borderWidth={'0.18em'} borderColor='black'  borderRadius={"lg"} width='20em' />
+
+      <Text as='b'>Pictures:</Text>
+      <HStack shouldWrapChildren={true} display='flex' overflowX='auto'> 
+          {
+          props.location.images?.length != null ? 
+          (
+            props.location.images?.map((image)=>{
+              return (
+                <Image 
+                  src={image as string} 
+                  width='200'
+                  height='200'
+                  borderRadius='lg'
+                  fallbackSrc='https://via.placeholder.com/150'>
+                </Image>
+              )
+            })   
+          ) 
+          : 
+          <Text>
+              No photos available
+          </Text>
+          }
+        </HStack>
+
+
+      <Text as={'b'} >Description:</Text>
+      <Flex
+        direction={'column'}
+        overflowY='auto'
+        marginBottom='1.05em'
+        >
+        <Text textAlign={'justify'} margin='1.2em'>{props.location.description}</Text>  
+      </Flex>
+      <Box marginTop={'auto'} marginLeft='auto' marginEnd={'1em'}>
+        <Button colorScheme='red' leftIcon={<Icon as={RxCross2} width='max-content' height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
+          size='lg'
+          onClick={() => {
+            //we show a 
+
+            //we delete the props.location that is being showed
+            props.deleteLocation(props.location);
+          }}
+        >
+          Delete location
+        </Button>
+      </Box>
     </Flex>
   )
 }
