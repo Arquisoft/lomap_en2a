@@ -34,20 +34,20 @@ function PlaceDetail (props : PlaceDetailProps ) : JSX.Element{
                 >
                 <Flex
                  alignItems={'center'}
-                 width={'full'}
+                 width={'auto'}
                  justifyContent={'space-between'}>
-                    <Box width={'100%'}>
-                        <Text 
-                        textTransform={'capitalize'} 
-                        width={'40'}
-                        fontSize={'large'}
-                        fontWeight={'500'}
-                        isTruncated>
-                            {props.place.name}
-                        </Text>
-                    </Box>
+                    
+                    <Text 
+                    textTransform={'capitalize'} 
+                    width={'40'}
+                    fontSize={'large'}
+                    fontWeight={'500'}>
+                        {props.place.name}
+                    </Text>
                 </Flex>
-                <Text  fontSize='x1'isTruncated noOfLines={3}>
+                <Text  
+                    fontSize='x1'
+                    noOfLines={3}>
                         {props.place.description}
                 </Text>
             </Flex>
