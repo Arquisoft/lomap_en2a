@@ -63,7 +63,8 @@ export async function getLocations(webID:string) {
       let description = getStringNoLocale(location, SCHEMA_INRUPT.description) as string; 
       let imagesFolder = getStringNoLocale(location, SCHEMA_INRUPT.URL) as string; // get the path of the images folder
       let locationImages: string [] = []; // initialize array to store the images as strings
-      getLocationImage(imagesFolder).then((result) => locationImages = result) // obtain the string[] from Promise<string[]>
+      locationImages = await getLocationImage(imagesFolder);
+      
   
       // if location is not null, add it to the location array
       if (location)
