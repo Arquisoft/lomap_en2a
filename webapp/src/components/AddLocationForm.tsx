@@ -15,7 +15,6 @@ type AddLocationProps = {
 async function readFileAsync(file, reader) : Promise<string> {
     return new Promise((resolve, reject) => {
         reader.onload = () => {
-            alert(reader.result)
             resolve(reader.result);
         }
         reader.readAsDataURL(file);
