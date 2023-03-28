@@ -21,6 +21,7 @@ function PlaceDetail (props : PlaceDetailProps ) : JSX.Element{
         direction={'column'}
         alignItems={'start'}
         justifyContent = 'space-between'
+        borderRadius={'lg'}
         //change the view to the information view of the location being clicked
         onClick={() => props.setSelectedView(<LocationInfo location={props.place} deleteLocation = {props.deleteLocation} ></LocationInfo>)}
         >
@@ -35,7 +36,8 @@ function PlaceDetail (props : PlaceDetailProps ) : JSX.Element{
                 <Flex
                  alignItems={'center'}
                  width={'auto'}
-                 justifyContent={'space-between'}>
+                 justifyContent={'space-between'}
+                 direction='row'>
                     
                     <Text 
                     textTransform={'capitalize'} 
@@ -44,6 +46,7 @@ function PlaceDetail (props : PlaceDetailProps ) : JSX.Element{
                     fontWeight={'500'}>
                         {props.place.name}
                     </Text>
+                    
                 </Flex>
                 <Text  
                     fontSize='x1'

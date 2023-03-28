@@ -1,6 +1,7 @@
 import { Text,Stack, HStack, Image, Box, Flex, Button, Icon, Heading, Divider} from "@chakra-ui/react"
 import {RxCross2}  from "react-icons/rx";
 import { Location } from "../../../restapi/locations/Location";
+import Review from "./Review";
 
 
 type LocationInfoProps = {
@@ -35,46 +36,66 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
       </Heading>
 
       <Divider borderWidth={'0.18em'} borderColor='black'  borderRadius={"lg"} width='20em' />
-
-      <Text as='b'>Pictures:</Text>
-      <HStack shouldWrapChildren={true} display='flex' overflowX='auto'> 
-          {
-          props.location.images?.length != null ? 
-          (
-            props.location.images?.map((image)=>{
-              return (
-                <Image 
-                  src={image as string} 
-                  width='200'
-                  height='200'
-                  borderRadius='lg'
-                  fallbackSrc='https://via.placeholder.com/150'>
-                </Image>
-              )
-            })   
-          ) 
-          : 
-          <Text>
-              No photos available
-          </Text>
-          }
-        </HStack>
-
-
-      <Text as={'b'} >Description:</Text>
       <Flex
         direction={'column'}
-        overflowY='auto'
-        marginBottom='1.05em'
-        >
-        <Text textAlign={'justify'} margin='1.2em'>{props.location.description}</Text>  
+        overflowY='auto'>
+
+        <Text as='b'fontSize={'x-large'}>Pictures:</Text>
+        <HStack shouldWrapChildren={true} display='flex' overflowX='auto' minHeight={'2em'}> 
+            {
+            props.location.images?.length != null ? 
+            (
+              props.location.images?.map((image)=>{
+                return (
+                  <Image 
+                    src={image as string} 
+                    width='200'
+                    height='200'
+                    borderRadius='lg'
+                    fallbackSrc='https://via.placeholder.com/150'>
+                  </Image>
+                )
+              })   
+            ) 
+            : 
+            <Text>
+                No photos available for this location
+            </Text>
+            }
+          </HStack>
+
+
+        <Text as={'b'} fontSize={'x-large'} >Description:</Text>
+        <Flex
+          direction={'column'}
+          overflowY='auto'
+          marginBottom='1.05em'
+          maxHeight={'30vh'}
+          minHeight='15vh'
+          bgColor='blackAlpha.200'
+          border={"1px"}
+          borderRadius='lg'
+          >
+          <Text 
+            textAlign={'justify'}
+            margin='1.2em'>
+              {props.location.description.trim().length > 0 ? props.location.description : 'No description for this location'}
+          </Text>  
+        </Flex>
+
+        <Text as={'b'} fontSize={'x-large'} >Reviews:</Text>
+        <Review title="Review1" username="monkey" content="This is the content of the review"/>
+        <Review title="Review1" username="monkey" content="This is the content of the review"/>
+        <Review title="Review1" username="monkey" content="This is the content of the review"/>
+        <Review title="Review1" username="monkey" content="This is the content of the review"/>
+        <Review title="Review1" username="monkey" content="This is the content of the review"/>
+        <Review title="Review1" username="monkey" content="This is the content of the review"/>
+
       </Flex>
       <Box marginTop={'auto'} marginLeft='auto' marginEnd={'1em'}>
         <Button colorScheme='red' leftIcon={<Icon as={RxCross2} width='max-content' height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
           size='lg'
           onClick={() => {
-            //we show a 
-
             //we delete the props.location that is being showed
             props.deleteLocation(props.location);
           }}
