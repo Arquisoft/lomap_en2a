@@ -1,6 +1,6 @@
 
 import { Location } from '../../../restapi/locations/Location';
-import {Flex, Text,Image} from '@chakra-ui/react'
+import {Flex, Text,Image, Box} from '@chakra-ui/react'
 import LocationInfo from './LocationInfo';
 
 type PlaceDetailProps = {
@@ -36,16 +36,18 @@ function PlaceDetail (props : PlaceDetailProps ) : JSX.Element{
                  alignItems={'center'}
                  width={'full'}
                  justifyContent={'space-between'}>
-                    <Text 
-                     textTransform={'capitalize'} 
-                     width={'40'}
-                     fontSize={'large'}
-                     fontWeight={'500'}
-                     isTruncated>
-                        {props.place.name}
-                    </Text>
+                    <Box width={'100%'}>
+                        <Text 
+                        textTransform={'capitalize'} 
+                        width={'40'}
+                        fontSize={'large'}
+                        fontWeight={'500'}
+                        isTruncated>
+                            {props.place.name}
+                        </Text>
+                    </Box>
                 </Flex>
-                <Text  fontSize='x1'>
+                <Text  fontSize='x1'isTruncated noOfLines={3}>
                         {props.place.description}
                 </Text>
             </Flex>
