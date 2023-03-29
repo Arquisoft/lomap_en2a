@@ -28,7 +28,6 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
       <Heading
         fontSize='xx-large'
         as='b'  
-        isTruncated
         paddingLeft={'0.6em'}
         paddingBottom={'0.5em'} 
         >
