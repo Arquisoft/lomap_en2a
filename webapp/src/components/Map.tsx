@@ -28,8 +28,7 @@ const Map = ( props : MapProps) => {
 
   const [center, setCenter] = React.useState(init)
   const [map, setMap] = React.useState(null)
-  // check if there are any filters checked, if not show all locations
-  const [areCheckedFilters, setCheckedFilters] = React.useState<boolean>(false)
+  const [areCheckedFilters, setCheckedFilters] = React.useState<boolean>(false) // check if there are any filters checked, if not show all locations
   const [filteredLocations, setFilteredLocations] = React.useState<Array<Location>>([]) //need constant for the filter to work
 
   const onUnmount = React.useCallback(function callback() {setMap(null)}, [])
@@ -46,7 +45,7 @@ const Map = ( props : MapProps) => {
 
   const categories = Object.values(Category); // array of strings containing the values of the categories
 
-  // only filtering by one category. cannot filter by multiple at once
+  // only filtering by one category. cannot filter by multiple at once (possible but not urgent enhancement)
   const handleFilter = (e) => {
     setCheckedFilters(true) // variable to know if we have to display all the locations or filter
     let filtered: Array<Location> = [];
@@ -113,13 +112,12 @@ const Map = ( props : MapProps) => {
               }
                 <Button minWidth={100}
                   onClick={(e) => setCheckedFilters(false)}
-                >
-                  Clear Filters
+                  >Clear Filters
                 </Button>
               </HStack>
           </HStack>
           {
-            !areCheckedFilters? 
+            !areCheckedFilters? // if no filter was pressed or clean filters button was clicked, this value is false
             (props.locations.map((place, i) => (
               <Marker
                   position={{lat: Number(place.coordinates.lat), lng: Number(place.coordinates.lng)}}

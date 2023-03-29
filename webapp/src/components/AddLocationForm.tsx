@@ -64,9 +64,13 @@ function AddLocationForm(props : AddLocationProps) : JSX.Element {
 
     };
 
+    /**
+     * Add/Delete category to/from the location
+     * @param e 
+     */
     const handleCheckedCategory = (e) => {       
         // if the index is > -1, means that the location already had this category and the user wants to erase it
-        const index = checkedCategories.indexOf(e.target.innerText);
+        const index = checkedCategories.indexOf(e.target.innerText); //use innerText to get the name of the category
         if (index > -1) { // only splice array when item is found
             checkedCategories.splice(index, 1); // 2nd parameter means remove one item only
         }
@@ -74,7 +78,6 @@ function AddLocationForm(props : AddLocationProps) : JSX.Element {
         else{
             checkedCategories.push(e.target.innerText) // add category
         }
-        
     }
 
     return (
@@ -135,7 +138,7 @@ function AddLocationForm(props : AddLocationProps) : JSX.Element {
                 <MenuList minWidth='240px'>
                   <MenuOptionGroup type='checkbox'>
                     {
-                      categories.map((kind) => {
+                      categories.map((kind) => { // as many possible categories as items in Category enum
                         return (
                           <MenuItemOption value={kind} onClick={(e) => handleCheckedCategory(e)}
                           >{kind}</MenuItemOption>
@@ -162,10 +165,8 @@ function AddLocationForm(props : AddLocationProps) : JSX.Element {
 
             </Input>
             
-
             <Button colorScheme={'orange'}
                     variant={'outline'}
-                    //onClick={() => {addLocation()}}
                     type={'submit'}
             >
                 Añadir

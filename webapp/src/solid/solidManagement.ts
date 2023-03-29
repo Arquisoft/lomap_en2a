@@ -186,7 +186,7 @@ export async function addLocationToDataSet(folderURL:string, location:Location){
     .addStringNoLocale(SCHEMA_INRUPT.description, location.description.toString())
     .addStringNoLocale(SCHEMA_INRUPT.URL, imagesURL) // store the image path
     .addStringNoLocale(SCHEMA_INRUPT.identifier, locationIdUrl) // store the url of the location
-    .addStringNoLocale(SCHEMA_INRUPT.Product, categoriesSerialized)
+    .addStringNoLocale(SCHEMA_INRUPT.Product, categoriesSerialized) // store string containing the categories
     .addUrl(RDF.type, "https://schema.org/Place")
     .build();
 
@@ -223,7 +223,7 @@ export async function createLocationDataSet(folderURL:string, location:Location)
   .addStringNoLocale(SCHEMA_INRUPT.description, location.description.toString())
   .addStringNoLocale(SCHEMA_INRUPT.URL, imagesURL) // add image folder path
   .addStringNoLocale(SCHEMA_INRUPT.identifier, locationIdUrl) // store the url of the location
-  .addStringNoLocale(SCHEMA_INRUPT.Product, categoriesSerialized)
+  .addStringNoLocale(SCHEMA_INRUPT.Product, categoriesSerialized) // store string containing the categories
   .addUrl(RDF.type, "https://schema.org/Place")
   .build();
 
