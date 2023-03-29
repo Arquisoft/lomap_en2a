@@ -8,6 +8,7 @@ import { createLocation } from '../solid/solidManagement';
 import AddLocationForm from './AddLocationForm';
 import Friends from './Friends';
 import { ProfileView } from './ProfileInfo';
+import App from "../App";
 
 type MenuProps = {
   setSelectedView: (view: JSX.Element) => void,
@@ -92,7 +93,7 @@ function Menu(props: MenuProps): JSX.Element {
                           () => {
                             setinsideMenu(false);
                             props.setSelectedView(
-                              <AddLocationForm onSubmit={props.addLocation}/>
+                              <AddLocationForm onSubmit={props.addLocation} clickedCoords={''}/>
                             );
                           }
                         }>

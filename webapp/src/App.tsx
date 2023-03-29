@@ -11,6 +11,7 @@ import {createLocation, deleteLocation, getLocations} from './solid/solidManagem
 import Menu from './components/Menu';
 import { useSession } from '@inrupt/solid-ui-react';
 import { SessionInfo } from '@inrupt/solid-ui-react/dist/src/hooks/useSession';
+import AddLocationForm from "./components/AddLocationForm";
 
 
 function App(): JSX.Element {
@@ -65,6 +66,7 @@ function App(): JSX.Element {
       setCoordinates({lat: latitude , lng : longitude});
     })
   },[]);
+
   
   //previous way of deleting
   //<button onClick={() => deleteLocation(session.session.info.webId as string, "https://patrigarcia.inrupt.net/profile/card#d8068302-9df2-4e42-a531-e3d39f685f93")}>DELETE</button>

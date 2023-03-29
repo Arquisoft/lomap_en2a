@@ -4,6 +4,7 @@ import {Button, Flex, Input, Text, Textarea} from "@chakra-ui/react";
 
 type AddLocationProps = {
     onSubmit: (location: Location) => void
+    clickedCoords: any;
 }
 
 /**

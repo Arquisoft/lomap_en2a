@@ -4,13 +4,14 @@ import {GoogleMap, Marker, useJsApiLoader} from '@react-google-maps/api';
 import  LocationInfo  from './LocationInfo';
 import {Coordinates, Location} from "../../../restapi/locations/Location"
 import AddLocationForm from './AddLocationForm';
+import Menu from "./Menu";
 
 
 type MapProps = {
-  //center: Coordinates;
-  locations : Array<Location>
-  changeViewTo: (viewName: JSX.Element) => void //function to change the selected view on the left
-  deleteLocation : (loc : Location) => void
+    //center: Coordinates;
+    locations : Array<Location>
+    changeViewTo: (viewName: JSX.Element) => void //function to change the selected view on the left
+    deleteLocation : (loc : Location) => void
 }
 
 const Map = ( props : MapProps) => {
@@ -45,7 +46,8 @@ const Map = ( props : MapProps) => {
     // get coordinates where clicked
     let clickedCoords = lat + ", " + lon
 
-    props.changeViewTo(<AddLocationForm clickedCoords={clickedCoords}></AddLocationForm>);
+    props.changeViewTo(<AddLocationForm onSubmit={props.addLocation}
+                                        clickedCoords={clickedCoords} ></AddLocationForm>);
   }
 
   if (isLoaded)
@@ -91,4 +93,4 @@ const Map = ( props : MapProps) => {
 }
 
 
-export default Map
+export default Map;
