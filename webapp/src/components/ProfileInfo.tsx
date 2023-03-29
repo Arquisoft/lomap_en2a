@@ -1,6 +1,6 @@
 import { Avatar, Text, Flex, VStack, Box } from "@chakra-ui/react"
 import React from "react"
-import { getNameFromPod } from "../solid/solidManagement"
+import { getNameFromPod} from "../solid/solidManagement"
 
 
 

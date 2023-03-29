@@ -52,7 +52,7 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
                     width='200'
                     height='200'
                     borderRadius='lg'
-                    fallbackSrc='https://via.placeholder.com/150'>
+                    fallbackSrc='https://www.resultae.com/wp-content/uploads/2018/07/reloj-100.jpg'>
                   </Image>
                 )
               })   

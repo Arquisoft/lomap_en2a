@@ -24,35 +24,15 @@ function App(): JSX.Element {
 
   //we get the locations for the user and fetch them to the list
   useEffect(()=>{
-    //TODO refactor once restapi controls locations
-    // axios.get( "http://localhost:5000/locations/getAll"
-    //   ).then ((response) =>{
-    //     console.log(response)
-    //     if(response.status === 200){ //if no error
-    //       setLocations(response.data); //we store the locations retrieved
-    //       setIsLoading(false);
-    //       console.log(locations)
-    //     }
-    //   }).catch((error) =>{
-    //     //an error occurred while sending the request to the restapi
-    //     setIsLoading(true)
-    //     setLocations([]);
-    //   });
-    // console.log(session)
     loadLocations();
   },[session.session.info.isLoggedIn]);
 
 
-  function loadLocations(){
+  async function loadLocations(){
     if(session.session.info.webId){
-      getLocations(session.session.info.webId)
-        .then((result)=>
-        {
-          setLocations(result);
-          //we close if any selected to force reload of elements 
-          //TODO improve this to have leave the same view that was before but reloaded (try with location list, if no locations loaded must be loading and if not list must appear)
-          setselectedView(<></>);
-        });
+      let locationList = await getLocations(session.session.info.webId)
+      setLocations(locationList);
+      setselectedView(<></>);
     }
   }
 
