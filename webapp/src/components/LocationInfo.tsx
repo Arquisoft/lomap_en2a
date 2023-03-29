@@ -84,12 +84,13 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
         </Flex>
 
         <Text as={'b'} fontSize={'x-large'} >Reviews:</Text>
-        <Review title="Review1" username="monkey" content="This is the content of the review"/>
-        <Review title="Review1" username="monkey" content="This is the content of the review"/>
-        <Review title="Review1" username="monkey" content="This is the content of the review"/>
-        <Review title="Review1" username="monkey" content="This is the content of the review"/>
-        <Review title="Review1" username="monkey" content="This is the content of the review"/>
-        <Review title="Review1" username="monkey" content="This is the content of the review"/>
+        {
+          props.location.review?
+            props.location.review.map((rev,i)=>{<Review title="Review1" username="monkey" content="This is the content of the review"/>})
+            :
+            <Text>No reviews for this location.</Text>
+        }
+        
 
       </Flex>
       <Box marginTop={'auto'} marginLeft='auto' marginEnd={'1em'}>
