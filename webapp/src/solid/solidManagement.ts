@@ -4,7 +4,7 @@ import { fetch } from "@inrupt/solid-client-authn-browser";
 import { getThingAll } from "@inrupt/solid-client";
 
 import {
-  createThing, removeThing,Thing,getThing, setThing,buildThing,
+  createThing, removeThing,Thing,getThing, setThing,buildThing, setStringNoLocale,
   getSolidDataset, saveSolidDatasetAt, 
   getUrlAll,
   getStringNoLocale,
@@ -14,6 +14,7 @@ import {
 import { FOAF, VCARD, SCHEMA_INRUPT, RDF} from "@inrupt/vocab-common-rdf"
 
 import {v4 as uuid} from "uuid"
+import { Category, deserializeCategories, serializeCategories } from "../components/Category";
 
 
 // ************** FUNCTIONS *****************
@@ -67,7 +68,10 @@ export async function getLocations(webID:string) {
       let imagesFolder = getStringNoLocale(location, SCHEMA_INRUPT.URL) as string; // get the path of the images folder
       let locationImages: string [] = []; // initialize array to store the images as strings
       locationImages = await getLocationImage(imagesFolder);
-      
+      // get serialized categories
+      let categoriesSerialized = getStringNoLocale(location, SCHEMA_INRUPT.Product) as string;
+      // deserialize categories and obtain string[]
+      let categoriesDeserialized = deserializeCategories(categoriesSerialized);
   
       // if location is not null, add it to the location array
       if (location)
@@ -75,6 +79,7 @@ export async function getLocations(webID:string) {
           name: name,
           coordinates : {lng: new Number(longitude), lat: new Number(latitude)},
           description: description,
+          category: categoriesDeserialized,
           url: url,
           images: locationImages
         });
@@ -171,6 +176,9 @@ export async function addLocationToDataSet(folderURL:string, location:Location){
 
   let dataSet = await getSolidDataset(folderURL, {fetch: fetch}); // get the locations dataset
 
+  //serialize categories of location
+  let categoriesSerialized = serializeCategories(location.category);
+
   let newLocation = buildThing(createThing({name: locationID})) // give the thing a name
     .addStringNoLocale(SCHEMA_INRUPT.name, location.name.toString())
     .addStringNoLocale(SCHEMA_INRUPT.longitude, location.coordinates.lng.toString())
@@ -178,6 +186,7 @@ export async function addLocationToDataSet(folderURL:string, location:Location){
     .addStringNoLocale(SCHEMA_INRUPT.description, location.description.toString())
     .addStringNoLocale(SCHEMA_INRUPT.URL, imagesURL) // store the image path
     .addStringNoLocale(SCHEMA_INRUPT.identifier, locationIdUrl) // store the url of the location
+    .addStringNoLocale(SCHEMA_INRUPT.Product, categoriesSerialized)
     .addUrl(RDF.type, "https://schema.org/Place")
     .build();
 
@@ -204,6 +213,7 @@ export async function createLocationDataSet(folderURL:string, location:Location)
 
   let dataSet = createSolidDataset();
 
+  let categoriesSerialized = serializeCategories(location.category); // serialize categories
     
   // build location thing
   let newLocation = buildThing(createThing({name: locationID})) 
@@ -213,6 +223,7 @@ export async function createLocationDataSet(folderURL:string, location:Location)
   .addStringNoLocale(SCHEMA_INRUPT.description, location.description.toString())
   .addStringNoLocale(SCHEMA_INRUPT.URL, imagesURL) // add image folder path
   .addStringNoLocale(SCHEMA_INRUPT.identifier, locationIdUrl) // store the url of the location
+  .addStringNoLocale(SCHEMA_INRUPT.Product, categoriesSerialized)
   .addUrl(RDF.type, "https://schema.org/Place")
   .build();
 
