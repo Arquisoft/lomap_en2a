@@ -13,7 +13,11 @@ type MenuProps = {
   setSelectedView: (view: JSX.Element) => void,
   locations : Array<Location>,
   session : SessionInfo
+  deleteLoc : (location:Location) =>void,
+  addLocation : (location:Location) =>void
 }
+
+
 
 function Menu(props: MenuProps): JSX.Element {
   const [insideMenu, setinsideMenu] = useState(false)
@@ -71,7 +75,8 @@ function Menu(props: MenuProps): JSX.Element {
                         onClick={() => {
                           setinsideMenu(false);
                           props.setSelectedView(
-                            <List setSelectedView={(view)=> props.setSelectedView(view)} places={props.locations}  />
+                            <List deleteLocation={props.deleteLoc}
+                                  setSelectedView={(view)=> props.setSelectedView(view)} places={props.locations}  />
                             );
                         }}>
                   List of Locations
@@ -87,11 +92,7 @@ function Menu(props: MenuProps): JSX.Element {
                           () => {
                             setinsideMenu(false);
                             props.setSelectedView(
-                              <AddLocationForm onSubmit={
-                                (location:Location) => {
-                                  props.locations.push(location);
-                                  createLocation(props.session.session.info.webId as string, location);
-                              }}/>
+                              <AddLocationForm onSubmit={props.addLocation}/>
                             );
                           }
                         }>

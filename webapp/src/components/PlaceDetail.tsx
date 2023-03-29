@@ -1,11 +1,12 @@
-import React from 'react'
+
 import { Location } from '../../../restapi/locations/Location';
 import {Flex, Text,Image} from '@chakra-ui/react'
-import LocationView from './LocationInfo';
+import LocationInfo from './LocationInfo';
 
 type PlaceDetailProps = {
     place : Location;
     key : number;
+    deleteLocation : (loc : Location) => void
     setSelectedView: (viewName: JSX.Element) => void //function to change the selected view on the left
 }
 
@@ -21,7 +22,7 @@ function PlaceDetail (props : PlaceDetailProps ) : JSX.Element{
         alignItems={'start'}
         justifyContent = 'space-between'
         //change the view to the information view of the location being clicked
-        onClick={() => props.setSelectedView(<LocationView place={props.place}></LocationView>)}
+        onClick={() => props.setSelectedView(<LocationInfo location={props.place} deleteLocation = {props.deleteLocation} ></LocationInfo>)}
         >
         <Flex justifyContent={'space-between'} width ='full'>
             <Flex
@@ -55,7 +56,7 @@ function PlaceDetail (props : PlaceDetailProps ) : JSX.Element{
                 rounded='lg'
                 src={
                     //TODO add here the condition on the image to be added to the locations
-                    //{props.place.img} == null ? {props.place.img} : default
+                    //props.place.images[0] != null ? props.place.images[0] : 'https://media.newyorker.com/photos/59095bb86552fa0be682d9d0/master/w_2560%2Cc_limit/Monkey-Selfie.jpg'
 
                     //for now we place a default image
                     'https://media.newyorker.com/photos/59095bb86552fa0be682d9d0/master/w_2560%2Cc_limit/Monkey-Selfie.jpg'

@@ -1,16 +1,28 @@
 import React from 'react'
 import { Location } from '../../../restapi/locations/Location'
-import {Box, Button, Flex, HStack, Input, Spacer, Text, Textarea, VStack, Wrap, WrapItem} from "@chakra-ui/react";
-import {  SkeletonCircle, SkeletonText } from '@chakra-ui/react'
-import  PlaceDetail  from './PlaceDetail';
-import Map from './Map';
+import {Button, Flex, Input, Text, Textarea} from "@chakra-ui/react";
 
 type AddLocationProps = {
     onSubmit: (location: Location) => void
 }
 
+/**
+ * Read the file and obtain its base64 encoding.
+ * @param file contains the file
+ * @param reader FileReader object to do the reading
+ * @returns Promise<string> containing the base64 encoding of the file
+ */
+async function readFileAsync(file, reader) : Promise<string> {
+    return new Promise((resolve, reject) => {
+        reader.onload = () => {
+            resolve(reader.result);
+        }
+        reader.readAsDataURL(file);
+    })
+}
 
-function AddLocationForm(props : any) : JSX.Element {
+
+function AddLocationForm(props : AddLocationProps) : JSX.Element {
     const [name, setName] = React.useState('');
 
     const [coordsValue, setCoordsValue] = React.useState(props.clickedCoords);
@@ -18,6 +30,8 @@ function AddLocationForm(props : any) : JSX.Element {
     const [lonValue, setLonValue] = React.useState('');
 
     const [description, setDescription] = React.useState('');
+
+    let imgs: string[] = [];
 
     const regexLat = /^(-?[1-8]?\d(?:\.\d{1,18})?|90(?:\.0{1,18})?)$/;
     const regexLon = /^(-?(?:1[0-7]|[1-9])?\d(?:\.\d{1,18})?|180(?:\.0{1,18})?)$/;
@@ -45,12 +59,13 @@ function AddLocationForm(props : any) : JSX.Element {
                                     lat: Number(latValue)
                                 },
                                 description: description,
-                                images : []}
+                                images : imgs}
             props.onSubmit(l);
             return;
         //}
 
     };
+
 
     return (
         <form onSubmit={handleSubmit}>
@@ -104,7 +119,23 @@ function AddLocationForm(props : any) : JSX.Element {
                 />
             </Flex>
 
-            <input type="file" accept='image/*' multiple></input>
+            
+            <Input 
+                type="file" 
+                accept='image/*' 
+                onChange={async function(e) {
+                    imgs = []; // array of images empty
+                    var reader = new FileReader(); // create reader
+                    let files = e.target.files !== null ? e.target.files : []; // obtain files
+                    for (let image of files){
+                        let res = await readFileAsync(image, reader); // wait for the result
+                        imgs.push(res); // add file to array
+                    }
+                }} 
+                multiple>
+
+            </Input>
+            
 
             <Button colorScheme={'orange'}
                     variant={'outline'}

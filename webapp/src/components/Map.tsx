@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react'
-import { Box, useDisclosure } from "@chakra-ui/react";
-import {GoogleMap, InfoWindow, Marker, useJsApiLoader} from '@react-google-maps/api';
-import  LocationView  from './LocationInfo';
+import React from 'react'
+import { Box } from "@chakra-ui/react";
+import {GoogleMap, Marker, useJsApiLoader} from '@react-google-maps/api';
+import  LocationInfo  from './LocationInfo';
 import {Coordinates, Location} from "../../../restapi/locations/Location"
 import AddLocationForm from './AddLocationForm';
 
@@ -10,6 +10,7 @@ type MapProps = {
   //center: Coordinates;
   locations : Array<Location>
   changeViewTo: (viewName: JSX.Element) => void //function to change the selected view on the left
+  deleteLocation : (loc : Location) => void
 }
 
 const Map = ( props : MapProps) => {
@@ -36,8 +37,8 @@ const Map = ( props : MapProps) => {
       lng: location.coordinates.lng
     }
     setCenter(newCenter)
-  
-    props.changeViewTo(<LocationView place={location}></LocationView>);
+    //we display the info tab in the left part of the window
+    props.changeViewTo(<LocationInfo location={location} deleteLocation={props.deleteLocation}></LocationInfo>);
   }
 
   function handleMapClick(lat:any,lon:any):void {
@@ -63,7 +64,7 @@ const Map = ( props : MapProps) => {
             onClick={clickedCoords => {
               let lat = clickedCoords.latLng?.lat();
               console.log("lat = ",lat);
-            
+
               let lon = clickedCoords.latLng?.lng();
               console.log("lon = ",lon);
 

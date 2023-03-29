@@ -32,7 +32,6 @@ function Friends(props : any) : JSX.Element {
   const handleSubmit = (event)=>{
     event.preventDefault();
     let value = (document.getElementById("newFriend")as HTMLInputElement).value;
-    console.log(value);
     const result = addFriend(webId,{username:value,webID:value+"url"});
     result.then(r=>{setError(r.error);setErrorMessage(r.errorMessage);})
     handleFriends();
