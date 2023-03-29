@@ -13,7 +13,7 @@ type AddLocationProps = {
 function AddLocationForm(props : any) : JSX.Element {
     const [name, setName] = React.useState('');
 
-    const [coordsValue, setCoordsValue] = React.useState('');
+    const [coordsValue, setCoordsValue] = React.useState(props.clickedCoords);
     const [latValue, setLatValue] = React.useState('');
     const [lonValue, setLonValue] = React.useState('');
 

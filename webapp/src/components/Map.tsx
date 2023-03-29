@@ -3,6 +3,7 @@ import { Box, useDisclosure } from "@chakra-ui/react";
 import {GoogleMap, InfoWindow, Marker, useJsApiLoader} from '@react-google-maps/api';
 import  LocationView  from './LocationInfo';
 import {Coordinates, Location} from "../../../restapi/locations/Location"
+import AddLocationForm from './AddLocationForm';
 
 
 type MapProps = {
@@ -35,17 +36,20 @@ const Map = ( props : MapProps) => {
       lng: location.coordinates.lng
     }
     setCenter(newCenter)
-    //we display the info tab in the left part of the window
+  
     props.changeViewTo(<LocationView place={location}></LocationView>);
   }
 
-  function handleMapClick():void {
+  function handleMapClick(lat:any,lon:any):void {
+    // get coordinates where clicked
+    let clickedCoords = lat + ", " + lon
 
+    props.changeViewTo(<AddLocationForm clickedCoords={clickedCoords}></AddLocationForm>);
   }
 
   if (isLoaded)
     return (
-        <GoogleMap mapContainerStyle={{width: '100%', height: '90%'}}
+        <GoogleMap mapContainerStyle={{width: '100%', height: '100%'}}
             center={center}
             zoom={10}
             onLoad={() => {}}
@@ -55,7 +59,16 @@ const Map = ( props : MapProps) => {
               minZoom: 3,
               restriction: {latLngBounds: { north: 85, south: -85, west: -180, east: 180 },}
             }}
-            onClick={() => handleMapClick()}
+
+            onClick={clickedCoords => {
+              let lat = clickedCoords.latLng?.lat();
+              console.log("lat = ",lat);
+            
+              let lon = clickedCoords.latLng?.lng();
+              console.log("lon = ",lon);
+
+              handleMapClick(lat,lon);
+            }}
             //use inside of the options the styles property and personalyce a style in https://mapstyle.withgoogle.com/
         >
           {
