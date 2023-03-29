@@ -42,7 +42,7 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
         <Text as='b'fontSize={'x-large'}>Pictures:</Text>
         <HStack shouldWrapChildren={true} display='flex' overflowX='auto' minHeight={'2em'}> 
             {
-            props.location.images?.length != null ? 
+            props.location.images?.length? 
             (
               props.location.images?.map((image)=>{
                 return (
@@ -58,7 +58,7 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
             ) 
             : 
             <Text>
-                No photos available for this location
+              No photos available for this location
             </Text>
             }
           </HStack>

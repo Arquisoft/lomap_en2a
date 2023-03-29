@@ -2,6 +2,7 @@
 import { Location } from '../../../restapi/locations/Location';
 import {Flex, Text,Image, Box} from '@chakra-ui/react'
 import LocationInfo from './LocationInfo';
+import noImage from '../no-pictures-picture.png';
 
 type PlaceDetailProps = {
     place : Location;
@@ -59,10 +60,10 @@ function PlaceDetail (props : PlaceDetailProps ) : JSX.Element{
                 height={'120px'}
                 rounded='lg'
                 src={
-                    props.place.images?
+                    props.place.images?.length?
                         props.place.images[0] as string 
                         :
-                        'https://media.newyorker.com/photos/59095bb86552fa0be682d9d0/master/w_2560%2Cc_limit/Monkey-Selfie.jpg'
+                        noImage as string
                 }>
 
             </Image>
