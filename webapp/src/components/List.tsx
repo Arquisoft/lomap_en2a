@@ -65,7 +65,7 @@ function List(props : ListProps) : JSX.Element {
         overflow='hidden'
         px={2}
         >
-        <Flex flex={1} overflowY={'scroll'} mt={16} direction={'column'}>
+        <Flex flex={1} overflowY={'auto'} overflowX='clip' mt={16} direction={'column'}>
         {
             props.places && props.places.map((place,i) => <PlaceDetail deleteLocation={props.deleteLocation} setSelectedView={props.setSelectedView} place={place} key ={i}/>)
         }
