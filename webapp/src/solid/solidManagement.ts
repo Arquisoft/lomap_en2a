@@ -10,6 +10,7 @@ import {
   createThing, removeThing,Thing,getThing, setThing,buildThing,
   getSolidDataset, saveSolidDatasetAt, 
   getUrlAll,
+  getUrl,
   getStringNoLocale,
   createSolidDataset
 } from "@inrupt/solid-client";
@@ -284,12 +285,17 @@ export async function getSolidFriends(webID:string) {
     try{
       
       let name = getStringNoLocale(await getUserProfile(friend),FOAF.name);
+      let imageUrl: string | null = null;
+    
+      let pic = getUrl(await getUserProfile(friend),VCARD.hasPhoto);
+
       
 
       if (friend)
       friends.push({
         username: name as string,
-        webID : friend
+        webID : friend,
+        pfp: pic as string
       });
 
     } catch(err){

@@ -55,7 +55,7 @@ function Friends(props : any) : JSX.Element {
           overflow='hidden'
           px={2}>
           
-        
+    
           { 
             
             props.session.session.info.isLoggedIn ?

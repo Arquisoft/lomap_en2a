@@ -32,6 +32,20 @@ function FriendsDetail (props : FriendsDetailProps ) : JSX.Element{
                  alignItems={'center'}
                  width={'full'}
                  justifyContent={'space-between'}>
+                   {
+                        props.friend.pfp != null ? 
+                            <Image 
+                                src={props.friend.pfp as string} 
+                                width='200'
+                                height='200'
+                                borderRadius='lg'
+                                fallbackSrc='https://www.resultae.com/wp-content/uploads/2018/07/reloj-100.jpg'>
+                            </Image>
+                            
+                           
+                        
+                        : <></>
+                    }
                     <Text 
                      textTransform={'capitalize'} 
                      width={'40'}

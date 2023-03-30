@@ -12,4 +12,5 @@ type User ={
 export type Friend={
     username : string,
     webID : String,
+    pfp: string
 }
