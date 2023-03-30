@@ -1,8 +1,9 @@
 import { Text,Stack, HStack, Image, Box, Flex, Button, Icon, Heading, Divider, useDisclosure, Textarea, Input} from "@chakra-ui/react"
 import {RxCross2}  from "react-icons/rx";
 import {MdOutlineRateReview} from 'react-icons/md'
-import { Location } from "../../../restapi/locations/Location";
-import Review from "./Review";
+import { Location} from "../../../restapi/locations/Location";
+import {Review as ReviewType}  from "../../../restapi/locations/Location";
+
 import {
   Popover,
   PopoverTrigger,
@@ -21,6 +22,7 @@ import {
   FormHelperText,
 } from '@chakra-ui/react'
 import React,{useState} from "react";
+import Review  from "./Review";
 
 
 type LocationInfoProps = {
@@ -28,13 +30,13 @@ type LocationInfoProps = {
   deleteLocation : (loc : Location) => void
 };
 
-
-const AddReview =  ()=>{
+const AddReview =  ( location) =>{
   const {isOpen, onOpen, onClose } = useDisclosure();
+  const [title, settitle] = useState('')
   const [input, setInput] = useState('')
   const firstFieldRef = React.useRef(null);
-
-  let isError = input.trim().length == 0;
+  let errorOnTitle = title.trim().length == 0;
+  let errorOnBody = input.trim().length == 0;
   return (
     <Box marginLeft={'auto'} >
       <Popover
@@ -48,18 +50,57 @@ const AddReview =  ()=>{
           <PopoverTrigger>
             <Button colorScheme={'green'} size='sm' leftIcon ={<MdOutlineRateReview/>} >Add review</Button>
           </PopoverTrigger>
+          <PopoverHeader>Leave a review</PopoverHeader>
           <PopoverContent >
             <Box zIndex={'3'} padding='1.1em'>
-              <FormControl isInvalid={isError} >
-                  <FormLabel>Leave a review </FormLabel>
-                  <Textarea ref={firstFieldRef} value={input} onChange={(e) => setInput(e.target.value)} />
-                  {!isError ? 
-                    <FormHelperText>This review will be stored on the location.</FormHelperText>
-                    : 
-                    <FormErrorMessage>Review is required.</FormErrorMessage>
-                  }
-                  <Button marginLeft={'auto'} colorScheme={'teal'}>Submit review</Button>
-                </FormControl>
+            <PopoverCloseButton />
+              <form onSubmit={()=>{
+                //create a new Review with the info of the current user
+                let review : ReviewType = {
+                  username:'TODO', //TODO
+                  title:title,
+                  content:input,
+                  date:new Date(),
+                  webId : 'TODO' //TODO 
+                };
+                //we add it to the current location 
+                if(location.reviews) //if already have reviews push
+                  location.reviews.push(review)
+                else{ //if this is the first review create array and push
+                  location.reviews = new Array<ReviewType>();
+                  location.reviews.push(review)
+                }
+              }}>
+                <FormControl isInvalid={errorOnBody}  >
+                    <FormLabel>Leave a review </FormLabel>
+                    <FormLabel>Title</FormLabel>
+                    <Input 
+                      value={title}
+                      onChange={(e:any) => settitle(e.target.value)}                                        
+                      placeholder='Title of review'/>
+
+                    {!errorOnTitle ? 
+                      <FormHelperText>Give a descriptive title to the review</FormHelperText>
+                      : 
+                      <FormErrorMessage>Review must have a title</FormErrorMessage>
+                    }
+                    <FormLabel>Body</FormLabel>
+                    <Textarea
+                      placeholder="Body of the review"
+                      ref={firstFieldRef}
+                      value={input}
+                      onChange={(e) => setInput(e.target.value)}
+                      overflowY='auto'
+                      resize={'none'}/>
+                    {!errorOnBody ? 
+                      <FormHelperText>This review will be stored on the location.</FormHelperText>
+                      : 
+                      <FormErrorMessage>Body of the review is required</FormErrorMessage>
+                    }
+                    <Button  type="submit" marginLeft={'auto'} colorScheme={'teal'}
+                      >Submit review</Button>
+                  </FormControl>
+                </form>
               </Box>
           </PopoverContent>
         </Popover>
@@ -144,12 +185,12 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
             direction={'row'}
             width='full'>
           <Text as={'b'} fontSize={'x-large'} >Reviews:</Text>
-          <AddReview ></AddReview>
+          <AddReview location={props.location} ></AddReview>
         </Flex>
         
         {
-          props.location.review?
-            props.location.review.map((rev,i)=>{
+          props.location.reviews?
+            props.location.reviews.map((rev,i)=>{
               <Review title={rev.title as string} username={rev.username as string} content={rev.content as string} date={rev.date}/>
               })
             :

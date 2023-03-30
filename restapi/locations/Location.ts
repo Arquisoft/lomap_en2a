@@ -6,7 +6,7 @@ export type Location = {
     coordinates : Coordinates,
     description : String,
     
-    review ?: Array<Review>,
+    reviews ?: Array<Review>,
     ratings ?: Array<Number>, //stars of the location
     images?: Array<string>
 };
@@ -17,7 +17,7 @@ export type Coordinates = {
 }
 
 export type Review = {
-    webId:URL,
+    webId:string,
 
     date: Date,
     username:String,
