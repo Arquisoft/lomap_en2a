@@ -48,7 +48,10 @@ function AddLocationForm(props : AddLocationProps) : JSX.Element {
 
     const handleSubmit = (e:any) => {
         e.preventDefault();
-
+        // if no category was selected, autoselect 'Other'
+        if (checkedCategories.length == 0){
+            checkedCategories.push(Category.Other)
+        }
         //if (checkCoordinates(latValue, lonValue)) {
             let l : Location = {name: name,
                                 coordinates: {

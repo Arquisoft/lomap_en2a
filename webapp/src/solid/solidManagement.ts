@@ -71,8 +71,16 @@ export async function getLocations(webID:string) {
       locationImages = await getLocationImage(imagesFolder);
       // get serialized categories
       let categoriesSerialized = getStringNoLocale(location, SCHEMA_INRUPT.Product) as string;
-      // deserialize categories and obtain string[]
-      let categoriesDeserialized = deserializeCategories(categoriesSerialized);
+      let categoriesDeserialized;
+
+      // if the location has a category assigned:
+      if (categoriesSerialized) {
+        // deserialize categories and obtain string[]
+        categoriesDeserialized = deserializeCategories(categoriesSerialized);
+      }
+      else{
+        categoriesDeserialized = deserializeCategories(Category.Other)
+      }
   
       // if location is not null, add it to the location array
       if (location)
