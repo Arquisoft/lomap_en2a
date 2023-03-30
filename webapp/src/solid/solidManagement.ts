@@ -3,6 +3,9 @@ import type { Friend } from "../../../restapi/users/User";
 import { fetch } from "@inrupt/solid-client-authn-browser";
 import { getThingAll } from "@inrupt/solid-client";
 
+// Friends second iteration
+import { Friends } from 'solid-auth-client';
+
 import {
   createThing, removeThing,Thing,getThing, setThing,buildThing,
   getSolidDataset, saveSolidDatasetAt, 
@@ -317,5 +320,64 @@ export async function addFriend(webID:string, friend:Friend): Promise<{ error: b
   
     await saveSolidDatasetAt(webID, dataSet, {fetch: fetch})
     return{error:false,errorMessage:""}
+
+}
+
+export async function addFriendSolidPod(webID:string){
+  const friends = await new Friends().getFriends(webID);
+
+// Add a new friend to the list
+  friends.push('https://example.com/friend');
+
+// Save the updated friends list to the user's profile
+  await new Friends().saveFriends(webID, friends);
+}
+
+export async function addFriend1(webID:string, friend:Friend): Promise<{ error: boolean, errorMessage: string }> {
+  let profile = webID.split("#")[0]; //just in case there is extra information in the url
+  // get the dataset from the url
+  let dataSet = await getSolidDataset(profile, {fetch: fetch});  
+
+  let dataSetThing = getThing(dataSet, webID) as Thing;
+
+  try {
+    let existsFriend = getUrlAll(dataSetThing, FOAF.knows)
+    if (existsFriend.some((url) => url === friend.webID)){
+      return{error:true,errorMessage:"You are already friends with this user!"}
+    }
+    else{
+      // We create the friend
+    let newFriend = buildThing(dataSetThing)
+    .addUrl(FOAF.knows, friend.webID as string)
+    .build();
+
+    // insert friend in dataset
+    dataSet = setThing(dataSet, dataSetThing);
+    dataSet = await saveSolidDatasetAt(webID, dataSet, {fetch: fetch})
+    return{error:false,errorMessage:""}
+    }
+  } catch (error){
+    return{error:true,errorMessage:"Not a valid webId!"}
+  }
+}
+
+//Test nuevo
+export async function addSolidFriend(webID: string,friendURL: string): Promise<{error:boolean, errorMessage:string}>{
+  let profile = webID.split("#")[0];
+  let dataSet = await getSolidDataset(profile+"#me", {fetch: fetch});//dataset card me
+
+  let thing =await getThing(dataSet, profile+"#me") as Thing; // :me from dataset
+
+  let newFriend = buildThing(thing)
+    .addUrl(FOAF.knows, friendURL as string)
+    .build();
+
+  //let newThing = buildThing(await getUserProfile(webID)).addUrl(FOAF.knows, newFriend.url).build();
+
+    
+  dataSet = setThing(dataSet, newFriend);
+  dataSet = await saveSolidDatasetAt(webID, dataSet, {fetch: fetch})
+
+  return{error:false,errorMessage:""}
 
 }

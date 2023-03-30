@@ -1,6 +1,6 @@
 import React from 'react'
 import {Flex,Text, Button, Input,  InputRightElement, InputGroup} from "@chakra-ui/react";
-import {addFriend, getFriends} from "../solid/solidManagement";
+import {addFriend, getFriends,addFriendSolidPod,addSolidFriend} from "../solid/solidManagement";
 import type { Friend } from "../../../restapi/users/User";
 import FriendsDetail from './FriendsDetail';
 
@@ -37,6 +37,14 @@ function Friends(props : any) : JSX.Element {
     handleFriends();
     
   }
+  const handleTest= (event)=>{
+
+    let value = (document.getElementById("newFriend")as HTMLInputElement).value;
+    event.preventDefault();
+    addSolidFriend(webId,value);
+   //addFriendSolidPod(webId);
+    
+  }
 
     return (
         <Flex
@@ -51,13 +59,15 @@ function Friends(props : any) : JSX.Element {
           overflow='hidden'
           px={2}>
           
-          {
+          
+ 
+          { 
             
             props.session.session.info.isLoggedIn ?
             <Flex direction={"column"}>
               <Text fontSize='1.2em' borderBottomWidth='1px' margin={'20px'}>Add Friend</Text>
-              
-              <form onSubmit={handleSubmit} >
+              <Button onClick={handleTest} value="test"></Button>
+              <form onSubmit={handleTest} >
                 <InputGroup>
                 <Input placeholder='Friend URL' type='text' id="newFriend" name="newFriend"required/>
                 <InputRightElement>
