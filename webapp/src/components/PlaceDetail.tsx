@@ -1,6 +1,6 @@
 
 import { Location } from '../../../restapi/locations/Location';
-import {Flex, Text,Image} from '@chakra-ui/react'
+import {Flex, Text,Image, Box} from '@chakra-ui/react'
 import LocationInfo from './LocationInfo';
 
 type PlaceDetailProps = {
@@ -21,6 +21,7 @@ function PlaceDetail (props : PlaceDetailProps ) : JSX.Element{
         direction={'column'}
         alignItems={'start'}
         justifyContent = 'space-between'
+        borderRadius={'lg'}
         //change the view to the information view of the location being clicked
         onClick={() => props.setSelectedView(<LocationInfo location={props.place} deleteLocation = {props.deleteLocation} ></LocationInfo>)}
         >
@@ -34,18 +35,22 @@ function PlaceDetail (props : PlaceDetailProps ) : JSX.Element{
                 >
                 <Flex
                  alignItems={'center'}
-                 width={'full'}
-                 justifyContent={'space-between'}>
+                 width={'auto'}
+                 justifyContent={'space-between'}
+                 direction='row'>
+                    
                     <Text 
-                     textTransform={'capitalize'} 
-                     width={'40'}
-                     fontSize={'large'}
-                     fontWeight={'500'}
-                     isTruncated>
+                    textTransform={'capitalize'} 
+                    width={'40'}
+                    fontSize={'large'}
+                    fontWeight={'500'}>
                         {props.place.name}
                     </Text>
+                    
                 </Flex>
-                <Text  fontSize='x1'>
+                <Text  
+                    fontSize='x1'
+                    noOfLines={3}>
                         {props.place.description}
                 </Text>
             </Flex>
