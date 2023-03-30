@@ -10,7 +10,6 @@ type User ={
 }
 
 export type Friend={
-    username : String,
-
+    username : string,
     webID : String,
 }
