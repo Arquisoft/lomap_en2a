@@ -29,33 +29,38 @@ type LocationInfoProps = {
 };
 
 
-const AddReview =  (onOpen,onClose,firstFieldRef)=>{
+const AddReview =  ()=>{
+  const {isOpen, onOpen, onClose } = useDisclosure();
   const [input, setInput] = useState('')
+  const firstFieldRef = React.useRef(null);
+
   let isError = input.trim().length == 0;
   return (
-    <Box marginLeft={'auto'}>
+    <Box marginLeft={'auto'} >
       <Popover
-          isOpen={false}
+          isOpen={isOpen}
           initialFocusRef={firstFieldRef}
           onOpen={onOpen}
           onClose={onClose}
-          placement='right'
+          placement='top'
           closeOnBlur={false}
         >
           <PopoverTrigger>
             <Button colorScheme={'green'} size='sm' leftIcon ={<MdOutlineRateReview/>} >Add review</Button>
           </PopoverTrigger>
-          <PopoverContent>
-            <FormControl isInvalid={isError}>
-                <FormLabel>Email</FormLabel>
-                <Textarea  value={input} onChange={(e) => setInput(e.target.value)} />
-                {!isError ? 
-                  <FormHelperText>This review will be stored on the location.</FormHelperText>
-                  : 
-                  <FormErrorMessage>Review is required.</FormErrorMessage>
-                }
-                <Button>Submit review</Button>
-              </FormControl>
+          <PopoverContent >
+            <Box zIndex={'3'} padding='1.1em'>
+              <FormControl isInvalid={isError} >
+                  <FormLabel>Leave a review </FormLabel>
+                  <Textarea ref={firstFieldRef} value={input} onChange={(e) => setInput(e.target.value)} />
+                  {!isError ? 
+                    <FormHelperText>This review will be stored on the location.</FormHelperText>
+                    : 
+                    <FormErrorMessage>Review is required.</FormErrorMessage>
+                  }
+                  <Button marginLeft={'auto'} colorScheme={'teal'}>Submit review</Button>
+                </FormControl>
+              </Box>
           </PopoverContent>
         </Popover>
       </Box>
@@ -64,10 +69,6 @@ const AddReview =  (onOpen,onClose,firstFieldRef)=>{
 
 
 export default function LocationInfo (props : LocationInfoProps) : JSX.Element {  
-  //variables used in the review addition popup
-  const { onOpen, onClose } = useDisclosure();
-  const firstFieldRef = React.useRef(null);
-
   return (
     <Flex
         direction={'column'}
@@ -143,7 +144,7 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
             direction={'row'}
             width='full'>
           <Text as={'b'} fontSize={'x-large'} >Reviews:</Text>
-          <AddReview onOpen={onOpen} onClosed={onClose} firstFieldRef={firstFieldRef}></AddReview>
+          <AddReview ></AddReview>
         </Flex>
         
         {
