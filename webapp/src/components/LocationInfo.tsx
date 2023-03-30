@@ -1,7 +1,26 @@
-import { Text,Stack, HStack, Image, Box, Flex, Button, Icon, Heading, Divider} from "@chakra-ui/react"
+import { Text,Stack, HStack, Image, Box, Flex, Button, Icon, Heading, Divider, useDisclosure, Textarea, Input} from "@chakra-ui/react"
 import {RxCross2}  from "react-icons/rx";
+import {MdOutlineRateReview} from 'react-icons/md'
 import { Location } from "../../../restapi/locations/Location";
 import Review from "./Review";
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+  PopoverHeader,
+  PopoverBody,
+  PopoverFooter,
+  PopoverArrow,
+  PopoverCloseButton,
+  PopoverAnchor,
+} from '@chakra-ui/react'
+import {
+  FormControl,
+  FormLabel,
+  FormErrorMessage,
+  FormHelperText,
+} from '@chakra-ui/react'
+import React,{useState} from "react";
 
 
 type LocationInfoProps = {
@@ -9,7 +28,45 @@ type LocationInfoProps = {
   deleteLocation : (loc : Location) => void
 };
 
+
+const AddReview =  (onOpen,onClose,firstFieldRef)=>{
+  const [input, setInput] = useState('')
+  let isError = input.trim().length == 0;
+  return (
+    <Box marginLeft={'auto'}>
+      <Popover
+          isOpen={false}
+          initialFocusRef={firstFieldRef}
+          onOpen={onOpen}
+          onClose={onClose}
+          placement='right'
+          closeOnBlur={false}
+        >
+          <PopoverTrigger>
+            <Button colorScheme={'green'} size='sm' leftIcon ={<MdOutlineRateReview/>} >Add review</Button>
+          </PopoverTrigger>
+          <PopoverContent>
+            <FormControl isInvalid={isError}>
+                <FormLabel>Email</FormLabel>
+                <Textarea  value={input} onChange={(e) => setInput(e.target.value)} />
+                {!isError ? 
+                  <FormHelperText>This review will be stored on the location.</FormHelperText>
+                  : 
+                  <FormErrorMessage>Review is required.</FormErrorMessage>
+                }
+                <Button>Submit review</Button>
+              </FormControl>
+          </PopoverContent>
+        </Popover>
+      </Box>
+  )
+}
+
+
 export default function LocationInfo (props : LocationInfoProps) : JSX.Element {  
+  //variables used in the review addition popup
+  const { onOpen, onClose } = useDisclosure();
+  const firstFieldRef = React.useRef(null);
 
   return (
     <Flex
@@ -40,7 +97,7 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
         overflowY='auto'>
 
         <Text as='b'fontSize={'x-large'}>Pictures:</Text>
-        <HStack shouldWrapChildren={true} display='flex' overflowX='auto' minHeight={'2em'}> 
+        <HStack shouldWrapChildren={true} display='flex' overflowX='auto' height={'fit-content'}> 
             {
             props.location.images?.length? 
             (
@@ -82,13 +139,24 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
           </Text>  
         </Flex>
 
-        <Text as={'b'} fontSize={'x-large'} >Reviews:</Text>
+        <Flex
+            direction={'row'}
+            width='full'>
+          <Text as={'b'} fontSize={'x-large'} >Reviews:</Text>
+          <AddReview onOpen={onOpen} onClosed={onClose} firstFieldRef={firstFieldRef}></AddReview>
+        </Flex>
+        
         {
           props.location.review?
-            props.location.review.map((rev,i)=>{<Review title="Review1" username="monkey" content="This is the content of the review"/>})
+            props.location.review.map((rev,i)=>{
+              <Review title={rev.title as string} username={rev.username as string} content={rev.content as string} date={rev.date}/>
+              })
             :
             <Text>No reviews for this location.</Text>
         }
+
+        <Review title="Review1-->delete" username="monkey" content="This is the content of the review" date= {new Date()}/>
+        
         
 
       </Flex>
@@ -106,5 +174,4 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
     </Flex>
   )
 }
-
   

@@ -19,6 +19,7 @@ export type Coordinates = {
 export type Review = {
     webId:URL,
 
+    date: Date,
     username:String,
     title:String,
     content:String
