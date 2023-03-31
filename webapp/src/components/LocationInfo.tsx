@@ -5,6 +5,7 @@ import {MdOutlineRateReview} from 'react-icons/md'
 import { Location} from "../../../restapi/locations/Location";
 import {Review as ReviewType}  from "../../../restapi/locations/Location";
 
+
 import {
   Popover,
   PopoverTrigger,
@@ -30,7 +31,7 @@ type LocationInfoProps = {
   deleteLocation : (loc : Location) => void
 };
 
-const AddReview =  (location : any,setLocation :(loc :Location)=>void ) =>{
+const AddReview =  ( {location ,setLocation}) =>{
   const {isOpen, onOpen, onClose } = useDisclosure();
   const [title, settitle] = useState('')
   const [input, setInput] = useState('')
@@ -52,38 +53,14 @@ const AddReview =  (location : any,setLocation :(loc :Location)=>void ) =>{
           <PopoverTrigger>
             <Button colorScheme={'green'} size='sm' leftIcon ={<MdOutlineRateReview/>} >Add review</Button>
           </PopoverTrigger>
-          <PopoverHeader>Leave a review</PopoverHeader>
           <PopoverContent >
             <Box zIndex={'3'} padding='1.1em'>
             <PopoverCloseButton />
-              <form onSubmit={(e)=>{
-                e.preventDefault();
-
-                //create a new Review with the info of the current user
-                let review : ReviewType = {
-                  username:'TODO', //TODO
-                  title:title,
-                  content:input,
-                  date:new Date(),
-                  webId : 'TODO' //TODO 
-                };
-                //we add it to the current location 
-                if(localLocation.reviews) //if already have reviews push
-                  localLocation.reviews.push(review)
-                else{ //if this is the first review create array and push
-                  localLocation.reviews = new Array<ReviewType>();
-                  localLocation.reviews.push(review)
-                }
-                //we repaint the localLocation being showed
-                setLocation(localLocation)
-                //we persist the update on the Solid pod
-
-                //TODO make call to the solidManagement module here
-              }}>
                 <FormControl isInvalid={errorOnBody}  >
                   <FormLabel>Leave a review </FormLabel>
                   <FormLabel>Title</FormLabel>
                   <Input 
+                    ref={firstFieldRef}
                     value={title}
                     onChange={(e:any) => settitle(e.target.value)}                                        
                     placeholder='Title of review'/>
@@ -96,20 +73,43 @@ const AddReview =  (location : any,setLocation :(loc :Location)=>void ) =>{
                   <FormLabel>Body</FormLabel>
                   <Textarea
                     placeholder="Body of the review"
-                    ref={firstFieldRef}
                     value={input}
                     onChange={(e) => setInput(e.target.value)}
                     overflowY='auto'
                     resize={'none'}/>
                   {!errorOnBody ? 
-                    <FormHelperText>This review will be stored on the location.</FormHelperText>
+                    <FormHelperText>Give a descriptive review body</FormHelperText>
                     : 
                     <FormErrorMessage>Body of the review is required</FormErrorMessage>
                   }
-                  <Button  type="submit" marginLeft={'auto'} colorScheme={'teal'}
+                  <Button marginLeft={'auto'} colorScheme={'teal'} disabled={errorOnBody || errorOnTitle}
+                    onClick={()=>{
+                      //create a new Review with the info of the current user
+                      let review : ReviewType = {
+                        username:'TODO', //TODO
+                        title:title,
+                        content:input,
+                        date:new Date(),
+                        webId : 'TODO' //TODO 
+                      };
+                      //we add it to the current location 
+                      if(localLocation.reviews) //if already have reviews push
+                        localLocation.reviews.push(review)
+                      else{ //if this is the first review create array and push
+                        localLocation.reviews = new Array<ReviewType>();
+                        localLocation.reviews.push(review)
+                      }
+                      //we repaint the localLocation being showed
+                      setLocation(localLocation)
+                      //we persist the update on the Solid pod
+
+                      //TODO make call to the solidManagement module here
+
+                      //we close the add review window
+                      onClose()
+                    }}
                     >Submit review</Button>
                 </FormControl>
-              </form>
             </Box>
         </PopoverContent>
       </Popover>
@@ -120,12 +120,6 @@ const AddReview =  (location : any,setLocation :(loc :Location)=>void ) =>{
 
 export default function LocationInfo (props : LocationInfoProps) : JSX.Element {  
   const [location, setlocation] = useState(props.location)
-
-  useEffect(() => {
-    console.log(location);
-  }, [location])
-  
-
 
   return (
     <Flex
@@ -202,21 +196,19 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
             direction={'row'}
             width='full'>
           <Text as={'b'} fontSize={'x-large'} >Reviews:</Text>
-          <AddReview location={location} setLocation={(loc)=>setlocation(loc)} ></AddReview>
+          <AddReview location={location} setLocation={setlocation} ></AddReview>
         </Flex>
         
         {
           location.reviews?
-            location.reviews.map((rev,i)=>{
+          location.reviews.sort((a,b)=> new Date(a.date).getTime() - new Date(b.date).getTime()).map((rev,i)=>(
               <Review title={rev.title as string} username={rev.username as string} content={rev.content as string} date={rev.date}/>
-              })
+              ))
             :
-            <Text>No reviews for this location.</Text>
+            <Text>No reviews for this location</Text>
         }
+        <Button onClick={()=> {/*TODO delete this when fixed order*/console.log(location.reviews?.sort((a,b)=> new Date(a.date).getTime() - new Date(b.date).getTime())); location.reviews?.forEach(r=> console.log(new Date(r.date).getTime()))}}></Button>
 
-        <Review title="Review1-->delete" username="monkey" content="This is the content of the review" date= {new Date()}/>
-        
-        
 
       </Flex>
       <Box marginTop={'auto'} marginLeft='auto' marginEnd={'1em'}>
