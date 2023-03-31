@@ -1,3 +1,4 @@
+import React,{ useState,useEffect } from 'react';
 import { Text,Stack, HStack, Image, Box, Flex, Button, Icon, Heading, Divider, useDisclosure, Textarea, Input} from "@chakra-ui/react"
 import {RxCross2}  from "react-icons/rx";
 import {MdOutlineRateReview} from 'react-icons/md'
@@ -21,7 +22,6 @@ import {
   FormErrorMessage,
   FormHelperText,
 } from '@chakra-ui/react'
-import React,{useState} from "react";
 import Review  from "./Review";
 
 
@@ -30,13 +30,15 @@ type LocationInfoProps = {
   deleteLocation : (loc : Location) => void
 };
 
-const AddReview =  ( location) =>{
+const AddReview =  (location : any,setLocation :(loc :Location)=>void ) =>{
   const {isOpen, onOpen, onClose } = useDisclosure();
   const [title, settitle] = useState('')
   const [input, setInput] = useState('')
   const firstFieldRef = React.useRef(null);
   let errorOnTitle = title.trim().length == 0;
   let errorOnBody = input.trim().length == 0;
+  //we use a local version of the location because the passed one is the reference to the usestate one
+  let localLocation = JSON.parse(JSON.stringify(location)); 
   return (
     <Box marginLeft={'auto'} >
       <Popover
@@ -54,7 +56,9 @@ const AddReview =  ( location) =>{
           <PopoverContent >
             <Box zIndex={'3'} padding='1.1em'>
             <PopoverCloseButton />
-              <form onSubmit={()=>{
+              <form onSubmit={(e)=>{
+                e.preventDefault();
+
                 //create a new Review with the info of the current user
                 let review : ReviewType = {
                   username:'TODO', //TODO
@@ -64,52 +68,65 @@ const AddReview =  ( location) =>{
                   webId : 'TODO' //TODO 
                 };
                 //we add it to the current location 
-                if(location.reviews) //if already have reviews push
-                  location.reviews.push(review)
+                if(localLocation.reviews) //if already have reviews push
+                  localLocation.reviews.push(review)
                 else{ //if this is the first review create array and push
-                  location.reviews = new Array<ReviewType>();
-                  location.reviews.push(review)
+                  localLocation.reviews = new Array<ReviewType>();
+                  localLocation.reviews.push(review)
                 }
+                //we repaint the localLocation being showed
+                setLocation(localLocation)
+                //we persist the update on the Solid pod
+
+                //TODO make call to the solidManagement module here
               }}>
                 <FormControl isInvalid={errorOnBody}  >
-                    <FormLabel>Leave a review </FormLabel>
-                    <FormLabel>Title</FormLabel>
-                    <Input 
-                      value={title}
-                      onChange={(e:any) => settitle(e.target.value)}                                        
-                      placeholder='Title of review'/>
+                  <FormLabel>Leave a review </FormLabel>
+                  <FormLabel>Title</FormLabel>
+                  <Input 
+                    value={title}
+                    onChange={(e:any) => settitle(e.target.value)}                                        
+                    placeholder='Title of review'/>
 
-                    {!errorOnTitle ? 
-                      <FormHelperText>Give a descriptive title to the review</FormHelperText>
-                      : 
-                      <FormErrorMessage>Review must have a title</FormErrorMessage>
-                    }
-                    <FormLabel>Body</FormLabel>
-                    <Textarea
-                      placeholder="Body of the review"
-                      ref={firstFieldRef}
-                      value={input}
-                      onChange={(e) => setInput(e.target.value)}
-                      overflowY='auto'
-                      resize={'none'}/>
-                    {!errorOnBody ? 
-                      <FormHelperText>This review will be stored on the location.</FormHelperText>
-                      : 
-                      <FormErrorMessage>Body of the review is required</FormErrorMessage>
-                    }
-                    <Button  type="submit" marginLeft={'auto'} colorScheme={'teal'}
-                      >Submit review</Button>
-                  </FormControl>
-                </form>
-              </Box>
-          </PopoverContent>
-        </Popover>
-      </Box>
+                  {!errorOnTitle ? 
+                    <FormHelperText>Give a descriptive title to the review</FormHelperText>
+                    : 
+                    <FormErrorMessage>Review must have a title</FormErrorMessage>
+                  }
+                  <FormLabel>Body</FormLabel>
+                  <Textarea
+                    placeholder="Body of the review"
+                    ref={firstFieldRef}
+                    value={input}
+                    onChange={(e) => setInput(e.target.value)}
+                    overflowY='auto'
+                    resize={'none'}/>
+                  {!errorOnBody ? 
+                    <FormHelperText>This review will be stored on the location.</FormHelperText>
+                    : 
+                    <FormErrorMessage>Body of the review is required</FormErrorMessage>
+                  }
+                  <Button  type="submit" marginLeft={'auto'} colorScheme={'teal'}
+                    >Submit review</Button>
+                </FormControl>
+              </form>
+            </Box>
+        </PopoverContent>
+      </Popover>
+    </Box>
   )
 }
 
 
 export default function LocationInfo (props : LocationInfoProps) : JSX.Element {  
+  const [location, setlocation] = useState(props.location)
+
+  useEffect(() => {
+    console.log(location);
+  }, [location])
+  
+
+
   return (
     <Flex
         direction={'column'}
@@ -130,7 +147,7 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
         paddingLeft={'0.6em'}
         paddingBottom={'0.5em'} 
         >
-        {props.location.name}
+        {location.name}
       </Heading>
 
       <Divider borderWidth={'0.18em'} borderColor='black'  borderRadius={"lg"} width='20em' />
@@ -141,9 +158,9 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
         <Text as='b'fontSize={'x-large'}>Pictures:</Text>
         <HStack shouldWrapChildren={true} display='flex' overflowX='auto' height={'fit-content'}> 
             {
-            props.location.images?.length? 
+            location.images?.length? 
             (
-              props.location.images?.map((image)=>{
+              location.images?.map((image)=>{
                 return (
                   <Image 
                     src={image as string} 
@@ -177,7 +194,7 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
           <Text 
             textAlign={'justify'}
             margin='1.2em'>
-              {props.location.description.trim().length > 0 ? props.location.description : 'No description for this location'}
+              {location.description.trim().length > 0 ? location.description : 'No description for this location'}
           </Text>  
         </Flex>
 
@@ -185,12 +202,12 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
             direction={'row'}
             width='full'>
           <Text as={'b'} fontSize={'x-large'} >Reviews:</Text>
-          <AddReview location={props.location} ></AddReview>
+          <AddReview location={location} setLocation={(loc)=>setlocation(loc)} ></AddReview>
         </Flex>
         
         {
-          props.location.reviews?
-            props.location.reviews.map((rev,i)=>{
+          location.reviews?
+            location.reviews.map((rev,i)=>{
               <Review title={rev.title as string} username={rev.username as string} content={rev.content as string} date={rev.date}/>
               })
             :
@@ -206,8 +223,8 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
         <Button colorScheme='red' leftIcon={<Icon as={RxCross2} width='max-content' height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
           size='lg'
           onClick={() => {
-            //we delete the props.location that is being showed
-            props.deleteLocation(props.location);
+            //we delete the location that is being showed
+            props.deleteLocation(location);
           }}
         >
           Delete location
