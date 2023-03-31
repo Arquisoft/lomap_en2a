@@ -1,34 +1,126 @@
 import React,{ useState,useEffect } from 'react';
-import { Text,Stack, HStack, Image, Box, Flex, Button, Icon, Heading, Divider, useDisclosure, Textarea, Input} from "@chakra-ui/react"
+import { Text,Stack, HStack, Image, Box, Flex, Button, Icon, Heading, Divider, useDisclosure, Textarea, Input, Grid, Progress} from "@chakra-ui/react"
 import {RxCross2}  from "react-icons/rx";
 import {MdOutlineRateReview} from 'react-icons/md'
 import { Location} from "../../../restapi/locations/Location";
 import {Review as ReviewType}  from "../../../restapi/locations/Location";
-
-
-import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-  PopoverHeader,
-  PopoverBody,
-  PopoverFooter,
-  PopoverArrow,
-  PopoverCloseButton,
-  PopoverAnchor,
-} from '@chakra-ui/react'
-import {
-  FormControl,
-  FormLabel,
-  FormErrorMessage,
-  FormHelperText,
-} from '@chakra-ui/react'
+import {Popover,PopoverTrigger,PopoverContent,PopoverCloseButton,} from '@chakra-ui/react'
+import {FormControl,FormLabel,FormErrorMessage,FormHelperText,} from '@chakra-ui/react'
 import Review  from "./Review";
-
+import starFilled from './images/star_filled.png'
+import starUnilled from './images/star_unfilled.png'
+import { FaStar, FaStarHalfAlt } from "react-icons/fa";
 
 type LocationInfoProps = {
   location : Location
   deleteLocation : (loc : Location) => void
+};
+
+
+
+const StarRating = ({ defaultValue = 0, onChange }) => {
+  const [value, setValue] = useState(defaultValue);
+
+  const handleClick = (newValue) => {
+    setValue(newValue);
+    if (onChange) {
+      onChange(newValue);
+    }
+  };
+
+  return (
+    <HStack spacing={1}>
+      {[1, 2, 3, 4, 5].map((i) => {
+        let icon;
+        if (i <= value) {
+          icon = <Icon as={FaStar} color="yellow.500" />;
+        } else if (i === Math.ceil(value) && !Number.isInteger(value)) {
+          icon = <Icon as={FaStarHalfAlt} color="yellow.500" />;
+        } else {
+          icon = <Icon as={FaStar} color="gray.300" />;
+        }
+        return (
+          <span key={i} onClick={() => handleClick(i)}>
+            {icon}
+          </span>
+        );
+      })}
+    </HStack>
+  );
+};
+
+
+const RatingSection = ({location})=>{
+  let localLocation = JSON.parse(JSON.stringify(location)); 
+  // variables to store the number of each rating
+  const [zero, setzero] = useState(30)
+  const [one, setone] = useState(0)
+  const [two, settwo] = useState(0)
+  const [three, setthree] = useState(0)
+  const [four, setfour] = useState(0)
+  const [five, setfive] = useState(0)
+  //for the total numeber or ratings
+  const [total, settotal] = useState(100)
+
+  useEffect(() => {
+    //we compute the number of reviews of each type
+    location.ratings?.array.forEach(rating => {
+      switch (rating.value){
+        case 0: setzero(zero+1); break;
+        case 1: setone(one+1); break;
+        case 2: settwo(two+1); break;
+        case 3: setthree(three+1); break;
+        case 4: setfour(four+1); break;
+        case 5: setfive(five+1); break;
+      }
+      settotal(total+1)
+    });
+  }, [])
+  
+  return (
+    <>
+      <Text as={'b'} fontSize={'x-large'} >Ratings</Text>
+      <Grid templateRows={'repeat(2,1fr)'} gap='1.01em'>
+        <Stack alignItems={'center'} gap='0em'>
+          <Text>Give a rating to this location</Text>
+          {/*TODO cuanto tenga la session meterle aqui al valor inicial el de la location.reviews?.find(webID)*/}
+          <StarRating onChange={()=>{/*TODO meter aqui el update a la location*/}}></StarRating>
+          <Text>Average rating of this location:</Text>
+          <Text as={'b'} fontSize='2xl'>{666 /*TODO change*/}</Text>
+        </Stack>
+        <Grid templateColumns={'repeat(2,1fr)'} gap='1.01em'>
+        <Stack>
+          <Flex gap={'1em'} alignItems={'baseline'} direction={'row'}>
+            <Text>0</Text>
+            <Progress rounded={'md'} width={'full'} value={(zero * 100) / total} size='sm' colorScheme={'yellow'}></Progress>
+          </Flex>
+          <Flex gap={'1em'} alignItems={'baseline'} direction={'row'}>
+            <Text>1</Text>
+            <Progress rounded={'md'} width={'full'} value={(one * 100) / total} size='sm' colorScheme={'yellow'}></Progress>
+          </Flex>
+          <Flex gap={'1em'} alignItems={'baseline'} direction={'row'}>
+            <Text>2</Text>
+            <Progress rounded={'md'} width={'full'} value={(two * 100) / total} size='sm' colorScheme={'yellow'}></Progress>
+          </Flex>
+        </Stack>
+        <Stack>
+          <Flex gap={'1em'} alignItems={'baseline'} direction={'row'}>
+            <Text>3</Text>
+            <Progress rounded={'md'} width={'full'} value={(three * 100) / total} size='sm' colorScheme={'yellow'}></Progress>
+          </Flex>
+          <Flex gap={'1em'} alignItems={'baseline'} direction={'row'}>
+            <Text>4</Text>
+            <Progress rounded={'md'} width={'full'} value={(four * 100) / total} size='sm' colorScheme={'yellow'}></Progress>
+          </Flex>
+          <Flex gap={'1em'} alignItems={'baseline'} direction={'row'}>
+            <Text>5</Text>
+            <Progress rounded={'md'} width={'full'} value={(five * 100) / total} size='sm' colorScheme={'yellow'}></Progress>
+          </Flex>
+        </Stack>
+        </Grid>
+      </Grid>
+    </>
+  )
 };
 
 const AddReview =  ( {location ,setLocation}) =>{
@@ -191,6 +283,8 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
               {location.description.trim().length > 0 ? location.description : 'No description for this location'}
           </Text>  
         </Flex>
+
+        <RatingSection location={location} ></RatingSection>
 
         <Flex
             direction={'row'}

@@ -7,7 +7,7 @@ export type Location = {
     description : String,
     
     reviews ?: Array<Review>,
-    ratings ?: Array<Number>, //stars of the location
+    ratings ?: Map<string,Number>, //stars of the location <webId,number>
     images?: Array<string>
 };
 
