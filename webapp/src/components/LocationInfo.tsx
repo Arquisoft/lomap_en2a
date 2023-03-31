@@ -7,9 +7,8 @@ import {Review as ReviewType}  from "../../../restapi/locations/Location";
 import {Popover,PopoverTrigger,PopoverContent,PopoverCloseButton,} from '@chakra-ui/react'
 import {FormControl,FormLabel,FormErrorMessage,FormHelperText,} from '@chakra-ui/react'
 import Review  from "./Review";
-import starFilled from './images/star_filled.png'
-import starUnilled from './images/star_unfilled.png'
 import { FaStar, FaStarHalfAlt } from "react-icons/fa";
+import noImage from '../no-pictures-picture.png';
 
 type LocationInfoProps = {
   location : Location
@@ -20,6 +19,7 @@ type LocationInfoProps = {
 
 const StarRating = ({ defaultValue = 0, onChange }) => {
   const [value, setValue] = useState(defaultValue);
+  const [hoverValue, setHoverValue] = useState(0);
 
   const handleClick = (newValue) => {
     setValue(newValue);
@@ -28,19 +28,31 @@ const StarRating = ({ defaultValue = 0, onChange }) => {
     }
   };
 
+  const handleMouseEnter = (newValue) => {
+    setHoverValue(newValue);
+  };
+
+  const handleMouseLeave = () => {
+    setHoverValue(0);
+  };
+
   return (
-    <HStack spacing={1}>
+    <HStack spacing={1} onMouseLeave={() => handleMouseLeave()}>
       {[1, 2, 3, 4, 5].map((i) => {
         let icon;
-        if (i <= value) {
+        if (i <= (hoverValue || value)) {
           icon = <Icon as={FaStar} color="yellow.500" />;
-        } else if (i === Math.ceil(value) && !Number.isInteger(value)) {
+        } else if (i === Math.ceil(hoverValue) && !Number.isInteger(value)) {
           icon = <Icon as={FaStarHalfAlt} color="yellow.500" />;
         } else {
           icon = <Icon as={FaStar} color="gray.300" />;
         }
         return (
-          <span key={i} onClick={() => handleClick(i)}>
+          <span
+            key={i}
+            onClick={() => handleClick(i)}
+            onMouseEnter={() => handleMouseEnter(i)}
+          >
             {icon}
           </span>
         );
@@ -50,74 +62,89 @@ const StarRating = ({ defaultValue = 0, onChange }) => {
 };
 
 
-const RatingSection = ({location})=>{
+const RatingSection = ({location, setLocation})=>{
   let localLocation = JSON.parse(JSON.stringify(location)); 
+  console.log(localLocation)
   // variables to store the number of each rating
-  const [zero, setzero] = useState(30)
   const [one, setone] = useState(0)
   const [two, settwo] = useState(0)
   const [three, setthree] = useState(0)
   const [four, setfour] = useState(0)
   const [five, setfive] = useState(0)
-  //for the total numeber or ratings
+  //for the total number or ratings
   const [total, settotal] = useState(100)
+  //for the average of total reviews
+  const [average, setaverage] = useState(0)
 
   useEffect(() => {
+    console.log(localLocation)
+    setaverage(0);
     //we compute the number of reviews of each type
-    location.ratings?.array.forEach(rating => {
-      switch (rating.value){
-        case 0: setzero(zero+1); break;
-        case 1: setone(one+1); break;
-        case 2: settwo(two+1); break;
-        case 3: setthree(three+1); break;
-        case 4: setfour(four+1); break;
-        case 5: setfive(five+1); break;
-      }
-      settotal(total+1)
-    });
-  }, [])
+    if(location.ratings)
+      location.ratings.forEach((value,key,map) => {
+        switch (value){
+          case 1: setone(prev => prev + 1); break;
+          case 2: settwo(prev => prev + 1); break;
+          case 3: setthree(prev => prev + 1); break;
+          case 4: setfour(prev => prev + 1); break;
+          case 5: setfive(prev => prev + 1); break;
+        }
+        setaverage(prev => prev + value)
+        settotal(prev => prev + 1)
+      });
+    setaverage(average/total)
+  }, [location])
   
   return (
     <>
       <Text as={'b'} fontSize={'x-large'} >Ratings</Text>
-      <Grid templateRows={'repeat(2,1fr)'} gap='1.01em'>
+      <Grid templateRows={'repeat(2,1fr)'} >
         <Stack alignItems={'center'} gap='0em'>
           <Text>Give a rating to this location</Text>
-          {/*TODO cuanto tenga la session meterle aqui al valor inicial el de la location.reviews?.find(webID)*/}
-          <StarRating onChange={()=>{/*TODO meter aqui el update a la location*/}}></StarRating>
+          {/*TODO cuanto tenga la session meterle aqui al valor inicial el de la location.ratings?.find(webID)*/}
+          <StarRating defaultValue={0}  onChange={(value) => { 
+            //we add it to the location
+            if (localLocation.ratings === undefined) {
+              localLocation.ratings = new Map<string,number>();
+            }
+            console.log(localLocation.ratings)
+            localLocation.ratings.set("WEBID", value);
+            setLocation(localLocation);
+            //TODO hacer aqui el update en solid pod
+
+          }}></StarRating>
           <Text>Average rating of this location:</Text>
-          <Text as={'b'} fontSize='2xl'>{666 /*TODO change*/}</Text>
+          <Text as={'b'} fontSize='2xl'>{average}</Text>
         </Stack>
-        <Grid templateColumns={'repeat(2,1fr)'} gap='1.01em'>
-        <Stack>
-          <Flex gap={'1em'} alignItems={'baseline'} direction={'row'}>
-            <Text>0</Text>
-            <Progress rounded={'md'} width={'full'} value={(zero * 100) / total} size='sm' colorScheme={'yellow'}></Progress>
-          </Flex>
-          <Flex gap={'1em'} alignItems={'baseline'} direction={'row'}>
-            <Text>1</Text>
-            <Progress rounded={'md'} width={'full'} value={(one * 100) / total} size='sm' colorScheme={'yellow'}></Progress>
-          </Flex>
-          <Flex gap={'1em'} alignItems={'baseline'} direction={'row'}>
-            <Text>2</Text>
-            <Progress rounded={'md'} width={'full'} value={(two * 100) / total} size='sm' colorScheme={'yellow'}></Progress>
-          </Flex>
-        </Stack>
-        <Stack>
-          <Flex gap={'1em'} alignItems={'baseline'} direction={'row'}>
-            <Text>3</Text>
-            <Progress rounded={'md'} width={'full'} value={(three * 100) / total} size='sm' colorScheme={'yellow'}></Progress>
-          </Flex>
-          <Flex gap={'1em'} alignItems={'baseline'} direction={'row'}>
-            <Text>4</Text>
-            <Progress rounded={'md'} width={'full'} value={(four * 100) / total} size='sm' colorScheme={'yellow'}></Progress>
-          </Flex>
-          <Flex gap={'1em'} alignItems={'baseline'} direction={'row'}>
+        <Stack alignItems={'center'}>
+          <Grid templateColumns={'repeat(2,1fr)'} gap='0.5vw' width={'full'}>
+            <Stack>
+              <Flex gap={'1em'} alignItems={'baseline'} direction={'row'}>
+                <Text>1</Text>
+                <Progress rounded={'md'} width={'full'} value={(one * 100) / total} size='sm' colorScheme={'yellow'}></Progress>
+              </Flex>
+              <Flex gap={'1em'} alignItems={'baseline'} direction={'row'}>
+                <Text>2</Text>
+                <Progress rounded={'md'} width={'full'} value={(two * 100) / total} size='sm' colorScheme={'yellow'}></Progress>
+              </Flex>
+            </Stack>
+            <Stack>
+              <Flex gap={'1em'} alignItems={'baseline'} direction={'row'}>
+                <Text>3</Text>
+                <Progress rounded={'md'} width={'full'} value={(three * 100) / total} size='sm' colorScheme={'yellow'}></Progress>
+              </Flex>
+              <Flex gap={'1em'} alignItems={'baseline'} direction={'row'}>
+                <Text>4</Text>
+                <Progress rounded={'md'} width={'full'} value={(four * 100) / total} size='sm' colorScheme={'yellow'}></Progress>
+              </Flex>
+            </Stack>
+          </Grid>
+          <Flex gap={'1em'} width={'14.5vw'} justifyContent='center' alignItems={'baseline'} direction={'row'}>
             <Text>5</Text>
             <Progress rounded={'md'} width={'full'} value={(five * 100) / total} size='sm' colorScheme={'yellow'}></Progress>
           </Flex>
+
         </Stack>
-        </Grid>
       </Grid>
     </>
   )
@@ -212,7 +239,10 @@ const AddReview =  ( {location ,setLocation}) =>{
 
 export default function LocationInfo (props : LocationInfoProps) : JSX.Element {  
   const [location, setlocation] = useState(props.location)
-
+  // useEffect(() => {
+  //   console.log(location)
+  // }, [location])
+  
   return (
     <Flex
         direction={'column'}
@@ -242,7 +272,7 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
         overflowY='auto'>
 
         <Text as='b'fontSize={'x-large'}>Pictures:</Text>
-        <HStack shouldWrapChildren={true} display='flex' overflowX='auto' height={'fit-content'}> 
+        <HStack shouldWrapChildren={true} display='flex' overflowX='auto' minHeight={200}  height={'fit-content'}> 
             {
             location.images?.length? 
             (
@@ -259,9 +289,16 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
               })   
             ) 
             : 
-            <Text>
-              No photos available for this location
-            </Text>
+            <>
+              <Text>
+                No photos available for this location
+              </Text>
+              <Image 
+                src={noImage as string} 
+                width='180'
+                height='180'
+                borderRadius='lg'></Image>
+            </>
             }
           </HStack>
 
@@ -274,7 +311,7 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
           maxHeight={'30vh'}
           minHeight='15vh'
           bgColor='blackAlpha.200'
-          border={"1px"}
+          
           borderRadius='lg'
           >
           <Text 
@@ -284,7 +321,8 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
           </Text>  
         </Flex>
 
-        <RatingSection location={location} ></RatingSection>
+        <RatingSection location={location} setLocation={setlocation} ></RatingSection>
+        <Button colorScheme={'red'} onClick={()=> {/*TODO delete this when fixed order*/console.log(location.ratings)}}>BORRAR</Button>
 
         <Flex
             direction={'row'}
