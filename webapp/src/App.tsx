@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ChakraProvider } from '@chakra-ui/react';
+import { ChakraProvider, HStack, Input, Tag, TagLabel, TagLeftIcon } from '@chakra-ui/react';
 import {Flex} from "@chakra-ui/react";
 import { Location } from '../../restapi/locations/Location';
 import Map from './components/Map';
@@ -88,7 +88,7 @@ function App(): JSX.Element {
                   setSelectedView= {(newView : JSX.Element) => {setselectedView(newView)}} 
                   locations = {locations}
                   session = {session}
-                  />
+            />
             {
               !session.session.info.isLoggedIn ? (
                 <Login session={session.session}></Login>
