@@ -63,8 +63,9 @@ const StarRating = ({ defaultValue = 0, onChange }) => {
 
 
 const RatingSection = ({location, setLocation})=>{
-  let localLocation = JSON.parse(JSON.stringify(location)); 
-  console.log(localLocation)
+  // let localLocation = JSON.parse(JSON.stringify(location)); 
+  let localLocation = location;
+  // console.log(localLocation)
   // variables to store the number of each rating
   const [one, setone] = useState(0)
   const [two, settwo] = useState(0)
@@ -77,23 +78,33 @@ const RatingSection = ({location, setLocation})=>{
   const [average, setaverage] = useState(0)
 
   useEffect(() => {
-    console.log(localLocation)
-    setaverage(0);
+    computeStatistics();
+  }, [location]);
+
+  let computeStatistics = () => {
+    // console.log(localLocation)
+    //we reinitialize all the variables to 0 to recompute them
+    let ones = 0,twos  = 0,threes = 0,fours = 0,fives = 0
+    let totalLocal = 0;
+    let avgLocal = 0;
     //we compute the number of reviews of each type
     if(location.ratings)
       location.ratings.forEach((value,key,map) => {
         switch (value){
-          case 1: setone(prev => prev + 1); break;
-          case 2: settwo(prev => prev + 1); break;
-          case 3: setthree(prev => prev + 1); break;
-          case 4: setfour(prev => prev + 1); break;
-          case 5: setfive(prev => prev + 1); break;
+          case 1: ones++; break;
+          case 2: twos++; break;
+          case 3: threes++; break;
+          case 4: fours++; break;
+          case 5: fives++; break;
         }
-        setaverage(prev => prev + value)
-        settotal(prev => prev + 1)
+        avgLocal += value;
+        totalLocal++;
       });
-    setaverage(average/total)
-  }, [location])
+    //we update the visual variables
+    setone(ones);settwo(twos);setthree(threes);setfour(fours);setfive(fives);
+    setaverage(avgLocal/totalLocal);
+    settotal(totalLocal);
+  };
   
   return (
     <>
@@ -107,14 +118,24 @@ const RatingSection = ({location, setLocation})=>{
             if (localLocation.ratings === undefined) {
               localLocation.ratings = new Map<string,number>();
             }
-            console.log(localLocation.ratings)
             localLocation.ratings.set("WEBID", value);
             setLocation(localLocation);
+            //we update the visual part of the application
+            computeStatistics()
+
             //TODO hacer aqui el update en solid pod
 
           }}></StarRating>
-          <Text>Average rating of this location:</Text>
-          <Text as={'b'} fontSize='2xl'>{average}</Text>
+          <HStack gap='1.5em' placeContent={'center'} width={'full'}>
+            <Stack alignItems={'center'}>
+              <Text>Average rating:</Text>
+              <Text as={'b'} fontSize='2xl'>{Number.isNaN(average)? 0 : average.toFixed(2)}</Text>
+            </Stack>
+            <Stack alignItems={'center'}>
+              <Text>Number of ratings:</Text>
+              <Text as={'b'} fontSize='2xl'>{total}</Text>
+            </Stack>
+          </HStack>
         </Stack>
         <Stack alignItems={'center'}>
           <Grid templateColumns={'repeat(2,1fr)'} gap='0.5vw' width={'full'}>
@@ -155,8 +176,8 @@ const AddReview =  ( {location ,setLocation}) =>{
   const [title, settitle] = useState('')
   const [input, setInput] = useState('')
   const firstFieldRef = React.useRef(null);
-  let errorOnTitle = title.trim().length == 0;
-  let errorOnBody = input.trim().length == 0;
+  let errorOnTitle = title.trim().length === 0;
+  let errorOnBody = input.trim().length === 0;
   //we use a local version of the location because the passed one is the reference to the usestate one
   let localLocation = JSON.parse(JSON.stringify(location)); 
   return (
@@ -322,7 +343,6 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
         </Flex>
 
         <RatingSection location={location} setLocation={setlocation} ></RatingSection>
-        <Button colorScheme={'red'} onClick={()=> {/*TODO delete this when fixed order*/console.log(location.ratings)}}>BORRAR</Button>
 
         <Flex
             direction={'row'}
