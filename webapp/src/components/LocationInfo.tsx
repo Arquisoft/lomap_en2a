@@ -64,7 +64,6 @@ const StarRating = ({ defaultValue = 0, onChange }) => {
 
 const RatingSection = ({location, setLocation})=>{ 
   let localLocation = location;
-  // console.log(localLocation)
   // variables to store the number of each rating
   const [one, setone] = useState(0)
   const [two, settwo] = useState(0)
@@ -169,7 +168,7 @@ const RatingSection = ({location, setLocation})=>{
   )
 };
 
-const AddReview =  ( {location ,setLocation}) =>{
+const ReviewSection =  ( {location ,setLocation}) =>{
   const {isOpen, onOpen, onClose } = useDisclosure();
   const [title, settitle] = useState('')
   const [input, setInput] = useState('')
@@ -179,91 +178,94 @@ const AddReview =  ( {location ,setLocation}) =>{
   //we use a local version of the location because the passed one is the reference to the usestate one
   let localLocation = location;
   return (
-    <Box marginLeft={'auto'} >
-      <Popover
-          isOpen={isOpen}
-          initialFocusRef={firstFieldRef}
-          onOpen={onOpen}
-          onClose={onClose}
-          placement='top'
-          closeOnBlur={false}
-        >
-          <PopoverTrigger>
-            <Button colorScheme={'green'} size='sm' leftIcon ={<MdOutlineRateReview/>} >Add review</Button>
-          </PopoverTrigger>
-          <PopoverContent >
-            <Box zIndex={'3'} padding='1.1em'>
-            <PopoverCloseButton />
-                <FormControl isInvalid={errorOnBody}  >
-                  <FormLabel>Leave a review </FormLabel>
-                  <FormLabel>Title</FormLabel>
-                  <Input 
-                    ref={firstFieldRef}
-                    value={title}
-                    onChange={(e:any) => settitle(e.target.value)}                                        
-                    placeholder='Title of review'/>
+    <>
+      <Box >
+        <Popover
+            isOpen={isOpen}
+            initialFocusRef={firstFieldRef}
+            onOpen={onOpen}
+            onClose={onClose}
+            placement='top'
+            closeOnBlur={false}
+          >
+            <PopoverTrigger>
+              <Button colorScheme={'green'} size='sm' leftIcon ={<MdOutlineRateReview/>} >Add review</Button>
+            </PopoverTrigger>
+            <PopoverContent >
+              <Box zIndex={'3'} padding='1.1em'>
+              <PopoverCloseButton />
+                  <FormControl isInvalid={errorOnBody}  >
+                    <FormLabel>Leave a review </FormLabel>
+                    <FormLabel>Title</FormLabel>
+                    <Input 
+                      ref={firstFieldRef}
+                      value={title}
+                      onChange={(e:any) => settitle(e.target.value)}                                        
+                      placeholder='Title of review'/>
 
-                  {!errorOnTitle ? 
-                    <FormHelperText>Give a descriptive title to the review</FormHelperText>
-                    : 
-                    <FormErrorMessage>Review must have a title</FormErrorMessage>
-                  }
-                  <FormLabel>Body</FormLabel>
-                  <Textarea
-                    placeholder="Body of the review"
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    overflowY='auto'
-                    resize={'none'}/>
-                  {!errorOnBody ? 
-                    <FormHelperText>Give a descriptive review body</FormHelperText>
-                    : 
-                    <FormErrorMessage>Body of the review is required</FormErrorMessage>
-                  }
-                  <Button marginLeft={'auto'} colorScheme={'teal'} disabled={errorOnBody || errorOnTitle}
-                    onClick={()=>{
-                      //create a new Review with the info of the current user
-                      let review : ReviewType = {
-                        username:'TODO', //TODO
-                        title:title,
-                        content:input,
-                        date:new Date(),
-                        webId : 'TODO' //TODO 
-                      };
-                      //we add it to the current location 
-                      if(localLocation.reviews === undefined){ //if no array we initialize it
-                        localLocation.reviews = new Array<ReviewType>();
-                      }
-                      localLocation.reviews.push(review)
-                      
-                      //we repaint the localLocation being showed
-                      setLocation(localLocation)
-                      //we persist the update on the Solid pod
+                    {!errorOnTitle ? 
+                      <FormHelperText>Give a descriptive title to the review</FormHelperText>
+                      : 
+                      <FormErrorMessage>Review must have a title</FormErrorMessage>
+                    }
+                    <FormLabel>Body</FormLabel>
+                    <Textarea
+                      placeholder="Body of the review"
+                      value={input}
+                      onChange={(e) => setInput(e.target.value)}
+                      overflowY='auto'
+                      resize={'none'}/>
+                    {!errorOnBody ? 
+                      <FormHelperText>Give a descriptive review body</FormHelperText>
+                      : 
+                      <FormErrorMessage>Body of the review is required</FormErrorMessage>
+                    }
+                    <Button marginLeft={'auto'} colorScheme={'teal'} disabled={errorOnBody || errorOnTitle}
+                      onClick={()=>{
+                        //create a new Review with the info of the current user
+                        let review : ReviewType = {
+                          username:'TODO', //TODO
+                          title:title,
+                          content:input,
+                          date:new Date(),
+                          webId : 'TODO' //TODO 
+                        };
+                        //we add it to the current location 
+                        if(localLocation.reviews === undefined){ //if no array we initialize it
+                          localLocation.reviews = new Array<ReviewType>();
+                        }
+                        localLocation.reviews.push(review)
+                        
+                        //we repaint the localLocation being showed
+                        setLocation(localLocation)
+                        //we persist the update on the Solid pod
 
-                      //TODO make call to the solidManagement module here
+                        //TODO make call to the solidManagement module here
 
-                      //we close the add review window
-                      onClose()
-                    }}
-                    >Submit review</Button>
-                </FormControl>
-            </Box>
-        </PopoverContent>
-      </Popover>
-    </Box>
+                        //we close the add review window
+                        onClose()
+                      }}
+                      >Submit review</Button>
+                  </FormControl>
+              </Box>
+          </PopoverContent>
+        </Popover>
+      </Box>
+      {
+        localLocation.reviews?
+          localLocation.reviews.sort((a,b)=> new Date(a.date).getTime() - new Date(b.date).getTime()).map((rev,i)=>(
+            <Review key={i} title={rev.title as string} username={rev.username as string} content={rev.content as string} date={rev.date}/>
+            ))
+          :
+          <Text>No reviews for this location, be the first one to leave one</Text>
+      }
+    </>
   )
 }
 
 
 export default function LocationInfo (props : LocationInfoProps) : JSX.Element {  
   const [location, setlocation] = useState(props.location)
-  const [reviews, setReviews] = useState(location.reviews || []);
-  
-  useEffect(() => {
-    console.log('updating revs')
-    console.log(location.reviews)
-    setReviews(location.reviews || []);
-  }, [location.reviews?.length]);
 
   return (
     <Flex
@@ -350,19 +352,9 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
             direction={'row'}
             width='full'>
           <Text as={'b'} fontSize={'x-large'} >Reviews:</Text>
-          <AddReview location={location} setLocation={setlocation} ></AddReview>
         </Flex>
-        <Button colorScheme={'red'} onClick={()=> {/*TODO delete this when fixed order*/console.log(location.reviews?.sort((a,b)=> new Date(a.date).getTime() - new Date(b.date).getTime())); location.reviews?.forEach(r=> console.log(new Date(r.date).getTime()))}}>Borrar</Button>
-        {
-          reviews.length != 0?
-            reviews.sort((a,b)=> new Date(a.date).getTime() - new Date(b.date).getTime()).map((rev,i)=>(
-              <Review title={rev.title as string} username={rev.username as string} content={rev.content as string} date={rev.date}/>
-              ))
-            :
-            <Text>No reviews for this location, be the first one to leave one</Text>
-        }
-
-
+        <ReviewSection location={location} setLocation={setlocation} ></ReviewSection>
+ 
       </Flex>
       <Box marginTop={'auto'} marginLeft='auto' marginEnd={'1em'}>
         <Button colorScheme='red' leftIcon={<Icon as={RxCross2} width='max-content' height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
