@@ -1,12 +1,13 @@
-import type { Location } from "../../../restapi/locations/Location";
+import type { Location, Review } from "../../../restapi/locations/Location";
 import type { Friend } from "../../../restapi/users/User";
 import { fetch } from "@inrupt/solid-client-authn-browser";
 import { getThingAll } from "@inrupt/solid-client";
+import { addReviewToLocation } from "../../../restapi/locations/Location";
 
 import {
   createThing, removeThing,Thing,getThing, setThing,buildThing,
   getSolidDataset, saveSolidDatasetAt, 
-  getUrlAll,
+  getUrlAll, getUrl,
   getStringNoLocale,
   createSolidDataset
 } from "@inrupt/solid-client";
@@ -67,7 +68,8 @@ export async function getLocations(webID:string) {
       let imagesFolder = getStringNoLocale(location, SCHEMA_INRUPT.URL) as string; // get the path of the images folder
       let locationImages: string [] = []; // initialize array to store the images as strings
       locationImages = await getLocationImage(imagesFolder);
-      
+      let reviews: Review[] = [];
+      reviews = await getReviewsFromSolidLocation(location)
   
       // if location is not null, add it to the location array
       if (location)
@@ -137,8 +139,70 @@ export async function getFriends(webID:string) {
 
 }
 
+export async function getReviewsFromSolidLocation(location:Thing) {
+  let ret:Review[] = [];
+
+  let reviewsUrl = getUrlAll(location, VCARD.hasNote)
+  for (let review of reviewsUrl) {
+    
+  }
+
+
+
+  return ret;
+}
 
 // WRITE FUNCTIONS
+
+export async function addReviewToSolidLocation(webID:string, location:Location, review:Review){
+  let baseURL = webID.split("profile")[0];
+  let locationsFolder = `${baseURL}private/lomap/locations/index.ttl`; // locations folder
+
+  // get locations dataset
+  let locationsDataset = await getSolidDataset(locationsFolder, {fetch: fetch})
+
+  // get the location to be updated
+  let locationToUpdate = await getThing(locationsDataset, location.url as string)
+
+  // check for consistency that the location exists
+  if (!locationToUpdate) {
+    return Promise.reject();
+  }
+
+  // create review to add
+  let reviewToAdd = buildThing(createThing())
+    .addDate(VCARD.Date, review.date) // review date
+    .addStringNoLocale(VCARD.title, review.title) // review title
+    .addStringNoLocale(VCARD.Text, review.content) // review content
+    .addStringNoLocale(SCHEMA_INRUPT.identifier, review.webId) // webId of the username
+    .addUrl(VCARD.Type, VCARD.hasNote) // type hasNote
+    .build();
+
+  // get the path of the images folder to later add it to the location
+  let imagesURL = getStringNoLocale(locationToUpdate, SCHEMA_INRUPT.URL) as string 
+
+  // update location adding the review
+  locationToUpdate = buildThing(locationToUpdate)
+  .addStringNoLocale(SCHEMA_INRUPT.name, location.name.toString())
+  .addStringNoLocale(SCHEMA_INRUPT.longitude, location.coordinates.lng.toString())
+  .addStringNoLocale(SCHEMA_INRUPT.latitude, location.coordinates.lat.toString())
+  .addStringNoLocale(SCHEMA_INRUPT.description, location.description.toString())
+  .addStringNoLocale(SCHEMA_INRUPT.URL, imagesURL) // store the image path
+  .addStringNoLocale(SCHEMA_INRUPT.identifier, location.url as string) // store the url of the location
+  .addUrl(VCARD.hasNote, reviewToAdd) // store review
+  .addUrl(RDF.type, "https://schema.org/Place")
+  .build();
+  
+  locationsDataset = setThing(locationsDataset, locationToUpdate)
+  try {
+    locationsDataset = await saveSolidDatasetAt(locationsFolder, locationsDataset, {fetch: fetch})
+  } catch (error){
+    console.log(error)
+  }
+}
+
+
+
 
 /**
  * Create (or add) location in pod
