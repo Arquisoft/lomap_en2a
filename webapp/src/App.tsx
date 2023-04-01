@@ -21,6 +21,8 @@ function App(): JSX.Element {
 
 
   const session = useSession();
+  //we save the session as a global variable for the hole program
+  
 
   //we get the locations for the user and fetch them to the list
   useEffect(()=>{
@@ -61,9 +63,6 @@ function App(): JSX.Element {
     })
   },[]);
   
-  //previous way of deleting
-  //<button onClick={() => deleteLocation(session.session.info.webId as string, "https://patrigarcia.inrupt.net/profile/card#d8068302-9df2-4e42-a531-e3d39f685f93")}>DELETE</button>
-  //TODO delet this one implemented the correct deletion
   return (
     <>
       <ChakraProvider>

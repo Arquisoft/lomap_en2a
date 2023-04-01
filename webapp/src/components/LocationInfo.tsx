@@ -62,8 +62,7 @@ const StarRating = ({ defaultValue = 0, onChange }) => {
 };
 
 
-const RatingSection = ({location, setLocation})=>{
-  // let localLocation = JSON.parse(JSON.stringify(location)); 
+const RatingSection = ({location, setLocation})=>{ 
   let localLocation = location;
   // console.log(localLocation)
   // variables to store the number of each rating
@@ -82,13 +81,12 @@ const RatingSection = ({location, setLocation})=>{
   }, [location]);
 
   let computeStatistics = () => {
-    // console.log(localLocation)
     //we reinitialize all the variables to 0 to recompute them
     let ones = 0,twos  = 0,threes = 0,fours = 0,fives = 0
     let totalLocal = 0;
     let avgLocal = 0;
     //we compute the number of reviews of each type
-    if(location.ratings)
+    if(location.ratings !== undefined)
       location.ratings.forEach((value,key,map) => {
         switch (value){
           case 1: ones++; break;
@@ -179,7 +177,7 @@ const AddReview =  ( {location ,setLocation}) =>{
   let errorOnTitle = title.trim().length === 0;
   let errorOnBody = input.trim().length === 0;
   //we use a local version of the location because the passed one is the reference to the usestate one
-  let localLocation = JSON.parse(JSON.stringify(location)); 
+  let localLocation = location;
   return (
     <Box marginLeft={'auto'} >
       <Popover
@@ -233,12 +231,11 @@ const AddReview =  ( {location ,setLocation}) =>{
                         webId : 'TODO' //TODO 
                       };
                       //we add it to the current location 
-                      if(localLocation.reviews) //if already have reviews push
-                        localLocation.reviews.push(review)
-                      else{ //if this is the first review create array and push
+                      if(localLocation.reviews === undefined){ //if no array we initialize it
                         localLocation.reviews = new Array<ReviewType>();
-                        localLocation.reviews.push(review)
                       }
+                      localLocation.reviews.push(review)
+                      
                       //we repaint the localLocation being showed
                       setLocation(localLocation)
                       //we persist the update on the Solid pod
@@ -260,10 +257,14 @@ const AddReview =  ( {location ,setLocation}) =>{
 
 export default function LocationInfo (props : LocationInfoProps) : JSX.Element {  
   const [location, setlocation] = useState(props.location)
-  // useEffect(() => {
-  //   console.log(location)
-  // }, [location])
+  const [reviews, setReviews] = useState(location.reviews || []);
   
+  useEffect(() => {
+    console.log('updating revs')
+    console.log(location.reviews)
+    setReviews(location.reviews || []);
+  }, [location.reviews?.length]);
+
   return (
     <Flex
         direction={'column'}
@@ -297,9 +298,10 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
             {
             location.images?.length? 
             (
-              location.images?.map((image)=>{
+              location.images?.map((image,i)=>{
                 return (
                   <Image 
+                    key={i}
                     src={image as string} 
                     width='200'
                     height='200'
@@ -350,16 +352,15 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
           <Text as={'b'} fontSize={'x-large'} >Reviews:</Text>
           <AddReview location={location} setLocation={setlocation} ></AddReview>
         </Flex>
-        
+        <Button colorScheme={'red'} onClick={()=> {/*TODO delete this when fixed order*/console.log(location.reviews?.sort((a,b)=> new Date(a.date).getTime() - new Date(b.date).getTime())); location.reviews?.forEach(r=> console.log(new Date(r.date).getTime()))}}>Borrar</Button>
         {
-          location.reviews?
-          location.reviews.sort((a,b)=> new Date(a.date).getTime() - new Date(b.date).getTime()).map((rev,i)=>(
+          reviews.length != 0?
+            reviews.sort((a,b)=> new Date(a.date).getTime() - new Date(b.date).getTime()).map((rev,i)=>(
               <Review title={rev.title as string} username={rev.username as string} content={rev.content as string} date={rev.date}/>
               ))
             :
-            <Text>No reviews for this location</Text>
+            <Text>No reviews for this location, be the first one to leave one</Text>
         }
-        <Button onClick={()=> {/*TODO delete this when fixed order*/console.log(location.reviews?.sort((a,b)=> new Date(a.date).getTime() - new Date(b.date).getTime())); location.reviews?.forEach(r=> console.log(new Date(r.date).getTime()))}}></Button>
 
 
       </Flex>
