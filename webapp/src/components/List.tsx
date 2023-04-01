@@ -22,6 +22,7 @@ function List(props : ListProps) : JSX.Element {
           left={'5vw'}
           top={0}
           zIndex={1}
+          borderRight={"1px solid black"}
           overflow='hidden'
           px={2}
           >
@@ -62,7 +63,7 @@ function List(props : ListProps) : JSX.Element {
         left={'5vw'}
         top={0}
         zIndex={1}
-        overflow='hidden'
+        overflow='auto'
         px={2}
         >
         <Flex flex={1} overflowY={'scroll'} mt={16} direction={'column'}>

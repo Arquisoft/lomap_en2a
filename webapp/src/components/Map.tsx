@@ -48,7 +48,7 @@ const Map = ( props : MapProps) => {
     let clickedCoords = lat + ", " + lon;
 
     props.changeViewTo(<></>);
-    props.changeViewTo(<AddLocationForm onSubmit={props.addLocation} clickedCoords={clickedCoords}/>);
+    props.changeViewTo(<AddLocationForm addLocation={props.addLocation} clickedCoords={clickedCoords}/>);
   }
 
   if (isLoaded)
@@ -64,7 +64,7 @@ const Map = ( props : MapProps) => {
               restriction: {latLngBounds: { north: 85, south: -85, west: -180, east: 180 },}
             }}
 
-            onClick={clickedCoords => {
+            onClick= { (clickedCoords) => {
               let lat = clickedCoords.latLng?.lat();
               console.log("lat = ",lat);
 

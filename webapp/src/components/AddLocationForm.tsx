@@ -1,9 +1,9 @@
 import React from 'react'
 import { Location } from '../../../restapi/locations/Location'
-import {Button, Flex, Input, Text, Textarea, Wrap, WrapItem} from "@chakra-ui/react";
+import {Button, Flex, Input, Text, Textarea, useToast} from "@chakra-ui/react";
 
 type AddLocationProps = {
-    onSubmit: (location: Location) => void
+    addLocation: (location: Location) => void
     clickedCoords: any;
 }
 
@@ -23,17 +23,14 @@ async function readFileAsync(file, reader) : Promise<string> {
 }
 
 
-function AddLocationForm(props : AddLocationProps) : JSX.Element {
+function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
     const [name, setName] = React.useState('');
-
     const [coordsValue, setCoordsValue] = React.useState(props.clickedCoords);
-    const [latValue, setLatValue] = React.useState('');
-    const [lonValue, setLonValue] = React.useState('');
-
     const [description, setDescription] = React.useState('');
 
 
     let imgs: string[] = [];
+    let lat: number, lon: number;
 
     const regexLat = /^(-?[1-8]?\d(?:\.\d{1,18})?|90(?:\.0{1,18})?)$/;
     const regexLon = /^(-?(?:1[0-7]|[1-9])?\d(?:\.\d{1,18})?|180(?:\.0{1,18})?)$/;
@@ -46,31 +43,33 @@ function AddLocationForm(props : AddLocationProps) : JSX.Element {
     function handleCoordsValue(coords: string):void {
         let separatedCoords = coords.split(',');
         console.log(separatedCoords[0]);
-        setLatValue(separatedCoords[0]);
-        setLonValue(separatedCoords[1]);
-        console.log('durante de la funcion: ',lonValue);
+        lat = Number(separatedCoords[0]);
+        lon = Number(separatedCoords[1]);
     }
 
     const handleSubmit = (e:any) => {
         e.preventDefault();
 
         handleCoordsValue(coordsValue);
-        console.log('despues de la funcion: ',lonValue);
         //if (checkCoordinates(latValue, lonValue)) {
-            let l : Location = {name: name,
-                                coordinates: {
-                                    lng: Number(lonValue),
-                                    lat: Number(latValue)
-                                },
-                                description: description,
-                                images : imgs}
-            props.onSubmit(l);
-            console.log(l);
+            let l : Location = {
+                name: name,
+                coordinates: {
+                    lng: lon,
+                    lat: lat
+                },
+                description: description,
+                images : imgs
+            }
+            props.addLocation(l);
 
+            console.log(l);
             return;
         //}
 
     };
+
+    const toast = useToast();
 
     return (
         <form onSubmit={handleSubmit}>
@@ -83,6 +82,7 @@ function AddLocationForm(props : AddLocationProps) : JSX.Element {
             left={'5vw'}
             top={0}
             zIndex={1}
+            borderRight={"1px solid black"}
             overflow='hidden'
             px={2}
             rowGap="2em"            
@@ -144,8 +144,14 @@ function AddLocationForm(props : AddLocationProps) : JSX.Element {
 
             <Button colorScheme={'orange'}
                     variant={'outline'}
-                    onClick={() => {
-                        
+                    onClick={()=> {
+                        toast({
+                            title: 'Location added.',
+                            description: "The location was added to your pod.",
+                            status: 'success',
+                            duration: 5000,
+                            isClosable: true,
+                        })
                     }}
                     type={'submit'}
             >
@@ -158,4 +164,4 @@ function AddLocationForm(props : AddLocationProps) : JSX.Element {
 
 
 
-export default AddLocationForm;
+export default AddLocationFormComp;

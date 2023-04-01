@@ -14,7 +14,7 @@ type MenuProps = {
   changeViewTo: (view: JSX.Element) => void,
   locations : Array<Location>,
   session : SessionInfo
-  deleteLoc : (location:Location) =>void,
+  deleteLocation : (location:Location) =>void,
   addLocation : (location:Location) =>void
 }
 
@@ -35,7 +35,7 @@ function Menu(props: MenuProps): JSX.Element {
           bottom={-4}
           zIndex={1}
           overflow='hidden'
-          border={"1px solid black"}
+          borderRight={"1px solid black"}
           px={2}
           boxShadow ='lg'
           onMouseOver={()=> {setinsideMenu(true)}}
@@ -76,7 +76,7 @@ function Menu(props: MenuProps): JSX.Element {
                         onClick={() => {
                           setinsideMenu(false);
                           props.changeViewTo(
-                            <List deleteLocation={props.deleteLoc}
+                            <List deleteLocation={props.deleteLocation}
                                   setSelectedView={(view)=> props.changeViewTo(view)} places={props.locations}  />
                             );
                         }}>
@@ -93,7 +93,7 @@ function Menu(props: MenuProps): JSX.Element {
                           () => {
                             setinsideMenu(false);
                             props.changeViewTo(
-                              <AddLocationForm onSubmit={props.addLocation} clickedCoords={''}/>
+                              <AddLocationForm addLocation={props.addLocation} clickedCoords={''}/>
                             );
                           }
                         }>

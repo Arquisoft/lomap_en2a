@@ -21,6 +21,7 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
         top={0}
         bottom={-4}
         zIndex={1}
+        borderRight={"1px solid black"}
         overflow='hidden'
         px={2}
         >
