@@ -1,6 +1,6 @@
 import React from 'react'
 import { Location } from '../../../restapi/locations/Location'
-import {Button, Flex, Input, Text, Textarea} from "@chakra-ui/react";
+import {Button, Flex, Input, Text, Textarea, Wrap, WrapItem} from "@chakra-ui/react";
 
 type AddLocationProps = {
     onSubmit: (location: Location) => void
@@ -32,6 +32,7 @@ function AddLocationForm(props : AddLocationProps) : JSX.Element {
 
     const [description, setDescription] = React.useState('');
 
+
     let imgs: string[] = [];
 
     const regexLat = /^(-?[1-8]?\d(?:\.\d{1,18})?|90(?:\.0{1,18})?)$/;
@@ -44,15 +45,17 @@ function AddLocationForm(props : AddLocationProps) : JSX.Element {
 
     function handleCoordsValue(coords: string):void {
         let separatedCoords = coords.split(',');
-        console.log(separatedCoords);
+        console.log(separatedCoords[0]);
         setLatValue(separatedCoords[0]);
         setLonValue(separatedCoords[1]);
+        console.log('durante de la funcion: ',lonValue);
     }
 
     const handleSubmit = (e:any) => {
         e.preventDefault();
 
         handleCoordsValue(coordsValue);
+        console.log('despues de la funcion: ',lonValue);
         //if (checkCoordinates(latValue, lonValue)) {
             let l : Location = {name: name,
                                 coordinates: {
@@ -62,11 +65,12 @@ function AddLocationForm(props : AddLocationProps) : JSX.Element {
                                 description: description,
                                 images : imgs}
             props.onSubmit(l);
+            console.log(l);
+
             return;
         //}
 
     };
-
 
     return (
         <form onSubmit={handleSubmit}>
@@ -140,7 +144,9 @@ function AddLocationForm(props : AddLocationProps) : JSX.Element {
 
             <Button colorScheme={'orange'}
                     variant={'outline'}
-                    //onClick={() => {addLocation()}}
+                    onClick={() => {
+                        
+                    }}
                     type={'submit'}
             >
                 Add location

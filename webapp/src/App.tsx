@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ChakraProvider } from '@chakra-ui/react';
-import {Flex} from "@chakra-ui/react";
+import { ChakraProvider, useToast, Flex } from '@chakra-ui/react';
 import { Location } from '../../restapi/locations/Location';
 import Map from './components/Map';
 
@@ -20,6 +19,7 @@ function App(): JSX.Element {
   //stores the actual view currently selected
   const [selectedView, setselectedView] = useState(<></>);
 
+  
 
   const getNewLocation = (location:Location) => {
     locations.push(location);
@@ -50,10 +50,28 @@ function App(): JSX.Element {
 
   }
 
+  const toast = useToast();
+
   function addLocation(location:Location){
     if(session.session.info.webId)
       createLocation(session.session.info.webId ,location).then(
-        ()=> loadLocations()
+        ()=> {
+          loadLocations()
+          toast({
+            title: 'Location added.',
+            description: "The location was added to your pod.",
+            status: 'success',
+            duration: 5000,
+            isClosable: true,
+          })
+        },
+        () =>  toast({
+          title: 'Error.',
+          description: "The location could not be added to your pod.",
+          status: 'error',
+          duration: 5000,
+          isClosable: true,
+        })  
       )
 
   }
@@ -84,17 +102,19 @@ function App(): JSX.Element {
           position={'relative'}
           >
             <Map /*center = {coordinates}*/
-              deleteLocation={deleteLoc}
+              deleteLocation={deleteLoc}              
               locations={locations}
-              changeViewTo= {(newView : JSX.Element) => {setselectedView(newView)}}/>
+              changeViewTo= {(newView : JSX.Element) => {setselectedView(newView)}}
+              addLocation={addLocation}
+              />
             {
               selectedView ?  selectedView  :  <></>
             }
             <Menu deleteLoc={deleteLoc}
                   addLocation={addLocation}
-                  setSelectedView= {(newView : JSX.Element) => {setselectedView(newView)}}
+                  changeViewTo= {(newView : JSX.Element) => {setselectedView(newView)}}
                   locations = {locations}
-                  session = {session}
+                  session = {session}                  
                   />
             {
               !session.session.info.isLoggedIn ? (

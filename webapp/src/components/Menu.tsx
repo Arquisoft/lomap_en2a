@@ -11,7 +11,7 @@ import { ProfileView } from './ProfileInfo';
 import App from "../App";
 
 type MenuProps = {
-  setSelectedView: (view: JSX.Element) => void,
+  changeViewTo: (view: JSX.Element) => void,
   locations : Array<Location>,
   session : SessionInfo
   deleteLoc : (location:Location) =>void,
@@ -63,7 +63,7 @@ function Menu(props: MenuProps): JSX.Element {
                         color={'black'}
                         size='lg'
                         height={'5vh'}
-                        onClick={() => { setinsideMenu(false); props.setSelectedView(<></>); }}>
+                        onClick={() => { setinsideMenu(false); props.changeViewTo(<></>); }}>
                   Map View
                 </Button>
               </Box>
@@ -75,9 +75,9 @@ function Menu(props: MenuProps): JSX.Element {
                         size='lg'
                         onClick={() => {
                           setinsideMenu(false);
-                          props.setSelectedView(
+                          props.changeViewTo(
                             <List deleteLocation={props.deleteLoc}
-                                  setSelectedView={(view)=> props.setSelectedView(view)} places={props.locations}  />
+                                  setSelectedView={(view)=> props.changeViewTo(view)} places={props.locations}  />
                             );
                         }}>
                   List of Locations
@@ -92,7 +92,7 @@ function Menu(props: MenuProps): JSX.Element {
                         onClick={
                           () => {
                             setinsideMenu(false);
-                            props.setSelectedView(
+                            props.changeViewTo(
                               <AddLocationForm onSubmit={props.addLocation} clickedCoords={''}/>
                             );
                           }
@@ -108,7 +108,7 @@ function Menu(props: MenuProps): JSX.Element {
                         size='lg'
                         onClick={() => {
                           setinsideMenu(false);
-                          props.setSelectedView(
+                          props.changeViewTo(
                             <Friends session={props.session}/>
                           );
                         }}
@@ -124,7 +124,7 @@ function Menu(props: MenuProps): JSX.Element {
                         size='lg'
                         onClick={() => {
                           setinsideMenu(false);
-                          props.setSelectedView(
+                          props.changeViewTo(
                             <ProfileView webId={props.session.session.info.webId}></ProfileView>
                           );
                         }}

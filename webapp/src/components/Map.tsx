@@ -12,6 +12,7 @@ type MapProps = {
     locations : Array<Location>
     changeViewTo: (viewName: JSX.Element) => void //function to change the selected view on the left
     deleteLocation : (loc : Location) => void
+    addLocation : (location:Location) =>void
 }
 
 const Map = ( props : MapProps) => {
@@ -44,10 +45,10 @@ const Map = ( props : MapProps) => {
 
   function handleMapClick(lat:any,lon:any):void {
     // get coordinates where clicked
-    let clickedCoords = lat + ", " + lon
+    let clickedCoords = lat + ", " + lon;
 
-    props.changeViewTo(<AddLocationForm onSubmit={props.addLocation}
-                                        clickedCoords={clickedCoords} ></AddLocationForm>);
+    props.changeViewTo(<></>);
+    props.changeViewTo(<AddLocationForm onSubmit={props.addLocation} clickedCoords={clickedCoords}/>);
   }
 
   if (isLoaded)
