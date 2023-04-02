@@ -253,7 +253,7 @@ const ReviewSection =  ( {location ,setLocation,session}) =>{
                         setLocation(localLocation)
                         //we persist the update on the Solid pod
 
-                        //TODO make call to the solidManagement module here
+                        // make call to the solidManagement module here
                         addLocationReview(localLocation, review)
                         //we close the add review window
                         onClose()

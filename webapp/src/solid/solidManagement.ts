@@ -88,9 +88,9 @@ export async function getLocationFromDataset(locationPath:string){
   //let imagesFolder = getStringNoLocale(locationAsThing, SCHEMA_INRUPT.URL) as string; // path of the images folder
   
   let locationImages: string [] = []; // initialize array to store the images as strings
-  locationImages = await getLocationImage(locationPath);
+  locationImages = await getLocationImage(datasetPath);
   let reviews: ReviewType[] = [];
-  reviews = await getLocationReviews(locationPath)
+  reviews = await getLocationReviews(datasetPath)
 
   let location : LocationType = {
       name: name,
@@ -220,8 +220,7 @@ export async function addLocationToInventory(locationsFolder:string, location:Lo
   let inventory = await getSolidDataset(locationsFolder, {fetch: fetch}) // get the inventory
   let locationId = "LOC_" + uuid(); // location id
   let baseURL = locationsFolder.split("private")[0]
-  baseURL += `private/lomap/locations/${locationId}/index.ttl`
-  let locationURL = `${baseURL}#${locationId}`; // location url
+  let locationURL = `${baseURL}private/lomap/locations/${locationId}/index.ttl#${locationId}`
 
   let newLocation = buildThing(createThing({name: locationId})) // create thing with the url
     .addStringNoLocale(SCHEMA_INRUPT.identifier, locationURL)
@@ -239,8 +238,7 @@ export async function addLocationToInventory(locationsFolder:string, location:Lo
 export async function createInventory(locationsFolder: string, location:LocationType){
   let locationId = "LOC_" + uuid(); // location id
   let baseURL = locationsFolder.split("private")[0]
-  baseURL += `private/lomap/locations/${locationId}/index.ttl`
-  let locationURL = `${baseURL}#${locationId}`; // location url
+  let locationURL = `${baseURL}private/lomap/locations/${locationId}/index.ttl#${locationId}`
 
   let inventory = createSolidDataset()
 
