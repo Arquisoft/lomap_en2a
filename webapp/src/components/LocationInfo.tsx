@@ -266,14 +266,16 @@ const ReviewSection =  ( {location ,setLocation,session}) =>{
       </Box>
       {
         localLocation.reviews?
-          localLocation.reviews.sort((a,b)=> new Date(a.date).getTime() - new Date(b.date).getTime()).map((rev,i)=>(
-            <Review 
-              key={i}
-              title={rev.title as string}
-              username={username}
-              content={rev.content as string}
-              date={rev.date}/>
-            ))
+          (localLocation.reviews as Array<ReviewType>)
+            .sort((a : ReviewType,b : ReviewType)=> b.date.getTime() - a.date.getTime())
+            .map((rev,i)=>(
+              <Review 
+                key={i}
+                title={rev.title as string}
+                username={username}
+                content={rev.content as string}
+                date={rev.date}/>
+              ))
           :
           <Text>No reviews for this location, be the first one to leave one</Text>
       }
