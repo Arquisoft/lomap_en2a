@@ -20,7 +20,6 @@ export type Review = {
     webId:string,
 
     date: Date,
-    username:string,
     title:string,
     content:string
 };

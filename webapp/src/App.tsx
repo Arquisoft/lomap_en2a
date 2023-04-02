@@ -10,7 +10,6 @@ import {createLocation, deleteLocation, getLocations} from './solid/solidManagem
 
 import Menu from './components/Menu';
 import { useSession } from '@inrupt/solid-ui-react';
-import { SessionInfo } from '@inrupt/solid-ui-react/dist/src/hooks/useSession';
 
 
 function App(): JSX.Element {
@@ -18,11 +17,7 @@ function App(): JSX.Element {
   const [locations, setLocations] = useState<Array<Location>>([]);
   //stores the actual view currently selected
   const [selectedView, setselectedView] = useState(<></>);
-
-
-  const session = useSession();
-  //we save the session as a global variable for the hole program
-  
+  const [session, setSession] = useState(useSession());
 
   //we get the locations for the user and fetch them to the list
   useEffect(()=>{
@@ -86,11 +81,10 @@ function App(): JSX.Element {
                   addLocation={addLocation}
                   setSelectedView= {(newView : JSX.Element) => {setselectedView(newView)}} 
                   locations = {locations}
-                  session = {session}
                   />
             {
               !session.session.info.isLoggedIn ? (
-                <Login session={session.session}></Login>
+                <Login></Login>
               ) : <></>
             }
             

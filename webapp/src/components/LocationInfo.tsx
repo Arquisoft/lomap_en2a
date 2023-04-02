@@ -9,6 +9,9 @@ import {FormControl,FormLabel,FormErrorMessage,FormHelperText,} from '@chakra-ui
 import Review  from "./Review";
 import { FaStar, FaStarHalfAlt } from "react-icons/fa";
 import noImage from '../no-pictures-picture.png';
+import { useSession } from '@inrupt/solid-ui-react';
+import { SessionInfo } from '@inrupt/solid-ui-react/dist/src/hooks/useSession';
+import { getNameFromPod } from '../solid/solidManagement';
 
 type LocationInfoProps = {
   location : Location
@@ -61,8 +64,7 @@ const StarRating = ({ defaultValue = 0, onChange }) => {
   );
 };
 
-
-const RatingSection = ({location, setLocation})=>{ 
+const RatingSection = ({location, setLocation, session})=>{ 
   let localLocation = location;
   // variables to store the number of each rating
   const [one, setone] = useState(0)
@@ -109,18 +111,26 @@ const RatingSection = ({location, setLocation})=>{
       <Grid templateRows={'repeat(2,1fr)'} >
         <Stack alignItems={'center'} gap='0em'>
           <Text>Give a rating to this location</Text>
-          {/*TODO cuanto tenga la session meterle aqui al valor inicial el de la location.ratings?.find(webID)*/}
-          <StarRating defaultValue={0}  onChange={(value) => { 
-            //we add it to the location
-            if (localLocation.ratings === undefined) {
-              localLocation.ratings = new Map<string,number>();
-            }
-            localLocation.ratings.set("WEBID", value);
-            setLocation(localLocation);
-            //we update the visual part of the application
-            computeStatistics()
-
-            //TODO hacer aqui el update en solid pod
+          <StarRating 
+            defaultValue={
+              location.ratings? //if we have ratings
+                //if this user has rated
+                (Array.from(location.ratings?.keys()).filter(key => key === (session as SessionInfo).session.info.webId)? 
+                  location.ratings.get((session as SessionInfo).session.info.webId)
+                  :0/*if not rated*/ 
+                )
+                :0//if no ratings for the location
+            }  
+            onChange={(value) => { 
+              //we add it to the location
+              if (localLocation.ratings === undefined) {
+                localLocation.ratings = new Map<string,number>();
+              }
+              localLocation.ratings.set(session.session.info.webId, value);
+              setLocation(localLocation);
+              //we update the visual part of the application
+              computeStatistics()
+              //TODO hacer aqui el update en solid pod
 
           }}></StarRating>
           <HStack gap='1.5em' placeContent={'center'} width={'full'}>
@@ -168,15 +178,19 @@ const RatingSection = ({location, setLocation})=>{
   )
 };
 
-const ReviewSection =  ( {location ,setLocation}) =>{
+const ReviewSection =  ( {location ,setLocation,session}) =>{
   const {isOpen, onOpen, onClose } = useDisclosure();
   const [title, settitle] = useState('')
   const [input, setInput] = useState('')
+  const [username, setusername] = useState('')
   const firstFieldRef = React.useRef(null);
   let errorOnTitle = title.trim().length === 0;
   let errorOnBody = input.trim().length === 0;
   //we use a local version of the location because the passed one is the reference to the usestate one
   let localLocation = location;
+  
+  getNameFromPod(session.session.info.webId).then(res=> setusername(res));
+  
   return (
     <>
       <Box >
@@ -224,11 +238,10 @@ const ReviewSection =  ( {location ,setLocation}) =>{
                       onClick={()=>{
                         //create a new Review with the info of the current user
                         let review : ReviewType = {
-                          username:'TODO', //TODO
                           title:title,
                           content:input,
                           date:new Date(),
-                          webId : 'TODO' //TODO 
+                          webId : session.session.info.webId
                         };
                         //we add it to the current location 
                         if(localLocation.reviews === undefined){ //if no array we initialize it
@@ -254,7 +267,12 @@ const ReviewSection =  ( {location ,setLocation}) =>{
       {
         localLocation.reviews?
           localLocation.reviews.sort((a,b)=> new Date(a.date).getTime() - new Date(b.date).getTime()).map((rev,i)=>(
-            <Review key={i} title={rev.title as string} username={rev.username as string} content={rev.content as string} date={rev.date}/>
+            <Review 
+              key={i}
+              title={rev.title as string}
+              username={username}
+              content={rev.content as string}
+              date={rev.date}/>
             ))
           :
           <Text>No reviews for this location, be the first one to leave one</Text>
@@ -264,9 +282,9 @@ const ReviewSection =  ( {location ,setLocation}) =>{
 }
 
 
-export default function LocationInfo (props : LocationInfoProps) : JSX.Element {  
+export default function LocationInfo (props : LocationInfoProps) : JSX.Element { 
+  const session = useSession(); 
   const [location, setlocation] = useState(props.location)
-
   return (
     <Flex
         direction={'column'}
@@ -346,14 +364,14 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
           </Text>  
         </Flex>
 
-        <RatingSection location={location} setLocation={setlocation} ></RatingSection>
+        <RatingSection location={location} setLocation={setlocation} session={session} ></RatingSection>
 
         <Flex
             direction={'row'}
             width='full'>
           <Text as={'b'} fontSize={'x-large'} >Reviews:</Text>
         </Flex>
-        <ReviewSection location={location} setLocation={setlocation} ></ReviewSection>
+        <ReviewSection location={location} setLocation={setlocation} session={session} ></ReviewSection>
  
       </Flex>
       <Box marginTop={'auto'} marginLeft='auto' marginEnd={'1em'}>

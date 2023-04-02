@@ -2,7 +2,6 @@ import { useState } from 'react'
 import { Flex, Button, Icon, Box } from "@chakra-ui/react";
 import { MdList, MdLocationOn, MdMap, MdPeopleAlt, MdPerson } from "react-icons/md"
 import { Location } from '../../../restapi/locations/Location';
-import { SessionInfo } from '@inrupt/solid-ui-react/dist/src/hooks/useSession';
 import List from './List';
 import AddLocationForm from './AddLocationForm';
 import Friends from './Friends';
@@ -11,7 +10,6 @@ import { ProfileView } from './ProfileInfo';
 type MenuProps = {
   setSelectedView: (view: JSX.Element) => void,
   locations : Array<Location>,
-  session : SessionInfo
   deleteLoc : (location:Location) =>void,
   addLocation : (location:Location) =>void
 }
@@ -106,7 +104,7 @@ function Menu(props: MenuProps): JSX.Element {
                         onClick={() => {
                           setinsideMenu(false);
                           props.setSelectedView(
-                            <Friends session={props.session}/>
+                            <Friends/>
                           );
                         }}
                 >
@@ -122,7 +120,7 @@ function Menu(props: MenuProps): JSX.Element {
                         onClick={() => {
                           setinsideMenu(false);
                           props.setSelectedView(
-                            <ProfileView webId={props.session.session.info.webId}></ProfileView>
+                            <ProfileView></ProfileView>
                           );
                         }}
                 >
