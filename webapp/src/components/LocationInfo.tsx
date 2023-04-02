@@ -7,9 +7,11 @@ import {Review as ReviewType}  from "../../../restapi/locations/Location";
 import {Popover,PopoverTrigger,PopoverContent,PopoverCloseButton,} from '@chakra-ui/react'
 import {FormControl,FormLabel,FormErrorMessage,FormHelperText,} from '@chakra-ui/react'
 import Review  from "./Review";
-import starFilled from './images/star_filled.png'
-import starUnilled from './images/star_unfilled.png'
 import { FaStar, FaStarHalfAlt } from "react-icons/fa";
+import noImage from '../no-pictures-picture.png';
+import { useSession } from '@inrupt/solid-ui-react';
+import { SessionInfo } from '@inrupt/solid-ui-react/dist/src/hooks/useSession';
+import { getNameFromPod } from '../solid/solidManagement';
 
 type LocationInfoProps = {
   location : Location
@@ -20,6 +22,7 @@ type LocationInfoProps = {
 
 const StarRating = ({ defaultValue = 0, onChange }) => {
   const [value, setValue] = useState(defaultValue);
+  const [hoverValue, setHoverValue] = useState(0);
 
   const handleClick = (newValue) => {
     setValue(newValue);
@@ -28,19 +31,31 @@ const StarRating = ({ defaultValue = 0, onChange }) => {
     }
   };
 
+  const handleMouseEnter = (newValue) => {
+    setHoverValue(newValue);
+  };
+
+  const handleMouseLeave = () => {
+    setHoverValue(0);
+  };
+
   return (
-    <HStack spacing={1}>
+    <HStack spacing={1} onMouseLeave={() => handleMouseLeave()}>
       {[1, 2, 3, 4, 5].map((i) => {
         let icon;
-        if (i <= value) {
+        if (i <= (hoverValue || value)) {
           icon = <Icon as={FaStar} color="yellow.500" />;
-        } else if (i === Math.ceil(value) && !Number.isInteger(value)) {
+        } else if (i === Math.ceil(hoverValue) && !Number.isInteger(value)) {
           icon = <Icon as={FaStarHalfAlt} color="yellow.500" />;
         } else {
           icon = <Icon as={FaStar} color="gray.300" />;
         }
         return (
-          <span key={i} onClick={() => handleClick(i)}>
+          <span
+            key={i}
+            onClick={() => handleClick(i)}
+            onMouseEnter={() => handleMouseEnter(i)}
+          >
             {icon}
           </span>
         );
@@ -49,170 +64,227 @@ const StarRating = ({ defaultValue = 0, onChange }) => {
   );
 };
 
-
-const RatingSection = ({location})=>{
-  let localLocation = JSON.parse(JSON.stringify(location)); 
+const RatingSection = ({location, setLocation, session})=>{ 
+  let localLocation = location;
   // variables to store the number of each rating
-  const [zero, setzero] = useState(30)
   const [one, setone] = useState(0)
   const [two, settwo] = useState(0)
   const [three, setthree] = useState(0)
   const [four, setfour] = useState(0)
   const [five, setfive] = useState(0)
-  //for the total numeber or ratings
+  //for the total number or ratings
   const [total, settotal] = useState(100)
+  //for the average of total reviews
+  const [average, setaverage] = useState(0)
 
   useEffect(() => {
+    computeStatistics();
+  }, [location]);
+
+  let computeStatistics = () => {
+    //we reinitialize all the variables to 0 to recompute them
+    let ones = 0,twos  = 0,threes = 0,fours = 0,fives = 0
+    let totalLocal = 0;
+    let avgLocal = 0;
     //we compute the number of reviews of each type
-    location.ratings?.array.forEach(rating => {
-      switch (rating.value){
-        case 0: setzero(zero+1); break;
-        case 1: setone(one+1); break;
-        case 2: settwo(two+1); break;
-        case 3: setthree(three+1); break;
-        case 4: setfour(four+1); break;
-        case 5: setfive(five+1); break;
-      }
-      settotal(total+1)
-    });
-  }, [])
+    if(location.ratings !== undefined)
+      location.ratings.forEach((value,key,map) => {
+        switch (value){
+          case 1: ones++; break;
+          case 2: twos++; break;
+          case 3: threes++; break;
+          case 4: fours++; break;
+          case 5: fives++; break;
+        }
+        avgLocal += value;
+        totalLocal++;
+      });
+    //we update the visual variables
+    setone(ones);settwo(twos);setthree(threes);setfour(fours);setfive(fives);
+    setaverage(avgLocal/totalLocal);
+    settotal(totalLocal);
+  };
   
   return (
     <>
       <Text as={'b'} fontSize={'x-large'} >Ratings</Text>
-      <Grid templateRows={'repeat(2,1fr)'} gap='1.01em'>
+      <Grid templateRows={'repeat(2,1fr)'} >
         <Stack alignItems={'center'} gap='0em'>
           <Text>Give a rating to this location</Text>
-          {/*TODO cuanto tenga la session meterle aqui al valor inicial el de la location.reviews?.find(webID)*/}
-          <StarRating onChange={()=>{/*TODO meter aqui el update a la location*/}}></StarRating>
-          <Text>Average rating of this location:</Text>
-          <Text as={'b'} fontSize='2xl'>{666 /*TODO change*/}</Text>
+          <StarRating 
+            defaultValue={
+              location.ratings? //if we have ratings
+                //if this user has rated
+                (Array.from(location.ratings?.keys()).filter(key => key === (session as SessionInfo).session.info.webId)? 
+                  location.ratings.get((session as SessionInfo).session.info.webId)
+                  :0/*if not rated*/ 
+                )
+                :0//if no ratings for the location
+            }  
+            onChange={(value) => { 
+              //we add it to the location
+              if (localLocation.ratings === undefined) {
+                localLocation.ratings = new Map<string,number>();
+              }
+              localLocation.ratings.set(session.session.info.webId, value);
+              setLocation(localLocation);
+              //we update the visual part of the application
+              computeStatistics()
+              //TODO hacer aqui el update en solid pod
+
+          }}></StarRating>
+          <HStack gap='1.5em' placeContent={'center'} width={'full'}>
+            <Stack alignItems={'center'}>
+              <Text>Average rating:</Text>
+              <Text as={'b'} fontSize='2xl'>{Number.isNaN(average)? 0 : average.toFixed(2)}</Text>
+            </Stack>
+            <Stack alignItems={'center'}>
+              <Text>Number of ratings:</Text>
+              <Text as={'b'} fontSize='2xl'>{total}</Text>
+            </Stack>
+          </HStack>
         </Stack>
-        <Grid templateColumns={'repeat(2,1fr)'} gap='1.01em'>
-        <Stack>
-          <Flex gap={'1em'} alignItems={'baseline'} direction={'row'}>
-            <Text>0</Text>
-            <Progress rounded={'md'} width={'full'} value={(zero * 100) / total} size='sm' colorScheme={'yellow'}></Progress>
-          </Flex>
-          <Flex gap={'1em'} alignItems={'baseline'} direction={'row'}>
-            <Text>1</Text>
-            <Progress rounded={'md'} width={'full'} value={(one * 100) / total} size='sm' colorScheme={'yellow'}></Progress>
-          </Flex>
-          <Flex gap={'1em'} alignItems={'baseline'} direction={'row'}>
-            <Text>2</Text>
-            <Progress rounded={'md'} width={'full'} value={(two * 100) / total} size='sm' colorScheme={'yellow'}></Progress>
-          </Flex>
-        </Stack>
-        <Stack>
-          <Flex gap={'1em'} alignItems={'baseline'} direction={'row'}>
-            <Text>3</Text>
-            <Progress rounded={'md'} width={'full'} value={(three * 100) / total} size='sm' colorScheme={'yellow'}></Progress>
-          </Flex>
-          <Flex gap={'1em'} alignItems={'baseline'} direction={'row'}>
-            <Text>4</Text>
-            <Progress rounded={'md'} width={'full'} value={(four * 100) / total} size='sm' colorScheme={'yellow'}></Progress>
-          </Flex>
-          <Flex gap={'1em'} alignItems={'baseline'} direction={'row'}>
+        <Stack alignItems={'center'}>
+          <Grid templateColumns={'repeat(2,1fr)'} gap='0.5vw' width={'full'}>
+            <Stack>
+              <Flex gap={'1em'} alignItems={'baseline'} direction={'row'}>
+                <Text>1</Text>
+                <Progress rounded={'md'} width={'full'} value={(one * 100) / total} size='sm' colorScheme={'yellow'}></Progress>
+              </Flex>
+              <Flex gap={'1em'} alignItems={'baseline'} direction={'row'}>
+                <Text>2</Text>
+                <Progress rounded={'md'} width={'full'} value={(two * 100) / total} size='sm' colorScheme={'yellow'}></Progress>
+              </Flex>
+            </Stack>
+            <Stack>
+              <Flex gap={'1em'} alignItems={'baseline'} direction={'row'}>
+                <Text>3</Text>
+                <Progress rounded={'md'} width={'full'} value={(three * 100) / total} size='sm' colorScheme={'yellow'}></Progress>
+              </Flex>
+              <Flex gap={'1em'} alignItems={'baseline'} direction={'row'}>
+                <Text>4</Text>
+                <Progress rounded={'md'} width={'full'} value={(four * 100) / total} size='sm' colorScheme={'yellow'}></Progress>
+              </Flex>
+            </Stack>
+          </Grid>
+          <Flex gap={'1em'} width={'14.5vw'} justifyContent='center' alignItems={'baseline'} direction={'row'}>
             <Text>5</Text>
             <Progress rounded={'md'} width={'full'} value={(five * 100) / total} size='sm' colorScheme={'yellow'}></Progress>
           </Flex>
+
         </Stack>
-        </Grid>
       </Grid>
     </>
   )
 };
 
-const AddReview =  ( {location ,setLocation}) =>{
+const ReviewSection =  ( {location ,setLocation,session}) =>{
   const {isOpen, onOpen, onClose } = useDisclosure();
   const [title, settitle] = useState('')
   const [input, setInput] = useState('')
+  const [username, setusername] = useState('')
   const firstFieldRef = React.useRef(null);
-  let errorOnTitle = title.trim().length == 0;
-  let errorOnBody = input.trim().length == 0;
+  let errorOnTitle = title.trim().length === 0;
+  let errorOnBody = input.trim().length === 0;
   //we use a local version of the location because the passed one is the reference to the usestate one
-  let localLocation = JSON.parse(JSON.stringify(location)); 
+  let localLocation = location;
+  
+  getNameFromPod(session.session.info.webId).then(res=> setusername(res));
+  
   return (
-    <Box marginLeft={'auto'} >
-      <Popover
-          isOpen={isOpen}
-          initialFocusRef={firstFieldRef}
-          onOpen={onOpen}
-          onClose={onClose}
-          placement='top'
-          closeOnBlur={false}
-        >
-          <PopoverTrigger>
-            <Button colorScheme={'green'} size='sm' leftIcon ={<MdOutlineRateReview/>} >Add review</Button>
-          </PopoverTrigger>
-          <PopoverContent >
-            <Box zIndex={'3'} padding='1.1em'>
-            <PopoverCloseButton />
-                <FormControl isInvalid={errorOnBody}  >
-                  <FormLabel>Leave a review </FormLabel>
-                  <FormLabel>Title</FormLabel>
-                  <Input 
-                    ref={firstFieldRef}
-                    value={title}
-                    onChange={(e:any) => settitle(e.target.value)}                                        
-                    placeholder='Title of review'/>
+    <>
+      <Box >
+        <Popover
+            isOpen={isOpen}
+            initialFocusRef={firstFieldRef}
+            onOpen={onOpen}
+            onClose={onClose}
+            placement='top'
+            closeOnBlur={false}
+          >
+            <PopoverTrigger>
+              <Button colorScheme={'green'} size='sm' leftIcon ={<MdOutlineRateReview/>} >Add review</Button>
+            </PopoverTrigger>
+            <PopoverContent >
+              <Box zIndex={'3'} padding='1.1em'>
+              <PopoverCloseButton />
+                  <FormControl isInvalid={errorOnBody}  >
+                    <FormLabel>Leave a review </FormLabel>
+                    <FormLabel>Title</FormLabel>
+                    <Input 
+                      ref={firstFieldRef}
+                      value={title}
+                      onChange={(e:any) => settitle(e.target.value)}                                        
+                      placeholder='Title of review'/>
 
-                  {!errorOnTitle ? 
-                    <FormHelperText>Give a descriptive title to the review</FormHelperText>
-                    : 
-                    <FormErrorMessage>Review must have a title</FormErrorMessage>
-                  }
-                  <FormLabel>Body</FormLabel>
-                  <Textarea
-                    placeholder="Body of the review"
-                    value={input}
-                    onChange={(e) => setInput(e.target.value)}
-                    overflowY='auto'
-                    resize={'none'}/>
-                  {!errorOnBody ? 
-                    <FormHelperText>Give a descriptive review body</FormHelperText>
-                    : 
-                    <FormErrorMessage>Body of the review is required</FormErrorMessage>
-                  }
-                  <Button marginLeft={'auto'} colorScheme={'teal'} disabled={errorOnBody || errorOnTitle}
-                    onClick={()=>{
-                      //create a new Review with the info of the current user
-                      let review : ReviewType = {
-                        username:'TODO', //TODO
-                        title:title,
-                        content:input,
-                        date:new Date(),
-                        webId : 'TODO' //TODO 
-                      };
-                      //we add it to the current location 
-                      if(localLocation.reviews) //if already have reviews push
+                    {!errorOnTitle ? 
+                      <FormHelperText>Give a descriptive title to the review</FormHelperText>
+                      : 
+                      <FormErrorMessage>Review must have a title</FormErrorMessage>
+                    }
+                    <FormLabel>Body</FormLabel>
+                    <Textarea
+                      placeholder="Body of the review"
+                      value={input}
+                      onChange={(e) => setInput(e.target.value)}
+                      overflowY='auto'
+                      resize={'none'}/>
+                    {!errorOnBody ? 
+                      <FormHelperText>Give a descriptive review body</FormHelperText>
+                      : 
+                      <FormErrorMessage>Body of the review is required</FormErrorMessage>
+                    }
+                    <Button marginLeft={'auto'} colorScheme={'teal'} disabled={errorOnBody || errorOnTitle}
+                      onClick={()=>{
+                        //create a new Review with the info of the current user
+                        let review : ReviewType = {
+                          title:title,
+                          content:input,
+                          date:new Date(),
+                          webId : session.session.info.webId
+                        };
+                        //we add it to the current location 
+                        if(localLocation.reviews === undefined){ //if no array we initialize it
+                          localLocation.reviews = new Array<ReviewType>();
+                        }
                         localLocation.reviews.push(review)
-                      else{ //if this is the first review create array and push
-                        localLocation.reviews = new Array<ReviewType>();
-                        localLocation.reviews.push(review)
-                      }
-                      //we repaint the localLocation being showed
-                      setLocation(localLocation)
-                      //we persist the update on the Solid pod
+                        
+                        //we repaint the localLocation being showed
+                        setLocation(localLocation)
+                        //we persist the update on the Solid pod
 
-                      //TODO make call to the solidManagement module here
+                        //TODO make call to the solidManagement module here
 
-                      //we close the add review window
-                      onClose()
-                    }}
-                    >Submit review</Button>
-                </FormControl>
-            </Box>
-        </PopoverContent>
-      </Popover>
-    </Box>
+                        //we close the add review window
+                        onClose()
+                      }}
+                      >Submit review</Button>
+                  </FormControl>
+              </Box>
+          </PopoverContent>
+        </Popover>
+      </Box>
+      {
+        localLocation.reviews?
+          localLocation.reviews.sort((a,b)=> new Date(a.date).getTime() - new Date(b.date).getTime()).map((rev,i)=>(
+            <Review 
+              key={i}
+              title={rev.title as string}
+              username={username}
+              content={rev.content as string}
+              date={rev.date}/>
+            ))
+          :
+          <Text>No reviews for this location, be the first one to leave one</Text>
+      }
+    </>
   )
 }
 
 
-export default function LocationInfo (props : LocationInfoProps) : JSX.Element {  
+export default function LocationInfo (props : LocationInfoProps) : JSX.Element { 
+  const session = useSession(); 
   const [location, setlocation] = useState(props.location)
-
   return (
     <Flex
         direction={'column'}
@@ -242,13 +314,14 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
         overflowY='auto'>
 
         <Text as='b'fontSize={'x-large'}>Pictures:</Text>
-        <HStack shouldWrapChildren={true} display='flex' overflowX='auto' height={'fit-content'}> 
+        <HStack shouldWrapChildren={true} display='flex' overflowX='auto' minHeight={200}  height={'fit-content'}> 
             {
             location.images?.length? 
             (
-              location.images?.map((image)=>{
+              location.images?.map((image,i)=>{
                 return (
                   <Image 
+                    key={i}
                     src={image as string} 
                     width='200'
                     height='200'
@@ -259,9 +332,16 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
               })   
             ) 
             : 
-            <Text>
-              No photos available for this location
-            </Text>
+            <>
+              <Text>
+                No photos available for this location
+              </Text>
+              <Image 
+                src={noImage as string} 
+                width='180'
+                height='180'
+                borderRadius='lg'></Image>
+            </>
             }
           </HStack>
 
@@ -274,7 +354,7 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
           maxHeight={'30vh'}
           minHeight='15vh'
           bgColor='blackAlpha.200'
-          border={"1px"}
+          
           borderRadius='lg'
           >
           <Text 
@@ -284,26 +364,15 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
           </Text>  
         </Flex>
 
-        <RatingSection location={location} ></RatingSection>
+        <RatingSection location={location} setLocation={setlocation} session={session} ></RatingSection>
 
         <Flex
             direction={'row'}
             width='full'>
           <Text as={'b'} fontSize={'x-large'} >Reviews:</Text>
-          <AddReview location={location} setLocation={setlocation} ></AddReview>
         </Flex>
-        
-        {
-          location.reviews?
-          location.reviews.sort((a,b)=> new Date(a.date).getTime() - new Date(b.date).getTime()).map((rev,i)=>(
-              <Review title={rev.title as string} username={rev.username as string} content={rev.content as string} date={rev.date}/>
-              ))
-            :
-            <Text>No reviews for this location</Text>
-        }
-        <Button onClick={()=> {/*TODO delete this when fixed order*/console.log(location.reviews?.sort((a,b)=> new Date(a.date).getTime() - new Date(b.date).getTime())); location.reviews?.forEach(r=> console.log(new Date(r.date).getTime()))}}></Button>
-
-
+        <ReviewSection location={location} setLocation={setlocation} session={session} ></ReviewSection>
+ 
       </Flex>
       <Box marginTop={'auto'} marginLeft='auto' marginEnd={'1em'}>
         <Button colorScheme='red' leftIcon={<Icon as={RxCross2} width='max-content' height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
