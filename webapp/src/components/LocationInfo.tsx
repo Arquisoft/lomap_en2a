@@ -11,7 +11,7 @@ import { FaStar, FaStarHalfAlt } from "react-icons/fa";
 import noImage from '../no-pictures-picture.png';
 import { useSession } from '@inrupt/solid-ui-react';
 import { SessionInfo } from '@inrupt/solid-ui-react/dist/src/hooks/useSession';
-import { getNameFromPod } from '../solid/solidManagement';
+import { addLocationReview, getNameFromPod } from '../solid/solidManagement';
 
 type LocationInfoProps = {
   location : Location
@@ -254,7 +254,7 @@ const ReviewSection =  ( {location ,setLocation,session}) =>{
                         //we persist the update on the Solid pod
 
                         //TODO make call to the solidManagement module here
-
+                        addLocationReview(localLocation, review)
                         //we close the add review window
                         onClose()
                       }}
