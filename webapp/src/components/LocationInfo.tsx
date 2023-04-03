@@ -11,7 +11,7 @@ import { FaStar, FaStarHalfAlt } from "react-icons/fa";
 import noImage from '../no-pictures-picture.png';
 import { useSession } from '@inrupt/solid-ui-react';
 import { SessionInfo } from '@inrupt/solid-ui-react/dist/src/hooks/useSession';
-import { addLocationReview, getNameFromPod } from '../solid/solidManagement';
+import { addLocationReview, addLocationScore, getNameFromPod } from '../solid/solidManagement';
 
 type LocationInfoProps = {
   location : Location
@@ -130,7 +130,8 @@ const RatingSection = ({location, setLocation, session})=>{
               setLocation(localLocation);
               //we update the visual part of the application
               computeStatistics()
-              //TODO hacer aqui el update en solid pod
+              // solid management
+              addLocationScore(session.session.info.webId, localLocation, value)
 
           }}></StarRating>
           <HStack gap='1.5em' placeContent={'center'} width={'full'}>

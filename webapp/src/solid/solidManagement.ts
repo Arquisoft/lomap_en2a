@@ -91,6 +91,8 @@ export async function getLocationFromDataset(locationPath:string){
   locationImages = await getLocationImage(datasetPath);
   let reviews: ReviewType[] = [];
   reviews = await getLocationReviews(datasetPath)
+  let scores : Map<string, number>;
+  scores = await getLocationScores(datasetPath);
 
   let location : LocationType = {
       name: name,
@@ -98,7 +100,8 @@ export async function getLocationFromDataset(locationPath:string){
       description: description,
       url: url,
       images: locationImages,
-      reviews: reviews
+      reviews: reviews,
+      ratings: scores
   }
   return location;
 
@@ -108,11 +111,9 @@ export async function getLocationReviews(folder:string) {
   let reviews : ReviewType[] = [];
   try {
     let dataSet = await getSolidDataset(folder, {fetch:fetch});
-    let thing = getThing(dataSet, VCARD.hasNote) as Thing
-    let urls = getUrlAll(thing, VCARD.hasNote)
+    let things = getThingAll(dataSet).filter((thing) => getUrl(thing, VCARD.Type) === VCARD.hasNote)
 
-    for (let reviewURL of urls) {
-      let review = getThing(dataSet, reviewURL) as Thing
+    for (let review of things) {
 
       let title = getStringNoLocale(review, SCHEMA_INRUPT.name) as string;
       let content = getStringNoLocale(review, SCHEMA_INRUPT.description) as string;
@@ -136,6 +137,24 @@ export async function getLocationReviews(folder:string) {
   return reviews;
 }
 
+export async function getLocationScores(folder:string) {
+  let scores : Map<string,number> = new Map<string,number>();
+  try {
+    let dataSet = await getSolidDataset(folder, {fetch:fetch});
+    let things = getThingAll(dataSet).filter((thing) => getUrl(thing, VCARD.Type) === VCARD.hasValue)
+
+    for (let score of things) {
+      let value = parseInt(getStringNoLocale(score, SCHEMA_INRUPT.value) as string);
+      let webId = getStringNoLocale(score, SCHEMA_INRUPT.Person) as string;
+
+      scores.set(webId, value);
+    }
+
+  } catch (error) {
+    return scores;
+  }
+  return scores;
+}
 /**
  * Given the folder containing the images of the locations, gets the images (things) inside the dataset.
  * @param imagesFolderUrl url of the images folder
@@ -283,8 +302,6 @@ export async function createLocationDataSet(locationFolder:string, location:Loca
   // save dataset to later add the images
   dataSet = await saveSolidDatasetAt(locationFolder, dataSet, {fetch: fetch}) // save dataset 
   await addLocationImage(locationFolder, location); // store the images
-  // addLocationReview(locationFolder, location) // store the reviews
-  // addLocationScore(locationFolder, location) // store the score
   try {
     await saveSolidDatasetAt(locationFolder, dataSet, {fetch: fetch}) // save dataset 
   } catch (error) {
@@ -296,41 +313,42 @@ export async function createLocationDataSet(locationFolder:string, location:Loca
     let url = location.url?.split("#")[0] as string;
     // get dataset
     let locationDataset = await getSolidDataset(url, {fetch: fetch})
-    // location.reviews?.forEach(async review => {
-      let newReview = buildThing(createThing())
-        .addStringNoLocale(SCHEMA_INRUPT.name, review.title)
-        .addStringNoLocale(SCHEMA_INRUPT.description, review.content)
-        .addStringNoLocale(SCHEMA_INRUPT.startDate, review.date.toDateString())
-        .addStringNoLocale(SCHEMA_INRUPT.Person, review.webId)
-        .addUrl(VCARD.Type, VCARD.hasNote)
-        .build();
+    // create review
+    let newReview = buildThing(createThing())
+      .addStringNoLocale(SCHEMA_INRUPT.name, review.title)
+      .addStringNoLocale(SCHEMA_INRUPT.description, review.content)
+      .addStringNoLocale(SCHEMA_INRUPT.startDate, review.date.toDateString())
+      .addStringNoLocale(SCHEMA_INRUPT.Person, review.webId)
+      .addUrl(VCARD.Type, VCARD.hasNote)
+      .build();
 
-      let hasReviews = getThing(locationDataset, VCARD.hasNote) as Thing;
-      if (hasReviews === null) {
-        // we create the thing as it has not been done before
-        hasReviews = buildThing(createThing())
-          .addUrl(VCARD.hasNote, newReview.url)
-          .build();
-      }
-      else {
-        hasReviews = buildThing(hasReviews)
-          .addUrl(VCARD.hasNote, newReview.url)
-          .build();
+    locationDataset = setThing(locationDataset, newReview)
 
-      }
-
-      locationDataset = setThing(locationDataset, newReview)
-      locationDataset = setThing(locationDataset, hasReviews)
-
-      try {
-        locationDataset = await saveSolidDatasetAt(url, locationDataset, {fetch: fetch});
-      } catch (error){
-        console.log(error);
-      }
+    try {
+      locationDataset = await saveSolidDatasetAt(url, locationDataset, {fetch: fetch});
+    } catch (error){
+      console.log(error);
+    }
   }
 
-  export async function addLocationScore(url:string, location:LocationType){
+  export async function addLocationScore(webId:string, location:LocationType, score:number){
+    let url = location.url?.split("#")[0] as string;
+    // get dataset
+    let locationDataset = await getSolidDataset(url, {fetch: fetch})
+    // create score
+    let newScore = buildThing(createThing())
+      .addStringNoLocale(SCHEMA_INRUPT.value, score.toString())
+      .addStringNoLocale(SCHEMA_INRUPT.Person, webId)
+      .addUrl(VCARD.Type, VCARD.hasValue)
+      .build();
 
+    locationDataset = setThing(locationDataset, newScore)
+
+    try {
+      locationDataset = await saveSolidDatasetAt(url, locationDataset, {fetch: fetch});
+    } catch (error){
+      console.log(error);
+    }
   }
 
 /**
