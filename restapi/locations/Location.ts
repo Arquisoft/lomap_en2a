@@ -22,30 +22,3 @@ export type Review = {
     title:string,
     content:string
 };
-
-export function addReviewToLocation(review:Review, location:Location){
-    if (location.reviews !== null){
-        location.reviews?.push(review);
-    }
-    else{
-        let reviewArray : Review[] = [];
-        reviewArray.push(review);
-        location.reviews = reviewArray;
-    }
-}
-
-export function serializeReviews(reviews: Review[]) : string[] {
-    let webIdsRecord;
-    let datesRecord;
-    let usernamesRecord;
-    let titlesRecord;
-    let contentsRecord;
-    return [];
-}
-
-
-
-
-
-
-
