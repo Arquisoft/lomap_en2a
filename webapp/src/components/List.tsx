@@ -3,6 +3,8 @@ import {Flex, Box} from "@chakra-ui/react";
 import {  SkeletonCircle, SkeletonText } from '@chakra-ui/react'
 import  PlaceDetail  from './PlaceDetail';
 
+
+
 type ListProps = {
     places : Array<Location>;
     setSelectedView: (viewName: JSX.Element) => void //function to change the selected view on the left
