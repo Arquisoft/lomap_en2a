@@ -7,7 +7,7 @@ import {
   getSolidDataset, saveSolidDatasetAt, getThingAll,
   getUrlAll, getUrl,
   getStringNoLocale,
-  createSolidDataset
+  createSolidDataset, deleteSolidDataset
 } from "@inrupt/solid-client";
 
 import { FOAF, VCARD, SCHEMA_INRUPT, RDF} from "@inrupt/vocab-common-rdf"
@@ -20,14 +20,14 @@ import {v4 as uuid} from "uuid" // for the uuids of the locations
 At this moment, the structure of the information stored in the pod sticks to the following architecture:
 + All the information belonging to LoMap is stored in the private folder of the user's pod, more precisely in
   private/lomap.
-+ We create a dataset for each location to ease the manipulation of data and the granting of the access
++ A dataset for each location was created to ease the manipulation of data and the granting of the access
   to some locations (friends logic). This datasets are contained in private/lomap/locations/{locationId}/index.ttl
   This dataset contains:
     # The location Thing itselft (name, description, longitude, latitude ...)
     # Things representing the images of the location
     # Things representing the reviews of the location
     # Things representing the ratings of the location.
-+ Apart from that folder hierarchy, we need another one to register the locations. If we did not do this, we would have
++ Apart from that folder hierarchy, another one is needed to register the locations. If this was not done, we would have
   to iterate through all the folders of the locations directory in order to retrieve all of them. Since we did not 
   find an efficient way of doing this, we keep a locations record, which stores the location path for each one of them.
   This record is stored in /private/lomap/inventory/index.ttl
@@ -47,6 +47,7 @@ At this moment, the structure of the information stored in the pod sticks to the
       - inventory
         - LOC_ID1 path (private/lomap/locations/LOC_ID1)
         - LOC_ID2 path (private/lomap/locations/LOC_ID2)
+        - . . .
 */
 
 
@@ -450,27 +451,30 @@ export async function addLocationImage(url: string, location:LocationType) {
 }
 
 /**
- * 
- * @param webID 
- * @param locationUrl 
- * @returns 
+ * Deletes location dataset and from inventory
+ * @param webID contains the webId of the user
+ * @param locationUrl contains the location url
+ * @returns updated dataset or reject if any errors arise
  */
-// TODO: 
 export async function deleteLocation(webID:string, locationUrl: string) {
-  let locationFolder = locationUrl.split("index.ttl")[0];
+  let url = locationUrl.split("#")[0] as string; // get location dataset path
+  let inventory = `${locationUrl.split("locations")[0]}inventory/index.ttl`;
+  let locationUrlInventory = `${inventory}#${locationUrl.split("#")[1]}`
   try {
-    let dataSet = await getSolidDataset(locationFolder, {fetch: fetch}); // fetch locations dataset
-    // obtain the location from the POD
-    let location = getThing(dataSet, locationUrl) as Thing;
+    let dataset = await getSolidDataset(url, {fetch:fetch}) // remove location dataset
+    await deleteSolidDataset(dataset, {fetch: fetch})
 
-    // cant remove something that does not exist
-    if (location === null) return Promise.reject();
+    // remove location from inventory
+    let inventoryDataset = await getSolidDataset(inventory, {fetch:fetch})
+    let locationToDelete = getThing(inventoryDataset, locationUrlInventory)
+
+    if (locationToDelete === null) return Promise.reject();
     // remove the location
-    dataSet = removeThing(dataSet, location);
-    
+    inventoryDataset = removeThing(inventoryDataset, locationToDelete);
     // update the dataset
-    return await saveSolidDatasetAt(locationFolder, dataSet, { fetch: fetch });
-  } catch (error) {
+    return await saveSolidDatasetAt(inventory, inventoryDataset, { fetch: fetch });
+
+  } catch (error){
     return Promise.reject()
   }
 }
