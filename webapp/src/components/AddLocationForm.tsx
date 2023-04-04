@@ -1,9 +1,10 @@
 import React from 'react'
 import { Location } from '../../../restapi/locations/Location'
 import {Button, Flex, Input, Text, Textarea, useToast} from "@chakra-ui/react";
+import './AddLocationForm.css'
 
 type AddLocationProps = {
-    addLocation: (location: Location) => void
+    addLocation: (location: Location) => boolean
     clickedCoords: any;
 }
 
@@ -31,13 +32,11 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
 
     let imgs: string[] = [];
     let lat: number, lon: number;
+    let areValidCoords: boolean = false;
 
-    const regexLat = /^(-?[1-8]?\d(?:\.\d{1,18})?|90(?:\.0{1,18})?)$/;
-    const regexLon = /^(-?(?:1[0-7]|[1-9])?\d(?:\.\d{1,18})?|180(?:\.0{1,18})?)$/;
-    function checkCoordinates(lat: string, lon: string): boolean {
-        let validLat = regexLat.test(lat);
-        let validLon = regexLon.test(lon);
-        return validLat && validLon;
+    const regexCoords = /^-?(90|[0-8]?\d)(\.\d+)?, *-?(180|1[0-7]\d|\d?\d)(\.\d+)?$/;
+    function checkCoordinates(coords: string): void {
+        areValidCoords = regexCoords.test(coords);
     }
 
     function handleCoordsValue(coords: string):void {
@@ -47,47 +46,54 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
         lon = Number(separatedCoords[1]);
     }
 
+    const toast = useToast();
+
     const handleSubmit = (e:any) => {
         e.preventDefault();
+        checkCoordinates(coordsValue)
+
+        if (!name || name.trim().length == 0) {
+            alert("no hay nombre manin");
+            return;
+        }
+
+        if (!areValidCoords) {
+            alert("areValidCoords da false");
+            return;
+        }
 
         handleCoordsValue(coordsValue);
-        //if (checkCoordinates(latValue, lonValue)) {
-            let l : Location = {
-                name: name,
-                coordinates: {
-                    lng: lon,
-                    lat: lat
-                },
-                description: description,
-                images : imgs
-            }
-            props.addLocation(l);
-
-            console.log(l);
-            return;
-        //}
-
+        let l : Location = {
+            name: name,
+            coordinates: {
+                lng: lon,
+                lat: lat
+            },
+            description: description,
+            images : imgs
+        }
+        if (props.addLocation(l))
+            toast({
+                title: 'Location added.',
+                description: "The location was added to your pod.",
+                status: 'success',
+                duration: 5000,
+                isClosable: true,
+            });
+        else
+            toast({
+                title: 'Error.',
+                description: "The location couldn't be added to your pod.",
+                status: 'error',
+                duration: 5000,
+                isClosable: true,
+            });
     };
-
-    const toast = useToast();
 
     return (
         <form onSubmit={handleSubmit}>
-        <Flex
-            direction={'column'}
-            bg={'white'}
-            width={"30vw"}
-            height={"100vh"}
-            position={'absolute'}
-            left={'5vw'}
-            top={0}
-            zIndex={1}
-            borderRight={"1px solid black"}
-            overflow='hidden'
-            px={2}
-            rowGap="2em"            
-        >
-            <Flex direction={'column'}>
+        <Flex className="flex menu" px={2}>
+            <Flex className="flex section">
                 <Text>Name:</Text>
                 <Input
                     value={name}
@@ -97,24 +103,25 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
                 />
             </Flex>
 
-            <Flex direction={'column'}>
+            <Flex className="flex section">
                 <Text>Coordinates:</Text>
                 <Input
                     value={coordsValue}
-                    onChange={(e:any) => setCoordsValue(e.target.value)}
+                    onChange={(e:any) => {
+                        checkCoordinates(e.target.value);
+                        if (!areValidCoords) {
+                            e.target.style.borderColor = "red"
+                        } else {
+                            e.target.style.borderColor = "inherit"
+                        }
+                        setCoordsValue(e.target.value);
+                    }}
                     placeholder='Ej: 43.35484910218162, -5.851277716083629'
                     size='sm'
                 />
-                {/*<Text>Longitud:</Text>
-                <Input
-                    value={lonValue}
-                    onChange={(e:any) => setLonValue(e.target.value)}
-                    placeholder='Inserte longitud'
-                    size='sm'
-                />*/}
             </Flex>
 
-            <Flex direction={'column'}>
+            <Flex className="flex section">
                 <Text>Description:</Text>
                 <Textarea
                     value={description}
@@ -124,35 +131,30 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
                 />
             </Flex>
 
-            
-            <Input 
-                type="file" 
-                accept='image/*' 
-                onChange={async function(e) {
-                    imgs = []; // array of images empty
-                    var reader = new FileReader(); // create reader
-                    let files = e.target.files !== null ? e.target.files : []; // obtain files
-                    for (let image of files){
-                        let res = await readFileAsync(image, reader); // wait for the result
-                        imgs.push(res); // add file to array
-                    }
-                }} 
-                multiple>
+            <Flex className="flex section">
+                <Text paddingBottom={'0.5em'}>
+                    Add images to your location:
+                </Text>
+                <Input type="file"
+                       accept='image/*'
+                       border={'0'}
+                       onChange={async function(e) {
+                           imgs = []; // array of images empty
+                           let reader = new FileReader(); // create reader
+                           let files = e.target.files !== null ? e.target.files : []; // obtain files
+                           for (let image of files){
+                               let res = await readFileAsync(image, reader); // wait for the result
+                               imgs.push(res); // add file to array
+                           }
+                       }}
+                       multiple>
 
-            </Input>
+                </Input>
+            </Flex>
             
 
             <Button colorScheme={'orange'}
                     variant={'outline'}
-                    onClick={()=> {
-                        toast({
-                            title: 'Location added.',
-                            description: "The location was added to your pod.",
-                            status: 'success',
-                            duration: 5000,
-                            isClosable: true,
-                        })
-                    }}
                     type={'submit'}
             >
                 Add location
@@ -164,4 +166,4 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
 
 
 
-export default AddLocationFormComp;
+export default AddLocationFormComp;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               

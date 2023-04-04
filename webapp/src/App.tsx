@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSession } from '@inrupt/solid-ui-react';
 import { ChakraProvider, useToast, Flex } from '@chakra-ui/react';
+
 import { SessionInfo } from '@inrupt/solid-ui-react/dist/src/hooks/useSession';
 // Our imports
 import './App.css';
@@ -10,7 +11,6 @@ import Login from './components/login/Login';
 import Map from './components/Map';
 import {createLocation, deleteLocation, getLocations} from './solid/solidManagement'
 import Menu from './components/Menu';
-import AddLocationForm from "./components/AddLocationForm";
 
 
 function App(): JSX.Element {
@@ -27,17 +27,6 @@ function App(): JSX.Element {
   }
 
   const session = useSession();
-  const toast = useToast();
-
-  const showToast = (type) => {
-    toast({
-      title: 'Location added.',
-      description: "The location was added to your pod.",
-      status: type,
-      duration: 5000,
-      isClosable: true,
-    })
-  }
 
   //we get the locations for the user and fetch them to the list
   useEffect(()=>{
@@ -58,33 +47,23 @@ function App(): JSX.Element {
       deleteLocation(session.session.info.webId ,location.url.toString()).then(
         ()=> {
           loadLocations();
-          showToast('error');
         }
       )
 
   }
 
 
-
-
-  function addLocation(location:Location){
+  function addLocation(location:Location):boolean{
+    let success = false;
     if(session.session.info.webId)
       createLocation(session.session.info.webId ,location).then(
         ()=> {
           loadLocations();
-          showToast('success');
-        },
-        () => {
-          toast({
-            title: 'Error.',
-            description: "The location could not be added to your pod.",
-            status: 'error',
-            duration: 5000,
-            isClosable: true,
-          });
+          success = true;
         }
       )
 
+    return success;
   }
 
 

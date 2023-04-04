@@ -15,7 +15,7 @@ type MenuProps = {
   locations : Array<Location>,
   session : SessionInfo
   deleteLocation : (location:Location) =>void,
-  addLocation : (location:Location) =>void
+  addLocation : (location:Location) =>boolean
 }
 
 

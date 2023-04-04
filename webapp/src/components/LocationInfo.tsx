@@ -1,6 +1,6 @@
-import { Text,Stack, HStack, Image, Box, Flex, Button, Icon} from "@chakra-ui/react"
-import {RxCross2}  from "react-icons/rx";
+import { Text,Stack, HStack, Image, Box, Flex } from "@chakra-ui/react"
 import { Location } from "../../../restapi/locations/Location";
+import { DeletingAlertDialog } from './DeletingAlertDialog';
 
 
 type LocationInfoProps = {
@@ -54,18 +54,12 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
             </HStack>
           </Stack>
           </Flex>
-          <Box marginTop={'auto'} marginLeft='auto' marginEnd={'1em'}>
-            <Button colorScheme='red' leftIcon={<Icon as={RxCross2} width='max-content' height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
-              size='lg'
-              onClick={() => {
-                //we show a 
+          <Box marginTop={'auto'} marginLeft='auto' marginEnd={'1em'} paddingBottom={'1em'}>
 
-                //we delete the props.location that is being showed
-                props.deleteLocation(props.location);
-              }}
-            >
-              Delete location
-            </Button>
+            <DeletingAlertDialog
+                deleteLocation={props.deleteLocation}
+                location={props.location}
+            ></DeletingAlertDialog>
           </Box>
     </Flex>
   )

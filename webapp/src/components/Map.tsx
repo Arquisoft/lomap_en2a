@@ -12,7 +12,7 @@ type MapProps = {
     locations : Array<Location>
     changeViewTo: (viewName: JSX.Element) => void //function to change the selected view on the left
     deleteLocation : (loc : Location) => void
-    addLocation : (location:Location) =>void
+    addLocation : (location:Location) =>boolean
 }
 
 const Map = ( props : MapProps) => {

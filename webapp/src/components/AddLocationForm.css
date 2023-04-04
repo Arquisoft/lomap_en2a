@@ -1,0 +1,16 @@
+.flex {
+    flex-direction: column;
+}
+
+.menu {
+    background: white;
+    width: 30vw;
+    height: 100vw;
+    position: absolute;
+    left: 5vw;
+    top: 0;
+    z-index: 1;
+    border-right: 1px solid black;
+    overflow: hidden;
+    row-gap: 2em;
+}
