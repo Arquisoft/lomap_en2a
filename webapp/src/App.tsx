@@ -1,9 +1,8 @@
 // External imports
 import React, { useState, useEffect } from 'react';
 import { useSession } from '@inrupt/solid-ui-react';
-import { ChakraProvider, useToast, Flex } from '@chakra-ui/react';
+import { ChakraProvider, Flex } from '@chakra-ui/react';
 
-import { SessionInfo } from '@inrupt/solid-ui-react/dist/src/hooks/useSession';
 // Our imports
 import './App.css';
 import { Location } from '../../restapi/locations/Location';
@@ -18,6 +17,8 @@ function App(): JSX.Element {
   const [locations, setLocations] = useState<Array<Location>>([]);
   //stores the actual view currently selected
   const [selectedView, setselectedView] = useState(<></>);
+  const [addLocationSuccess, setAddLocationSuccess] = useState(false);
+  const [deleteLocationSuccess, setDeleteLocationSuccess] = useState(false);
 
   
 
@@ -53,17 +54,13 @@ function App(): JSX.Element {
   }
 
 
-  function addLocation(location:Location):boolean{
-    let success = false;
+  async function addLocation(location:Location):Promise<void>{
     if(session.session.info.webId)
       createLocation(session.session.info.webId ,location).then(
         ()=> {
-          loadLocations();
-          success = true;
+          loadLocations().then(()=>{setAddLocationSuccess(true);});
         }
       )
-
-    return success;
   }
 
 
@@ -96,6 +93,7 @@ function App(): JSX.Element {
               addLocation={addLocation}
               locations={locations}
               changeViewTo= {(newView : JSX.Element) => {setselectedView(newView)}}
+              addingSuccess={addLocationSuccess}
 
               />
             {
@@ -105,7 +103,8 @@ function App(): JSX.Element {
                   addLocation={addLocation}
                   changeViewTo= {(newView : JSX.Element) => {setselectedView(newView)}}
                   locations = {locations}
-                  session = {session}                  
+                  session = {session}
+                  addingSuccess={addLocationSuccess}
                   />
             {
               !session.session.info.isLoggedIn ? (

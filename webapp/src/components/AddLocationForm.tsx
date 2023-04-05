@@ -1,11 +1,12 @@
 import React from 'react'
 import { Location } from '../../../restapi/locations/Location'
-import {Button, Flex, Input, Text, Textarea, useToast} from "@chakra-ui/react";
+import {Button, Flex, Input, Text, Textarea, useToast, VisuallyHidden} from "@chakra-ui/react";
 import './AddLocationForm.css'
 
 type AddLocationProps = {
-    addLocation: (location: Location) => boolean
+    addLocation: (location: Location) => Promise<void>
     clickedCoords: any;
+    addingSuccess: boolean;
 }
 
 /**
@@ -64,30 +65,35 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
 
         handleCoordsValue(coordsValue);
         let l : Location = {
-            name: name,
+            name: name.trimStart().trimEnd(),
             coordinates: {
                 lng: lon,
                 lat: lat
             },
-            description: description,
+            description: description.trimStart().trimEnd(),
             images : imgs
         }
-        if (props.addLocation(l))
-            toast({
-                title: 'Location added.',
-                description: "The location was added to your pod.",
-                status: 'success',
-                duration: 5000,
-                isClosable: true,
-            });
-        else
-            toast({
-                title: 'Error.',
-                description: "The location couldn't be added to your pod.",
-                status: 'error',
-                duration: 5000,
-                isClosable: true,
-            });
+        props.addLocation(l).then(
+            ()=> {
+                if (props.addingSuccess)
+                    toast({
+                        title: 'Location added.',
+                        description: "The location was added to your pod.",
+                        status: 'success',
+                        duration: 5000,
+                        isClosable: true,
+                    });
+                else
+                    toast({
+                        title: 'Error.',
+                        description: "The location couldn't be added to your pod.",
+                        status: 'error',
+                        duration: 5000,
+                        isClosable: true,
+                    });
+            }
+        );
+
     };
 
     return (
@@ -101,6 +107,7 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
                     placeholder="Location's name"
                     size='sm'
                 />
+                <VisuallyHidden></VisuallyHidden>
             </Flex>
 
             <Flex className="flex section">

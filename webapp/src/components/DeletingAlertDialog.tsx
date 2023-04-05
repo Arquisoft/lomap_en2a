@@ -47,10 +47,10 @@ export function DeletingAlertDialog(props:any) {
                                 Cancel
                             </Button>
                             <Button colorScheme='red'
-                                    onClick={()=> {
-                                        props.deleteLocation(props.location)
-                                        onClose();
-                                        toast({
+                                    onClick={async ()=> {
+                                        await props.deleteLocation(props.location);
+                                        await onClose();
+                                        await toast({
                                             title: 'Location deleted.',
                                             description: "The location was deleted from your pod.",
                                             status: 'success',

@@ -4,18 +4,18 @@ import { MdList, MdLocationOn, MdMap, MdPeopleAlt, MdPerson } from "react-icons/
 import { Location } from '../../../restapi/locations/Location';
 import { SessionInfo } from '@inrupt/solid-ui-react/dist/src/hooks/useSession';
 import List from './List';
-import { createLocation } from '../solid/solidManagement';
 import AddLocationForm from './AddLocationForm';
 import Friends from './Friends';
 import { ProfileView } from './ProfileInfo';
-import App from "../App";
+
 
 type MenuProps = {
   changeViewTo: (view: JSX.Element) => void,
   locations : Array<Location>,
   session : SessionInfo
   deleteLocation : (location:Location) =>void,
-  addLocation : (location:Location) =>boolean
+  addLocation : (location:Location) => Promise<void>
+  addingSuccess: boolean
 }
 
 
@@ -93,7 +93,7 @@ function Menu(props: MenuProps): JSX.Element {
                           () => {
                             setinsideMenu(false);
                             props.changeViewTo(
-                              <AddLocationForm addLocation={props.addLocation} clickedCoords={''}/>
+                              <AddLocationForm addLocation={props.addLocation} clickedCoords={''} addingSuccess={props.addingSuccess}/>
                             );
                           }
                         }>
