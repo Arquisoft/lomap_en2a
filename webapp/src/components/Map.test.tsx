@@ -88,13 +88,13 @@ test('Check with 1 locations 1 marker in the map',async () => {
     expect(container.querySelector('div[role="button"] img')).toBeInTheDocument()
 })
 
-// test('Check with n locations n marker in the map',async () => {
-//     const {container}= render(<Map locations={testLocations} changeViewTo={()=>{}} deleteLocation={()=>{}}></Map>)
+test('Check with n locations n marker in the map',async () => {
+    const {container}= render(<Map locations={testLocations} changeViewTo={()=>{}} deleteLocation={()=>{}}></Map>)
     
-//     await waitFor(() => expect(container.querySelector('div[role="button"] img')).toBeInTheDocument())
-//     let markers = container.querySelectorAll('div[role="button"] img')
-//     expect(markers.length).toBe(testLocations.length)
-// })
+    await waitFor(() => expect(container.querySelector('div[role="button"] img')).toBeInTheDocument())
+    let markers = container.querySelectorAll('div[role="button"] img')
+    expect(markers.length).toBe(testLocations.length)
+})
 
 test('Check click on a location to open location details',async () => {
     let selectedView = <></>
