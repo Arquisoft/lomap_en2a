@@ -82,6 +82,7 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
                 lng: lon,
                 lat: lat
             },
+            category: categories,
             description: description.trimStart().trimEnd(),
             images : imgs
         }
