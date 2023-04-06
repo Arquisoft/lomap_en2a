@@ -9,6 +9,8 @@ import {
   getStringNoLocale,
   createSolidDataset, deleteSolidDataset
 } from "@inrupt/solid-client";
+import { Category, deserializeCategories, serializeCategories } from "../components/Category";
+import { DatasetContext } from "@inrupt/solid-ui-react";
 
 import { FOAF, VCARD, SCHEMA_INRUPT, RDF} from "@inrupt/vocab-common-rdf"
 
@@ -126,6 +128,17 @@ export async function getLocationFromDataset(locationPath:string){
   let latitude = getStringNoLocale(locationAsThing, SCHEMA_INRUPT.latitude) as string; 
   let description = getStringNoLocale(locationAsThing, SCHEMA_INRUPT.description) as string; 
   let url = getStringNoLocale(locationAsThing, SCHEMA_INRUPT.identifier) as string;
+  let categoriesSerialized = getStringNoLocale(locationAsThing, SCHEMA_INRUPT.Product) as string;
+  let categoriesDeserialized;
+
+  // if the location has a category assigned:
+  if (categoriesSerialized) {
+    // deserialize categories and obtain string[]
+    categoriesDeserialized = deserializeCategories(categoriesSerialized);
+  }
+  else{
+    categoriesDeserialized = deserializeCategories(Category.Other)
+  }
   
   let locationImages: string [] = []; // initialize array to store the images as strings
   locationImages = await getLocationImage(datasetPath); // get the images
@@ -140,6 +153,7 @@ export async function getLocationFromDataset(locationPath:string){
       coordinates : {lng: new Number(longitude), lat: new Number(latitude)},
       description: description,
       url: url,
+      category: categoriesDeserialized,
       images: locationImages,
       reviews: reviews,
       ratings: scores
@@ -351,7 +365,7 @@ export async function createLocationDataSet(locationFolder:string, location:Loca
 
   // create dataset for the location
   let dataSet = createSolidDataset();
-
+  let categoriesSerialized = serializeCategories(location.category); // serialize categories
   // build location thing
   let newLocation = buildThing(createThing({name: id})) 
   .addStringNoLocale(SCHEMA_INRUPT.name, location.name.toString())
@@ -359,6 +373,7 @@ export async function createLocationDataSet(locationFolder:string, location:Loca
   .addStringNoLocale(SCHEMA_INRUPT.latitude, location.coordinates.lat.toString())
   .addStringNoLocale(SCHEMA_INRUPT.description, location.description.toString())
   .addStringNoLocale(SCHEMA_INRUPT.identifier, locationIdUrl) // store the url of the location
+  .addStringNoLocale(SCHEMA_INRUPT.Product, categoriesSerialized) // store string containing the categories
   .addUrl(RDF.type, "https://schema.org/Place")
   .build();
 
@@ -480,53 +495,29 @@ export async function deleteLocation(webID:string, locationUrl: string) {
 }
 
 export async function addFriend(webID:string, friend:Friend): Promise<{ error: boolean, errorMessage: string }> {
-    // get the url of the full dataset
     let profile = webID.split("#")[0]; //just in case there is extra information in the url
-    // to write to a profile you must be authenticated, that is the role of the fetch
-    let dataSet = await getSolidDataset(profile, {fetch: fetch});
+    // get the dataset from the url
+    let dataSet = await getSolidDataset(profile, {fetch: fetch});  
   
+    let dataSetThing = getThing(dataSet, webID) as Thing;
 
-    // We create the location
-    const newFriend = buildThing(createThing())
-    .addStringNoLocale(VCARD.Name, friend.username.toString())
-    .addStringNoLocale(VCARD.url, friend.webID.toString())
-    .addUrl(VCARD.Type, VCARD.Friend)
-    .build();
-  
-    // check if there exists any 
-    let existFriends = await getThing(dataSet, VCARD.Contact) as Thing;
-    // if they do not exist, create it
-    if (existFriends === null){
-      const friends  = await getFriends(webID).then(friendsPromise => {return friendsPromise});
-      if(friends.some(f=>  f.webID.toString() === friend.webID.toString())){
-        return {error:true,errorMessage:"You are already friends"};
+    try {
+      let existsFriend = getUrlAll(dataSetThing, FOAF.knows)
+      if (existsFriend.some((url) => url === friend.webID)){
+        return{error:true,errorMessage:"You are already friends with this user!"}
       }
       else{
-  
-        //existFriends = buildThing(existFriends).addUrl(VCARD.Contact, newFriend.url).build();
-      }
-      existFriends = buildThing(await getUserProfile(webID)).addUrl(VCARD.Contact, newFriend.url).build();
+        // We create the friend
+      let newFriend = buildThing(dataSetThing)
+      .addUrl(FOAF.knows, friend.webID as string)
+      .build();
 
+      // insert friend in dataset
+      dataSet = setThing(dataSet, dataSetThing);
+      dataSet = await saveSolidDatasetAt(webID, dataSet, {fetch: fetch})
+      return{error:false,errorMessage:""}
+      }
+    } catch (error){
+      return{error:true,errorMessage:"Not a valid webId!"}
     }
-    // add the location to the existing ones
-    else{
-
-      const friends  = await getFriends(webID).then(friendsPromise => {return friendsPromise});
-      if(friends.some(f=>  f.webID.toString() === friend.webID.toString())){
-        return{error:true,errorMessage:""};
-      }
-      else{
-  
-        existFriends = buildThing(existFriends).addUrl(VCARD.Contact, newFriend.url).build();
-      }
-    }
-  
-    // insert the new location in the dataset
-    dataSet = setThing(dataSet, newFriend);
-    // insert/replace the control structure in the dataset
-    dataSet = setThing(dataSet, existFriends);
-  
-    await saveSolidDatasetAt(webID, dataSet, {fetch: fetch})
-    return{error:false,errorMessage:""}
-
 }

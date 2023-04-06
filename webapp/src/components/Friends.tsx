@@ -31,13 +31,13 @@ function Friends() : JSX.Element {
       setFriends([]);
     }
   }
-  const handleSubmit = (event)=>{
+  const handleSubmit = async (event)=>{
     event.preventDefault();
     let value = (document.getElementById("newFriend")as HTMLInputElement).value;
-    const result = addFriend(webId as string,{username:value,webID:value+"url"});
-    result.then(r=>{setError(r.error);setErrorMessage(r.errorMessage);})
+    const result = await addFriend(webId as string,{username:value,webID:value});
+    setError(result.error)
+    setErrorMessage(result.errorMessage)
     handleFriends();
-    
   }
 
     return (

@@ -44,8 +44,8 @@ export function ProfileView() {
         </VStack>
           <Box p={2} shadow='md' borderWidth='1px'>
             <Text as="b">Statistics</Text>
-            <Text>198 Locations</Text>
-            <Text>199987624 Reviews</Text>
+            <Text>N Locations</Text>
+            <Text>N Reviews</Text>
           </Box>
       </Flex>
     )
