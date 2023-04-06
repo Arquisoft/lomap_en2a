@@ -1,6 +1,6 @@
 import React from 'react'
 import { Location } from '../../../restapi/locations/Location'
-import {Button, Flex, Input, Text, Textarea, useToast, VisuallyHidden} from "@chakra-ui/react";
+import {Button, Flex, FormErrorMessage, Input, Text, Textarea, useToast, VisuallyHidden} from "@chakra-ui/react";
 import './AddLocationForm.css'
 
 type AddLocationProps = {
@@ -34,6 +34,8 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
     let imgs: string[] = [];
     let lat: number, lon: number;
     let areValidCoords: boolean = false;
+    let isValidName: boolean = !name || name.trim().length === 0;
+
 
     const regexCoords = /^-?(90|[0-8]?\d)(\.\d+)?, *-?(180|1[0-7]\d|\d?\d)(\.\d+)?$/;
     function checkCoordinates(coords: string): void {
@@ -53,8 +55,7 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
         e.preventDefault();
         checkCoordinates(coordsValue)
 
-        if (!name || name.trim().length == 0) {
-            alert("no hay nombre manin");
+        if (isValidName) {
             return;
         }
 
@@ -107,7 +108,6 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
                     placeholder="Location's name"
                     size='sm'
                 />
-                <VisuallyHidden></VisuallyHidden>
             </Flex>
 
             <Flex className="flex section">
