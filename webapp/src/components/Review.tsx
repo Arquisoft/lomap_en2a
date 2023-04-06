@@ -6,7 +6,8 @@ import LocationInfo from './LocationInfo';
 type ReviewProps = {
     username: string,
     title:string,
-    content:string
+    content:string,
+    date: Date
 }
 
 function Review (props : ReviewProps ) : JSX.Element{
@@ -23,27 +24,34 @@ function Review (props : ReviewProps ) : JSX.Element{
         borderRadius={'lg'}
         gap='0.5em'
         >
-        <Text as={'b'}>
-            {props.title}
-        </Text>
         <Flex
+            direction={'row'}
+            width='full'>
+            <Flex
             direction={'row'}
             alignItems='start'
             gap={'0.2em'}> 
-            <Avatar 
-                bg={['red.500','blue.500','green.500','orange.500'].at( Math.random() * (3 - 0))}
-                size='xs'/>
-            <Text as={'b'}>
-                {props.username}
+                <Avatar 
+                    bg={['red.500','blue.500','green.500','orange.500'].at( Math.random() * (3 - 0))}
+                    size='xs'/>
+                <Text as={'b'} fontSize='0.8em'>
+                    {props.username}
+                </Text>
+            </Flex>
+            <Text marginLeft={'auto'} textColor='grey' fontSize={'0.9em'}>
+                {new Date(props.date).toLocaleString()}
             </Text>
         </Flex>
-        <Text>
-            {props.content}
-        </Text>
-
-
-
-        
+        <Box width='full'>
+                <Text as={'b'}>
+                    {props.title}
+                </Text>
+        </Box>
+        <Box width='full'>
+            <Text>
+                {props.content}
+            </Text>
+        </Box>
     </Flex>
   );
 }

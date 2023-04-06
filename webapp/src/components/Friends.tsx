@@ -1,13 +1,15 @@
-import React from 'react'
+import React, { useContext, useState } from 'react'
 import {Flex,Text, Button, Input,  InputRightElement, InputGroup} from "@chakra-ui/react";
 import {addFriend, getFriends} from "../solid/solidManagement";
 import type { Friend } from "../../../restapi/users/User";
 import FriendsDetail from './FriendsDetail';
+import { useSession } from '@inrupt/solid-ui-react';
 
+function Friends() : JSX.Element {
+  //we load the session
+  const session = useSession()
 
-function Friends(props : any) : JSX.Element {
-  const webId = props.session.session.info.webId;
-    
+  const webId = session.session.info.webId;
   const [friends, setFriends] = React.useState<Friend[]>([]);
   const[isLoged, setLogged] = React.useState(false);
 
@@ -32,7 +34,7 @@ function Friends(props : any) : JSX.Element {
   const handleSubmit = async (event)=>{
     event.preventDefault();
     let value = (document.getElementById("newFriend")as HTMLInputElement).value;
-    const result = await addFriend(webId,{username:value,webID:value});
+    const result = await addFriend(webId as string,{username:value,webID:value});
     setError(result.error)
     setErrorMessage(result.errorMessage)
     handleFriends();
@@ -50,10 +52,9 @@ function Friends(props : any) : JSX.Element {
           zIndex={1}
           overflow='hidden'
           px={2}>
-          
           {
             
-            props.session.session.info.isLoggedIn ?
+            session.session.info.isLoggedIn ?
             <Flex direction={"column"}>
               <Text fontSize='1.2em' borderBottomWidth='1px' margin={'20px'}>Add Friend</Text>
               
