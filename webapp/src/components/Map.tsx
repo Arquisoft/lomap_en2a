@@ -12,9 +12,7 @@ type MapProps = {
     //center: Coordinates;
     locations : Array<Location>
     changeViewTo: (viewName: JSX.Element) => void //function to change the selected view on the left
-    deleteLocation : (loc : Location) => void
-    addLocation : (location:Location) => Promise<void>
-    addingSuccess: boolean
+    loadLocations : () => Promise<void>
 }
 
 const Map = ( props : MapProps) => {
@@ -43,7 +41,7 @@ const Map = ( props : MapProps) => {
     }
     setCenter(newCenter)
     //we display the info tab in the left part of the window
-    props.changeViewTo(<LocationInfo location={location} deleteLocation={props.deleteLocation}></LocationInfo>);
+    props.changeViewTo(<LocationInfo location={location} loadLocations={props.loadLocations}></LocationInfo>);
   }
 
   function handleMapClick(lat:any,lon:any):void {
@@ -51,7 +49,7 @@ const Map = ( props : MapProps) => {
     let clickedCoords = lat + ", " + lon;
 
     props.changeViewTo(<></>);
-    props.changeViewTo(<AddLocationForm addLocation={props.addLocation} clickedCoords={clickedCoords} addingSuccess={props.addingSuccess}/>);
+    props.changeViewTo(<AddLocationForm loadLocations={props.loadLocations} clickedCoords={clickedCoords}/>);
   }
 
   const categories = Object.values(Category); // array of strings containing the values of the categories
@@ -149,7 +147,7 @@ const Map = ( props : MapProps) => {
               filteredLocations.map((place, i) => ( // necessary to use a const, if not it does not work (dont know why)
                 <Marker
                     position={{lat: Number(place.coordinates.lat), lng: Number(place.coordinates.lng)}}
-                    onClick={() => handleMapClick(place)}
+                    onClick={() => handlePlaceClick(place)}
                 ></Marker>))
             )
           }

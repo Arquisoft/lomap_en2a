@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Flex, Button, Icon, Box } from "@chakra-ui/react";
 import { MdList, MdLocationOn, MdMap, MdPeopleAlt, MdPerson } from "react-icons/md"
 import { Location } from '../../../restapi/locations/Location';
-import List from './List';
+import ListOfLocations from './ListOfLocations';
 import AddLocationForm from './AddLocationForm';
 import Friends from './Friends';
 import { ProfileView } from './ProfileInfo';
@@ -11,9 +11,7 @@ import { ProfileView } from './ProfileInfo';
 type MenuProps = {
   changeViewTo: (view: JSX.Element) => void,
   locations : Array<Location>,
-  deleteLocation : (location:Location) =>void,
-  addLocation : (location:Location) => Promise<void>
-  addingSuccess: boolean
+  loadLocations : () => Promise<void>
 }
 
 
@@ -74,8 +72,7 @@ function Menu(props: MenuProps): JSX.Element {
                         onClick={() => {
                           setinsideMenu(false);
                           props.changeViewTo(
-                            <List deleteLocation={props.deleteLocation}
-                                  setSelectedView={(view)=> props.changeViewTo(view)} places={props.locations}  />
+                            <ListOfLocations setSelectedView={(view)=> props.changeViewTo(view)} places={props.locations} loadLocations={props.loadLocations} />
                             );
                         }}>
                   List of Locations
@@ -91,7 +88,7 @@ function Menu(props: MenuProps): JSX.Element {
                           () => {
                             setinsideMenu(false);
                             props.changeViewTo(
-                              <AddLocationForm addLocation={props.addLocation} clickedCoords={''} addingSuccess={props.addingSuccess}/>
+                              <AddLocationForm loadLocations={props.loadLocations} clickedCoords={''}/>
                             );
                           }
                         }>

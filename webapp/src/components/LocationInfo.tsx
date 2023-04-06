@@ -1,6 +1,5 @@
 import React,{ useState,useEffect } from 'react';
 import { Text,Stack, HStack, Image, Box, Flex, Button, Icon, Heading, Divider, useDisclosure, Textarea, Input, Grid, Progress} from "@chakra-ui/react"
-import {RxCross2}  from "react-icons/rx";
 import {MdOutlineRateReview} from 'react-icons/md'
 import { Location} from "../../../restapi/locations/Location";
 import {Review as ReviewType}  from "../../../restapi/locations/Location";
@@ -11,13 +10,13 @@ import { FaStar, FaStarHalfAlt } from "react-icons/fa";
 import noImage from '../no-pictures-picture.png';
 import { useSession } from '@inrupt/solid-ui-react';
 import { SessionInfo } from '@inrupt/solid-ui-react/dist/src/hooks/useSession';
-import { addLocationReview, addLocationScore, getNameFromPod } from '../solid/solidManagement';
+import {addLocationReview, addLocationScore, deleteLocation, getNameFromPod} from '../solid/solidManagement';
 import { DeletingAlertDialog } from './DeletingAlertDialog';
 
 
 type LocationInfoProps = {
   location : Location
-  deleteLocation : (loc : Location) => void
+  loadLocations: () => Promise<void>
 };
 
 
@@ -290,6 +289,8 @@ const ReviewSection =  ( {location ,setLocation,session}) =>{
 export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
   const session = useSession();
   const [location, setlocation] = useState(props.location)
+
+
   return (
     <Flex
         direction={'column'}
@@ -382,7 +383,6 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
       </Flex>
       <Box marginTop={'auto'} marginLeft='auto' marginEnd={'1em'}>
         <DeletingAlertDialog
-            deleteLocation={props.deleteLocation}
             location={props.location}
         ></DeletingAlertDialog>
       </Box>

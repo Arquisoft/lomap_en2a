@@ -42,7 +42,7 @@ Stakeholders of your system should be able to comprehend and retrace your decisi
 .Form
 Various options:
 
-* List or table, ordered by importance and consequences or:
+* ListOfLocations or table, ordered by importance and consequences or:
 * more detailed in form of separate sections per decision
 * ADR (architecture decision record) for every important decision
 ****

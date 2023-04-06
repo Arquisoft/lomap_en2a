@@ -9,13 +9,43 @@ import {
     useDisclosure, Button, Icon, useToast
 } from '@chakra-ui/react'
 import {RxCross2} from "react-icons/rx";
+import {deleteLocation} from "../solid/solidManagement";
+import {useSession} from "@inrupt/solid-ui-react";
+import {Location} from "../../../restapi/locations/Location";
+
 
 
 export function DeletingAlertDialog(props:any) {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const cancelRef:any = React.useRef();
-
+    const session = useSession();
     const toast = useToast();
+
+    function deleteLoc(location: Location) {
+        if(session.session.info.webId && location.url)
+            deleteLocation(session.session.info.webId ,location.url.toString()).then(
+                ()=> {
+                    props.loadLocations();
+                    toast({
+                        title: 'Location deleted.',
+                        description: "The location was deleted from your pod.",
+                        status: 'success',
+                        duration: 5000,
+                        isClosable: true,
+                    });
+                },
+                ()=> {
+                    toast({
+                        title: 'Error while deleting.',
+                        description: "The location couldn't be deleted from your pod.",
+                        status: 'error',
+                        duration: 5000,
+                        isClosable: true,
+                    });
+                }
+            )
+    }
+
 
     return (
         <>
@@ -47,16 +77,9 @@ export function DeletingAlertDialog(props:any) {
                                 Cancel
                             </Button>
                             <Button colorScheme='red'
-                                    onClick={async ()=> {
-                                        await props.deleteLocation(props.location);
-                                        await onClose();
-                                        await toast({
-                                            title: 'Location deleted.',
-                                            description: "The location was deleted from your pod.",
-                                            status: 'success',
-                                            duration: 5000,
-                                            isClosable: true,
-                                        });
+                                    onClick={()=> {
+                                        deleteLoc(props.location);
+                                        onClose();
                                     }}
                                     ml={3}>
                                 Delete

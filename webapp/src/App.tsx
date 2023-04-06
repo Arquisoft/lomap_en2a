@@ -2,15 +2,13 @@
 import React, { useState, useEffect } from 'react';
 import { ChakraProvider, HStack, Input, Tag, TagLabel, TagLeftIcon } from '@chakra-ui/react';
 import {Flex} from "@chakra-ui/react";
-import { Location } from '../../restapi/locations/Location';
-import Map from './components/Map';
 
 // Our imports
 import './App.css';
 import { Location } from '../../restapi/locations/Location';
 import Login from './components/login/Login';
 import Map from './components/Map';
-import {createLocation, deleteLocation, getLocations} from './solid/solidManagement'
+import {createLocation, getLocations} from './solid/solidManagement'
 import Menu from './components/Menu';
 import { useSession } from '@inrupt/solid-ui-react';
 
@@ -21,8 +19,6 @@ function App(): JSX.Element {
   //stores the actual view currently selected
   const [selectedView, setselectedView] = useState(<></>);
   const [session, setSession] = useState(useSession());
-  const [addLocationSuccess, setAddLocationSuccess] = useState(false);
-  const [deleteLocationSuccess, setDeleteLocationSuccess] = useState(false);
 
 
   const getNewLocation = (location:Location) => {
@@ -44,23 +40,6 @@ function App(): JSX.Element {
     }
   }
 
-  function deleteLoc( location:Location){
-    if(session.session.info.webId && location.url)
-      deleteLocation(session.session.info.webId ,location.url.toString()).then(
-        ()=> loadLocations()
-      )
-
-  }
-
-
-  async function addLocation(location:Location):Promise<void>{
-    if(session.session.info.webId)
-      createLocation(session.session.info.webId ,location).then(
-        ()=> {
-          loadLocations().then(()=>{setAddLocationSuccess(true);});
-        }
-      )
-  }
 
 
   //get the user's current location and save it for the map to use it as a center
@@ -84,23 +63,16 @@ function App(): JSX.Element {
           maxHeight={'100vh'}
           position={'relative'}
           >
-            <Map /*center = {coordinates}*/
-              deleteLocation={deleteLoc}
-              addLocation={addLocation}
-              locations={locations}
-              changeViewTo= {(newView : JSX.Element) => {setselectedView(newView)}}
-              addingSuccess={addLocationSuccess}
-
+            <Map loadLocations={loadLocations}
+                 locations={locations}
+                 changeViewTo= {(newView : JSX.Element) => {setselectedView(newView)}}
               />
             {
               selectedView ?  selectedView  :  <></>
             }
-            <Menu deleteLocation={deleteLoc}
-                  addLocation={addLocation}
+            <Menu loadLocations={loadLocations}
                   changeViewTo= {(newView : JSX.Element) => {setselectedView(newView)}}
                   locations = {locations}
-                  session = {session}
-                  addingSuccess={addLocationSuccess}
                   />
             {
               !session.session.info.isLoggedIn ? (

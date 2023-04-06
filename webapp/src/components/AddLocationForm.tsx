@@ -1,14 +1,31 @@
-import React from 'react'
+import React, {useState} from 'react'
+import './AddLocationForm.css'
 import { Location } from '../../../restapi/locations/Location'
-import {Button, Checkbox, Flex, Input, Menu, MenuButton, MenuItem, MenuItemOption, MenuList, MenuOptionGroup, Text, Textarea} from "@chakra-ui/react";
+import {
+    Button,
+    Checkbox, Divider,
+    Flex, HStack,
+    Icon, Image,
+    Input,
+    Menu,
+    MenuButton,
+    MenuItem,
+    MenuItemOption,
+    MenuList,
+    MenuOptionGroup,
+    Text,
+    Textarea
+} from "@chakra-ui/react";
 import { Category } from './Category';
 import { FormErrorMessage, useToast, VisuallyHidden} from "@chakra-ui/react";
-import './AddLocationForm.css'
+import {createLocation} from "../solid/solidManagement";
+import {useSession} from "@inrupt/solid-ui-react";
+import {MdOutlineAddLocationAlt} from "react-icons/md";
+import noImage from "../no-pictures-picture.png";
 
 type AddLocationProps = {
-    addLocation: (location: Location) => Promise<void>
+    loadLocations: () => Promise<void>
     clickedCoords: any;
-    addingSuccess: boolean;
 }
 
 /**
@@ -27,7 +44,9 @@ async function readFileAsync(file, reader) : Promise<string> {
 }
 
 
+
 function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
+    const [session, setSession] = useState(useSession());
     const [name, setName] = React.useState('');
     const [coordsValue, setCoordsValue] = React.useState(props.clickedCoords);
     const [description, setDescription] = React.useState('');
@@ -37,11 +56,39 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
 
     const categories = Object.values(Category); // array of strings containing the values of the categories
 
-    let imgs: string[] = [];
+    //let imgs: string[] = [];
+    const [imgs, setImgs] = React.useState<string[]>([]);
+
+
     let lat: number, lon: number;
     let areValidCoords: boolean = false;
     let isValidName: boolean = !name || name.trim().length === 0;
 
+
+    function addLocation(location:Location):void{
+        if(session.session.info.webId)
+            createLocation(session.session.info.webId ,location).then(
+                ()=> {
+                    props.loadLocations();
+                    toast({
+                        title: 'Location added.',
+                        description: "The location was added to your pod.",
+                        status: 'success',
+                        duration: 5000,
+                        isClosable: true,
+                    });
+                },
+                ()=> {
+                    toast({
+                        title: 'Error.',
+                        description: "The location couldn't be added to your pod.",
+                        status: 'error',
+                        duration: 5000,
+                        isClosable: true,
+                    });
+                }
+            )
+    }
 
     const regexCoords = /^-?(90|[0-8]?\d)(\.\d+)?, *-?(180|1[0-7]\d|\d?\d)(\.\d+)?$/;
     function checkCoordinates(coords: string): void {
@@ -86,27 +133,7 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
             description: description.trimStart().trimEnd(),
             images : imgs
         }
-        props.addLocation(l).then(
-            ()=> {
-                if (props.addingSuccess)
-                    toast({
-                        title: 'Location added.',
-                        description: "The location was added to your pod.",
-                        status: 'success',
-                        duration: 5000,
-                        isClosable: true,
-                    });
-                else
-                    toast({
-                        title: 'Error.',
-                        description: "The location couldn't be added to your pod.",
-                        status: 'error',
-                        duration: 5000,
-                        isClosable: true,
-                    });
-            }
-        );
-
+        addLocation(l);
     };
     /**
      * Add/Delete category to/from the location
@@ -128,7 +155,7 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
         <form onSubmit={handleSubmit}>
         <Flex className="flex menu" px={2}>
             <Flex className="flex section">
-                <Text>Name:</Text>
+                <Text as={'b'} fontSize={'x-large'}>Name:</Text>
                 <Input
                     value={name}
                     onChange={(e:any) => setName(e.target.value)}                                        
@@ -138,7 +165,7 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
             </Flex>
 
             <Flex className="flex section">
-                <Text>Coordinates:</Text>
+                <Text as={'b'} fontSize={'x-large'}>Coordinates:</Text>
                 <Input
                     value={coordsValue}
                     onChange={(e:any) => {
@@ -156,7 +183,7 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
             </Flex>
 
             <Flex className="flex section">
-                <Text>Description:</Text>
+                <Text as={'b'} fontSize={'x-large'}>Description:</Text>
                 <Textarea
                     value={description}
                     onChange={(e:any) => setDescription(e.target.value)}
@@ -166,6 +193,7 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
             </Flex>
 
             <Flex className="flex section">
+                <Text as={'b'} fontSize={'x-large'}>Select categories:</Text>
                 <Menu closeOnSelect={false}>
                     <MenuButton as={Button} colorScheme='blue' minWidth='120px'>Select Category</MenuButton>
                     <MenuList minWidth='240px'>
@@ -184,27 +212,53 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
             </Flex>
 
             <Flex className="flex section">
-                <Text paddingBottom={'0.5em'}>
+                <Text paddingBottom={'0.5em'} as={'b'} fontSize={'x-large'}>
                     Add images to your location:
                 </Text>
                 <Input type="file"
                        accept='image/*'
                        border={'0'}
                        onChange={async function(e) {
-                           imgs = []; // array of images empty
+                           //imgs = []; // array of images empty
                            let reader = new FileReader(); // create reader
                            let files = e.target.files !== null ? e.target.files : []; // obtain files
                            for (let image of files){
                                let res = await readFileAsync(image, reader); // wait for the result
-                               imgs.push(res); // add file to array
+                               //imgs.push(res); // add file to array
+                               setImgs(oldArray => [...oldArray, res]);
                            }
                        }}
                        multiple>
 
                 </Input>
+
+                <HStack shouldWrapChildren={true} display='flex' overflowX='auto' minHeight={200}  height={'fit-content'}>
+                    {
+                        imgs.length ? (
+                                imgs.map((image,i)=>{
+                                    return (
+                                        <Image
+                                            key={i}
+                                            src={image as string}
+                                            width='200'
+                                            height='200'
+                                            borderRadius='lg'
+                                            fallbackSrc='https://www.resultae.com/wp-content/uploads/2018/07/reloj-100.jpg'>
+
+                                        </Image>
+                                    )
+                                })
+                            )
+                            :
+                            <>
+
+                            </>
+                    }
+                </HStack>
             </Flex>
 
-            <Button colorScheme={'orange'}
+            <Button leftIcon={<MdOutlineAddLocationAlt/>}
+                    colorScheme={'orange'}
                     variant={'outline'}
                     type={'submit'}
             >
@@ -214,7 +268,6 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
         </form>
     );
 }
-
 
 
 export default AddLocationFormComp;
