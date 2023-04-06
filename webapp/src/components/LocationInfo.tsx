@@ -11,7 +11,7 @@ import { FaStar, FaStarHalfAlt } from "react-icons/fa";
 import noImage from '../no-pictures-picture.png';
 import { useSession } from '@inrupt/solid-ui-react';
 import { SessionInfo } from '@inrupt/solid-ui-react/dist/src/hooks/useSession';
-import { addLocationReview, addLocationScore, getNameFromPod } from '../solid/solidManagement';
+import { addLocationReview, addLocationScore, getNameFromPod,getSolidName } from '../solid/solidManagement';
 
 type LocationInfoProps = {
   location : Location
@@ -242,7 +242,8 @@ const ReviewSection =  ( {location ,setLocation,session}) =>{
                           title:title,
                           content:input,
                           date:new Date(),
-                          webId : session.session.info.webId
+                          webId : session.session.info.webId,
+                          username: username
                         };
                         //we add it to the current location 
                         if(localLocation.reviews === undefined){ //if no array we initialize it
@@ -270,10 +271,11 @@ const ReviewSection =  ( {location ,setLocation,session}) =>{
           (localLocation.reviews as Array<ReviewType>)
             .sort((a : ReviewType,b : ReviewType)=> b.date.getTime() - a.date.getTime())
             .map((rev,i)=>(
+              
               <Review 
                 key={i}
                 title={rev.title as string}
-                username={username}
+                username={rev.username}//AKITOY
                 content={rev.content as string}
                 date={rev.date}/>
               ))

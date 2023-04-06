@@ -4,9 +4,10 @@ import {Flex} from "@chakra-ui/react";
 import { Location } from '../../restapi/locations/Location';
 import Map from './components/Map';
 
+
 import './App.css';
 import Login from './components/login/Login';
-import {createLocation, deleteLocation, getLocations} from './solid/solidManagement'
+import {createLocation, deleteLocation, getLocations,getSolidFriends} from './solid/solidManagement'
 
 import Menu from './components/Menu';
 import { useSession } from '@inrupt/solid-ui-react';
@@ -28,6 +29,20 @@ function App(): JSX.Element {
   async function loadLocations(){
     if(session.session.info.webId){
       let locationList = await getLocations(session.session.info.webId)
+      //Friends Locations
+      let friends = await getSolidFriends(session.session.info.webId);
+
+      for await (let f of friends){
+        let locations = await getLocations(f.webID as string)
+        locationList= locationList.concat(locations);
+      }
+      /** 
+       friends.forEach(async element => {
+        let locations = await getLocations(element.webID as string)
+        await locationList.concat(locations);
+      });
+      */
+      //
       setLocations(locationList);
       setselectedView(<></>);
     }

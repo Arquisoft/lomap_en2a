@@ -184,12 +184,14 @@ export async function getLocationReviews(folder:string) {
       let content = getStringNoLocale(review, SCHEMA_INRUPT.description) as string;
       let date = new Date(getStringNoLocale(review, SCHEMA_INRUPT.startDate) as string);
       let webId = getStringNoLocale(review, SCHEMA_INRUPT.Person) as string;
+      let name = getStringNoLocale(await getUserProfile(webId),FOAF.name) as string;
 
       let newReview : ReviewType = {
         title: title,
         content: content,
         date: date,
-        webId: webId
+        webId: webId,
+        username: name
       }
 
       reviews.push(newReview);
@@ -503,7 +505,7 @@ export async function addSolidFriend(webID: string,friendURL: string): Promise<{
 }
 
 export async function getSolidFriends(webID:string) {
-  
+  let test = getUrl(await getUserProfile(webID), FOAF.knows);
   let friendURLs = getUrlAll(await getUserProfile(webID), FOAF.knows);
   let friends: Friend[] = [];
 
@@ -533,4 +535,12 @@ export async function getSolidFriends(webID:string) {
   
   return friends;
 
+}
+
+export  function getSolidName(webID:string)  {
+ // let name = await getSolidFriends(webId).then(friendsPromise => {return friendsPromise})
+
+  let name =  getUserProfile(webID).then(u => getStringNoLocale(u,FOAF.name)).then(p => {return p as string});
+
+  
 }
