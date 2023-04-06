@@ -37,7 +37,7 @@ function Friends() : JSX.Element {
     event.preventDefault();
     let value = (document.getElementById("newFriend")as HTMLInputElement).value;
     
-    const result = addSolidFriend(webId,value);
+    const result = addSolidFriend(webId as string,value);
     result.then(r=>{setError(r.error);setErrorMessage(r.errorMessage);})
     
     handleFriends();
