@@ -195,7 +195,7 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
             <Flex className="flex section">
                 <Text as={'b'} fontSize={'x-large'}>Select categories:</Text>
                 <Menu closeOnSelect={false}>
-                    <MenuButton as={Button} colorScheme='blue' minWidth='120px'>Select Category</MenuButton>
+                    <MenuButton as={Button} colorScheme='orange' minWidth='120px'>Select Category</MenuButton>
                     <MenuList minWidth='240px'>
                         <MenuOptionGroup type='checkbox'>
                             {
@@ -215,7 +215,14 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
                 <Text paddingBottom={'0.5em'} as={'b'} fontSize={'x-large'}>
                     Add images to your location:
                 </Text>
-                <Input type="file"
+                <label className={"label upload-file"}
+                       htmlFor="image-input">
+                    <i className="fa fa-cloud-upload"></i> Upload images
+                </label>
+                <Input className={"upload-file"}
+                       id={"image-input"}
+                       hidden={true}
+                       type="file"
                        accept='image/*'
                        border={'0'}
                        onChange={async function(e) {
@@ -228,9 +235,10 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
                                setImgs(oldArray => [...oldArray, res]);
                            }
                        }}
-                       multiple>
-
+                       multiple
+                >
                 </Input>
+
 
                 <HStack shouldWrapChildren={true} display='flex' overflowX='auto' minHeight={200}  height={'fit-content'}>
                     {
