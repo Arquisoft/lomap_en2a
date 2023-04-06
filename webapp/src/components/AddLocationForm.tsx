@@ -1,6 +1,7 @@
 import React from 'react'
 import { Location } from '../../../restapi/locations/Location'
-import {Button, Flex, Input, Text, Textarea} from "@chakra-ui/react";
+import {Button, Checkbox, Flex, Input, Menu, MenuButton, MenuItem, MenuItemOption, MenuList, MenuOptionGroup, Text, Textarea} from "@chakra-ui/react";
+import { Category } from './Category';
 
 type AddLocationProps = {
     onSubmit: (location: Location) => void
@@ -31,6 +32,10 @@ function AddLocationForm(props : AddLocationProps) : JSX.Element {
 
     const [description, setDescription] = React.useState('');
 
+    let checkedCategories : string[] = [];
+
+    const categories = Object.values(Category); // array of strings containing the values of the categories
+
     let imgs: string[] = [];
 
     const regexLat = /^(-?[1-8]?\d(?:\.\d{1,18})?|90(?:\.0{1,18})?)$/;
@@ -43,7 +48,10 @@ function AddLocationForm(props : AddLocationProps) : JSX.Element {
 
     const handleSubmit = (e:any) => {
         e.preventDefault();
-
+        // if no category was selected, autoselect 'Other'
+        if (checkedCategories.length == 0){
+            checkedCategories.push(Category.Other)
+        }
         //if (checkCoordinates(latValue, lonValue)) {
             let l : Location = {name: name,
                                 coordinates: {
@@ -51,13 +59,29 @@ function AddLocationForm(props : AddLocationProps) : JSX.Element {
                                     lat: Number(latValue)
                                 },
                                 description: description,
-                                images : imgs}
+                                images : imgs,
+                                category: checkedCategories}
             props.onSubmit(l);
             return;
         //}
 
     };
 
+    /**
+     * Add/Delete category to/from the location
+     * @param e 
+     */
+    const handleCheckedCategory = (e) => {       
+        // if the index is > -1, means that the location already had this category and the user wants to erase it
+        const index = checkedCategories.indexOf(e.target.innerText); //use innerText to get the name of the category
+        if (index > -1) { // only splice array when item is found
+            checkedCategories.splice(index, 1); // 2nd parameter means remove one item only
+        }
+        // if the index was not in the checkedCategories means that the user wants to add the category to the location
+        else{
+            checkedCategories.push(e.target.innerText) // add category
+        }
+    }
 
     return (
         <form onSubmit={handleSubmit}>
@@ -112,6 +136,21 @@ function AddLocationForm(props : AddLocationProps) : JSX.Element {
                 />
             </Flex>
 
+            <Menu closeOnSelect={false}>
+                <MenuButton as={Button} colorScheme='blue' minWidth='120px'>Select Category</MenuButton>
+                <MenuList minWidth='240px'>
+                  <MenuOptionGroup type='checkbox'>
+                    {
+                      categories.map((kind) => { // as many possible categories as items in Category enum
+                        return (
+                          <MenuItemOption value={kind} onClick={(e) => handleCheckedCategory(e)}
+                          >{kind}</MenuItemOption>
+                        )
+                      })
+                    }
+                  </MenuOptionGroup>
+                </MenuList>
+              </Menu>
             
             <Input 
                 type="file" 
@@ -129,10 +168,8 @@ function AddLocationForm(props : AddLocationProps) : JSX.Element {
 
             </Input>
             
-
             <Button colorScheme={'orange'}
                     variant={'outline'}
-                    //onClick={() => {addLocation()}}
                     type={'submit'}
             >
                 Añadir

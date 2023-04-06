@@ -5,9 +5,10 @@ export type Location = {
     name : String,
     coordinates : Coordinates,
     description : String,
+    category: Array<string>,
     
-    review ?: Array<Review>,
-    ratings ?: Array<Number>, //stars of the location
+    reviews ?: Array<Review>,
+    ratings ?: Map<string,Number>, //stars of the location <webId,number>
     images?: Array<string>
 };
 
@@ -17,16 +18,8 @@ export type Coordinates = {
 }
 
 export type Review = {
-    webId:URL,
-
-    username:String,
-    title:String,
-    content:String
+    webId:string,
+    date: Date,
+    title:string,
+    content:string
 };
-
-
-
-
-
-
-

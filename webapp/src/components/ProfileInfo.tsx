@@ -1,11 +1,10 @@
 import { Avatar, Text, Flex, VStack, Box } from "@chakra-ui/react"
-import React from "react"
+import React, { useContext } from "react"
 import { getNameFromPod} from "../solid/solidManagement"
+import { useSession } from '@inrupt/solid-ui-react';
 
-
-
-export function ProfileView(props:any) {  
-
+export function ProfileView() {  
+  const session = useSession();
   const [name, setName] = React.useState("");
 
   React.useEffect(() => {
@@ -14,8 +13,8 @@ export function ProfileView(props:any) {
 
   const handleName = async () => {
     // if we have a valid webid, retrieve the name. Else retrieve generic unidentified name
-    if (props.webId !== undefined && props.webId !== ""){
-      const n  = await getNameFromPod(props.webId)
+    if (session.session.info.webId !== undefined && session.session.info.webId !== ""){
+      const n  = await getNameFromPod(session.session.info.webId as string)
       setName(n)
     }
     else{
@@ -45,8 +44,8 @@ export function ProfileView(props:any) {
         </VStack>
           <Box p={2} shadow='md' borderWidth='1px'>
             <Text as="b">Statistics</Text>
-            <Text>198 Locations</Text>
-            <Text>199987624 Reviews</Text>
+            <Text>N Locations</Text>
+            <Text>N Reviews</Text>
           </Box>
       </Flex>
     )

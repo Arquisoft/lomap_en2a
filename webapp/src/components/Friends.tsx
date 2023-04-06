@@ -1,13 +1,15 @@
-import React from 'react'
+import React, { useContext, useState } from 'react'
 import {Flex,Text, Button, Input,  InputRightElement, InputGroup} from "@chakra-ui/react";
 import { addSolidFriend,getSolidFriends} from "../solid/solidManagement";
 import type { Friend } from "../../../restapi/users/User";
 import FriendsDetail from './FriendsDetail';
+import { useSession } from '@inrupt/solid-ui-react';
 
+function Friends() : JSX.Element {
+  //we load the session
+  const session = useSession()
 
-function Friends(props : any) : JSX.Element {
-  const webId = props.session.session.info.webId;
-    
+  const webId = session.session.info.webId;
   const [friends, setFriends] = React.useState<Friend[]>([]);
   const[isLoged, setLogged] = React.useState(false);
 
@@ -58,7 +60,7 @@ function Friends(props : any) : JSX.Element {
     
           { 
             
-            props.session.session.info.isLoggedIn ?
+            session.session.info.isLoggedIn ?
             <Flex direction={"column"}>
               <Text fontSize='1.2em' borderBottomWidth='1px' margin={'20px'}>Add Friend</Text>
               
