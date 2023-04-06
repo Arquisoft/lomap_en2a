@@ -380,12 +380,12 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
         </Flex>
         <ReviewSection location={location} setLocation={setlocation} session={session} ></ReviewSection>
 
+        <Box marginTop={'auto'} marginLeft='auto' marginEnd={'1em'}>
+          <DeletingAlertDialog location={props.location} loadLocations={props.loadLocations}></DeletingAlertDialog>
+        </Box>
       </Flex>
-      <Box marginTop={'auto'} marginLeft='auto' marginEnd={'1em'}>
-        <DeletingAlertDialog
-            location={props.location}
-        ></DeletingAlertDialog>
-      </Box>
+
+
     </Flex>
   )
 }

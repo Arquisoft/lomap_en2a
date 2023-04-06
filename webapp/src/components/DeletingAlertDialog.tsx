@@ -53,6 +53,7 @@ export function DeletingAlertDialog(props:any) {
                     onClick={onOpen}
                     size='lg'
                     leftIcon={<Icon as={RxCross2} width='max-content' height={'2.5vw'} minHeight={'10px'} minWidth={'10px'}/>}
+                    marginBottom={'1em'}
             >
                 Delete location
             </Button>
