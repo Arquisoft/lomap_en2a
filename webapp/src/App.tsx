@@ -1,7 +1,9 @@
 // External imports
 import React, { useState, useEffect } from 'react';
-import { useSession } from '@inrupt/solid-ui-react';
-import { ChakraProvider, Flex } from '@chakra-ui/react';
+import { ChakraProvider, HStack, Input, Tag, TagLabel, TagLeftIcon } from '@chakra-ui/react';
+import {Flex} from "@chakra-ui/react";
+import { Location } from '../../restapi/locations/Location';
+import Map from './components/Map';
 
 // Our imports
 import './App.css';
@@ -10,6 +12,7 @@ import Login from './components/login/Login';
 import Map from './components/Map';
 import {createLocation, deleteLocation, getLocations} from './solid/solidManagement'
 import Menu from './components/Menu';
+import { useSession } from '@inrupt/solid-ui-react';
 
 
 function App(): JSX.Element {
@@ -17,17 +20,15 @@ function App(): JSX.Element {
   const [locations, setLocations] = useState<Array<Location>>([]);
   //stores the actual view currently selected
   const [selectedView, setselectedView] = useState(<></>);
+  const [session, setSession] = useState(useSession());
   const [addLocationSuccess, setAddLocationSuccess] = useState(false);
   const [deleteLocationSuccess, setDeleteLocationSuccess] = useState(false);
 
-  
 
   const getNewLocation = (location:Location) => {
     locations.push(location);
     createLocation(session.session.info.webId as string, location);
   }
-
-  const session = useSession();
 
   //we get the locations for the user and fetch them to the list
   useEffect(()=>{
@@ -46,9 +47,7 @@ function App(): JSX.Element {
   function deleteLoc( location:Location){
     if(session.session.info.webId && location.url)
       deleteLocation(session.session.info.webId ,location.url.toString()).then(
-        ()=> {
-          loadLocations();
-        }
+        ()=> loadLocations()
       )
 
   }
@@ -72,10 +71,7 @@ function App(): JSX.Element {
     })
   },[]);
 
-  
-  //previous way of deleting
-  //<button onClick={() => deleteLocation(session.session.info.webId as string, "https://patrigarcia.inrupt.net/profile/card#d8068302-9df2-4e42-a531-e3d39f685f93")}>DELETE</button>
-  //TODO delet this one implemented the correct deletion
+
   return (
     <>
       <ChakraProvider>
@@ -108,7 +104,7 @@ function App(): JSX.Element {
                   />
             {
               !session.session.info.isLoggedIn ? (
-                <Login session={session.session}></Login>
+                <Login></Login>
               ) : <></>
             }
 

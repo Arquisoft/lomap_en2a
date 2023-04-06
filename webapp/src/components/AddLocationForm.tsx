@@ -1,6 +1,8 @@
 import React from 'react'
 import { Location } from '../../../restapi/locations/Location'
-import {Button, Flex, FormErrorMessage, Input, Text, Textarea, useToast, VisuallyHidden} from "@chakra-ui/react";
+import {Button, Checkbox, Flex, Input, Menu, MenuButton, MenuItem, MenuItemOption, MenuList, MenuOptionGroup, Text, Textarea} from "@chakra-ui/react";
+import { Category } from './Category';
+import { FormErrorMessage, useToast, VisuallyHidden} from "@chakra-ui/react";
 import './AddLocationForm.css'
 
 type AddLocationProps = {
@@ -30,6 +32,10 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
     const [coordsValue, setCoordsValue] = React.useState(props.clickedCoords);
     const [description, setDescription] = React.useState('');
 
+
+    let checkedCategories : string[] = [];
+
+    const categories = Object.values(Category); // array of strings containing the values of the categories
 
     let imgs: string[] = [];
     let lat: number, lon: number;
@@ -64,6 +70,11 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
             return;
         }
 
+        // if no category was selected, autoselect 'Other'
+        if (checkedCategories.length == 0){
+            checkedCategories.push(Category.Other)
+        }
+
         handleCoordsValue(coordsValue);
         let l : Location = {
             name: name.trimStart().trimEnd(),
@@ -96,6 +107,21 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
         );
 
     };
+    /**
+     * Add/Delete category to/from the location
+     * @param e
+     */
+    const handleCheckedCategory = (e) => {
+        // if the index is > -1, means that the location already had this category and the user wants to erase it
+        const index = checkedCategories.indexOf(e.target.innerText); //use innerText to get the name of the category
+        if (index > -1) { // only splice array when item is found
+            checkedCategories.splice(index, 1); // 2nd parameter means remove one item only
+        }
+        // if the index was not in the checkedCategories means that the user wants to add the category to the location
+        else{
+            checkedCategories.push(e.target.innerText) // add category
+        }
+    }
 
     return (
         <form onSubmit={handleSubmit}>
@@ -139,6 +165,24 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
             </Flex>
 
             <Flex className="flex section">
+                <Menu closeOnSelect={false}>
+                    <MenuButton as={Button} colorScheme='blue' minWidth='120px'>Select Category</MenuButton>
+                    <MenuList minWidth='240px'>
+                        <MenuOptionGroup type='checkbox'>
+                            {
+                                categories.map((kind) => { // as many possible categories as items in Category enum
+                                    return (
+                                        <MenuItemOption value={kind} onClick={(e) => handleCheckedCategory(e)}
+                                        >{kind}</MenuItemOption>
+                                    )
+                                })
+                            }
+                        </MenuOptionGroup>
+                    </MenuList>
+                </Menu>
+            </Flex>
+
+            <Flex className="flex section">
                 <Text paddingBottom={'0.5em'}>
                     Add images to your location:
                 </Text>
@@ -158,7 +202,6 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
 
                 </Input>
             </Flex>
-            
 
             <Button colorScheme={'orange'}
                     variant={'outline'}
@@ -173,4 +216,4 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
 
 
 
-export default AddLocationFormComp;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               
+export default AddLocationFormComp;
