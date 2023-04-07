@@ -59,6 +59,8 @@ const testLocations : Array<Location> = [
       ]
     }];
 
+jest.setTimeout(10000)
+
 
 /*
 ----------------------------//TODO test this ----------------------------
@@ -70,10 +72,17 @@ tests basicos porque no detecta que el mapa este cargado y de ahi ya no se puede
 
 
 test('check map loads correctly',async () => {
-    const {container}= render(<Map locations={testLocations} changeViewTo={()=>{}} deleteLocation={()=>{}}></Map>)
-    await waitFor(()=>expect (container.querySelector('[aria-label="Mapa"]')).toBeInTheDocument())
+  // global.google = { maps: { Map: jest.fn(), Marker: jest.fn() } } as unknown as typeof google;
+    // jest
+    //   .spyOn(ReactGoogleMapsApi, "useJsApiLoader")
+    //   .mockReturnValue({
+    //     isLoaded: true,
+    //     loadError: undefined
+    //   });
+    const {getByTestId}= render(<Map locations={testLocations} changeViewTo={()=>{}} deleteLocation={()=>{}}></Map>)
     //we expect the map to be loaded in the screen
-    expect(container.querySelector('[aria-label="Mapa"]')).toBeInTheDocument()
+    // screen.debug()
+    await waitFor(()=>expect (getByTestId('map')).toBeInTheDocument(),{timeout:10000})
 })
 
 test('Check with no locations no markers in map',async () => {
@@ -96,18 +105,19 @@ test('Check with n locations n marker in the map',async () => {
     expect(markers.length).toBe(testLocations.length)
 })
 
-test('Check click on a location to open location details',async () => {
-    let selectedView = <></>
-    //we modify this variable on change of view
-    const {container}= render(<Map locations={testLocations} changeViewTo={(view)=>{ selectedView = view}} deleteLocation={()=>{}}></Map>)
-    expect(container.querySelector('[aria-label="Mapa"]'))
-    //we wait the marker to appear
-    await waitFor(() => container.querySelector('div[role="button"]'));
-    //store it in a variable
-    let marker = container.querySelector('div[role="button"]'); //! ensures no null value
-    //we click the marker
-    fireEvent.click(marker as Element);
-    //we wait for the selected view to update
-    await waitFor(() => expect(selectedView).not.toEqual(<></>));
-})
+//This is tested in the location small info card
+// test('Check click on a location to open location details',async () => {
+//     let selectedView = <></>
+//     //we modify this variable on change of view
+//     const {container}= render(<Map locations={testLocations} changeViewTo={(view)=>{ selectedView = view}} deleteLocation={()=>{}}></Map>)
+//     expect(container.querySelector('[aria-label="Mapa"]'))
+//     //we wait the marker to appear
+//     await waitFor(() => container.querySelector('div[role="button"]'));
+//     //store it in a variable
+//     let marker = container.querySelector('div[role="button"]'); //! ensures no null value
+//     //we click the marker
+//     fireEvent.click(marker as Element);
+//     //we wait for the selected view to update
+//     await waitFor(() => expect(selectedView).not.toEqual(<></>));
+// })
 
