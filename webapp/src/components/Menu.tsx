@@ -120,7 +120,7 @@ function Menu(props: MenuProps): JSX.Element {
                         onClick={() => {
                           setinsideMenu(false);
                           props.setSelectedView(
-                            <ProfileView></ProfileView>
+                            <ProfileView locations={props.locations}></ProfileView>
                           );
                         }}
                 >
