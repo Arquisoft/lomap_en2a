@@ -1,5 +1,5 @@
 import { Avatar, Text, Flex, VStack, Box, HStack,Icon } from "@chakra-ui/react"
-import React, { useContext } from "react"
+import React, { useState } from "react"
 import { getNameFromPod} from "../solid/solidManagement"
 import { useSession } from '@inrupt/solid-ui-react';
 import { Location } from "../../../restapi/locations/Location";
@@ -13,14 +13,21 @@ type ProfileProps = {
 export function ProfileView(props:ProfileProps) {  
   const session = useSession();
   const [name, setName] = React.useState("");
+  const [avgRatings, setavgRatings] = useState(0)
 
   React.useEffect(() => {
     handleName()
   }, []);
 
+  React.useEffect(()=>{
+    setavgRatings( getAverageOfAllLocations(props.locations))
+  },[props.locations])
+
   const handleName = async () => {
+    console.log(session.session.info)
     // if we have a valid webid, retrieve the name. Else retrieve generic unidentified name
     if (session.session.info.webId !== undefined && session.session.info.webId !== ""){
+      console.log("aqui entra")
       const n  = await getNameFromPod(session.session.info.webId as string)
       setName(n)
     }
@@ -28,12 +35,6 @@ export function ProfileView(props:ProfileProps) {
       setName("Loading name...")
     }
   }
-  const getAverageMark = (location: Location): number => {
-    const ratings = location.ratings;
-    if (!ratings) return 0;
-    let sumrevs : Number = Array.from(ratings.values()).reduce((acc, val) => ((acc as number) + (val as number)) as number,0);
-    return (sumrevs as number) / ratings.size;
-  };
   
   const getAverageOfAllLocations = (locations): number => {
     const totalSum = locations.reduce((acc, location) => {
@@ -75,12 +76,12 @@ export function ProfileView(props:ProfileProps) {
             <HStack>
               <Icon as={MdLocationOn} color="red.500" />
               <Text>Number of locations:</Text>
-              <Text as={'b'}>{props.locations.length}</Text>
+              <Text data-testid="nLocations" as={'b'}>{props.locations.length}</Text>
             </HStack>
             <HStack>
               <Icon as={FaStar} color="yellow.500" />
               <Text>Average rating for locations: </Text>
-              <Text as={'b'}>{getAverageOfAllLocations(props.locations).toFixed(2)}</Text>
+              <Text data-testid="avgRatings" as={'b'}>{Number.isNaN(avgRatings)?'No ratings':avgRatings.toFixed(2)}</Text>
             </HStack>
           </Box>
       </Flex>
