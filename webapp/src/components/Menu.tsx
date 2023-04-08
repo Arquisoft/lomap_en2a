@@ -20,7 +20,9 @@ function Menu(props: MenuProps): JSX.Element {
   const [insideMenu, setinsideMenu] = useState(false)
 
   return (
-    <Flex direction={'column'}
+    <Flex 
+          data-testid='bigContainer'
+          direction={'column'}
           bg={'white'}
           width={"fit-content"}
           minWidth={"5vw"}
@@ -132,6 +134,7 @@ function Menu(props: MenuProps): JSX.Element {
           :
           (
             <Flex
+              data-testid='smallContainer'
               direction={'column'}
               bg={'white'}
               width={"fit-content"}
