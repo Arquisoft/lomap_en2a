@@ -24,10 +24,8 @@ export function ProfileView(props:ProfileProps) {
   },[props.locations])
 
   const handleName = async () => {
-    console.log(session.session.info)
     // if we have a valid webid, retrieve the name. Else retrieve generic unidentified name
     if (session.session.info.webId !== undefined && session.session.info.webId !== ""){
-      console.log("aqui entra")
       const n  = await getNameFromPod(session.session.info.webId as string)
       setName(n)
     }

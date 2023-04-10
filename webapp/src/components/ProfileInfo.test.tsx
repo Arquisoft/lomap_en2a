@@ -57,7 +57,11 @@ const testArray5Ratings = [
     }
 ];
 
-jest.createMockFromModule('@inrupt/solid-ui-react');
+//TODO fix the mock on this errors now working (top one is the same as the first down, just another alternative)
+/* 
+  Missing to test the name of the pod loading correctly -> once mocking works this should be easy to ipmlement
+  Current coverage = 85.71%
+*/
 
 // describe("Test suite" , ()=>{
 //     it("Renders the name correctly",async () => {
@@ -71,7 +75,6 @@ jest.createMockFromModule('@inrupt/solid-ui-react');
 //     })
 // })
 
-//TODO fix the mock on this errors now working (top one is the same as the first down, just another alternative)
 
 // test('check name is correctly loaded -> no webId',async () => {
 //     //we mock the session to give it no webId
