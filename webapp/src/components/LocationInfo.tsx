@@ -137,11 +137,11 @@ const RatingSection = ({location, setLocation, session})=>{
           <HStack gap='1.5em' placeContent={'center'} width={'full'}>
             <Stack alignItems={'center'}>
               <Text>Average rating:</Text>
-              <Text as={'b'} fontSize='2xl'>{Number.isNaN(average)? 0 : average.toFixed(2)}</Text>
+              <Text data-testid ='avgRatings' as={'b'} fontSize='2xl'>{Number.isNaN(average)? 0 : average.toFixed(2)}</Text>
             </Stack>
             <Stack alignItems={'center'}>
               <Text>Number of ratings:</Text>
-              <Text as={'b'} fontSize='2xl'>{total}</Text>
+              <Text  data-testid ='nRatings' as={'b'} fontSize='2xl'>{total}</Text>
             </Stack>
           </HStack>
         </Stack>

@@ -44,6 +44,7 @@ const Map = ( props : MapProps) => {
   if (isLoaded)
     return ( 
         <GoogleMap 
+            data-testid = 'map'
             mapContainerStyle={{width: '100%', height: '100%'}}
             center={center}
             zoom={10}
@@ -56,7 +57,6 @@ const Map = ( props : MapProps) => {
             }}
             //use inside of the options the styles property and personalyce a style in https://mapstyle.withgoogle.com/
         >
-          <div data-testid="map" />
           {
           /* place the locations in the map */
           props.locations.map((place, i) => (
