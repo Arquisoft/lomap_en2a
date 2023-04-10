@@ -494,8 +494,9 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#section-design-decisions">9. Design Decisions</a>
 <ul class="sectlevel2">
 <li><a href="#_google_maps_api">9.1. Google Maps API</a></li>
-<li><a href="#_mysql_database">9.2. MySQL DataBase</a></li>
-<li><a href="#_storing_users_id_in_db">9.3. Storing users' ID in DB</a></li>
+<li><a href="#_no_db_usage">9.2. No DB usage</a></li>
+<li><a href="#_design_and_ui_technologies">9.3. Design and UI Technologies</a></li>
+<li><a href="#_solid_pod_structure">9.4. Solid Pod Structure</a></li>
 </ul>
 </li>
 <li><a href="#section-quality-scenarios">10. Quality Requirements</a>
@@ -603,7 +604,7 @@ markers, which can define bars, restaurants, sights, or points of interests from
 <p>see the locations in a map in form of markers.</p>
 </li>
 <li>
-<p>interact with markers adding photos, reviews or comments.</p>
+<p>interact with the locations adding photos, reviews or comments.</p>
 </li>
 <li>
 <p>manage a list of friends.</p>
@@ -623,10 +624,7 @@ markers, which can define bars, restaurants, sights, or points of interests from
 <div class="title">System requirements. The system must:</div>
 <ul>
 <li>
-<p>store the information about each user&#8217;s places in his pod, not centralized.</p>
-</li>
-<li>
-<p>store information in a centralized way for performance reasons, respecting users' privacy.</p>
+<p>store the information about each user&#8217;s places in his Solid pod, not centralized.</p>
 </li>
 <li>
 <p>allow users to see their friends' markers.</p>
@@ -678,7 +676,7 @@ markers, which can define bars, restaurants, sights, or points of interests from
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Performance</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The application should be able to give short response time when users are interacting with it.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The application should be able to give rationale response time when users are interacting with it.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Availability</p></td>
@@ -750,7 +748,7 @@ markers, which can define bars, restaurants, sights, or points of interests from
 <h2 id="section-architecture-constraints">2. Architecture Constraints</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>When designing the LoMap application, there are several constraints that must be taken into consideration. These constraints will have a significant impact on the overall design of the application and the architectural decisions that are made. The constraints include privacy, performance, user experience, deployment, security,&#8230;&#8203; These constraints must be considered in order to ensure that the final product meets the needs and expectations of the users and stakeholders. The following table summarizes these constraints and provides a brief explanation for each.</p>
+<p>When designing the LoMap application, there are several constraints that must be taken into consideration. These constraints will have a significant impact on the overall design of the application and the architectural decisions that are made. The constraints include privacy, user experience, deployment, security,&#8230;&#8203; These constraints must be considered in order to ensure that the final product meets the needs and expectations of the users and stakeholders. The following table summarizes these constraints and provides a brief explanation for each.</p>
 </div>
 <table class="tableblock frame-all grid-all stretch">
 <colgroup>
@@ -766,19 +764,15 @@ markers, which can define bars, restaurants, sights, or points of interests from
 <tbody>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Privacy (use of SOLID)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The privacy of the users is a key concern, and the application should be designed to respect the privacy of users. The information stored in each user’s pod should not be centralized and should be kept confidential.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The privacy of the users is a key concern, for that, the application is decentralized and the information stored in each user’s pod is kept confidential.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Version control and monitoring (GitHub)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">For the LoMap application, GitHub can be a useful tool for version control and collaboration among the team members working on the project. It allows for easier coordination and organization of the development process, as well as keeping track of changes and contributions made by each team member.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Performance</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The application should perform well and should be scalable to handle large amounts of data.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">For the LoMap application, GitHub is a useful tool for version control and collaboration among the team members working on the project. It allows easier coordination and organization of the development process, as well as keeping track of changes and contributions made by each team member.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">User Experience</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The user experience should be user-friendly and intuitive, making it easy for users to add, edit, and delete locations, as well as manage their friends and personal information, this means application will support connection between friends.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The design of the application must make its use friendly and easy.</p></td>
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Deployment</p></td>
@@ -821,7 +815,11 @@ markers, which can define bars, restaurants, sights, or points of interests from
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Inrupt</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">SOLID pod provider advised by the teachers. It will help us understand how solid pods work.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SOLID pod provider. Also offers a set of libraries to ease the use and management of pods.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Chakra UI</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Modular component library for React which decreases the effort on creating HTML components.</p></td>
 </tr>
 </tbody>
 </table>
@@ -886,7 +884,7 @@ The title of the table is the name of your system, the three columns contain the
 </div>
 </div>
 <div class="paragraph">
-<p>In our business context, the user will input data into the application. The application communicates with the user&#8217;s SOLID pod to get data and will make use of the Google Maps API. Then it will process all this data and produce an output that the user will recieve.<br>
+<p>In our business context, the user will input data into the application, which communicates with the user&#8217;s SOLID pod to retrieve and add data. All this information among with the use of the Google Maps API, will be processed and a processed output will be recieved by the user.<br>
 The pod will store the user&#8217;s personal data, and the locations they mark on the map.<br>
 The Google Maps API will provide our application maps, and more functionality like marking places.</p>
 </div>
@@ -933,15 +931,11 @@ together with a mapping table showing the relationships between channels and inp
 <td class="tableblock halign-left valign-top"><p class="tableblock">A specification that lets people store their data securely in decentralized data stores called <em>pods</em>. These <em>pods</em> are fully under its owner&#8217;s (the user) control. To use SOLID, a <em>pod provider</em> and a "web ID" are needed. Pods are structures that store the user&#8217;s data, and the ID identifies the user and allows them to access their pods, and also connect with other SOLID users.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Hosting server</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">It will be the infrastructure that will host both the application and the database. Its use will be avoided at the beginning, as we will use docker containers that will abstract the application from the machine.</p></td>
-</tr>
-<tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">TypeScript</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">A free and open source, developed and mantained by Microsoft. It is the programming language we will use to develop the application. It is derived from JavaScript and implements additional syntax and elements that makes it more complete and in general better than JS. It adds optional static typing and error detection is much easier. As it is a superset of JavaScript, existing JavaScript programs are also valid TypeScript programs.</p></td>
 </tr>
 <tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">React.js</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ReactJS</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">A JavaScript open source library that will make it easier to create user interfaces. It shines in applications whose data is always changing. React is the View in the context of the MVC (Model-View-Controller) pattern.</p></td>
 </tr>
 <tr>
@@ -964,10 +958,7 @@ together with a mapping table showing the relationships between channels and inp
 <div class="title">Technologies</div>
 <ul>
 <li>
-<p>Google Maps API: This API allows us to build the map which will be needed to the development of the application. This api has been chosen because it&#8217;s reliable and has been used by some of our team members before.</p>
-</li>
-<li>
-<p>MySQL: This DB provides a robust way to store the data that won&#8217;t be stored at each user&#8217;s pod. It has been chosen because it&#8217;s a simple but powerfull database, well-known and we have worked previously with it.</p>
+<p>Google Maps API: This API allows us to build the map which will be needed to the development of the application. This api has been chosen because it&#8217;s reliable and has been used by some of our team members before. Achieves usability, deployment and good user experience.</p>
 </li>
 <li>
 <p>TypeScript: This language, that comes from JavaScript, provides a powerful language to program the client part of our application. It provides a good documentation and some tools that JavaScript does not provide that makes it more powerfull.</p>
@@ -976,7 +967,7 @@ together with a mapping table showing the relationships between channels and inp
 <p>Arc42: This template allows our documentation to be organized, and well specified, and also gives us a path to follow and simplify the process.</p>
 </li>
 <li>
-<p>Solid: In order to store each user&#8217;s pod and keep the data decentralized. It offers good security and performance.</p>
+<p>Solid: In order to store each user&#8217;s pod and keep the data decentralized. Achieves security and privacy.</p>
 </li>
 <li>
 <p>React: A JavaScript library for user interfaces. It is widely used in the industry because it helps building rich user interfaces in a simple way, and allows flexibility and is easy to mantain.</p>
@@ -985,7 +976,25 @@ together with a mapping table showing the relationships between channels and inp
 <p>NodeJS: Another JavaScript library for the server layer that provides the tools to implement the application. It also supports different types of databases and has a large and active community, that might comme in handy when we have questions.</p>
 </li>
 <li>
-<p>Docker: In order to deploy the application. It containerizes it for automated deployment.</p>
+<p>Docker: In order to deploy the application. It containerizes it for automated deployment. Achieves portability.</p>
+</li>
+<li>
+<p>Chakra UI: component and modular library to create HTML customized and themeable components. Achieves usability.</p>
+</li>
+<li>
+<p>Inrupt Solid APIs: set of libraries developed by inrupt to manage and control the information and features in the Solid pod.</p>
+</li>
+<li>
+<p>RDF: semantic web standard used to describe and model information for web resources, in this case, used to store information in the Solid pod.</p>
+</li>
+<li>
+<p>Turtle: RDF syntax that allows an RDF graph to be completely written in a compact and natural text form, with abbreviations for common usage patterns and datatypes</p>
+</li>
+<li>
+<p>Cucumber: testing tool that supports Behavior Driven Development (BDD). Achieves Testability</p>
+</li>
+<li>
+<p>End-to-end testing: methodology to test from the end user&#8217;s experience by simulating the real user scenario and validating the system and its components for integration and data integrity. Achieves Test Coverage</p>
 </li>
 </ul>
 </div>
@@ -993,10 +1002,13 @@ together with a mapping table showing the relationships between channels and inp
 <div class="title">Design</div>
 <ul>
 <li>
-<p>Adapter pattern for using the API that might be needed, for example the google maps API.</p>
+<p>Serverless application: this application won&#8217;t rely on a server nor have a database.</p>
 </li>
 <li>
-<p>MVC pattern for the internal structure of the application.</p>
+<p>Client-side component: the code resides in the browser, receives requests and presents the user with the required information.</p>
+</li>
+<li>
+<p>Pod architecture: data stored in pods will be divided in different paths and subfolders to achieve privacy and security.</p>
 </li>
 </ul>
 </div>
@@ -1650,101 +1662,42 @@ on this list.</p>
 <div class="sect1">
 <h2 id="section-design-decisions">9. Design Decisions</h2>
 <div class="sectionbody">
+<div class="paragraph">
+<p>The architectural decisions are completely documented in our ARD section in the Wiki. Due to this, and to avoid redundancy, instead of re-document those decisions here, we will refer to them.</p>
+</div>
 <div class="sect2">
 <h3 id="_google_maps_api">9.1. Google Maps API</h3>
-<div class="sect3">
-<h4 id="_problem">9.1.1. Problem</h4>
 <div class="paragraph">
-<p>Need to develop a software system capable of provide personalized maps about places and local businesses in any city. In order to do this, a Map API is needed to provide location-aware infographics, mind maps and visualization aids. We need and API which includes geocoding, geolocation, directions and navigation, touch-screen interaction, popups and customizable control objects.</p>
+<p>To refer to the documented architectural decision about Google Maps API, click on the link below.<br></p>
 </div>
-</div>
-<div class="sect3">
-<h4 id="_advantages">9.1.2. Advantages</h4>
-<div class="paragraph">
-<p>Some team members have already used the Google Maps API in other projects. This is one of the decisive advantages, since it facilitates the development of the web application. Also it provides a very important series of features that perfectly adapt to the requirements of LoMap:</p>
-</div>
-<div class="ulist">
-<ul>
-<li>
-<p>Directions: provides a route planner with an estimate of how much time the route takes and can include additional locations the user wants to travel through.</p>
-</li>
-<li>
-<p>Places: helps users find points of interest, whether that&#8217;s a landmark or tourist attraction, a public building such as a school or hospital, or a restaurant or shop. Also provides the possibility of adding reviews or comments to those points of interest.</p>
-</li>
-<li>
-<p>Geocoding: allows to accurately mark locations on maps, by converting between street addresses latitude and longitude coordinates.</p>
-</li>
-<li>
-<p>Data layers: lets the user personalize or overlay own data on the map.</p>
-</li>
-</ul>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_alternatives">9.1.3. Alternatives</h4>
-<div class="paragraph">
-<p>Apart from Google Maps API, we also considered these other options:
-* MapBox API.
-* Geopify API.
-Both of them were temporarily discarded because of the familiarity of Google Maps. However, we remark temporarily since we plan to implement an adapter pattern that lets us change the used Map API if we consider it necessary.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_ard_link">9.1.4. ARD Link</h4>
 <div class="paragraph">
 <p><a href="https://github.com/Arquisoft/lomap_en2a/wiki/ARD---Map-API">Google Maps API</a></p>
 </div>
 </div>
+<div class="sect2">
+<h3 id="_no_db_usage">9.2. No DB usage</h3>
+<div class="paragraph">
+<p><a href="https://github.com/Arquisoft/lomap_en2a/wiki/ARD-not-Db-usage">No DB usage</a>
+This decision cancels out the following two:
+* <a href="https://github.com/Arquisoft/lomap_en2a/wiki/ARD---Data-Base">MySQL DB</a>
+* <a href="https://github.com/Arquisoft/lomap_en2a/wiki/ARD-Storing-user&#8217;s-ID-in-DB">Storing users' ID in DB</a></p>
+</div>
 </div>
 <div class="sect2">
-<h3 id="_mysql_database">9.2. MySQL DataBase</h3>
+<h3 id="_design_and_ui_technologies">9.3. Design and UI Technologies</h3>
 <div class="sect3">
-<h4 id="_problem_2">9.2.1. Problem</h4>
+<h4 id="_first_ui_mockup">9.3.1. First UI mockup</h4>
 <div class="paragraph">
-<p>Although with a database we store the information in a centralized way, this is necessary for performance reasons. We need a solution that allows us to respect the privacy of the users as much as possible, as well as store the data in a secure way. Apart from this, the solution must be reliable, scalable and flexible. For all this, we have chosen MySQL.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_advantages_2">9.2.2. Advantages</h4>
-<div class="paragraph">
-<p>Again, the fact of team members having familiarity with the data base has been a decisive advantage, but we also had into account:
-* Simplicity: it is a simple, intuitive and easy to work with DB.
-* Scalability and Flexibility: leaves open the door to potentially stored growing data.
-* Community support: as the solution is a well known DB, we count with the help of the software communnity to fix any kind of error or solve any doubt that we may have.
-* Secure and reliable:  it complies with ACID (Atomicity, Consistency, Isolation, and Durability) which ensures data integrity and consistency. Apart from that, it provides password encryption and secure transactions.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_alternatives_2">9.2.3. Alternatives</h4>
-<div class="paragraph">
-<p>An alternative was MariaDB, since it is based on MySQL. Since both data bases are very similar and offer the same features, the alternative was discarded because of the familiarity with MySQL.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_ard_link_2">9.2.4. ARD Link</h4>
-<div class="paragraph">
-<p><a href="https://github.com/Arquisoft/lomap_en2a/wiki/ARD---Data-Base">MySQL DB</a></p>
+<p><a href="https://github.com/Arquisoft/lomap_en2a/wiki/First-mock-up-of-the-application-UI">First mockup</a>
+==== Chakra UI library
+<a href="https://github.com/Arquisoft/lomap_en2a/wiki/ARD-Use-of-ChakraUI">Use of ChakraUI as REact component library</a></p>
 </div>
 </div>
 </div>
 <div class="sect2">
-<h3 id="_storing_users_id_in_db">9.3. Storing users' ID in DB</h3>
-<div class="sect3">
-<h4 id="_problem_3">9.3.1. Problem</h4>
+<h3 id="_solid_pod_structure">9.4. Solid Pod Structure</h3>
 <div class="paragraph">
-<p>For performance reasons, there are some data that should be stored in a centralized way, in other words, using our data base. For now, we have decided to store the user IDs this way.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_advantages_3">9.3.2. Advantages</h4>
-<div class="paragraph">
-<p>Storing this piece of information in this way, we can save the application some time wasting operations, such as having to scan all the users pods in order to retrieve the wanted ID. This ID will be used, for example, in friend requests.</p>
-</div>
-</div>
-<div class="sect3">
-<h4 id="_alternatives_3">9.3.3. Alternatives</h4>
-<div class="paragraph">
-<p>We considered the option of storing the user ID in the user pod, but for performance reasons, this was discarded.</p>
+<p><a href="https://github.com/Arquisoft/lomap_en2a/wiki/Solid-Pod-Structure">File directory hierarchy in pod</a></p>
 </div>
 <div class="sidebarblock arc42help">
 <div class="content">
@@ -1785,7 +1738,6 @@ here in this central section or whether you better document it locally
 </div>
 </div>
 <div style="page-break-after: always;"></div>
-</div>
 </div>
 </div>
 </div>
@@ -1853,14 +1805,8 @@ here in this central section or whether you better document it locally
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Performance</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The application must have a short response time. Slow applications are not positively popular in society.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The application must have a reasonable response time. Slow applications are not positively popular in society.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The application must be able to bear at least 20 concurrent users and give a response time to their actions in less than 5 seconds.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">High</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Availability</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The application must be available 24 hours a day all weeks.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">When the database does not respond, the system should log the fault and respond with stale data in less than 5 seconds</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">High</p></td>
 </tr>
 <tr>
@@ -1873,12 +1819,6 @@ here in this central section or whether you better document it locally
 <td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Usability</strong></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">To make the website stand out from the competition, it must be easy to use, familiar, aesthetic, consistent&#8230;&#8203;</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">When the user wants to do something in the application, he/she should be able to do it without difficulty, guided by the interface elements.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Very high</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><strong>Reliability</strong></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Errors must be managed by the application itself. It can&#8217;t crash without any solution.</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">When a user introduces wrong data or tries to perform not authorized actions, the system will handle the errors without crashing.</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">Very high</p></td>
 </tr>
 </tbody>
@@ -2105,7 +2045,7 @@ Created by Dr. Peter Hruschka &amp; Dr. Gernot Starke.</p>
 </div>
 <div id="footer">
 <div id="footer-text">
-Last updated 2023-02-09 22:36:53 +0100
+Last updated 2023-03-11 19:36:51 +0100
 </div>
 </div>
 </body>
