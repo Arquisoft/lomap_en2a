@@ -1,16 +1,16 @@
 
 
 type User ={
-    username : String,
+    username : string,
 
-    webID : String,
+    webID : string,
     profilePicture : File,  //if not specified uses the pod one
 
-    friendRequests :  Array<String> //array de webId
+    friendRequests :  Array<string> //array de webId
 }
 
 export type Friend={
     username : string,
-    webID : String,
+    webID : string,
     pfp: string
 }
