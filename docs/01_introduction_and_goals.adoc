@@ -54,7 +54,7 @@ The user requirements are actions that they can do in the application.
 
 | Security | Each user should access to it's pod and it can not be accessed by other user. User can modify their access data.
 
-| Performance | The application should be able to give rationale response time when users are interacting with it. 
+| Performance | The application should be able to give reasonable response times when users are interacting with it. 
 
 | Availability | The personal data from the pods can be accessed at any time.
 
