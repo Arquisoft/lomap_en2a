@@ -35,6 +35,8 @@ const Map = ( props : MapProps) => {
   const [areCheckedFilters, setCheckedFilters] = React.useState<boolean>(false) // check if there are any filters checked, if not show all locations
   const [filteredLocations, setFilteredLocations] = React.useState<Array<Location>>([]) //need constant for the filter to work
   const [friends, setFriends] = React.useState<Friend[]>([]);
+  const [checkedFriends, setCheckedFriends] = React.useState<string[]>([]);
+
 
   const onUnmount = React.useCallback(function callback() {setMap(null)}, [])
 
@@ -79,11 +81,24 @@ const Map = ( props : MapProps) => {
 
   const filteringFriends = (e) => {
     setCheckedFilters(true);
+    const index = checkedFriends.indexOf(e.target.innerText); //use innerText to get the friend webID
     let filtered: Array<Location> = [];
+
     for (let location of props.locations){
       let creator = `${(location.url as string).split("private")[0]}profile/card#me`
-      if (creator === e.target.value) {
-        filtered.push(location)
+      const locIndex = filteredLocations.indexOf(location)
+      if (creator === e.target.innerText) {
+        // if the index is > -1, means this filter was already applied
+        if (index > -1) { 
+          checkedFriends.splice(index, 1); // 2nd parameter means remove one item only    
+          if (locIndex > -1) // the location was in the array so delete it
+            filteredLocations.length>1? filteredLocations.splice(index, 1) : filtered = props.locations
+        }
+        // if the index was not in the checkedFriends means that the user wants to apply new filter
+        else{
+          checkedFriends.push(e.target.innerText as string) // add friend
+          filtered.push(location)
+        }
       }
     }
     setFilteredLocations(filtered) // update value of const
