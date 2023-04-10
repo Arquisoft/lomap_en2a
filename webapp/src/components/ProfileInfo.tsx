@@ -32,6 +32,7 @@ export function ProfileView() {
         left='5vw'
         top={0}
         zIndex={1}
+        borderRight={"1px solid black"}
         overflow='hidden'
         px={2}>
         <Text fontSize='1.2em' borderBottomWidth='1px' margin={'20px'}>Profile Information</Text>
