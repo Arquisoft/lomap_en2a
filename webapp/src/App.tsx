@@ -32,17 +32,10 @@ function App(): JSX.Element {
       //Friends Locations
       let friends = await getSolidFriends(session.session.info.webId);
 
-      for await (let f of friends){
-        let locations = await getLocations(f.webID as string)
+      for (let friend of friends){
+        let locations = await getLocations(friend.webID as string)
         locationList= locationList.concat(locations);
       }
-      /** 
-       friends.forEach(async element => {
-        let locations = await getLocations(element.webID as string)
-        await locationList.concat(locations);
-      });
-      */
-      //
       setLocations(locationList);
       setselectedView(<></>);
     }

@@ -11,13 +11,14 @@ import type { Friend } from "../../../restapi/users/User";
 
 
 type MapProps = {
-  //center: Coordinates;
   locations : Array<Location>
   changeViewTo: (viewName: JSX.Element) => void //function to change the selected view on the left
   deleteLocation : (loc : Location) => void
 }
 
 const Map = ( props : MapProps) => {
+
+  const session = useSession();
 
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
@@ -33,6 +34,7 @@ const Map = ( props : MapProps) => {
   const [map, setMap] = React.useState(null)
   const [areCheckedFilters, setCheckedFilters] = React.useState<boolean>(false) // check if there are any filters checked, if not show all locations
   const [filteredLocations, setFilteredLocations] = React.useState<Array<Location>>([]) //need constant for the filter to work
+  const [friends, setFriends] = React.useState<Friend[]>([]);
 
   const onUnmount = React.useCallback(function callback() {setMap(null)}, [])
 
@@ -45,7 +47,7 @@ const Map = ( props : MapProps) => {
     //we display the info tab in the left part of the window
     props.changeViewTo(<LocationInfo location={location} deleteLocation={props.deleteLocation}></LocationInfo>);
   }
-
+  
   const categories = Object.values(Category); // array of strings containing the values of the categories
 
   // only filtering by one category. cannot filter by multiple at once (possible but not urgent enhancement)
@@ -55,6 +57,32 @@ const Map = ( props : MapProps) => {
     for (let location of props.locations){
       let condition = isLocationOfCategory(location, e.target.value)
       if (condition) {
+        filtered.push(location)
+      }
+    }
+    setFilteredLocations(filtered) // update value of const
+  }
+
+  React.useEffect(() => {
+    handleFriends()
+  }, [session.session.info.isLoggedIn]);
+
+  const handleFriends = async () => {
+    if (session.session.info.webId !== undefined && session.session.info.webId !== ""){
+      const n  = await getSolidFriends(session.session.info.webId);
+      setFriends(n);
+    }
+    else{
+      setFriends([]);
+    }
+  }
+
+  const filteringFriends = (e) => {
+    setCheckedFilters(true);
+    let filtered: Array<Location> = [];
+    for (let location of props.locations){
+      let creator = `${(location.url as string).split("private")[0]}profile/card#me`
+      if (creator === e.target.value) {
         filtered.push(location)
       }
     }
@@ -87,10 +115,10 @@ const Map = ( props : MapProps) => {
                 <MenuList minWidth='240px'>
                   <MenuOptionGroup type='checkbox'>
                     {
-                      categories.map((filter) => {
+                      friends.map((friend) => {
                         return (
-                          <MenuItemOption value={filter}>
-                            {filter}</MenuItemOption>
+                          <MenuItemOption value={friend.webID as string} onClick={(e) => filteringFriends(e)}>
+                            {friend.webID as string}</MenuItemOption>
                         )
                       })
                     }
