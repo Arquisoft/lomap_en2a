@@ -105,9 +105,15 @@ export async function getLocations(webID:string) {
       // get the path of the actual location
       let path = getStringNoLocale(locationPath, SCHEMA_INRUPT.identifier) as string;
       // get the location : Location from the dataset of that location
-      let location = await getLocationFromDataset(path)
-      // add the location to the array
-      locations.push(location)
+      try{
+        let location = await getLocationFromDataset(path)
+        locations.push(location)
+        // add the location to the array
+      }
+      catch(error){
+        //The url is not accessed(no permision)
+      }
+     
     }
   } catch (error) {
     // if the location dataset does no exist, return empty array of locations
