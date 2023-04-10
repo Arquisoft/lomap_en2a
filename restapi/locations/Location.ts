@@ -5,6 +5,7 @@ export type Location = {
     name : String,
     coordinates : Coordinates,
     description : String,
+    category: Array<string>,
     
     reviews ?: Array<Review>,
     ratings ?: Map<string,Number>, //stars of the location <webId,number>

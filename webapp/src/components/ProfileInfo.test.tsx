@@ -10,6 +10,7 @@ const testLocation =
     coordinates: { lng: 1.234, lat: 5.678 },
     description: "Short description alone",
     reviews: [],
+    category:[],
     ratings: new Map<string, number>([["webId1", 5]])
   };
 
@@ -19,6 +20,7 @@ const testArray5Ratings = [
     coordinates: { lng: 1.234, lat: 5.678 },
     description: "Short description 1",
     reviews: [],
+    category:[],
     ratings: new Map<string, number>([["webId1", 1], ["webId2", 1], ["webId3", 1]])
 },
   {
@@ -26,6 +28,7 @@ const testArray5Ratings = [
     coordinates: { lng: 2.345, lat: 6.789 },
     description: "Short description 2",
     reviews: [],
+    category:[],
     ratings: new Map<string, number>([["webId1", 2], ["webId2", 2], ["webId3", 2]])
   },
   {
@@ -33,6 +36,7 @@ const testArray5Ratings = [
     coordinates: { lng: 3.456, lat: 7.890 },
     description: "Short description 3",
     reviews: [],
+    category:[],
     ratings: new Map<string, number>([["webId1", 3], ["webId2", 3], ["webId3", 3]])
 },
   {
@@ -40,6 +44,7 @@ const testArray5Ratings = [
     coordinates: { lng: 4.567, lat: 8.901 },
     description: "Short description 4",
     reviews: [],
+    category:[],
     ratings: new Map<string, number>([["webId1", 4], ["webId2", 4], ["webId3", 4]])
   },
   {
@@ -47,6 +52,7 @@ const testArray5Ratings = [
       coordinates: { lng: 5.678, lat: 9.012 },
       description: "Short description 5",
       reviews: [],
+      category:[],
       ratings: new Map<string, number>([["webId1", 5], ["webId2", 5], ["webId3", 5]])
     }
 ];

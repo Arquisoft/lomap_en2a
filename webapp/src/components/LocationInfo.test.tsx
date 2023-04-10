@@ -8,6 +8,7 @@ const testLocation=
   name: "Location alone",
   coordinates: { lng: 1.234, lat: 5.678 },
   description: "Short description alone",
+  category:[],
   reviews: [{
     "webId": "abc123",
     "date": new Date ("2022-03-15T12:00:00Z"),

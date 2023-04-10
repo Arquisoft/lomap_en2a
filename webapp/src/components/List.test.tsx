@@ -10,6 +10,7 @@ const testLocations = [
         "lng": -73.9632,
         "lat": 40.7794
       },
+      "category":[],
       "description": "One of the world's largest and finest art museums, located in New York City.",
       "images": [
         "https://www.metmuseum.org/-/media/images/visit/met-fifth-ave/met-5thave-exterior2-1024x640.jpg",
@@ -19,6 +20,7 @@ const testLocations = [
     {
       "url": "https://www.nps.gov/grca/index.htm",
       "name": "Grand Canyon National Park",
+      "category":[],
       "coordinates": {
         "lng": -112.1121,
         "lat": 36.1069
@@ -32,6 +34,7 @@ const testLocations = [
     {
       "url": "https://www.disneyland.com/",
       "name": "Disneyland Park",
+      "category":[],
       "coordinates": {
         "lng": -117.9189,
         "lat": 33.8121
@@ -45,6 +48,7 @@ const testLocations = [
     {
       "url": "https://www.nps.gov/yell/index.htm",
       "name": "Yellowstone National Park",
+      "category":[],
       "coordinates": {
         "lng": -110.7002,
         "lat": 44.4279

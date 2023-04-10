@@ -12,6 +12,7 @@ const testLocation =
         "lng": -73.9632,
         "lat": 40.7794
       },
+      "category":[],
       "description": "One of the world's largest and finest art museums, located in New York City.",
       "images": [
         "https://www.metmuseum.org/-/media/images/visit/met-fifth-ave/met-5thave-exterior2-1024x640.jpg",
@@ -42,6 +43,7 @@ test('check image displays correctly when NO image in location',async () => {
           "lng": -73.9632,
           "lat": 40.7794
         },
+        "category":[],
         "description": "One of the world's largest and finest art museums, located in New York City.",
         "images": []
       };
