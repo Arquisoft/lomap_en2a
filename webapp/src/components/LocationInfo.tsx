@@ -380,7 +380,8 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
  
       </Flex>
       <Box marginTop={'auto'} marginLeft='auto' marginEnd={'1em'}>
-        <Button colorScheme='red' leftIcon={<Icon as={RxCross2} width='max-content' height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
+        <Button data-testid = 'deleteLocationButton' 
+         colorScheme='red' leftIcon={<Icon as={RxCross2} width='max-content' height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
           size='lg'
           onClick={() => {
             //we delete the location that is being showed
