@@ -26,15 +26,14 @@ The user requirements are actions that they can do in the application.
 .User requirements. The user can: 
 * add different categories for each location.
 * see the locations in a map in form of markers.
-* interact with markers adding photos, reviews or comments.
+* interact with the locations adding photos, reviews or comments.
 * manage a list of friends.
 * manage the information that is shared with his friends.
 * create personalized routes.(optional)
 * compare specific categories. (optional)
 
 .System requirements. The system must:
-* store the information about each user's places in his pod, not centralized. 
-* store information in a centralized way for performance reasons, respecting users' privacy.
+* store the information about each user's places in his Solid pod, not centralized. 
 * allow users to see their friends' markers.
 * allow map filtering by categories.
 * allow places to create their own pods.(optional)
@@ -55,7 +54,7 @@ The user requirements are actions that they can do in the application.
 
 | Security | Each user should access to it's pod and it can not be accessed by other user. User can modify their access data.
 
-| Performance | The application should be able to give short response time when users are interacting with it. 
+| Performance | The application should be able to give rationale response time when users are interacting with it. 
 
 | Availability | The personal data from the pods can be accessed at any time.
 
