@@ -497,6 +497,8 @@ export async function deleteLocation(webID:string, locationUrl: string) {
  * @param giveAccess if true, permissions are granted, if false permissions are revoked
  */
 export async function setAccessToFriend(friend:string, locationURL:string, giveAccess:boolean){
+  let myInventory = `${locationURL.split("private")[0]}private/lomap/inventory/index.ttl`
+  await giveAccessToInventory(myInventory, friend);
   let resourceURL = locationURL.split("#")[0]; // dataset path
   // Fetch the SolidDataset and its associated ACL, if available:
   let myDatasetWithAcl;
@@ -538,6 +540,44 @@ export async function setAccessToFriend(friend:string, locationURL:string, giveA
       { read: false, append: false, write: false, control: false }
     );
   }
+  // save the access control list
+  await saveAclFor(myDatasetWithAcl, updatedAcl, {fetch: fetch});
+  }
+  catch (error){ // catch any possible thrown errors
+    console.log(error)
+  }
+}
+
+export async function giveAccessToInventory(resourceURL:string, friend:string){
+  let myDatasetWithAcl;
+  try {
+    myDatasetWithAcl = await getSolidDatasetWithAcl(resourceURL, {fetch: fetch}); // inventory
+    // Obtain the SolidDataset's own ACL, if available, or initialise a new one, if possible:
+    let resourceAcl;
+    if (!hasResourceAcl(myDatasetWithAcl)) {
+      if (!hasAccessibleAcl(myDatasetWithAcl)) {
+        //  "The current user does not have permission to change access rights to this Resource."
+      }
+      if (!hasFallbackAcl(myDatasetWithAcl)) {
+        // create new access control list
+        resourceAcl = createAcl(myDatasetWithAcl);
+      }
+      else{
+        // create access control list from fallback
+        resourceAcl = createAclFromFallbackAcl(myDatasetWithAcl);
+      }
+    } else {
+      // get the access control list of the dataset
+      resourceAcl = getResourceAcl(myDatasetWithAcl);
+    }
+
+  let updatedAcl;
+    // grant permissions
+    updatedAcl = setAgentResourceAccess(
+      resourceAcl,
+      friend,
+      { read: true, append: true, write: false, control: false }
+    );
   // save the access control list
   await saveAclFor(myDatasetWithAcl, updatedAcl, {fetch: fetch});
   }
