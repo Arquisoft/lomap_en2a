@@ -159,11 +159,13 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
     }
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form name="add-location-form" onSubmit={handleSubmit}>
         <Flex className="flex menu" px={2} height = {'100%'} overflowY={'auto'}>
             <Flex className="flex section">
                 <Text as={'b'} fontSize={'x-large'}>Name:</Text>
                 <Input
+                    required
+                    name={"name"}
                     value={name}
                     onChange={(e:any) => setName(e.target.value)}                                        
                     placeholder="Location's name"
