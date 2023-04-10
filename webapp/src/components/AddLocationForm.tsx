@@ -14,7 +14,8 @@ import {
     MenuList,
     MenuOptionGroup,
     Text,
-    Textarea
+    Textarea,
+    Box
 } from "@chakra-ui/react";
 import { Category } from './Category';
 import { FormErrorMessage, useToast, VisuallyHidden} from "@chakra-ui/react";
@@ -153,7 +154,7 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
 
     return (
         <form onSubmit={handleSubmit}>
-        <Flex className="flex menu" px={2}>
+        <Flex className="flex menu" px={2} height = {'100%'} overflowY={'auto'}>
             <Flex className="flex section">
                 <Text as={'b'} fontSize={'x-large'}>Name:</Text>
                 <Input
@@ -240,7 +241,7 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
                 </Input>
 
 
-                <HStack shouldWrapChildren={true} display='flex' overflowX='auto' minHeight={200}  height={'fit-content'}>
+                <HStack shouldWrapChildren={true} display='flex' overflowX='auto'  height={'fit-content'}>
                     {
                         imgs.length ? (
                                 imgs.map((image,i)=>{
@@ -264,14 +265,14 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
                     }
                 </HStack>
             </Flex>
-
-            <Button leftIcon={<MdOutlineAddLocationAlt/>}
-                    colorScheme={'orange'}
-                    variant={'outline'}
-                    type={'submit'}
-            >
-                Add location
-            </Button>
+            <Box >
+                <Button leftIcon={<MdOutlineAddLocationAlt/>}
+                        colorScheme={'orange'}
+                        variant={'outline'}
+                        type={'submit'}>
+                    Add location
+                </Button>
+            </Box>
         </Flex>
         </form>
     );
