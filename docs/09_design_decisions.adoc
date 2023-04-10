@@ -1,9 +1,11 @@
 [[section-design-decisions]]
 == Design Decisions
 
+The architectural decisions are completely documented in our ARD section in the Wiki. Due to this, and to avoid redundancy, instead of re-document those decisions here, we will refer to them.
 
 === Google Maps API
-the Architectural Record containing this decision can be found in the following link:+
+To refer to the documented architectural decision about Google Maps API, click on the link below. +
+
 https://github.com/Arquisoft/lomap_en2a/wiki/ARD---Map-API[Google Maps API]
 
 === No DB usage

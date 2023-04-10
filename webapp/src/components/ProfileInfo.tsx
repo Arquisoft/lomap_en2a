@@ -1,6 +1,6 @@
 import { Avatar, Text, Flex, VStack, Box } from "@chakra-ui/react"
 import React from "react"
-import { getNameFromPod } from "../solid/solidManagement"
+import { getNameFromPod} from "../solid/solidManagement"
 
 
 
@@ -26,7 +26,7 @@ export function ProfileView(props:any) {
     return (
       <Flex
         direction={'column'}
-        bg={'whiteAlpha.900'}
+        bg={'white'}
         width={"30vw"}
         height={"100vh"}
         position={'absolute'} 

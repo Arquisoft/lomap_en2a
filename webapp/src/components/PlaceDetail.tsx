@@ -1,46 +1,56 @@
-import React from 'react'
+
 import { Location } from '../../../restapi/locations/Location';
-import {Flex, Text,Image} from '@chakra-ui/react'
+import {Flex, Text,Image, Box} from '@chakra-ui/react'
+import LocationInfo from './LocationInfo';
+import noImage from '../no-pictures-picture.png';
 
 type PlaceDetailProps = {
     place : Location;
     key : number;
+    deleteLocation : (loc : Location) => void
+    setSelectedView: (viewName: JSX.Element) => void //function to change the selected view on the left
 }
 
 function PlaceDetail (props : PlaceDetailProps ) : JSX.Element{
   return (
     <Flex
-        bg= {'whiteAlpha.900'}
+        bg= {'white'}
         px={4}
         py={2}
         mb={2}
+        maxWidth='40vw'
         shadow='lg'
         direction={'column'}
         alignItems={'start'}
         justifyContent = 'space-between'
+        borderRadius={'lg'}
+        //change the view to the information view of the location being clicked
+        onClick={() => props.setSelectedView(<LocationInfo location={props.place} deleteLocation = {props.deleteLocation} ></LocationInfo>)}
         >
         <Flex justifyContent={'space-between'} width ='full'>
             <Flex
                 direction={'column'}
                 justifyContent={'start'}
                 alignItems={'start'}
-                width='full'
+                width='17vw'
                 px={2}
                 >
                 <Flex
                  alignItems={'center'}
-                 width={'full'}
-                 justifyContent={'space-between'}>
+                 justifyContent={'space-between'}
+                 direction='row'
+                 width={'full'}>
                     <Text 
-                     textTransform={'capitalize'} 
-                     width={'40'}
-                     fontSize={'lg'}
-                     fontWeight={'500'}
-                     isTruncated>
+                        textTransform={'capitalize'} 
+                        fontSize={'large'}
+                        fontWeight={'500'}
+                        isTruncated>
                         {props.place.name}
                     </Text>
                 </Flex>
-                <Text  fontSize='x1'>
+                <Text  
+                    fontSize='x1'
+                    noOfLines={3}>
                         {props.place.description}
                 </Text>
             </Flex>
@@ -50,11 +60,10 @@ function PlaceDetail (props : PlaceDetailProps ) : JSX.Element{
                 height={'120px'}
                 rounded='lg'
                 src={
-                    //TODO add here the condition on the image to be added to the locations
-                    //{props.place.img} == null ? {props.place.img} : default
-
-                    //for now we place a default image
-                    'https://media.newyorker.com/photos/59095bb86552fa0be682d9d0/master/w_2560%2Cc_limit/Monkey-Selfie.jpg'
+                    props.place.images?.length?
+                        props.place.images[0] as string 
+                        :
+                        noImage as string
                 }>
 
             </Image>

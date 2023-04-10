@@ -1,24 +1,15 @@
 import React from 'react'
-import { Location } from '../../../restapi/locations/Location'
-import {Flex,Text,Avatar,VStack, Box, Button, Input, InputRightAddon, InputRightElement, InputGroup} from "@chakra-ui/react";
-import {  SkeletonCircle, SkeletonText } from '@chakra-ui/react'
-import  PlaceDetail  from './PlaceDetail';
+import {Flex,Text, Button, Input,  InputRightElement, InputGroup} from "@chakra-ui/react";
 import {addFriend, getFriends} from "../solid/solidManagement";
 import type { Friend } from "../../../restapi/users/User";
 import FriendsDetail from './FriendsDetail';
 
-import {
-  FormControl,
-  FormLabel,
-  FormErrorMessage,
-  FormHelperText,
-} from '@chakra-ui/react'
-function Friends(props : any) : JSX.Element {
 
+function Friends(props : any) : JSX.Element {
+  const webId = props.session.session.info.webId;
     
   const [friends, setFriends] = React.useState<Friend[]>([]);
   const[isLoged, setLogged] = React.useState(false);
-  const[isLoading,setLoading] = React.useState(true);
 
   const[error, setError]=React.useState(false);
   const[errorMessage,setErrorMessage]=React.useState("");
@@ -28,8 +19,8 @@ function Friends(props : any) : JSX.Element {
   }, [friends]);
 
   const handleFriends = async () => {
-    if (props.webId !== undefined && props.webId !== ""){
-      const n  = await getFriends(props.webId).then(friendsPromise => {return friendsPromise});
+    if (webId !== undefined && webId !== ""){
+      const n  = await getFriends(webId).then(friendsPromise => {return friendsPromise});
       
       setFriends(n);
       setLogged(true);
@@ -38,20 +29,19 @@ function Friends(props : any) : JSX.Element {
       setFriends([]);
     }
   }
-  const handleSubmit = (event)=>{
+  const handleSubmit = async (event)=>{
     event.preventDefault();
     let value = (document.getElementById("newFriend")as HTMLInputElement).value;
-    console.log(value);
-    const result = addFriend(props.webId,{username:value,webID:value+"url"});
-    result.then(r=>{setError(r.error);setErrorMessage(r.errorMessage);})
+    const result = await addFriend(webId,{username:value,webID:value});
+    setError(result.error)
+    setErrorMessage(result.errorMessage)
     handleFriends();
-    
   }
 
     return (
         <Flex
           direction={'column'}
-          bg={'whiteAlpha.900'}
+          bg={'white'}
           width={"30vw"}
           height={"100vh"}
           position={'absolute'} 

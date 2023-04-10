@@ -1,11 +1,22 @@
-import React, { useState } from 'react'
-import { Flex, Button, Icon, Text, IconButton, ButtonGroup, Box } from "@chakra-ui/react";
-import { MdList, MdLocationOn, MdMap, MdOutlineOpenInBrowser, MdPeopleAlt, MdPerson } from "react-icons/md"
-import { start } from 'repl';
+import { useState } from 'react'
+import { Flex, Button, Icon, Box } from "@chakra-ui/react";
+import { MdList, MdLocationOn, MdMap, MdPeopleAlt, MdPerson } from "react-icons/md"
+import { Location } from '../../../restapi/locations/Location';
+import { SessionInfo } from '@inrupt/solid-ui-react/dist/src/hooks/useSession';
+import List from './List';
+import AddLocationForm from './AddLocationForm';
+import Friends from './Friends';
+import { ProfileView } from './ProfileInfo';
 
 type MenuProps = {
-  changeViewTo: (viewName: string) => void
+  setSelectedView: (view: JSX.Element) => void,
+  locations : Array<Location>,
+  session : SessionInfo
+  deleteLoc : (location:Location) =>void,
+  addLocation : (location:Location) =>void
 }
+
+
 
 function Menu(props: MenuProps): JSX.Element {
   const [insideMenu, setinsideMenu] = useState(false)
@@ -23,8 +34,9 @@ function Menu(props: MenuProps): JSX.Element {
           zIndex={1}
           overflow='hidden'
           px={2}
-          onMouseEnter={() => { setinsideMenu(true) }}
-          onMouseLeave={() => { setinsideMenu(false) }}
+          boxShadow ='lg'
+          onMouseOver={()=> {setinsideMenu(true)}}
+          onMouseLeave={() => { setinsideMenu(false)}}
     >
       {
         insideMenu ?
@@ -48,8 +60,8 @@ function Menu(props: MenuProps): JSX.Element {
                         color={'black'}
                         size='lg'
                         height={'5vh'}
-                        onClick={() => { setinsideMenu(false); props.changeViewTo("none"); }}>
-                  Visualización del mapa
+                        onClick={() => { setinsideMenu(false); props.setSelectedView(<></>); }}>
+                  Map view
                 </Button>
               </Box>
 
@@ -60,9 +72,12 @@ function Menu(props: MenuProps): JSX.Element {
                         size='lg'
                         onClick={() => {
                           setinsideMenu(false);
-                          props.changeViewTo("list");
+                          props.setSelectedView(
+                            <List deleteLocation={props.deleteLoc}
+                               setSelectedView={(view)=> props.setSelectedView(view)} places={props.locations}  />
+                            );
                         }}>
-                  Listado de Localizaciones
+                  Location list
                 </Button>
               </Box>
 
@@ -74,10 +89,12 @@ function Menu(props: MenuProps): JSX.Element {
                         onClick={
                           () => {
                             setinsideMenu(false);
-                            props.changeViewTo("addLocation");
+                            props.setSelectedView(
+                              <AddLocationForm onSubmit={props.addLocation}/>
+                            );
                           }
                         }>
-                  Añadir Localización
+                  Add location
                 </Button>
               </Box>
 
@@ -88,10 +105,12 @@ function Menu(props: MenuProps): JSX.Element {
                         size='lg'
                         onClick={() => {
                           setinsideMenu(false);
-                          props.changeViewTo("friends");
+                          props.setSelectedView(
+                            <Friends session={props.session}/>
+                          );
                         }}
                 >
-                  Añadir amigos
+                  Add friends
                 </Button>
               </Box>
 
@@ -102,10 +121,12 @@ function Menu(props: MenuProps): JSX.Element {
                         size='lg'
                         onClick={() => {
                           setinsideMenu(false);
-                          props.changeViewTo("profile");
+                          props.setSelectedView(
+                            <ProfileView webId={props.session.session.info.webId}></ProfileView>
+                          );
                         }}
                 >
-                  Perfil
+                  Profile
                 </Button>
               </Box>
             </Flex>
