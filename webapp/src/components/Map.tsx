@@ -5,6 +5,9 @@ import  LocationInfo  from './LocationInfo';
 import {Location} from "../../../restapi/locations/Location"
 import { Category, isLocationOfCategory } from './Category';
 import { SessionInfo } from '@inrupt/solid-ui-react/dist/src/hooks/useSession';
+import { useSession } from '@inrupt/solid-ui-react';
+import { getSolidFriends } from "../solid/solidManagement";
+import type { Friend } from "../../../restapi/users/User";
 
 
 type MapProps = {
@@ -26,10 +29,28 @@ const Map = ( props : MapProps) => {
     lng: -5.874621861782328
   };
 
+  const session = useSession(); 
+  const webId = session.session.info.webId;
   const [center, setCenter] = React.useState(init)
   const [map, setMap] = React.useState(null)
   const [areCheckedFilters, setCheckedFilters] = React.useState<boolean>(false) // check if there are any filters checked, if not show all locations
   const [filteredLocations, setFilteredLocations] = React.useState<Array<Location>>([]) //need constant for the filter to work
+
+  const [friends, setFriends] = React.useState<Friend[]>([]);
+
+  React.useEffect(() => {
+    handleFriends()
+  }, [friends]);
+
+  const handleFriends = async () => {
+    if ( webId !== undefined && webId !== ""){
+      const n  = await getSolidFriends(webId).then(friendsPromise => {return friendsPromise});
+      setFriends(n);
+    }
+    else{
+      setFriends([]);
+    }
+  }
 
   const onUnmount = React.useCallback(function callback() {setMap(null)}, [])
 
@@ -56,6 +77,10 @@ const Map = ( props : MapProps) => {
       }
     }
     setFilteredLocations(filtered) // update value of const
+  }
+
+  const handleFriendFilter = (e) => {
+    
   }
 
 
@@ -85,9 +110,11 @@ const Map = ( props : MapProps) => {
                 <MenuList minWidth='240px'>
                   <MenuOptionGroup type='checkbox'>
                     {
-                      categories.map((filter) => { // change it for the friends, put categories to have something to show
+                      friends.map((friend) => {
                         return (
-                          <MenuItemOption value={filter}>{filter}</MenuItemOption>
+                          <MenuItemOption value={friend.webID}
+                            onClick={(e) => handleFriendFilter(e)}>
+                            {friend.webID}</MenuItemOption>
                         )
                       })
                     }

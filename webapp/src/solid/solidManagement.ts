@@ -3,6 +3,17 @@ import type { Review as ReviewType} from "../../../restapi/locations/Location";
 import type { Friend } from "../../../restapi/users/User";
 import { fetch } from "@inrupt/solid-client-authn-browser";
 
+import {
+  getSolidDatasetWithAcl,
+  hasResourceAcl,
+  hasFallbackAcl,
+  hasAccessibleAcl,
+  createAcl,
+  createAclFromFallbackAcl,
+  getResourceAcl,
+  setAgentResourceAccess,
+  saveAclFor,
+} from "@inrupt/solid-client";
 
 // Friends second iteration
 import { Friends } from 'solid-auth-client';
@@ -479,7 +490,61 @@ export async function deleteLocation(webID:string, locationUrl: string) {
   }
 }
 
+/**
+ * Grant/ Revoke permissions of friends regarding a particular location
+ * @param friend webID of the friend to grant or revoke permissions
+ * @param locationURL location to give/revoke permission to
+ * @param giveAccess if true, permissions are granted, if false permissions are revoked
+ */
+export async function setAccessToFriend(friend:string, locationURL:string, giveAccess:boolean){
+  let resourceURL = locationURL.split("#")[0]; // dataset path
+  // Fetch the SolidDataset and its associated ACL, if available:
+  let myDatasetWithAcl;
+  try {
+    myDatasetWithAcl = await getSolidDatasetWithAcl(resourceURL, {fetch: fetch});
+    // Obtain the SolidDataset's own ACL, if available, or initialise a new one, if possible:
+    let resourceAcl;
+    if (!hasResourceAcl(myDatasetWithAcl)) {
+      if (!hasAccessibleAcl(myDatasetWithAcl)) {
+        //  "The current user does not have permission to change access rights to this Resource."
+      }
+      if (!hasFallbackAcl(myDatasetWithAcl)) {
+        // create new access control list
+        resourceAcl = createAcl(myDatasetWithAcl);
+      }
+      else{
+        // create access control list from fallback
+        resourceAcl = createAclFromFallbackAcl(myDatasetWithAcl);
+      }
+    } else {
+      // get the access control list of the dataset
+      resourceAcl = getResourceAcl(myDatasetWithAcl);
+    }
 
+  let updatedAcl;
+  if (giveAccess) {
+    // grant permissions
+    updatedAcl = setAgentResourceAccess(
+      resourceAcl,
+      friend,
+      { read: true, append: true, write: false, control: false }
+    );
+  }
+  else{
+    // revoke permissions
+    updatedAcl = setAgentResourceAccess(
+      resourceAcl,
+      friend,
+      { read: false, append: false, write: false, control: false }
+    );
+  }
+  // save the access control list
+  await saveAclFor(myDatasetWithAcl, updatedAcl, {fetch: fetch});
+  }
+  catch (error){ // catch any possible thrown errors
+    console.log(error)
+  }
+}
 
 
 //Friends
