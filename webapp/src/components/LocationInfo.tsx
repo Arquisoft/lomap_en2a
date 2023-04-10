@@ -204,15 +204,16 @@ const ReviewSection =  ( {location ,setLocation,session}) =>{
             closeOnBlur={false}
           >
             <PopoverTrigger>
-              <Button colorScheme={'green'} size='sm' leftIcon ={<MdOutlineRateReview/>} >Add review</Button>
+              <Button data-testid ='buttonReview' colorScheme={'green'} size='sm' leftIcon ={<MdOutlineRateReview/>} >Add review</Button>
             </PopoverTrigger>
             <PopoverContent >
               <Box zIndex={'3'} padding='1.1em'>
-              <PopoverCloseButton />
+              <PopoverCloseButton data-testid='closeButtonReview' />
                   <FormControl isInvalid={errorOnBody}  >
                     <FormLabel>Leave a review </FormLabel>
                     <FormLabel>Title</FormLabel>
                     <Input 
+                      data-testid ='inputTitle'
                       ref={firstFieldRef}
                       value={title}
                       onChange={(e:any) => settitle(e.target.value)}                                        
@@ -225,6 +226,7 @@ const ReviewSection =  ( {location ,setLocation,session}) =>{
                     }
                     <FormLabel>Body</FormLabel>
                     <Textarea
+                      data-testid ='inputBody'
                       placeholder="Body of the review"
                       value={input}
                       onChange={(e) => setInput(e.target.value)}
@@ -235,7 +237,7 @@ const ReviewSection =  ( {location ,setLocation,session}) =>{
                       : 
                       <FormErrorMessage>Body of the review is required</FormErrorMessage>
                     }
-                    <Button marginLeft={'auto'} colorScheme={'teal'} disabled={errorOnBody || errorOnTitle}
+                    <Button data-testid ='submitReviewButton'  marginLeft={'auto'} colorScheme={'teal'} disabled={errorOnBody || errorOnTitle}
                       onClick={()=>{
                         //create a new Review with the info of the current user
                         let review : ReviewType = {
