@@ -43,7 +43,7 @@ To have a measurable response of the system regarding some stimulus correspondin
 
 | *Performance*
 | The application must have a reasonable response time. Slow applications are not positively popular in society.
-| The application must be able to bear at least 20 concurrent users and give a response time to their actions in less than 5 seconds.
+| The application must be able to bear at least 5 concurrent users and give a response time to their actions in less than one minute.
 | High
 
 | *Availability* 
