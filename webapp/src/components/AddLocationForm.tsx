@@ -78,6 +78,7 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
                         duration: 5000,
                         isClosable: true,
                     });
+                    setAddingLocationProcess(false);
                 },
                 ()=> {
                     toast({
@@ -87,6 +88,7 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
                         duration: 5000,
                         isClosable: true,
                     });
+                    setAddingLocationProcess(false);
                 }
             )
     }
@@ -138,7 +140,7 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
         }
 
         addLocation(l);
-        setAddingLocationProcess(false);
+
     };
     /**
      * Add/Delete category to/from the location
@@ -269,7 +271,22 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
                 </HStack>
             </Flex>
             <Box>
-                <AddLocationButton addingLocationProcess={addingLocationProcess}></AddLocationButton>
+                {addingLocationProcess ? (
+                    <Button leftIcon={<Spinner size={"xs"}/>}
+                            colorScheme={'orange'}
+                            variant={'outline'}
+                            type={'submit'}
+                            disabled>
+                        Adding location
+                    </Button>
+                ) : (
+                    <Button leftIcon={<MdOutlineAddLocationAlt/>}
+                            colorScheme={'orange'}
+                            variant={'outline'}
+                            type={'submit'}>
+                        Add location
+                    </Button>
+                )}
             </Box>
         </Flex>
         </form>
