@@ -59,7 +59,7 @@ function App(): JSX.Element {
           alignItems={'center'}
           width={'100vw'}
           height={'100vh'}
-          maxWidth={'100vw'}
+          maxWidth={'100vw'} 
           maxHeight={'100vh'}
           position={'relative'}
           >
