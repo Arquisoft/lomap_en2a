@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import './AddLocationForm.css'
 import { Location } from '../../../restapi/locations/Location'
 import {
@@ -15,14 +15,13 @@ import {
     MenuOptionGroup,
     Text,
     Textarea,
-    Box
+    Box, Spinner
 } from "@chakra-ui/react";
 import { Category } from './Category';
-import { FormErrorMessage, useToast, VisuallyHidden} from "@chakra-ui/react";
+import { useToast } from "@chakra-ui/react";
 import {createLocation} from "../solid/solidManagement";
 import {useSession} from "@inrupt/solid-ui-react";
 import {MdOutlineAddLocationAlt} from "react-icons/md";
-import noImage from "../no-pictures-picture.png";
 
 type AddLocationProps = {
     loadLocations: () => Promise<void>
@@ -51,6 +50,7 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
     const [name, setName] = React.useState('');
     const [coordsValue, setCoordsValue] = React.useState(props.clickedCoords);
     const [description, setDescription] = React.useState('');
+    const [addingLocationProcess, setAddingLocationProcess] = useState(false);
 
 
     let checkedCategories : string[] = [];
@@ -107,7 +107,9 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
 
     const handleSubmit = (e:any) => {
         e.preventDefault();
-        checkCoordinates(coordsValue)
+
+        setAddingLocationProcess(true);
+        checkCoordinates(coordsValue);
 
         if (isValidName) {
             return;
@@ -134,7 +136,9 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
             description: description.trimStart().trimEnd(),
             images : imgs
         }
+
         addLocation(l);
+        setAddingLocationProcess(false);
     };
     /**
      * Add/Delete category to/from the location
@@ -244,37 +248,52 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
                 <HStack shouldWrapChildren={true} display='flex' overflowX='auto'  height={'fit-content'}>
                     {
                         imgs.length ? (
-                                imgs.map((image,i)=>{
-                                    return (
-                                        <Image
-                                            key={i}
-                                            src={image as string}
-                                            width='200'
-                                            height='200'
-                                            borderRadius='lg'
-                                            fallbackSrc='https://www.resultae.com/wp-content/uploads/2018/07/reloj-100.jpg'>
-
-                                        </Image>
-                                    )
-                                })
-                            )
-                            :
+                            imgs.map((image,i)=>{
+                                return (
+                                    <Image
+                                        key={i}
+                                        src={image as string}
+                                        width='200'
+                                        height='200'
+                                        borderRadius='lg'
+                                        fallbackSrc='https://www.resultae.com/wp-content/uploads/2018/07/reloj-100.jpg'>
+                                    </Image>
+                                );
+                            })
+                        ) : (
                             <>
 
                             </>
+                        )
                     }
                 </HStack>
             </Flex>
-            <Box >
-                <Button leftIcon={<MdOutlineAddLocationAlt/>}
-                        colorScheme={'orange'}
-                        variant={'outline'}
-                        type={'submit'}>
-                    Add location
-                </Button>
+            <Box>
+                <AddLocationButton addingLocationProcess={addingLocationProcess}></AddLocationButton>
             </Box>
         </Flex>
         </form>
+    );
+}
+
+function AddLocationButton(props:any) : JSX.Element {
+    return (
+        props.addingLocationProcess ? (
+            <Button leftIcon={<Spinner size={"xs"}/>}
+                    colorScheme={'orange'}
+                    variant={'outline'}
+                    type={'submit'}
+                    disabled>
+                Adding location
+            </Button>
+        ) : (
+            <Button leftIcon={<MdOutlineAddLocationAlt/>}
+                    colorScheme={'orange'}
+                    variant={'outline'}
+                    type={'submit'}>
+                Add location
+            </Button>
+        )
     );
 }
 

@@ -26,13 +26,14 @@ export function DeletingAlertDialog(props:any) {
             deleteLocation(session.session.info.webId ,location.url.toString()).then(
                 ()=> {
                     props.loadLocations().then(
-                    toast({
-                        title: 'Location deleted.',
-                        description: "The location was deleted from your pod.",
-                        status: 'success',
-                        duration: 5000,
-                        isClosable: true,
-                    }))
+                        () => toast({
+                            title: 'Location deleted.',
+                            description: "The location was deleted from your pod.",
+                            status: 'success',
+                            duration: 5000,
+                            isClosable: true,
+                        })
+                    );
                 },
                 ()=> {
                     toast({
