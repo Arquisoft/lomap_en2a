@@ -57,14 +57,14 @@ This is the actual state of the domain model, which will change along the develo
 [plantuml,Domain model,png]
 ----
 class Map
-    Map : - locations : List<Location>
+    Map : - locations : ListOfLocations<Location>
 
 class Location
     Location : - latitude : double
     Location : - longitude : double    
     Location : - name : String
     Location : - description : String
-    Location : - reviews : List<String>
+    Location : - reviews : ListOfLocations<String>
 
     Location : + getLatitude() : String
     Location : + getLongitude() : String
@@ -72,8 +72,8 @@ class Location
     Location : + getDescription() : String
 
 class User
-    User : maps : List<Map>
-    User : friends : List<User>
+    User : maps : ListOfLocations<Map>
+    User : friends : ListOfLocations<User>
 
 
 Map <-- "*" Location

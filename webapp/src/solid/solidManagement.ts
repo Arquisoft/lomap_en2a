@@ -2,6 +2,11 @@ import type { Location as LocationType, Review }from "../../../restapi/locations
 import type { Review as ReviewType} from "../../../restapi/locations/Location";
 import type { Friend } from "../../../restapi/users/User";
 import { fetch } from "@inrupt/solid-client-authn-browser";
+
+
+// Friends second iteration
+import { Friends } from 'solid-auth-client';
+
 import {
   createThing, removeThing,Thing,getThing, setThing,buildThing,
   getSolidDataset, saveSolidDatasetAt, getThingAll,
@@ -244,34 +249,6 @@ export async function getLocationImage(imagesFolderUrl:string){
   return images;
 }
 
-export async function getFriends(webID:string) {
-  
-  let friendURLs = getUrlAll(await getUserProfile(webID), VCARD.Contact);
-  let friends: Friend[] = [];
-
-  // for each friend url, get the fields of the object
-  for (let friend of friendURLs) {
-    let name = getStringNoLocale(
-      await getUserProfile(friend),
-      VCARD.Name
-    ) as string;
-    let webId = getStringNoLocale(
-      await getUserProfile(friend),
-      VCARD.url
-    ) as string;
-    
-
-    if (friend)
-      friends.push({
-        username: name,
-        webID : webId
-      });
-  }
-  
-  return friends;
-
-}
-
 // WRITE FUNCTIONS
 
 /**
@@ -494,30 +471,66 @@ export async function deleteLocation(webID:string, locationUrl: string) {
   }
 }
 
-export async function addFriend(webID:string, friend:Friend): Promise<{ error: boolean, errorMessage: string }> {
-    let profile = webID.split("#")[0]; //just in case there is extra information in the url
-    // get the dataset from the url
-    let dataSet = await getSolidDataset(profile, {fetch: fetch});  
+
+
+
+//Friends
+export async function addSolidFriend(webID: string,friendURL: string): Promise<{error:boolean, errorMessage:string}>{
+  let profile = webID.split("#")[0];
+  let dataSet = await getSolidDataset(profile+"#me", {fetch: fetch});//dataset card me
+
+  let thing =await getThing(dataSet, profile+"#me") as Thing; // :me from dataset
+
+  try{
+    let newFriend = buildThing(thing)
+    .addUrl(FOAF.knows, friendURL as string)
+    .build();
+      
+    const urlRegex = /^https:\/\/[a-zA-Z0-9]+\.(solid|inrupt)\.net\/card#me$/i;//RegExp to check if it's a valid URL.
+
+    let friends = await getSolidFriends(webID);
+    if(friends.some(f => f.webID === friendURL))
+      return{error:true,errorMessage:"You are already friends"}
+
+    dataSet = setThing(dataSet, newFriend);
+    dataSet = await saveSolidDatasetAt(webID, dataSet, {fetch: fetch})
+  } catch(err){
+    return{error:true,errorMessage:"The url is not valid."}
+  }
+
+  return{error:false,errorMessage:""}
+
+}
+
+export async function getSolidFriends(webID:string) {
   
-    let dataSetThing = getThing(dataSet, webID) as Thing;
+  let friendURLs = getUrlAll(await getUserProfile(webID), FOAF.knows);
+  let friends: Friend[] = [];
 
-    try {
-      let existsFriend = getUrlAll(dataSetThing, FOAF.knows)
-      if (existsFriend.some((url) => url === friend.webID)){
-        return{error:true,errorMessage:"You are already friends with this user!"}
-      }
-      else{
-        // We create the friend
-      let newFriend = buildThing(dataSetThing)
-      .addUrl(FOAF.knows, friend.webID as string)
-      .build();
+  // for each friend url, get the fields of the object
+  for (let friend of friendURLs) {
+    
+    try{
+      
+      let name = getStringNoLocale(await getUserProfile(friend),FOAF.name);
+      let imageUrl: string | null = null;
+    
+      let pic = getUrl(await getUserProfile(friend),VCARD.hasPhoto);
 
-      // insert friend in dataset
-      dataSet = setThing(dataSet, dataSetThing);
-      dataSet = await saveSolidDatasetAt(webID, dataSet, {fetch: fetch})
-      return{error:false,errorMessage:""}
-      }
-    } catch (error){
-      return{error:true,errorMessage:"Not a valid webId!"}
+      
+
+      if (friend)
+      friends.push({
+        username: name as string,
+        webID : friend,
+        pfp: pic as string
+      });
+
+    } catch(err){
+
     }
+  }
+  
+  return friends;
+
 }

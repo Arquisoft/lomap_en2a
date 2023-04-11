@@ -3,14 +3,13 @@ import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import Menu from "./Menu";
 
 test('check menu contains 5 options',async () => {
-  const{container} = render(<Menu addLocation={jest.fn()} deleteLoc={jest.fn()} locations={[]} setSelectedView={jest.fn()}></Menu>)
+  const{container} = render(<Menu loadLocations={jest.fn()} locations={[]} changeViewTo={jest.fn()}></Menu>)
   //we check there are 5 icons = svg
   expect(container.querySelectorAll('svg').length).toBe(5)
 })
 
 test('check menu expands when mouse enters', async () => {
-    const { getByTestId } = render( 
-      <Menu addLocation={jest.fn()} deleteLoc={jest.fn()} locations={[]} setSelectedView={jest.fn()} />
+    const { getByTestId } = render(<Menu loadLocations={jest.fn()}  locations={[]} changeViewTo={jest.fn()} />
     );
     //we expect the small component to be in the document
     expect(getByTestId('smallContainer')).toBeInTheDocument()
@@ -21,8 +20,7 @@ test('check menu expands when mouse enters', async () => {
   });
 
 test('check menu shrinks when mouse exits', async () => {
-    const { getByTestId } = render( 
-        <Menu addLocation={jest.fn()} deleteLoc={jest.fn()} locations={[]} setSelectedView={jest.fn()} />
+    const { getByTestId } = render(<Menu loadLocations={jest.fn()}  locations={[]} changeViewTo={jest.fn()} />
     );
     // enter the menu with the mouse
     fireEvent.mouseEnter(getByTestId('smallContainer'));
@@ -39,12 +37,11 @@ test.each(['Map view', 'Location list', 'Add location','Add friends','Profile'])
     'clicking %s updates the view',
     async (buttonText) => {
       let viewUpdated = false;
-      const { getByTestId, getAllByRole } = render(
-        <Menu
-          addLocation={jest.fn()}
-          deleteLoc={jest.fn()}
+      const { getByTestId } = render(
+        <Menu 
+          loadLocations={jest.fn()}
           locations={[]}
-          setSelectedView={(view) => {
+          changeViewTo={(view) => {
             viewUpdated = true;
           }}
         />
@@ -52,7 +49,8 @@ test.each(['Map view', 'Location list', 'Add location','Add friends','Profile'])
       // enter the menu with the mouse
       fireEvent.mouseEnter(getByTestId('smallContainer'));
       // get the button by its text content
-      const button = getAllByRole('button', { name: buttonText })[0];
+      const button = getByTestId(buttonText)
+      // const button = getAllByRole('button', { name: buttonText })[0];
       expect(getByTestId('bigContainer')).toBeInTheDocument();
       
       // click the button

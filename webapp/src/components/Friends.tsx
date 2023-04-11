@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react'
 import {Flex,Text, Button, Input,  InputRightElement, InputGroup} from "@chakra-ui/react";
-import {addFriend, getFriends} from "../solid/solidManagement";
+import { addSolidFriend,getSolidFriends} from "../solid/solidManagement";
 import type { Friend } from "../../../restapi/users/User";
 import FriendsDetail from './FriendsDetail';
 import { useSession } from '@inrupt/solid-ui-react';
@@ -22,7 +22,7 @@ function Friends() : JSX.Element {
 
   const handleFriends = async () => {
     if (webId !== undefined && webId !== ""){
-      const n  = await getFriends(webId).then(friendsPromise => {return friendsPromise});
+      const n  = await getSolidFriends(webId).then(friendsPromise => {return friendsPromise});
       
       setFriends(n);
       setLogged(true);
@@ -31,13 +31,17 @@ function Friends() : JSX.Element {
       setFriends([]);
     }
   }
-  const handleSubmit = async (event)=>{
+
+  
+  const handleSubmitSolid= (event)=>{
     event.preventDefault();
     let value = (document.getElementById("newFriend")as HTMLInputElement).value;
-    const result = await addFriend(webId as string,{username:value,webID:value});
-    setError(result.error)
-    setErrorMessage(result.errorMessage)
+    
+    const result = addSolidFriend(webId as string,value);
+    result.then(r=>{setError(r.error);setErrorMessage(r.errorMessage);})
+    
     handleFriends();
+
   }
 
     return (
@@ -50,15 +54,18 @@ function Friends() : JSX.Element {
           left='5vw'
           top={0}
           zIndex={1}
+          borderRight={"1px solid black"}
           overflow='hidden'
           px={2}>
-          {
+          
+    
+          { 
             
             session.session.info.isLoggedIn ?
             <Flex direction={"column"}>
               <Text fontSize='1.2em' borderBottomWidth='1px' margin={'20px'}>Add Friend</Text>
               
-              <form onSubmit={handleSubmit} >
+              <form onSubmit={handleSubmitSolid} >
                 <InputGroup>
                 <Input data-testid ='inputFriends' placeholder='Friend URL' type='text' id="newFriend" name="newFriend"required/>
                 <InputRightElement>
@@ -70,7 +77,7 @@ function Friends() : JSX.Element {
                 
               </form>
               <Text fontSize='1.2em' borderBottomWidth='1px' margin={'20px'}>Friends</Text>
-              <Flex flex={1} overflowY={'scroll'} mt={3} direction={'column'} >
+              <Flex flex={1} overflowY={'scroll'}overflowX={'scroll'} mt={3} direction={'column'} >
               {
                   friends.map((f,i) => <FriendsDetail friend={f} key ={i}/>)
               }

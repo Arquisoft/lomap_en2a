@@ -1,4 +1,4 @@
-import { Avatar, Text, Flex, VStack, Box, HStack,Icon } from "@chakra-ui/react"
+import { Avatar, Text, Flex, VStack, Box, HStack,Icon, Button } from "@chakra-ui/react"
 import React, { useState } from "react"
 import { getNameFromPod} from "../solid/solidManagement"
 import { useSession } from '@inrupt/solid-ui-react';
@@ -9,6 +9,7 @@ import {MdLocationOn} from "react-icons/md"
 type ProfileProps = {
   locations : Array<Location>
 }
+import {RiLogoutBoxLine} from 'react-icons/ri'
 
 export function ProfileView(props:ProfileProps) {  
   const session = useSession();
@@ -59,6 +60,7 @@ export function ProfileView(props:ProfileProps) {
         left='5vw'
         top={0}
         zIndex={1}
+        borderRight={"1px solid black"}
         overflow='hidden'
         px={2}>
         <Text fontSize='1.2em' borderBottomWidth='1px' margin={'20px'}>Profile Information</Text>
@@ -70,7 +72,7 @@ export function ProfileView(props:ProfileProps) {
           <Text fontSize='1.2em' as="b">{name}</Text>
         </VStack>
           <Box p={2} shadow='md' borderWidth='1px'>
-            <Text as="b" fontSize={'2x1'}>Statistics</Text>
+          <Text as="b" fontSize={'2x1'}>Statistics</Text>
             <HStack>
               <Icon as={MdLocationOn} color="red.500" />
               <Text>Number of locations:</Text>
@@ -82,6 +84,17 @@ export function ProfileView(props:ProfileProps) {
               <Text data-testid="avgRatings" as={'b'}>{Number.isNaN(avgRatings)?'No ratings':avgRatings.toFixed(2)}</Text>
             </HStack>
           </Box>
+          <Box marginTop={'auto'} marginLeft='auto' marginEnd={'1em'}>
+
+        <Button colorScheme='red' leftIcon={<Icon as={RiLogoutBoxLine} width='max-content' height={'2 em'} minHeight={'10px'} minWidth={'10px'} />}
+          size='lg'
+          onClick={() => {
+            session.logout();
+          }}
+        >
+          Logout
+        </Button>
+      </Box>
       </Flex>
     )
   }

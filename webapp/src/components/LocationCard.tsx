@@ -1,17 +1,16 @@
-
 import { Location } from '../../../restapi/locations/Location';
-import {Flex, Text,Image, Box} from '@chakra-ui/react'
+import {Flex, Text,Image} from '@chakra-ui/react'
 import LocationInfo from './LocationInfo';
 import noImage from '../no-pictures-picture.png';
 
 type PlaceDetailProps = {
     place : Location;
     key : number;
-    deleteLocation : (loc : Location) => void
     setSelectedView: (viewName: JSX.Element) => void //function to change the selected view on the left
+    loadLocations: () => Promise<void>
 }
 
-function PlaceDetail (props : PlaceDetailProps ) : JSX.Element{
+function LocationCard (props : PlaceDetailProps ) : JSX.Element{
   return (
     <Flex
         bg= {'white'}
@@ -25,8 +24,10 @@ function PlaceDetail (props : PlaceDetailProps ) : JSX.Element{
         justifyContent = 'space-between'
         borderRadius={'lg'}
         //change the view to the information view of the location being clicked
-        onClick={() => props.setSelectedView(<LocationInfo location={props.place} deleteLocation = {props.deleteLocation} ></LocationInfo>)}
-        >
+        onClick={
+            () => props.setSelectedView(<LocationInfo location={props.place} loadLocations={props.loadLocations}></LocationInfo>)
+        }
+    >
         <Flex justifyContent={'space-between'} width ='full'>
             <Flex
                 direction={'column'}
@@ -72,4 +73,4 @@ function PlaceDetail (props : PlaceDetailProps ) : JSX.Element{
   );
 }
 
-export default PlaceDetail;
+export default LocationCard;

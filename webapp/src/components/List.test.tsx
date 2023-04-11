@@ -1,6 +1,6 @@
 import React from 'react'
 import { render } from "@testing-library/react";
-import List from "./List";
+import ListOfLocations from "./ListOfLocations";
 
 const testLocations = [
     {
@@ -61,7 +61,7 @@ const testLocations = [
     }];
 
 test('check that the location list renders propertly',async () => {
-    const {getByText}= render(<List places={testLocations} setSelectedView={()=>{}} deleteLocation={()=>{}}></List>)
+    const {getByText}= render(<ListOfLocations loadLocations={jest.fn()} places={testLocations} setSelectedView={()=>{}}></ListOfLocations>)
     testLocations.forEach(location => {
         let name = location.name;
         expect(getByText(name)).toBeInTheDocument();
@@ -69,6 +69,6 @@ test('check that the location list renders propertly',async () => {
 })
 
 test('check that with no location the loading squeletons appear',async () => {
-    const {getByTestId}= render(<List places={[]} setSelectedView={()=>{}} deleteLocation={()=>{}}></List>)
+    const {getByTestId}= render(<ListOfLocations loadLocations={jest.fn()} places={[]} setSelectedView={()=>{}}></ListOfLocations>)
     expect(getByTestId('loadingView')).toBeInTheDocument();
 })

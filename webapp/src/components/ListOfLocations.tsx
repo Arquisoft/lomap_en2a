@@ -1,17 +1,17 @@
 import { Location } from '../../../restapi/locations/Location'
 import {Flex, Box} from "@chakra-ui/react";
 import {  SkeletonCircle, SkeletonText } from '@chakra-ui/react'
-import  PlaceDetail  from './PlaceDetail';
+import  LocationCard  from './LocationCard';
 
 
 
 type ListProps = {
     places : Array<Location>;
     setSelectedView: (viewName: JSX.Element) => void //function to change the selected view on the left
-    deleteLocation : (loc : Location) => void
+    loadLocations: () => Promise<void>
 }
 
-function List(props : ListProps) : JSX.Element {
+function ListOfLocations(props : ListProps) : JSX.Element {
 
    if(props.places.length === 0)
     return(
@@ -25,6 +25,7 @@ function List(props : ListProps) : JSX.Element {
           left={'5vw'}
           top={0}
           zIndex={1}
+          borderRight={"1px solid black"}
           overflow='hidden'
           px={2}
           >
@@ -65,14 +66,14 @@ function List(props : ListProps) : JSX.Element {
         left={'5vw'}
         top={0}
         zIndex={1}
-        overflow='hidden'
+        overflow='auto'
         px={2}
         >
         <Flex flex={1} overflowY={'auto'} overflowX='clip' mt={16} direction={'column'}>
         {
-            props.places && props.places.map((place,i) => <PlaceDetail deleteLocation={props.deleteLocation} setSelectedView={props.setSelectedView} place={place} key ={i}/>)
+            props.places && props.places.map((place,i) => <LocationCard place={place} key ={i} setSelectedView={props.setSelectedView} loadLocations={props.loadLocations}/>)
         }
         </Flex>
     </Flex>);
 }
-export default List;
+export default ListOfLocations;
