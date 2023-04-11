@@ -4,7 +4,7 @@ import { useSession } from "@inrupt/solid-ui-react";
 import { Button, Flex, Input, InputGroup, Radio, RadioGroup, Stack, Image, Text } from "@chakra-ui/react";
 import { SessionInfo } from "@inrupt/solid-ui-react/dist/src/hooks/useSession";
 import { login } from "@inrupt/solid-client-authn-browser";
-import lomap_logo from "../../lomap_logo.png";
+import images from "../../static/images/images";
 import {useState } from "react";
 
 function Login() : JSX.Element  {
@@ -33,7 +33,7 @@ function Login() : JSX.Element  {
       (!(session as SessionInfo).session.info.isLoggedIn) ? (
         <Flex className={'backgroundAlphaColor'}>
           <Flex className={'loginPopup'} px={2}>
-            <Image src={lomap_logo} width='20vw'></Image>
+            <Image src={images.logo} width='20vw'></Image>
 
             <Text fontSize={'2xl'}>
                 Select your Solid pod provider:

@@ -7,7 +7,8 @@ import {Popover,PopoverTrigger,PopoverContent,PopoverCloseButton, Menu, MenuButt
 import {FormControl,FormLabel,FormErrorMessage,FormHelperText,} from '@chakra-ui/react'
 import Review  from "./Review";
 import { FaStar, FaStarHalfAlt } from "react-icons/fa";
-import noImage from '../no-pictures-picture.png';
+import noImage from '../static/images/no-pictures-picture.png';
+import images from '../static/images/images'
 import { useSession } from '@inrupt/solid-ui-react';
 import { SessionInfo } from '@inrupt/solid-ui-react/dist/src/hooks/useSession';
 import {addLocationReview, addLocationScore, getNameFromPod } from '../solid/solidManagement';
@@ -379,7 +380,7 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
                 No photos available for this location
               </Text>
               <Image
-                src={noImage as string}
+                src={images.noPicture}
                 width='180'
                 height='180'
                 borderRadius='lg'></Image>

@@ -1,7 +1,8 @@
 import { Location } from '../../../restapi/locations/Location';
 import {Flex, Text,Image} from '@chakra-ui/react'
 import LocationInfo from './LocationInfo';
-import noImage from '../no-pictures-picture.png';
+import images from '../static/images/images'
+import noImage from '../static/images/no-pictures-picture.png';
 
 type PlaceDetailProps = {
     place : Location;
@@ -64,7 +65,7 @@ function LocationCard (props : PlaceDetailProps ) : JSX.Element{
                     props.place.images?.length?
                         props.place.images[0] as string 
                         :
-                        noImage as string
+                        images.noPicture
                 }>
 
             </Image>
