@@ -1,18 +1,16 @@
 [[section-architecture-constraints]]
 == Architecture Constraints
-When designing the LoMap application, there are several constraints that must be taken into consideration. These constraints will have a significant impact on the overall design of the application and the architectural decisions that are made. The constraints include privacy, performance, user experience, deployment, security,... These constraints must be considered in order to ensure that the final product meets the needs and expectations of the users and stakeholders. The following table summarizes these constraints and provides a brief explanation for each.
+When designing the LoMap application, there are several constraints that must be taken into consideration. These constraints will have a significant impact on the overall design of the application and the architectural decisions that are made. The constraints include privacy, user experience, deployment, security,... These constraints must be considered in order to ensure that the final product meets the needs and expectations of the users and stakeholders. The following table summarizes these constraints and provides a brief explanation for each.
 
 [options="header", cols="1,1"]
 |===
 | Constraint | Explanation
 
-| Privacy (use of SOLID) | The privacy of the users is a key concern, and the application should be designed to respect the privacy of users. The information stored in each user’s pod should not be centralized and should be kept confidential.
+| Privacy (use of SOLID) | The privacy of the users is a key concern, for that, the application is decentralized and the information stored in each user’s pod is kept confidential.
 
-| Version control and monitoring (GitHub) | For the LoMap application, GitHub can be a useful tool for version control and collaboration among the team members working on the project. It allows for easier coordination and organization of the development process, as well as keeping track of changes and contributions made by each team member.
+| Version control and monitoring (GitHub) | For the LoMap application, GitHub is a useful tool for version control and collaboration among the team members working on the project. It allows easier coordination and organization of the development process, as well as keeping track of changes and contributions made by each team member.
 
-| Performance | The application should perform well and should be scalable to handle large amounts of data.
-
-| User Experience | The user experience should be user-friendly and intuitive, making it easy for users to add, edit, and delete locations, as well as manage their friends and personal information, this means application will support connection between friends.
+| User Experience | The design of the application must make its use friendly and easy.
 
 | Deployment | The application should be deployable to different cities.
 
@@ -34,6 +32,8 @@ For the development of this application, some technologies have been proposed to
 
 | React | It is a JavaScript framework that allows the creation of web application UI in an easy way.
 
-| Inrupt | SOLID pod provider advised by the teachers. It will help us understand how solid pods work.
+| Inrupt | SOLID pod provider. Also offers a set of libraries to ease the use and management of pods.
+
+| Chakra UI | Modular component library for React which decreases the effort on creating HTML components. 
 
 |===

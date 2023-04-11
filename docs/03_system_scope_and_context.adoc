@@ -40,7 +40,7 @@ The title of the table is the name of your system, the three columns contain the
 
 ****
 
-In our business context, the user will input data into the application. The application communicates with the user's SOLID pod to get data and will make use of the Google Maps API. Then it will process all this data and produce an output that the user will recieve. +
+In our business context, the user will input data into the application, which communicates with the user's SOLID pod to retrieve and add data. All this information among with the use of the Google Maps API, will be processed and a processed output will be recieved by the user. +
 The pod will store the user's personal data, and the locations they mark on the map. +
 The Google Maps API will provide our application maps, and more functionality like marking places.
 
@@ -70,11 +70,9 @@ together with a mapping table showing the relationships between channels and inp
 | Technical Interfaces | Description
 | SOLID
 | A specification that lets people store their data securely in decentralized data stores called _pods_. These _pods_ are fully under its owner's (the user) control. To use SOLID, a _pod provider_ and a "web ID" are needed. Pods are structures that store the user's data, and the ID identifies the user and allows them to access their pods, and also connect with other SOLID users.
-| Hosting server
-| It will be the infrastructure that will host both the application and the database. Its use will be avoided at the beginning, as we will use docker containers that will abstract the application from the machine.
 | TypeScript
 | A free and open source, developed and mantained by Microsoft. It is the programming language we will use to develop the application. It is derived from JavaScript and implements additional syntax and elements that makes it more complete and in general better than JS. It adds optional static typing and error detection is much easier. As it is a superset of JavaScript, existing JavaScript programs are also valid TypeScript programs.
-| React.js
+| ReactJS
 | A JavaScript open source library that will make it easier to create user interfaces. It shines in applications whose data is always changing. React is the View in the context of the MVC (Model-View-Controller) pattern.
 | Docker
 | A very useful tool that makes developing easier. It is used to automate the deployment of applications in lightweight _containers_ so that applications can work efficiently in different environments. Containers are isolated from one another and bundle their own software, libraries and configuration files; they can communicate with each other through well-defined channels.

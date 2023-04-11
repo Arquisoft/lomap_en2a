@@ -42,13 +42,8 @@ To have a measurable response of the system regarding some stimulus correspondin
 | Very high
 
 | *Performance*
-| The application must have a short response time. Slow applications are not positively popular in society.
-| The application must be able to bear at least 20 concurrent users and give a response time to their actions in less than 5 seconds.
-| High
-
-| *Availability* 
-| The application must be available 24 hours a day all weeks. 
-| When the database does not respond, the system should log the fault and respond with stale data in less than 5 seconds
+| The application must have a reasonable response time. Slow applications are not positively popular in society.
+| The application must be able to bear at least 5 concurrent users and give a response time to their actions in less than one minute.
 | High
 
 | *Availability* 
@@ -61,10 +56,6 @@ To have a measurable response of the system regarding some stimulus correspondin
 | When the user wants to do something in the application, he/she should be able to do it without difficulty, guided by the interface elements.
 | Very high
 
-|*Reliability*
-| Errors must be managed by the application itself. It can't crash without any solution.
-| When a user introduces wrong data or tries to perform not authorized actions, the system will handle the errors without crashing.
-| Very high
 
 |===
 
