@@ -307,7 +307,7 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
       setFriends(n);
     }
     else{
-      setFriends([]);
+      // setFriends([]);
     }
   }
 
@@ -415,42 +415,27 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
         </Flex>
         <ReviewSection location={location} setLocation={setlocation} session={session} ></ReviewSection>
 
-        <Menu closeOnSelect={false}>
-          <MenuButton as={Button} colorScheme='blue' minWidth='120px'>Share location with friends</MenuButton>
-          <MenuList minWidth='240px'>
-            <MenuOptionGroup type='checkbox'>
-              {
-                friends.map((friend) => {
-                  return (
-                      <MenuItemOption value={friend.webID} onClick={(e) => handleCheckedFriend(e)}
-                      >{friend.webID}</MenuItemOption>
-                  )
-                })
-              }
-            </MenuOptionGroup>
-          </MenuList>
-        </Menu>
-
-        <Menu closeOnSelect={false}>
-          <MenuButton as={Button} colorScheme='blue' minWidth='120px'>Share location with friends</MenuButton>
-          <MenuList minWidth='240px'>
-            <MenuOptionGroup type='checkbox'>
-              {
-                friends.map((friend) => {
-                  return (
-                      <MenuItemOption value={friend.webID} onClick={(e) => handleCheckedFriend(e)}
-                      >{friend.webID}</MenuItemOption>
-                  )
-                })
-              }
-            </MenuOptionGroup>
-          </MenuList>
-        </Menu>
+        
 
       </Flex>
       <Box marginTop={'auto'} marginLeft='auto' marginEnd={'1em'}>
           <DeletingAlertDialog location={props.location} loadLocations={props.loadLocations}></DeletingAlertDialog>
         </Box>
+        <Menu closeOnSelect={false}>
+          <MenuButton as={Button} colorScheme='blue' minWidth='120px'>Share location with friends</MenuButton>
+          <MenuList minWidth='240px'>
+            <MenuOptionGroup type='checkbox'>
+              {
+                friends.map((friend) => {
+                  return (
+                      <MenuItemOption value={friend.webID} onClick={(e) => handleCheckedFriend(e)}
+                      >{friend.webID}</MenuItemOption>
+                  )
+                })
+              }
+            </MenuOptionGroup>
+          </MenuList>
+        </Menu>
     </Flex>
   )
 }
