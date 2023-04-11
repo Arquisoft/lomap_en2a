@@ -3,6 +3,8 @@ import {Flex, Box} from "@chakra-ui/react";
 import {  SkeletonCircle, SkeletonText } from '@chakra-ui/react'
 import  LocationCard  from './LocationCard';
 
+
+
 type ListProps = {
     places : Array<Location>;
     setSelectedView: (viewName: JSX.Element) => void //function to change the selected view on the left
@@ -14,6 +16,7 @@ function ListOfLocations(props : ListProps) : JSX.Element {
    if(props.places.length === 0)
     return(
         <Flex
+            data-testid ='loadingView'
           direction={'column'}
           bg={'white'}
           width={"30vw"}

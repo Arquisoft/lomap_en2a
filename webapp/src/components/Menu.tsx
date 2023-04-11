@@ -20,7 +20,9 @@ function Menu(props: MenuProps): JSX.Element {
   const [insideMenu, setinsideMenu] = useState(false)
 
   return (
-    <Flex direction={'column'}
+    <Flex 
+          data-testid='bigContainer'
+          direction={'column'}
           bg={'white'}
           width={"fit-content"}
           minWidth={"5vw"}
@@ -54,7 +56,9 @@ function Menu(props: MenuProps): JSX.Element {
                   marginTop={3}
             >
               <Box>
-                <Button leftIcon={<Icon as={MdMap} width='max-content' height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
+                <Button
+                data-testid={'Map View'}
+                 leftIcon={<Icon as={MdMap} width='max-content' height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
                         bg={'white'}
                         color={'black'}
                         size='lg'
@@ -65,7 +69,9 @@ function Menu(props: MenuProps): JSX.Element {
               </Box>
 
               <Box>
-                <Button leftIcon={<Icon as={MdList} width='max-content' height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
+                <Button
+                data-testid={'List of Locations'} 
+                leftIcon={<Icon as={MdList} width='max-content' height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
                         bg={'white'}
                         color={'black'}
                         size='lg'
@@ -80,7 +86,9 @@ function Menu(props: MenuProps): JSX.Element {
               </Box>
 
               <Box>
-                <Button leftIcon={<Icon as={MdLocationOn} width='max-content' height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
+                <Button 
+                data-testid={'Add location'}
+                leftIcon={<Icon as={MdLocationOn} width='max-content' height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
                         bg={'white'}
                         color={'black'}
                         size='lg'
@@ -97,7 +105,9 @@ function Menu(props: MenuProps): JSX.Element {
               </Box>
 
               <Box>
-                <Button leftIcon={<Icon alignContent={'left'} as={MdPeopleAlt} width='max-content' height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
+                <Button
+                data-testid={'Add friends'}
+                leftIcon={<Icon alignContent={'left'} as={MdPeopleAlt} width='max-content' height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
                         bg={'white'}
                         color={'black'}
                         size='lg'
@@ -113,14 +123,16 @@ function Menu(props: MenuProps): JSX.Element {
               </Box>
 
               <Box marginTop={'auto'}>
-                <Button leftIcon={<Icon as={MdPerson} width='max-content' height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
+                <Button 
+                data-testid={'Profile'}
+                leftIcon={<Icon as={MdPerson} width='max-content' height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
                         bg={'white'}
                         color={'black'}
                         size='lg'
                         onClick={() => {
                           setinsideMenu(false);
                           props.changeViewTo(
-                            <ProfileView></ProfileView>
+                            <ProfileView locations={props.locations}></ProfileView>
                           );
                         }}
                 >
@@ -132,6 +144,7 @@ function Menu(props: MenuProps): JSX.Element {
           :
           (
             <Flex
+              data-testid='smallContainer'
               direction={'column'}
               bg={'white'}
               width={"fit-content"}

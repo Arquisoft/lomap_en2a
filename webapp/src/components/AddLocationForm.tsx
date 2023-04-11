@@ -206,9 +206,9 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
                     <MenuList minWidth='240px'>
                         <MenuOptionGroup type='checkbox'>
                             {
-                                categories.map((kind) => { // as many possible categories as items in Category enum
+                                categories.map((kind,i) => { // as many possible categories as items in Category enum
                                     return (
-                                        <MenuItemOption value={kind} onClick={(e) => handleCheckedCategory(e)}
+                                        <MenuItemOption key={i} value={kind} onClick={(e) => handleCheckedCategory(e)}
                                         >{kind}</MenuItemOption>
                                     )
                                 })
