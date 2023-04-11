@@ -1,6 +1,6 @@
 import React from 'react'
 import { act, render } from "@testing-library/react";
-import {ProfileView} from "./ProfileInfo";
+import { ProfileView } from '../components/profile/ProfileInfo'; 
 import {useSession} from  '@inrupt/solid-ui-react';
 
 

@@ -1,4 +1,4 @@
-import { Location } from '../../../restapi/locations/Location'
+import { Location } from '../../types/types'
 import {Flex, Box} from "@chakra-ui/react";
 import {  SkeletonCircle, SkeletonText } from '@chakra-ui/react'
 import  LocationCard  from './LocationCard';

@@ -9,9 +9,9 @@ import {
     useDisclosure, Button, Icon, useToast
 } from '@chakra-ui/react'
 import {RxCross2} from "react-icons/rx";
-import {deleteLocation} from "../solid/solidManagement";
+import {deleteLocation} from "../../solid/solidManagement";
 import {useSession} from "@inrupt/solid-ui-react";
-import {Location} from "../../../restapi/locations/Location";
+import { Location } from "../../types/types";
 
 
 

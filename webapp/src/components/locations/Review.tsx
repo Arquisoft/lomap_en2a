@@ -1,7 +1,4 @@
-
-import { Location } from '../../../restapi/locations/Location';
 import {Flex, Text,Image, Box, Avatar} from '@chakra-ui/react'
-import LocationInfo from './LocationInfo';
 
 type ReviewProps = {
     username: string,

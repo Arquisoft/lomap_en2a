@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
-import Map from "./Map";
-import { Location } from '../../../restapi/locations/Location';
+import Map from '../components/map/Map';
+import { Location } from '../types/types';
 import * as ReactGoogleMapsApi from "@react-google-maps/api";
 
 

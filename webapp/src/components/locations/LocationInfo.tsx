@@ -1,20 +1,18 @@
 import React,{ useState,useEffect } from 'react';
 import { Text,Stack, HStack, Image, Box, Flex, Button, Icon, Heading, Divider, useDisclosure, Textarea, Input, Grid, Progress} from "@chakra-ui/react"
 import {MdOutlineRateReview} from 'react-icons/md'
-import { Location} from "../../../restapi/locations/Location";
-import {Review as ReviewType}  from "../../../restapi/locations/Location";
+
 import {Popover,PopoverTrigger,PopoverContent,PopoverCloseButton, Menu, MenuButton, MenuItem, MenuItemOption, MenuList, MenuOptionGroup} from '@chakra-ui/react'
 import {FormControl,FormLabel,FormErrorMessage,FormHelperText,} from '@chakra-ui/react'
 import Review  from "./Review";
 import { FaStar, FaStarHalfAlt } from "react-icons/fa";
-import noImage from '../static/images/no-pictures-picture.png';
-import images from '../static/images/images'
+import images from '../../static/images/images'
 import { useSession } from '@inrupt/solid-ui-react';
 import { SessionInfo } from '@inrupt/solid-ui-react/dist/src/hooks/useSession';
-import {addLocationReview, addLocationScore, getNameFromPod } from '../solid/solidManagement';
-import { DeletingAlertDialog } from './DeletingAlertDialog';
-import { getSolidFriends, setAccessToFriend } from "../solid/solidManagement";
-import type { Friend } from "../../../restapi/users/User";
+import {addLocationReview, addLocationScore, getNameFromPod } from '../../solid/solidManagement';
+import { DeletingAlertDialog } from '../dialogs/DeletingAlertDialog';
+import { getSolidFriends, setAccessToFriend } from "../../solid/solidManagement";
+import type { Friend ,Location, Review as ReviewType} from "../../types/types";
 
 type LocationInfoProps = {
   location : Location

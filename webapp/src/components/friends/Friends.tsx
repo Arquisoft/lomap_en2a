@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react'
 import {Flex,Text, Button, Input,  InputRightElement, InputGroup} from "@chakra-ui/react";
-import { addSolidFriend,getSolidFriends} from "../solid/solidManagement";
-import type { Friend } from "../../../restapi/users/User";
+import { addSolidFriend,getSolidFriends} from "../../solid/solidManagement";
+import type { Friend } from "../../types/types";
 import FriendsDetail from './FriendsDetail';
 import { useSession } from '@inrupt/solid-ui-react';
 
@@ -18,7 +18,7 @@ function Friends() : JSX.Element {
 
   React.useEffect(() => {
     handleFriends()
-  }, [session.session.info.isLoggedIn]);
+  }, [friends]);
 
   const handleFriends = async () => {
     if (webId !== undefined && webId !== ""){

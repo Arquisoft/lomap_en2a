@@ -1,7 +1,7 @@
 import React from 'react'
 import { act, render, screen, fireEvent } from "@testing-library/react";
-import LocationInfo from "./LocationInfo";
-import { Location} from "../../../restapi/locations/Location";
+import LocationInfo from '../components/locations/LocationInfo';
+import { Location } from '../types/types';
 
 //TODO
 /*

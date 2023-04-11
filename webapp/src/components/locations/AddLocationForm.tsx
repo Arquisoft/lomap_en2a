@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import './AddLocationForm.css'
-import { Location } from '../../../restapi/locations/Location'
+import { Location } from '../../types/types'; 
 import {
     Button,
     Checkbox, Divider,
@@ -17,9 +17,9 @@ import {
     Textarea,
     Box, Spinner
 } from "@chakra-ui/react";
-import { Category } from './Category';
+import { Category } from '../Category';
 import { useToast } from "@chakra-ui/react";
-import {createLocation} from "../solid/solidManagement";
+import {createLocation} from "../../solid/solidManagement";
 import {useSession} from "@inrupt/solid-ui-react";
 import {MdOutlineAddLocationAlt} from "react-icons/md";
 

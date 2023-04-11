@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import { Flex, Button, Icon, Box } from "@chakra-ui/react";
 import { MdList, MdLocationOn, MdMap, MdPeopleAlt, MdPerson } from "react-icons/md"
-import { Location } from '../../../restapi/locations/Location';
-import ListOfLocations from './ListOfLocations';
-import AddLocationForm from './AddLocationForm';
-import Friends from './Friends';
-import { ProfileView } from './ProfileInfo';
+import { Location } from '../../types/types';
+import ListOfLocations from '../locations/ListOfLocations';
+import AddLocationForm from '../locations/AddLocationForm';
+import Friends from '../friends/Friends';
+import { ProfileView } from '../profile/ProfileInfo';
 
 
 type MenuProps = {

@@ -1,7 +1,7 @@
 import React from 'react'
 import { render } from "@testing-library/react";
-import LocationCard from "./LocationCard";
-import LocationInfo from './LocationInfo';
+import LocationCard from '../components/locations/LocationCard';
+import LocationInfo from '../components/locations/LocationInfo';
 import noImage from '../no-pictures-picture.png';
 
 const testLocation = 

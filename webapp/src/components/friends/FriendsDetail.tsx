@@ -1,7 +1,6 @@
-import React from 'react'
-import { Location } from '../../../restapi/locations/Location';
+
 import {Flex, Text,Image, Avatar} from '@chakra-ui/react'
-import { Friend } from '../../../restapi/users/User';
+import type { Friend } from '../../types/types';
 
 type FriendsDetailProps = {
     friend : Friend;

@@ -1,8 +1,8 @@
 import { Avatar, Text, Flex, VStack, Box, HStack,Icon, Button } from "@chakra-ui/react"
 import React, { useState } from "react"
-import { getNameFromPod} from "../solid/solidManagement"
+import { getNameFromPod} from "../../solid/solidManagement"
 import { useSession } from '@inrupt/solid-ui-react';
-import { Location } from "../../../restapi/locations/Location";
+import { Location } from "../../types/types";
 import { FaStar} from "react-icons/fa";
 import {MdLocationOn} from "react-icons/md"
 import {RiLogoutBoxLine} from 'react-icons/ri'

@@ -1,7 +1,7 @@
-import { Location } from '../../../restapi/locations/Location';
+import { Location } from '../../types/types';
 import {Flex, Text,Image} from '@chakra-ui/react'
-import LocationInfo from './LocationInfo';
-import images from '../static/images/images'
+import LocationInfo from '../locations/LocationInfo';
+import images from '../../static/images/images'
 import noImage from '../static/images/no-pictures-picture.png';
 
 type PlaceDetailProps = {

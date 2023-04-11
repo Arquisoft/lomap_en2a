@@ -1,6 +1,6 @@
 import React from 'react'
 import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
-import Menu from "./Menu";
+import Menu from '../components/menu/Menu';
 
 test('check menu contains 5 options', async () => {
   const { container } = render(<Menu loadLocations={jest.fn()} locations={[]} changeViewTo={jest.fn()}></Menu>)
