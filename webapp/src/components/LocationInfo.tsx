@@ -10,9 +10,8 @@ import { FaStar, FaStarHalfAlt } from "react-icons/fa";
 import noImage from '../no-pictures-picture.png';
 import { useSession } from '@inrupt/solid-ui-react';
 import { SessionInfo } from '@inrupt/solid-ui-react/dist/src/hooks/useSession';
-import {addLocationReview, addLocationScore, deleteLocation, getNameFromPod} from '../solid/solidManagement';
+import {addLocationReview, addLocationScore, getNameFromPod } from '../solid/solidManagement';
 import { DeletingAlertDialog } from './DeletingAlertDialog';
-import { addLocationReview, addLocationScore, getNameFromPod,getSolidName,} from '../solid/solidManagement';
 import { getSolidFriends, setAccessToFriend } from "../solid/solidManagement";
 import type { Friend } from "../../../restapi/users/User";
 
