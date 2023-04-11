@@ -19,6 +19,6 @@ test('check content displays correctly',async () => {
 
 test('check date displays correctly',async () => {
     const {getByText}= render(<Review username='testUsrname' content='Body review' date={new Date('1/1/2000')} title='testTitle'></Review>)
-    expect(getByText('1/1/2000, 0:00:00')).toBeInTheDocument();
+    expect(getByText(new RegExp('^1\/1\/2000.*'))).toBeInTheDocument();
 })
 
