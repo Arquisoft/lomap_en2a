@@ -68,8 +68,7 @@ test('check that the location list renders propertly',async () => {
     });
 })
 
-test('check that with no location msg indicating it appears',async () => {
-    const {getByText}= render(<List places={[]} setSelectedView={()=>{}} deleteLocation={()=>{}}></List>)
-    //TODO make so this test works -> add loading screen
-    expect(getByText('No locations saved, add a new location for it to be shown')).toBeInTheDocument();
+test('check that with no location the loading squeletons appear',async () => {
+    const {getByTestId}= render(<List places={[]} setSelectedView={()=>{}} deleteLocation={()=>{}}></List>)
+    expect(getByTestId('loadingView')).toBeInTheDocument();
 })

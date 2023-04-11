@@ -16,6 +16,7 @@ function List(props : ListProps) : JSX.Element {
    if(props.places.length === 0)
     return(
         <Flex
+            data-testid ='loadingView'
           direction={'column'}
           bg={'white'}
           width={"30vw"}

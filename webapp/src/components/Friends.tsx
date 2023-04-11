@@ -60,7 +60,7 @@ function Friends() : JSX.Element {
               
               <form onSubmit={handleSubmit} >
                 <InputGroup>
-                <Input placeholder='Friend URL' type='text' id="newFriend" name="newFriend"required/>
+                <Input data-testid ='inputFriends' placeholder='Friend URL' type='text' id="newFriend" name="newFriend"required/>
                 <InputRightElement>
                 <Button type='submit'>+</Button> 
                 </InputRightElement>
