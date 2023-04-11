@@ -1,7 +1,8 @@
-import { Avatar, Text, Flex, VStack, Box } from "@chakra-ui/react"
+import { Avatar, Text, Flex, VStack, Box, Button,Icon } from "@chakra-ui/react"
 import React, { useContext } from "react"
 import { getNameFromPod} from "../solid/solidManagement"
 import { useSession } from '@inrupt/solid-ui-react';
+import {RiLogoutBoxLine} from 'react-icons/ri'
 
 export function ProfileView() {  
   const session = useSession();
@@ -32,6 +33,7 @@ export function ProfileView() {
         left='5vw'
         top={0}
         zIndex={1}
+        borderRight={"1px solid black"}
         overflow='hidden'
         px={2}>
         <Text fontSize='1.2em' borderBottomWidth='1px' margin={'20px'}>Profile Information</Text>
@@ -47,6 +49,17 @@ export function ProfileView() {
             <Text>N Locations</Text>
             <Text>N Reviews</Text>
           </Box>
+          <Box marginTop={'auto'} marginLeft='auto' marginEnd={'1em'}>
+
+        <Button colorScheme='red' leftIcon={<Icon as={RiLogoutBoxLine} width='max-content' height={'2 em'} minHeight={'10px'} minWidth={'10px'} />}
+          size='lg'
+          onClick={() => {
+            session.logout();
+          }}
+        >
+          Logout
+        </Button>
+      </Box>
       </Flex>
     )
   }

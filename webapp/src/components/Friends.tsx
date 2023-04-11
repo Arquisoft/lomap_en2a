@@ -50,6 +50,7 @@ function Friends() : JSX.Element {
           left='5vw'
           top={0}
           zIndex={1}
+          borderRight={"1px solid black"}
           overflow='hidden'
           px={2}>
           

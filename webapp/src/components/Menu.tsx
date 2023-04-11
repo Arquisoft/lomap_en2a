@@ -1,17 +1,17 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { Flex, Button, Icon, Box } from "@chakra-ui/react";
 import { MdList, MdLocationOn, MdMap, MdPeopleAlt, MdPerson } from "react-icons/md"
 import { Location } from '../../../restapi/locations/Location';
-import List from './List';
+import ListOfLocations from './ListOfLocations';
 import AddLocationForm from './AddLocationForm';
 import Friends from './Friends';
 import { ProfileView } from './ProfileInfo';
 
+
 type MenuProps = {
-  setSelectedView: (view: JSX.Element) => void,
+  changeViewTo: (view: JSX.Element) => void,
   locations : Array<Location>,
-  deleteLoc : (location:Location) =>void,
-  addLocation : (location:Location) =>void
+  loadLocations : () => Promise<void>
 }
 
 
@@ -31,6 +31,7 @@ function Menu(props: MenuProps): JSX.Element {
           bottom={-4}
           zIndex={1}
           overflow='hidden'
+          borderRight={"1px solid black"}
           px={2}
           boxShadow ='lg'
           onMouseOver={()=> {setinsideMenu(true)}}
@@ -58,8 +59,8 @@ function Menu(props: MenuProps): JSX.Element {
                         color={'black'}
                         size='lg'
                         height={'5vh'}
-                        onClick={() => { setinsideMenu(false); props.setSelectedView(<></>); }}>
-                  Map view
+                        onClick={() => { setinsideMenu(false); props.changeViewTo(<></>); }}>
+                  Map View
                 </Button>
               </Box>
 
@@ -70,12 +71,11 @@ function Menu(props: MenuProps): JSX.Element {
                         size='lg'
                         onClick={() => {
                           setinsideMenu(false);
-                          props.setSelectedView(
-                            <List deleteLocation={props.deleteLoc}
-                               setSelectedView={(view)=> props.setSelectedView(view)} places={props.locations}  />
+                          props.changeViewTo(
+                            <ListOfLocations setSelectedView={(view)=> props.changeViewTo(view)} places={props.locations} loadLocations={props.loadLocations} />
                             );
                         }}>
-                  Location list
+                  List of Locations
                 </Button>
               </Box>
 
@@ -87,12 +87,12 @@ function Menu(props: MenuProps): JSX.Element {
                         onClick={
                           () => {
                             setinsideMenu(false);
-                            props.setSelectedView(
-                              <AddLocationForm onSubmit={props.addLocation}/>
+                            props.changeViewTo(
+                              <AddLocationForm loadLocations={props.loadLocations} clickedCoords={''}/>
                             );
                           }
                         }>
-                  Add location
+                  Add Location
                 </Button>
               </Box>
 
@@ -103,7 +103,7 @@ function Menu(props: MenuProps): JSX.Element {
                         size='lg'
                         onClick={() => {
                           setinsideMenu(false);
-                          props.setSelectedView(
+                          props.changeViewTo(
                             <Friends/>
                           );
                         }}
@@ -119,7 +119,7 @@ function Menu(props: MenuProps): JSX.Element {
                         size='lg'
                         onClick={() => {
                           setinsideMenu(false);
-                          props.setSelectedView(
+                          props.changeViewTo(
                             <ProfileView></ProfileView>
                           );
                         }}
