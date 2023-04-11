@@ -57,7 +57,7 @@ function Menu(props: MenuProps): JSX.Element {
             >
               <Box>
                 <Button
-                data-testid='Map View'
+                data-testid={'Map View'}
                  leftIcon={<Icon as={MdMap} width='max-content' height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
                         bg={'white'}
                         color={'black'}
@@ -70,7 +70,7 @@ function Menu(props: MenuProps): JSX.Element {
 
               <Box>
                 <Button
-                data-testid='List of Locations' 
+                data-testid={'List of Locations'} 
                 leftIcon={<Icon as={MdList} width='max-content' height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
                         bg={'white'}
                         color={'black'}
@@ -87,7 +87,7 @@ function Menu(props: MenuProps): JSX.Element {
 
               <Box>
                 <Button 
-                data-testid='Add location'
+                data-testid={'Add location'}
                 leftIcon={<Icon as={MdLocationOn} width='max-content' height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
                         bg={'white'}
                         color={'black'}
@@ -106,7 +106,7 @@ function Menu(props: MenuProps): JSX.Element {
 
               <Box>
                 <Button
-                data-testid='Add friends'
+                data-testid={'Add friends'}
                 leftIcon={<Icon alignContent={'left'} as={MdPeopleAlt} width='max-content' height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
                         bg={'white'}
                         color={'black'}
@@ -124,7 +124,7 @@ function Menu(props: MenuProps): JSX.Element {
 
               <Box marginTop={'auto'}>
                 <Button 
-                data-testid='Profile'
+                data-testid={'Profile'}
                 leftIcon={<Icon as={MdPerson} width='max-content' height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
                         bg={'white'}
                         color={'black'}
