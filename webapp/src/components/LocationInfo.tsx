@@ -3,16 +3,17 @@ import { Text,Stack, HStack, Image, Box, Flex, Button, Icon, Heading, Divider, u
 import {MdOutlineRateReview} from 'react-icons/md'
 import { Location} from "../../../restapi/locations/Location";
 import {Review as ReviewType}  from "../../../restapi/locations/Location";
-import {Popover,PopoverTrigger,PopoverContent,PopoverCloseButton,} from '@chakra-ui/react'
+import {Popover,PopoverTrigger,PopoverContent,PopoverCloseButton, Menu, MenuButton, MenuItem, MenuItemOption, MenuList, MenuOptionGroup} from '@chakra-ui/react'
 import {FormControl,FormLabel,FormErrorMessage,FormHelperText,} from '@chakra-ui/react'
 import Review  from "./Review";
 import { FaStar, FaStarHalfAlt } from "react-icons/fa";
 import noImage from '../no-pictures-picture.png';
 import { useSession } from '@inrupt/solid-ui-react';
 import { SessionInfo } from '@inrupt/solid-ui-react/dist/src/hooks/useSession';
-import {addLocationReview, addLocationScore, deleteLocation, getNameFromPod} from '../solid/solidManagement';
+import {addLocationReview, addLocationScore, getNameFromPod } from '../solid/solidManagement';
 import { DeletingAlertDialog } from './DeletingAlertDialog';
-
+import { getSolidFriends, setAccessToFriend } from "../solid/solidManagement";
+import type { Friend } from "../../../restapi/users/User";
 
 type LocationInfoProps = {
   location : Location
@@ -243,7 +244,8 @@ const ReviewSection =  ( {location ,setLocation,session}) =>{
                           title:title,
                           content:input,
                           date:new Date(),
-                          webId : session.session.info.webId
+                          webId : session.session.info.webId,
+                          username: username
                         };
                         //we add it to the current location
                         if(localLocation.reviews === undefined){ //if no array we initialize it
@@ -274,7 +276,7 @@ const ReviewSection =  ( {location ,setLocation,session}) =>{
               <Review
                 key={i}
                 title={rev.title as string}
-                username={username}
+                username={rev.username}//AKITOY
                 content={rev.content as string}
                 date={rev.date}/>
               ))
@@ -286,10 +288,42 @@ const ReviewSection =  ( {location ,setLocation,session}) =>{
 }
 
 
-export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
+export default function LocationInfo (props : LocationInfoProps) : JSX.Element { 
   const session = useSession();
+  const webId = session.session.info.webId;
   const [location, setlocation] = useState(props.location)
+  const [friends, setFriends] = React.useState<Friend[]>([]);
+  let checkedFriends : string[] = [];
 
+  React.useEffect(() => {
+    handleFriends()
+  }, [friends]);
+
+  const handleFriends = async () => {
+    if ( webId !== undefined && webId !== ""){
+      const n  = await getSolidFriends(webId).then(friendsPromise => {return friendsPromise});
+      setFriends(n);
+    }
+    else{
+      setFriends([]);
+    }
+  }
+
+  const handleCheckedFriend = (e) => {
+    // if the index is > -1, means the location was already shared with this friend
+    const index = checkedFriends.indexOf(e.target.innerText); //use innerText to get the friend webID
+    if (index > -1) {
+        checkedFriends.splice(index, 1); // 2nd parameter means remove one item only
+        // revoke the access to this location
+        setAccessToFriend(e.target.innerText, location.url as string, false)
+    }
+    // if the index was not in the checkedFriends means that the user wants to share the location with this friend
+    else{
+        checkedFriends.push(e.target.innerText) // add friend
+        // grant access to this location
+        setAccessToFriend(e.target.innerText, location.url as string, true)
+    }
+}
 
   return (
     <Flex
@@ -302,7 +336,6 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
         top={0}
         bottom={-4}
         zIndex={1}
-        borderRight={"1px solid black"}
         overflow='hidden'
         px={2}
         >
@@ -379,6 +412,22 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
           <Text as={'b'} fontSize={'x-large'} >Reviews:</Text>
         </Flex>
         <ReviewSection location={location} setLocation={setlocation} session={session} ></ReviewSection>
+
+        <Menu closeOnSelect={false}>
+          <MenuButton as={Button} colorScheme='blue' minWidth='120px'>Share location with friends</MenuButton>
+          <MenuList minWidth='240px'>
+            <MenuOptionGroup type='checkbox'>
+              {
+                friends.map((friend) => {
+                  return (
+                      <MenuItemOption value={friend.webID} onClick={(e) => handleCheckedFriend(e)}
+                      >{friend.webID}</MenuItemOption>
+                  )
+                })
+              }
+            </MenuOptionGroup>
+          </MenuList>
+        </Menu>
 
         <Box marginTop={'auto'} marginLeft='auto' marginEnd={'1em'}>
           <DeletingAlertDialog location={props.location} loadLocations={props.loadLocations}></DeletingAlertDialog>

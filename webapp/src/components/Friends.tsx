@@ -18,12 +18,11 @@ function Friends() : JSX.Element {
 
   React.useEffect(() => {
     handleFriends()
-  }, [friends]);
+  }, [session.session.info.isLoggedIn]);
 
   const handleFriends = async () => {
     if (webId !== undefined && webId !== ""){
-      const n  = await getSolidFriends(webId).then(friendsPromise => {return friendsPromise});
-      
+      const n  = await getSolidFriends(webId)
       setFriends(n);
       setLogged(true);
     }
@@ -36,12 +35,9 @@ function Friends() : JSX.Element {
   const handleSubmitSolid= (event)=>{
     event.preventDefault();
     let value = (document.getElementById("newFriend")as HTMLInputElement).value;
-    
     const result = addSolidFriend(webId as string,value);
     result.then(r=>{setError(r.error);setErrorMessage(r.errorMessage);})
-    
     handleFriends();
-
   }
 
     return (

@@ -6,17 +6,19 @@ import { Location } from "../../../restapi/locations/Location"
 import AddLocationForm from './AddLocationForm';
 import { Category, isLocationOfCategory } from './Category';
 import { SessionInfo } from '@inrupt/solid-ui-react/dist/src/hooks/useSession';
+import { useSession } from '@inrupt/solid-ui-react';
+import { getSolidFriends } from "../solid/solidManagement";
+import type { Friend } from "../../../restapi/users/User";
 
 
 type MapProps = {
-    //center: Coordinates;
     locations : Array<Location>
     changeViewTo: (viewName: JSX.Element) => void //function to change the selected view on the left
     loadLocations : () => Promise<void>
 }
 
 const Map = ( props : MapProps) => {
-
+  const session = useSession();
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
     googleMapsApiKey: "AIzaSyASYfjo4_435pVgG-kiB3cqaDXp-77j2O8"
@@ -31,6 +33,10 @@ const Map = ( props : MapProps) => {
   const [map, setMap] = React.useState(null)
   const [areCheckedFilters, setCheckedFilters] = React.useState<boolean>(false) // check if there are any filters checked, if not show all locations
   const [filteredLocations, setFilteredLocations] = React.useState<Array<Location>>([]) //need constant for the filter to work
+  const [friends, setFriends] = React.useState<Friend[]>([]);
+  const [checkedFriends, setCheckedFriends] = React.useState<string[]>([]);
+
+
 
   const onUnmount = React.useCallback(function callback() {setMap(null)}, [])
 
@@ -57,16 +63,68 @@ const Map = ( props : MapProps) => {
   // only filtering by one category. cannot filter by multiple at once (possible but not urgent enhancement)
   const handleFilter = (e) => {
     setCheckedFilters(true) // variable to know if we have to display all the locations or filter
-    let filtered: Array<Location> = [];
-    for (let location of props.locations){
-      let condition = isLocationOfCategory(location, e.target.value)
-      if (condition) {
-        filtered.push(location)
+    let filtered: Location[] = [];
+    let hasFriendFilter = (checkedFriends.length != 0)
+    if (hasFriendFilter){
+      for (let location of props.locations){
+        let locationCreator = `${(location.url as string).split("private")[0]}profile/card#me`
+        if (isLocationOfCategory(location, e.target.value) && checkedFriends.includes(locationCreator))
+          filtered.push(location);
+      }
+    }
+    else {
+      for (let location of props.locations){
+        if (isLocationOfCategory(location, e.target.value))
+          filtered.push(location)
       }
     }
     setFilteredLocations(filtered) // update value of const
   }
 
+  React.useEffect(() => {
+    handleFriends()
+  }, [session.session.info.isLoggedIn]);
+
+  const handleFriends = async () => {
+    if (session.session.info.webId !== undefined && session.session.info.webId !== ""){
+      const n  = await getSolidFriends(session.session.info.webId);
+      setFriends(n);
+    }
+    else{
+      setFriends([]);
+    }
+  }
+
+  const filteringFriends = (e) => {
+    setCheckedFilters(true);
+    let filtered : Location[] = [];
+
+    const friendIndex = checkedFriends.indexOf(e.target.innerText) // if it is -1, the filter was not applied
+
+    if (friendIndex == -1){
+      // añadir el nuevo friend a los checked friends
+      checkedFriends.push(e.target.innerText as string);
+      // para cada localizacion mirar si su creador coincide con algun checkedfriend
+      for (let location of props.locations){
+        let locationCreator = `${(location.url as string).split("private")[0]}profile/card#me`
+        if (checkedFriends.includes(locationCreator)){
+          filtered.push(location)
+        }
+      }
+    }
+    else{
+      // quitar el friend de los checked friends
+      checkedFriends.splice(friendIndex, 1)
+      // para cada localizacion mirar si su creador coincide con algun checkedfriend
+      for (let location of props.locations){
+        let locationCreator = `${(location.url as string).split("private")[0]}profile/card#me`
+        if (checkedFriends.includes(locationCreator)){
+          filtered.push(location)
+        }
+      }
+    }
+    setFilteredLocations(filtered)
+  }
 
   if (isLoaded)
     return (
@@ -104,9 +162,11 @@ const Map = ( props : MapProps) => {
                 <MenuList minWidth='240px'>
                   <MenuOptionGroup type='checkbox'>
                     {
-                      categories.map((filter) => { // change it for the friends, put categories to have something to show
+                      friends.map((friend) => {
                         return (
-                          <MenuItemOption value={filter}>{filter}</MenuItemOption>
+                          <MenuItemOption value={friend.webID as string}
+                              onClick={(e) => filteringFriends(e)}>
+                            {friend.webID as string}</MenuItemOption>
                         )
                       })
                     }
@@ -130,7 +190,10 @@ const Map = ( props : MapProps) => {
                 })
               }
                 <Button minWidth={100}
-                  onClick={(e) => setCheckedFilters(false)}
+                  onClick={(e) => {
+                    setCheckedFilters(false);
+                    setCheckedFriends([])
+                  }}
                   >Clear Filters
                 </Button>
               </HStack>
