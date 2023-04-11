@@ -3,6 +3,17 @@ import type { Review as ReviewType} from "../../../restapi/locations/Location";
 import type { Friend } from "../../../restapi/users/User";
 import { fetch } from "@inrupt/solid-client-authn-browser";
 
+import {
+  getSolidDatasetWithAcl,
+  hasResourceAcl,
+  hasFallbackAcl,
+  hasAccessibleAcl,
+  createAcl,
+  createAclFromFallbackAcl,
+  getResourceAcl,
+  setAgentResourceAccess,
+  saveAclFor,
+} from "@inrupt/solid-client";
 
 // Friends second iteration
 import { Friends } from 'solid-auth-client';
@@ -105,9 +116,15 @@ export async function getLocations(webID:string) {
       // get the path of the actual location
       let path = getStringNoLocale(locationPath, SCHEMA_INRUPT.identifier) as string;
       // get the location : Location from the dataset of that location
-      let location = await getLocationFromDataset(path)
-      // add the location to the array
-      locations.push(location)
+      try{
+        let location = await getLocationFromDataset(path)
+        locations.push(location)
+        // add the location to the array
+      }
+      catch(error){
+        //The url is not accessed(no permision)
+      }
+     
     }
   } catch (error) {
     // if the location dataset does no exist, return empty array of locations
@@ -184,12 +201,14 @@ export async function getLocationReviews(folder:string) {
       let content = getStringNoLocale(review, SCHEMA_INRUPT.description) as string;
       let date = new Date(getStringNoLocale(review, SCHEMA_INRUPT.startDate) as string);
       let webId = getStringNoLocale(review, SCHEMA_INRUPT.Person) as string;
+      let name = getStringNoLocale(await getUserProfile(webId),FOAF.name) as string;
 
       let newReview : ReviewType = {
         title: title,
         content: content,
         date: date,
-        webId: webId
+        webId: webId,
+        username: name
       }
 
       reviews.push(newReview);
@@ -471,7 +490,101 @@ export async function deleteLocation(webID:string, locationUrl: string) {
   }
 }
 
+/**
+ * Grant/ Revoke permissions of friends regarding a particular location
+ * @param friend webID of the friend to grant or revoke permissions
+ * @param locationURL location to give/revoke permission to
+ * @param giveAccess if true, permissions are granted, if false permissions are revoked
+ */
+export async function setAccessToFriend(friend:string, locationURL:string, giveAccess:boolean){
+  let myInventory = `${locationURL.split("private")[0]}private/lomap/inventory/index.ttl`
+  await giveAccessToInventory(myInventory, friend);
+  let resourceURL = locationURL.split("#")[0]; // dataset path
+  // Fetch the SolidDataset and its associated ACL, if available:
+  let myDatasetWithAcl;
+  try {
+    myDatasetWithAcl = await getSolidDatasetWithAcl(resourceURL, {fetch: fetch});
+    // Obtain the SolidDataset's own ACL, if available, or initialise a new one, if possible:
+    let resourceAcl;
+    if (!hasResourceAcl(myDatasetWithAcl)) {
+      if (!hasAccessibleAcl(myDatasetWithAcl)) {
+        //  "The current user does not have permission to change access rights to this Resource."
+      }
+      if (!hasFallbackAcl(myDatasetWithAcl)) {
+        // create new access control list
+        resourceAcl = createAcl(myDatasetWithAcl);
+      }
+      else{
+        // create access control list from fallback
+        resourceAcl = createAclFromFallbackAcl(myDatasetWithAcl);
+      }
+    } else {
+      // get the access control list of the dataset
+      resourceAcl = getResourceAcl(myDatasetWithAcl);
+    }
 
+  let updatedAcl;
+  if (giveAccess) {
+    // grant permissions
+    updatedAcl = setAgentResourceAccess(
+      resourceAcl,
+      friend,
+      { read: true, append: true, write: false, control: false }
+    );
+  }
+  else{
+    // revoke permissions
+    updatedAcl = setAgentResourceAccess(
+      resourceAcl,
+      friend,
+      { read: false, append: false, write: false, control: false }
+    );
+  }
+  // save the access control list
+  await saveAclFor(myDatasetWithAcl, updatedAcl, {fetch: fetch});
+  }
+  catch (error){ // catch any possible thrown errors
+    console.log(error)
+  }
+}
+
+export async function giveAccessToInventory(resourceURL:string, friend:string){
+  let myDatasetWithAcl;
+  try {
+    myDatasetWithAcl = await getSolidDatasetWithAcl(resourceURL, {fetch: fetch}); // inventory
+    // Obtain the SolidDataset's own ACL, if available, or initialise a new one, if possible:
+    let resourceAcl;
+    if (!hasResourceAcl(myDatasetWithAcl)) {
+      if (!hasAccessibleAcl(myDatasetWithAcl)) {
+        //  "The current user does not have permission to change access rights to this Resource."
+      }
+      if (!hasFallbackAcl(myDatasetWithAcl)) {
+        // create new access control list
+        resourceAcl = createAcl(myDatasetWithAcl);
+      }
+      else{
+        // create access control list from fallback
+        resourceAcl = createAclFromFallbackAcl(myDatasetWithAcl);
+      }
+    } else {
+      // get the access control list of the dataset
+      resourceAcl = getResourceAcl(myDatasetWithAcl);
+    }
+
+  let updatedAcl;
+    // grant permissions
+    updatedAcl = setAgentResourceAccess(
+      resourceAcl,
+      friend,
+      { read: true, append: true, write: false, control: false }
+    );
+  // save the access control list
+  await saveAclFor(myDatasetWithAcl, updatedAcl, {fetch: fetch});
+  }
+  catch (error){ // catch any possible thrown errors
+    console.log(error)
+  }
+}
 
 
 //Friends
@@ -503,7 +616,7 @@ export async function addSolidFriend(webID: string,friendURL: string): Promise<{
 }
 
 export async function getSolidFriends(webID:string) {
-  
+  let test = getUrl(await getUserProfile(webID), FOAF.knows);
   let friendURLs = getUrlAll(await getUserProfile(webID), FOAF.knows);
   let friends: Friend[] = [];
 
@@ -533,4 +646,12 @@ export async function getSolidFriends(webID:string) {
   
   return friends;
 
+}
+
+export  function getSolidName(webID:string)  {
+ // let name = await getSolidFriends(webId).then(friendsPromise => {return friendsPromise})
+
+  let name =  getUserProfile(webID).then(u => getStringNoLocale(u,FOAF.name)).then(p => {return p as string});
+
+  
 }

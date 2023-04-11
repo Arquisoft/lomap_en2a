@@ -5,11 +5,11 @@ import { useSession } from '@inrupt/solid-ui-react';
 import { Location } from "../../../restapi/locations/Location";
 import { FaStar} from "react-icons/fa";
 import {MdLocationOn} from "react-icons/md"
+import {RiLogoutBoxLine} from 'react-icons/ri'
 
 type ProfileProps = {
   locations : Array<Location>
 }
-import {RiLogoutBoxLine} from 'react-icons/ri'
 
 export function ProfileView(props:ProfileProps) {  
   const session = useSession();
