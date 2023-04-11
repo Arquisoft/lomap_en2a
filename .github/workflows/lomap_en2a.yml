@@ -22,25 +22,8 @@ jobs:
       env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-  unit-test-restapi:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: restapi
-    steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-node@v3
-      with:
-        node-version: 18
-    - run: npm ci
-    - run: npm test --coverage --watchAll
-    - name: Analyze with SonarCloud
-      uses: sonarsource/sonarcloud-github-action@master
-      env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
   e2e-tests:
-    needs: [unit-test-webapp, unit-test-restapi]
+    needs: [unit-test-webapp]
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -48,7 +31,6 @@ jobs:
       with:
         node-version: 18
     - run: npm --prefix webapp install
-    - run: npm --prefix restapi install
     - run: npm --prefix webapp run build
     - run: npm --prefix webapp run test:e2e
   docker-push-webapp:
@@ -68,20 +50,6 @@ jobs:
           registry: ghcr.io
           workdir: webapp
           buildargs: API_URI
-  docker-push-restapi:
-    name: Push restapi Docker Image to GitHub Packages
-    runs-on: ubuntu-latest
-    needs: [e2e-tests]
-    steps:
-    - uses: actions/checkout@v3
-    - name: Publish to Registry
-      uses: elgohr/Publish-Docker-Github-Action@v5
-      with:
-          name: arquisoft/lomap_en2a/restapi
-          username: ${{ github.actor }}
-          password: ${{ secrets.DOCKER_PUSH_TOKEN }}
-          registry: ghcr.io
-          workdir: restapi
   # deploy:
   #   name: Deploy over SSH
   #   runs-on: ubuntu-latest

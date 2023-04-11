@@ -1,0 +1,26 @@
+.backgroundAlphaColor {
+    flex-direction: column;
+    width: 100vw;
+    height: 100vh;
+    z-index: 2;
+    position: absolute;
+    justify-content: center;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.8);
+}
+
+.loginPopup {
+    flex-direction: column;
+    width: 40vw;
+    height: 40vh;
+    z-index: 1;
+    position: relative;
+    justify-content: space-evenly;
+    align-items: center;
+    background: #dbdbd6;
+    overflow: hidden;
+    border-radius: 2vh;
+    padding: 1vh;
+    row-gap: 1vh;
+}
+

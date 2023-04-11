@@ -3,19 +3,24 @@
 In this section some strategies decided by the team will be stated. This strategies might grow with the development of the application.
 
 .Technologies
-* Google Maps API: This API allows us to build the map which will be needed to the development of the application. This api has been chosen because it's reliable and has been used by some of our team members before.
-* MySQL: This DB provides a robust way to store the data that won't be stored at each user's pod. It has been chosen because it's a simple but powerfull database, well-known and we have worked previously with it.
+* Google Maps API: This API allows us to build the map which will be needed to the development of the application. This api has been chosen because it's reliable and has been used by some of our team members before. Achieves usability, deployment and good user experience.
 * TypeScript: This language, that comes from JavaScript, provides a powerful language to program the client part of our application. It provides a good documentation and some tools that JavaScript does not provide that makes it more powerfull.
 * Arc42: This template allows our documentation to be organized, and well specified, and also gives us a path to follow and simplify the process.
-* Solid: In order to store each user's pod and keep the data decentralized. It offers good security and performance.
+* Solid: In order to store each user's pod and keep the data decentralized. Achieves security and privacy.
 * React: A JavaScript library for user interfaces. It is widely used in the industry because it helps building rich user interfaces in a simple way, and allows flexibility and is easy to mantain.
 * NodeJS: Another JavaScript library for the server layer that provides the tools to implement the application. It also supports different types of databases and has a large and active community, that might comme in handy when we have questions.
-* Docker: In order to deploy the application. It containerizes it for automated deployment.
+* Docker: In order to deploy the application. It containerizes it for automated deployment. Achieves portability.
+* Chakra UI: component and modular library to create HTML customized and themeable components. Achieves usability.
+* Inrupt Solid APIs: set of libraries developed by inrupt to manage and control the information and features in the Solid pod.
+* RDF: semantic web standard used to describe and model information for web resources, in this case, used to store information in the Solid pod.
+* Turtle: RDF syntax that allows an RDF graph to be completely written in a compact and natural text form, with abbreviations for common usage patterns and datatypes
+* Cucumber: testing tool that supports Behavior Driven Development (BDD). Achieves Testability
+* End-to-end testing: methodology to test from the end user's experience by simulating the real user scenario and validating the system and its components for integration and data integrity. Achieves Test Coverage
 
 .Design
-* Adapter pattern for using the API that might be needed, for example the google maps API.
-* MVC pattern for the internal structure of the application.
-
+* Serverless application: this application won't rely on a server nor have a database.
+* Client-side component: the code resides in the browser, receives requests and presents the user with the required information.
+* Pod architecture: data stored in pods will be divided in different paths and subfolders to achieve privacy and security.
 
 .Organizational
 * Good, up to date documentation, in order to make the development easy to follow.

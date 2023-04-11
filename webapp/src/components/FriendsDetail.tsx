@@ -1,6 +1,6 @@
 import React from 'react'
 import { Location } from '../../../restapi/locations/Location';
-import {Flex, Text,Image} from '@chakra-ui/react'
+import {Flex, Text,Image, Avatar} from '@chakra-ui/react'
 import { Friend } from '../../../restapi/users/User';
 
 type FriendsDetailProps = {
@@ -31,7 +31,13 @@ function FriendsDetail (props : FriendsDetailProps ) : JSX.Element{
                 <Flex
                  alignItems={'center'}
                  width={'full'}
-                 justifyContent={'space-between'}>
+                 >
+                    <Avatar 
+                        src={props.friend.pfp as string} 
+                        name ={props.friend.username}
+                    />
+
+               
                     <Text 
                      textTransform={'capitalize'} 
                      width={'40'}

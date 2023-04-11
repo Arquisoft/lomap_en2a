@@ -1,17 +1,28 @@
 import React, { useState } from 'react'
-import { Flex, Button, Icon, Text, IconButton, ButtonGroup, Box } from "@chakra-ui/react";
-import { MdList, MdLocationOn, MdMap, MdOutlineOpenInBrowser, MdPeopleAlt, MdPerson } from "react-icons/md"
-import { start } from 'repl';
+import { Flex, Button, Icon, Box } from "@chakra-ui/react";
+import { MdList, MdLocationOn, MdMap, MdPeopleAlt, MdPerson } from "react-icons/md"
+import { Location } from '../../../restapi/locations/Location';
+import ListOfLocations from './ListOfLocations';
+import AddLocationForm from './AddLocationForm';
+import Friends from './Friends';
+import { ProfileView } from './ProfileInfo';
+
 
 type MenuProps = {
-  changeViewTo: (viewName: string) => void
+  changeViewTo: (view: JSX.Element) => void,
+  locations : Array<Location>,
+  loadLocations : () => Promise<void>
 }
+
+
 
 function Menu(props: MenuProps): JSX.Element {
   const [insideMenu, setinsideMenu] = useState(false)
 
   return (
-    <Flex direction={'column'}
+    <Flex 
+          data-testid='bigContainer'
+          direction={'column'}
           bg={'white'}
           width={"fit-content"}
           minWidth={"5vw"}
@@ -22,9 +33,11 @@ function Menu(props: MenuProps): JSX.Element {
           bottom={-4}
           zIndex={1}
           overflow='hidden'
+          borderRight={"1px solid black"}
           px={2}
-          onMouseEnter={() => { setinsideMenu(true) }}
-          onMouseLeave={() => { setinsideMenu(false) }}
+          boxShadow ='lg'
+          onMouseOver={()=> {setinsideMenu(true)}}
+          onMouseLeave={() => { setinsideMenu(false)}}
     >
       {
         insideMenu ?
@@ -43,69 +56,87 @@ function Menu(props: MenuProps): JSX.Element {
                   marginTop={3}
             >
               <Box>
-                <Button leftIcon={<Icon as={MdMap} width='max-content' height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
+                <Button
+                data-testid={'Map View'}
+                 leftIcon={<Icon as={MdMap} width='max-content' height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
                         bg={'white'}
                         color={'black'}
                         size='lg'
                         height={'5vh'}
-                        onClick={() => { setinsideMenu(false); props.changeViewTo("none"); }}>
-                  Visualización del mapa
+                        onClick={() => { setinsideMenu(false); props.changeViewTo(<></>); }}>
+                  Map View
                 </Button>
               </Box>
 
               <Box>
-                <Button leftIcon={<Icon as={MdList} width='max-content' height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
+                <Button
+                data-testid={'List of Locations'} 
+                leftIcon={<Icon as={MdList} width='max-content' height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
                         bg={'white'}
                         color={'black'}
                         size='lg'
                         onClick={() => {
                           setinsideMenu(false);
-                          props.changeViewTo("list");
+                          props.changeViewTo(
+                            <ListOfLocations setSelectedView={(view)=> props.changeViewTo(view)} places={props.locations} loadLocations={props.loadLocations} />
+                            );
                         }}>
-                  Listado de Localizaciones
+                  List of Locations
                 </Button>
               </Box>
 
               <Box>
-                <Button leftIcon={<Icon as={MdLocationOn} width='max-content' height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
+                <Button 
+                data-testid={'Add location'}
+                leftIcon={<Icon as={MdLocationOn} width='max-content' height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
                         bg={'white'}
                         color={'black'}
                         size='lg'
                         onClick={
                           () => {
                             setinsideMenu(false);
-                            props.changeViewTo("addLocation");
+                            props.changeViewTo(
+                              <AddLocationForm loadLocations={props.loadLocations} clickedCoords={''}/>
+                            );
                           }
                         }>
-                  Añadir Localización
+                  Add Location
                 </Button>
               </Box>
 
               <Box>
-                <Button leftIcon={<Icon alignContent={'left'} as={MdPeopleAlt} width='max-content' height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
+                <Button
+                data-testid={'Add friends'}
+                leftIcon={<Icon alignContent={'left'} as={MdPeopleAlt} width='max-content' height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
                         bg={'white'}
                         color={'black'}
                         size='lg'
                         onClick={() => {
                           setinsideMenu(false);
-                          props.changeViewTo("friends");
+                          props.changeViewTo(
+                            <Friends/>
+                          );
                         }}
                 >
-                  Añadir amigos
+                  Add friends
                 </Button>
               </Box>
 
               <Box marginTop={'auto'}>
-                <Button leftIcon={<Icon as={MdPerson} width='max-content' height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
+                <Button 
+                data-testid={'Profile'}
+                leftIcon={<Icon as={MdPerson} width='max-content' height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
                         bg={'white'}
                         color={'black'}
                         size='lg'
                         onClick={() => {
                           setinsideMenu(false);
-                          props.changeViewTo("profile");
+                          props.changeViewTo(
+                            <ProfileView locations={props.locations}></ProfileView>
+                          );
                         }}
                 >
-                  Perfil
+                  Profile
                 </Button>
               </Box>
             </Flex>
@@ -113,6 +144,7 @@ function Menu(props: MenuProps): JSX.Element {
           :
           (
             <Flex
+              data-testid='smallContainer'
               direction={'column'}
               bg={'white'}
               width={"fit-content"}

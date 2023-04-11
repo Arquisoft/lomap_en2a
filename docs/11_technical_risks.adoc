@@ -52,7 +52,11 @@ used for a better task planning. Any major problem a member may encounter will b
 
 === 11.2 Technical Debts
 
-Due to the early stage of development of the project, the technical debt is not tangible enough to be added and, as a consequence, this section will be filled in as we start to create the source code.
+.DataBase
+The decision of not using a database will have a measurable impact in the speed of application. By prioritizing easier code we are sacrificing speed delivery of data.
+
+.Solid code
+Relying on the inrupt libraries for the pod information and control management can make the application not maintainable if those libraries stop being updated.
 
 [role="arc42help"]
 ****
@@ -65,5 +69,5 @@ A list of identified technical risks or technical debts, ordered by priority
 This should be your motto for systematic detection and evaluation of risks and technical debts in the architecture, which will be needed by management stakeholders (e.g. project managers, product owners) as part of the overall risk analysis and measurement planning.
 
 .Form
-List of risks and/or technical debts, probably including suggested measures to minimize, mitigate or avoid risks or reduce technical debts.
+ListOfLocations of risks and/or technical debts, probably including suggested measures to minimize, mitigate or avoid risks or reduce technical debts.
 ****
