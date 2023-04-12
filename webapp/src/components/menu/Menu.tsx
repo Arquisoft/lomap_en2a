@@ -95,7 +95,7 @@ function Menu(props: MenuProps): JSX.Element {
                           () => {
                             setinsideMenu(false);
                             props.changeViewTo(
-                              <AddLocationForm loadLocations={props.loadLocations} clickedCoords={''}/>
+                              <AddLocationForm setSelectedView={(view)=> props.changeViewTo(view)} loadLocations={props.loadLocations} clickedCoords={''}/>
                             );
                           }
                         }>

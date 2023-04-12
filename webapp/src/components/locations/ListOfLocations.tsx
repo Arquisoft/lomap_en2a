@@ -1,5 +1,5 @@
 import { Location } from '../../types/types'
-import {Flex, Box} from "@chakra-ui/react";
+import {Flex, Box, CloseButton, Button} from "@chakra-ui/react";
 import {  SkeletonCircle, SkeletonText } from '@chakra-ui/react'
 import  LocationCard  from './LocationCard';
 
@@ -29,6 +29,12 @@ function ListOfLocations(props : ListProps) : JSX.Element {
           overflow='hidden'
           px={2}
           >
+            <CloseButton 
+                onClick={() => props.setSelectedView(<></>)}
+                position='absolute'
+                top='2'
+                right='2'
+            ></CloseButton>
             <Box padding ="6" boxShadow ='lg' bg='white' mt={3}>
                 <SkeletonCircle size = '10'/>
                 <SkeletonText mt='4' noOfLines={4} spacing='4'/>
@@ -69,6 +75,12 @@ function ListOfLocations(props : ListProps) : JSX.Element {
         overflow='auto'
         px={2}
         >
+        <CloseButton 
+                onClick={() => props.setSelectedView(<></>)}
+                position='absolute'
+                top='2'
+                right='2'
+        ></CloseButton>
         <Flex flex={1} overflowY={'auto'} overflowX='clip' mt={16} direction={'column'}>
         {
             props.places && props.places.map((place,i) => <LocationCard place={place} key ={i} setSelectedView={props.setSelectedView} loadLocations={props.loadLocations}/>)

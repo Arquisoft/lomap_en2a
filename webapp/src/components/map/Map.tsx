@@ -54,7 +54,7 @@ const Map = ( props : MapProps) => {
     let clickedCoords = lat + ", " + lon;
 
     props.changeViewTo(<></>);
-    props.changeViewTo(<AddLocationForm loadLocations={props.loadLocations} clickedCoords={clickedCoords}/>);
+    props.changeViewTo(<AddLocationForm setSelectedView={(view)=> props.changeViewTo(view)} loadLocations={props.loadLocations} clickedCoords={clickedCoords}/>);
   }
 
   const categories = Object.values(Category); // array of strings containing the values of the categories

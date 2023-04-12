@@ -15,7 +15,7 @@ import {
     MenuOptionGroup,
     Text,
     Textarea,
-    Box, Spinner
+    Box, Spinner, CloseButton, Spacer
 } from "@chakra-ui/react";
 import { Category } from '../Category';
 import { useToast } from "@chakra-ui/react";
@@ -24,6 +24,7 @@ import {useSession} from "@inrupt/solid-ui-react";
 import {MdOutlineAddLocationAlt} from "react-icons/md";
 
 type AddLocationProps = {
+    setSelectedView: (viewName: JSX.Element) => void //function to change the selected view on the left
     loadLocations: () => Promise<void>
     clickedCoords: any;
 }
@@ -162,6 +163,14 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
         <form onSubmit={handleSubmit}>
         <Flex className="flex menu" px={2} height = {'100%'} overflowY={'auto'}>
             <Flex className="flex section">
+                <CloseButton 
+                    onClick={() => props.setSelectedView(<></>)}
+                    position='absolute'
+                    top='2'
+                    right='2'
+                ></CloseButton>
+            </Flex>
+            <Flex className="flex section">
                 <Text as={'b'} fontSize={'x-large'}>Name:</Text>
                 <Input
                     value={name}
@@ -202,7 +211,7 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
             <Flex className="flex section">
                 <Text as={'b'} fontSize={'x-large'}>Select categories:</Text>
                 <Menu closeOnSelect={false}>
-                    <MenuButton as={Button} colorScheme='orange' minWidth='120px'>Select Category</MenuButton>
+                    <MenuButton as={Button} color='white' background='#4299e1' minWidth='120px'>Select Category</MenuButton>
                     <MenuList minWidth='240px'>
                         <MenuOptionGroup type='checkbox'>
                             {
@@ -273,7 +282,7 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
             <Box>
                 {addingLocationProcess ? (
                     <Button leftIcon={<Spinner size={"xs"}/>}
-                            colorScheme={'orange'}
+                            colorScheme={'blue'}
                             variant={'outline'}
                             type={'submit'}
                             disabled>
@@ -281,7 +290,7 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
                     </Button>
                 ) : (
                     <Button leftIcon={<MdOutlineAddLocationAlt/>}
-                            colorScheme={'orange'}
+                            colorScheme={'blue'}
                             variant={'outline'}
                             type={'submit'}>
                         Add location
@@ -297,7 +306,7 @@ function AddLocationButton(props:any) : JSX.Element {
     return (
         props.addingLocationProcess ? (
             <Button leftIcon={<Spinner size={"xs"}/>}
-                    colorScheme={'orange'}
+                    colorScheme={'blue'}
                     variant={'outline'}
                     type={'submit'}
                     disabled>
@@ -305,7 +314,7 @@ function AddLocationButton(props:any) : JSX.Element {
             </Button>
         ) : (
             <Button leftIcon={<MdOutlineAddLocationAlt/>}
-                    colorScheme={'orange'}
+                    colorScheme={'blue'}
                     variant={'outline'}
                     type={'submit'}>
                 Add location
