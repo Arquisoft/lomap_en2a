@@ -49,28 +49,28 @@ const testLocation : Location =
 };
 
 test('check title shows in view', async () => {
-  const { getByText } = render(<LocationInfo location={testLocation} loadLocations={jest.fn()} ></LocationInfo>)
+  const { getByText } = render(<LocationInfo setSelectedView={()=>{}} location={testLocation} loadLocations={jest.fn()} ></LocationInfo>)
   await act(async () => {
     expect(getByText(testLocation.name)).toBeInTheDocument();
   })
 })
 
 test('check description shows in view', async () => {
-  const { getByText } = render(<LocationInfo location={testLocation} loadLocations={jest.fn()} ></LocationInfo>)
+  const { getByText } = render(<LocationInfo setSelectedView={()=>{}} location={testLocation} loadLocations={jest.fn()} ></LocationInfo>)
   await act(async () => {
     expect(getByText(testLocation.description)).toBeInTheDocument();
   })
 })
 
 test('check images shows in view', async () => {
-  const { container } = render(<LocationInfo location={testLocation} loadLocations={jest.fn()} ></LocationInfo>)
+  const { container } = render(<LocationInfo setSelectedView={()=>{}} location={testLocation} loadLocations={jest.fn()} ></LocationInfo>)
   await act(async () => {
     expect(container.querySelectorAll("img").length).toBe(testLocation.images?.length);
   })
 })
 
 test('check reviews are displayed correctly', async () => {
-  const { getByText } = render(<LocationInfo location={testLocation} loadLocations={jest.fn()} ></LocationInfo>)
+  const { getByText } = render(<LocationInfo setSelectedView={()=>{}} location={testLocation} loadLocations={jest.fn()} ></LocationInfo>)
   await act(async () => {
     testLocation.reviews?.forEach(review => {
       expect(getByText(review.title)).toBeInTheDocument();
@@ -92,7 +92,7 @@ test('check reviews are displayed correctly', async () => {
 
 
 test('check ratings are shown in view', async () => {
-  const { getByTestId } = render(<LocationInfo location={testLocation} loadLocations={jest.fn()} ></LocationInfo>)
+  const { getByTestId } = render(<LocationInfo setSelectedView={()=>{}} location={testLocation} loadLocations={jest.fn()} ></LocationInfo>)
   //we will check the number of reviews
   await act(async () => {
     //we will check the number of reviews
@@ -105,7 +105,7 @@ test('check ratings are shown in view', async () => {
 })
 
 test('check review addition form is working', async () => {
-  const { getByTestId, getByText, getByLabelText } = render(<LocationInfo location={testLocation} loadLocations={jest.fn()} ></LocationInfo>)
+  const { getByTestId, getByText, getByLabelText } = render(<LocationInfo setSelectedView={()=>{}} location={testLocation} loadLocations={jest.fn()} ></LocationInfo>)
   //we get the button to add a review
   let reviewButton = getByTestId('buttonReview')
   //we click the button 

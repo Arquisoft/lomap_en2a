@@ -3,6 +3,7 @@ import {Flex, Text,Image} from '@chakra-ui/react'
 import LocationInfo from '../locations/LocationInfo';
 import images from '../../static/images/images'
 import noImage from '../static/images/no-pictures-picture.png';
+import React from 'react';
 
 type PlaceDetailProps = {
     place : Location;
@@ -12,6 +13,7 @@ type PlaceDetailProps = {
 }
 
 function LocationCard (props : PlaceDetailProps ) : JSX.Element{
+
   return (
     <Flex
         bg= {'white'}
@@ -26,8 +28,9 @@ function LocationCard (props : PlaceDetailProps ) : JSX.Element{
         borderRadius={'lg'}
         //change the view to the information view of the location being clicked
         onClick={
-            () => props.setSelectedView(<LocationInfo location={props.place} loadLocations={props.loadLocations}></LocationInfo>)
+            () => props.setSelectedView(<LocationInfo setSelectedView={props.setSelectedView} location={props.place} loadLocations={props.loadLocations}></LocationInfo>)
         }
+        cursor={'pointer'}
     >
         <Flex justifyContent={'space-between'} width ='full'>
             <Flex

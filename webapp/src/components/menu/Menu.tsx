@@ -156,19 +156,19 @@ function Menu(props: MenuProps): JSX.Element {
               alignItems='left'
             >
               <Flex direction='row' gap='2' alignItems={'center'}>
-                <Icon as={MdMap} width='3em' height={'2.5vw'}/>
+                <Icon as={MdMap} width='3em' height={'2.5vw'} cursor={'pointer'}/>
               </Flex>
               <Flex direction='row' gap='2' alignItems={'center'}>
-                <Icon as={MdList} width='3em' height={'2.5vw'}/>
+                <Icon as={MdList} width='3em' height={'2.5vw'} cursor={'pointer'}/>
               </Flex>
               <Flex direction='row' gap='2' alignItems={'center'}>
-                <Icon as={MdLocationOn} width='3em' height={'2.5vw'}/> 
+                <Icon as={MdLocationOn} width='3em' height={'2.5vw'} cursor={'pointer'}/> 
               </Flex>
               <Flex direction='row' gap='2' alignItems={'center'}>
-                <Icon as={MdPeopleAlt} width='3em' height={'2.5vw'}/>
+                <Icon as={MdPeopleAlt} width='3em' height={'2.5vw'} cursor={'pointer'}/>
               </Flex>
               <Flex marginTop='auto' marginBottom={'2'} direction='row' gap='2' alignItems={'center'}>
-                <Icon as={MdPerson} width='3em' height={'2.5vw'}/>
+                <Icon as={MdPerson} width='3em' height={'2.5vw'} cursor={'pointer'}/>
               </Flex>
             </Flex>
           )

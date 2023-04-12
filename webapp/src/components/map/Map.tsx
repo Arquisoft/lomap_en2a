@@ -45,8 +45,8 @@ const Map = ( props : MapProps) => {
       lng: location.coordinates.lng
     }
     setCenter(newCenter)
-    //we display the info tab in the left part of the window
-    props.changeViewTo(<LocationInfo location={location} loadLocations={props.loadLocations}></LocationInfo>);
+    
+    props.changeViewTo(<LocationInfo setSelectedView={(view) =>props.changeViewTo(view)} location={location} loadLocations={props.loadLocations}></LocationInfo>);
   }
 
   function handleMapClick(lat:any,lon:any):void {

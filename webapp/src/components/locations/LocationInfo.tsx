@@ -1,5 +1,5 @@
 import React,{ useState,useEffect } from 'react';
-import { Text,Stack, HStack, Image, Box, Flex, Button, Icon, Heading, Divider, useDisclosure, Textarea, Input, Grid, Progress, Tab, TabList, TabPanel, TabPanels, Tabs} from "@chakra-ui/react"
+import { Text,Stack, HStack, Image, Box, Flex, Button, Icon, Heading, Divider, useDisclosure, Textarea, Input, Grid, Progress, Tab, TabList, TabPanel, TabPanels, Tabs, CloseButton} from "@chakra-ui/react"
 import {MdOutlineRateReview} from 'react-icons/md'
 
 import {Popover,PopoverTrigger,PopoverContent,PopoverCloseButton, Menu, MenuButton, MenuItem, MenuItemOption, MenuList, MenuOptionGroup} from '@chakra-ui/react'
@@ -17,6 +17,7 @@ import type { Friend ,Location, Review as ReviewType} from "../../types/types";
 type LocationInfoProps = {
   location : Location
   loadLocations: () => Promise<void>
+  setSelectedView: (viewName: JSX.Element) => void //function to change the selected view on the left
 };
 
 
@@ -41,7 +42,7 @@ const StarRating = ({ defaultValue = 0, onChange }) => {
   };
 
   return (
-    <HStack spacing={1} onMouseLeave={() => handleMouseLeave()}>
+    <HStack spacing={1} onMouseLeave={() => handleMouseLeave()} cursor={'pointer'}>
       {[1, 2, 3, 4, 5].map((i) => {
         let icon;
         if (i <= (hoverValue || value)) {
@@ -349,7 +350,12 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
         >
         {location.name}
       </Text>
-
+      <CloseButton 
+                onClick={() => props.setSelectedView(<></>)}
+                position='absolute'
+                top='2'
+                right='2'
+        ></CloseButton>
       <Divider marginTop={'2%'} borderWidth={'2px'} borderRadius={"lg"} width='100%' />
 
       <Text marginLeft='5%' fontSize={'1.6em'} >Related information:</Text>

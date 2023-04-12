@@ -83,7 +83,8 @@ function ListOfLocations(props : ListProps) : JSX.Element {
         ></CloseButton>
         <Flex flex={1} overflowY={'auto'} overflowX='clip' mt={16} direction={'column'} px={5}>
         {
-            props.places && props.places.map((place,i) => <LocationCard place={place} key ={i} setSelectedView={props.setSelectedView} loadLocations={props.loadLocations}/>)
+            props.places && props.places.map((place,i) => 
+            <LocationCard place={place} key ={i} setSelectedView={props.setSelectedView} loadLocations={props.loadLocations}/>)
         }
         </Flex>
     </Flex>);
