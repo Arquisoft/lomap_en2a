@@ -1,5 +1,5 @@
 import React,{ useState,useEffect } from 'react';
-import { Text,Stack, HStack, Image, Box, Flex, Button, Icon, Heading, Divider, useDisclosure, Textarea, Input, Grid, Progress} from "@chakra-ui/react"
+import { Text,Stack, HStack, Image, Box, Flex, Button, Icon, Heading, Divider, useDisclosure, Textarea, Input, Grid, Progress, Tab, TabList, TabPanel, TabPanels, Tabs} from "@chakra-ui/react"
 import {MdOutlineRateReview} from 'react-icons/md'
 
 import {Popover,PopoverTrigger,PopoverContent,PopoverCloseButton, Menu, MenuButton, MenuItem, MenuItemOption, MenuList, MenuOptionGroup} from '@chakra-ui/react'
@@ -108,10 +108,9 @@ const RatingSection = ({location, setLocation, session})=>{
 
   return (
     <>
-      <Text as={'b'} fontSize={'x-large'} >Ratings</Text>
       <Grid templateRows={'repeat(2,1fr)'} >
         <Stack alignItems={'center'} gap='0em'>
-          <Text>Give a rating to this location</Text>
+          <Text fontSize='1.2em'>Give a rating to this location</Text>
           <StarRating
             defaultValue={
               location.ratings? //if we have ratings
@@ -195,13 +194,13 @@ const ReviewSection =  ( {location ,setLocation,session}) =>{
 
   return (
     <>
-      <Box >
+      <Box marginLeft={'4%'}>
         <Popover
             isOpen={isOpen}
             initialFocusRef={firstFieldRef}
             onOpen={onOpen}
             onClose={onClose}
-            placement='top'
+            placement='bottom'
             closeOnBlur={false}
           >
             <PopoverTrigger>
@@ -211,7 +210,7 @@ const ReviewSection =  ( {location ,setLocation,session}) =>{
               <Box zIndex={'3'} padding='1.1em'>
               <PopoverCloseButton data-testid='closeButtonReview' />
                   <FormControl isInvalid={errorOnBody}  >
-                    <FormLabel>Leave a review </FormLabel>
+                    <FormLabel fontSize={'1.6em'}>Leave a review </FormLabel>
                     <FormLabel>Title</FormLabel>
                     <Input 
                       data-testid ='inputTitle'
@@ -238,7 +237,7 @@ const ReviewSection =  ( {location ,setLocation,session}) =>{
                       :
                       <FormErrorMessage>Body of the review is required</FormErrorMessage>
                     }
-                    <Button data-testid ='submitReviewButton'  marginLeft={'auto'} colorScheme={'teal'} disabled={errorOnBody || errorOnTitle}
+                    <Button data-testid ='submitReviewButton' mt='2%' marginLeft={'auto'} colorScheme={'teal'} disabled={errorOnBody || errorOnTitle}
                       onClick={()=>{
                         //create a new Review with the info of the current user
                         let review : ReviewType = {
@@ -269,22 +268,25 @@ const ReviewSection =  ( {location ,setLocation,session}) =>{
           </PopoverContent>
         </Popover>
       </Box>
+      <Flex mx={'4%'} maxHeight={'sm'} direction={'column'} overflowY={'auto'}>
       {
-        localLocation.reviews?
+        localLocation.reviews.length > 0?  
           (localLocation.reviews as Array<ReviewType>)
-            .sort((a : ReviewType,b : ReviewType)=> b.date.getTime() - a.date.getTime())
-            .map((rev,i)=>(
-              <Review
-                key={i}
-                title={rev.title as string}
-                username={rev.username}//AKITOY
-                content={rev.content as string}
-                date={rev.date}/>
-              ))
+          .sort((a : ReviewType,b : ReviewType)=> b.date.getTime() - a.date.getTime())
+          .map((rev,i)=>{return (
+          <Review
+            key={i}
+            title={rev.title as string}
+            username={rev.username}
+            content={rev.content as string}
+            date={rev.date}/>
+            )})
           :
           <Text>No reviews for this location, be the first one to leave one</Text>
       }
+      </Flex>
     </>
+
   )
 }
 
@@ -324,104 +326,109 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
         // grant access to this location
         setAccessToFriend(e.target.innerText, location.url as string, true)
     }
-}
+  }
 
   return (
     <Flex
         direction={'column'}
         bg={'white'}
-        width={"30vw"}
-        height={"100vh"}
+        width={"30%"}
+        height={"100%"}
         position={'absolute'} 
-        left={'5vw'}
+        left={'3%'}
         top={0}
         bottom={-4}
         zIndex={1}
-        overflow='hidden'
+        overflowY='auto'
         px={2}
         >
-      <Heading
-        fontSize='xx-large'
-        as='b'
-        paddingLeft={'0.6em'}
-        paddingBottom={'0.5em'}
+      <Text
+        fontSize='2.2em'
+        marginTop={'4%'}
+        marginLeft={'5%'}
         >
         {location.name}
-      </Heading>
+      </Text>
 
-      <Divider borderWidth={'0.18em'} borderColor='black'  borderRadius={"lg"} width='20em' />
+      <Divider marginTop={'2%'} borderWidth={'2px'} borderRadius={"lg"} width='100%' />
+
+      <Text marginLeft='5%' fontSize={'1.6em'} >Related information:</Text>
       <Flex
         direction={'column'}
-        overflowY='auto'>
-
-        <Text as='b'fontSize={'x-large'}>Pictures:</Text>
-        <HStack shouldWrapChildren={true} display='flex' overflowX='auto' minHeight={200}  height={'fit-content'}>
-            {
-            location.images?.length?
-            (
-              location.images?.map((image,i)=>{
-                return (
-                  <Image
-                    key={i}
-                    src={image as string}
-                    width='200'
-                    height='200'
-                    borderRadius='lg'
-                    fallbackSrc='https://www.resultae.com/wp-content/uploads/2018/07/reloj-100.jpg'>
-                  </Image>
-                )
-              })
-            )
-            :
-            <>
-              <Text>
-                No photos available for this location
-              </Text>
-              <Image
-                src={images.noPicture}
-                width='180'
-                height='180'
-                borderRadius='lg'></Image>
-            </>
-            }
-          </HStack>
-
-
-        <Text as={'b'} fontSize={'x-large'} >Description:</Text>
-        <Flex
-          direction={'column'}
-          overflowY='auto'
-          marginBottom='1.05em'
-          maxHeight={'30vh'}
-          minHeight='15vh'
-          bgColor='blackAlpha.200'
-
-          borderRadius='lg'
-          >
-          <Text
-            textAlign={'justify'}
-            margin='1.2em'>
-              {location.description.trim().length > 0 ? location.description : 'No description for this location'}
-          </Text>
-        </Flex>
-
-        <RatingSection location={location} setLocation={setlocation} session={session} ></RatingSection>
-
-        <Flex
-            direction={'row'}
-            width='full'>
-          <Text as={'b'} fontSize={'x-large'} >Reviews:</Text>
-        </Flex>
-        <ReviewSection location={location} setLocation={setlocation} session={session} ></ReviewSection>
-
-        
-
+        overflowY='auto'
+        marginBottom='1%'
+        maxHeight={'30%'}
+        minHeight='15%'
+        bgColor='blackAlpha.50'
+        marginLeft='5%'
+        marginRight={'2%'}
+        borderRadius='lg'
+        >
+        <Text
+          textAlign={'justify'}
+          marginLeft='3%'
+          marginTop='2%'>
+            {location.description.trim().length > 0 ? location.description : 'No description for this location'}
+        </Text>
       </Flex>
-      <Box marginTop={'auto'} marginLeft='auto' marginEnd={'1em'}>
-          <DeletingAlertDialog location={props.location} loadLocations={props.loadLocations}></DeletingAlertDialog>
-        </Box>
+
+      <Divider marginTop={'2%'} borderWidth={'2px'} borderRadius={"lg"} width='100%'/>
+
+      <Flex
+        direction={'column'}
+        width={'100%'}>
+        {
+        location.images?.length?
+        (
+          location.images?.map((image,i)=>{
+            return (
+              <HStack width={'100%'} marginLeft={'4%'} shouldWrapChildren={true} overflowY='auto'
+                  display='flex' overflowX='auto' minHeight={200}  height={'fit-content'}>
+                    <Image
+                      key={i}
+                      src={image as string}
+                      width='200'
+                      height='200'
+                      borderRadius='lg'
+                      fallbackSrc='https://www.resultae.com/wp-content/uploads/2018/07/reloj-100.jpg'>
+                    </Image>
+              </HStack>
+            )
+          })
+        )
+        :
+        <Flex marginLeft={'5%'} direction={'row'} alignItems={'center'} width={'100%'}>
+          <Image
+            src={images.noPicture}
+            width='100'
+            height='100'
+            borderRadius='lg'></Image>
+            <Text marginLeft='4%' width='100%'>No photos available for this location</Text>
+        </Flex>
+        }
+          
+      </Flex>
+
+      <Divider marginTop={'2%'} marginBottom={'2%'} borderWidth={'2px'} borderRadius={"lg"} width='100%'/> 
+        <Tabs isFitted={true} variant='enclosed' mx='5%'>
+          <TabList>
+            <Tab >Reviews</Tab>
+            <Tab >Ratings</Tab>
+          </TabList>
+          <TabPanels>
+            <TabPanel>
+              <ReviewSection location={location} setLocation={setlocation} session={session} ></ReviewSection>
+            </TabPanel>
+            <TabPanel>
+              <RatingSection location={location} setLocation={setlocation} session={session} ></RatingSection>
+            </TabPanel>
+          </TabPanels>
+        </Tabs>
+
+      <Divider marginBottom={'2%'} marginTop={'2%'} borderWidth={'2px'} borderRadius={"lg"} width='100%'/>    
+      <Flex height={'20%'} width={'100%'} justify={'center'} mb={'5%'}>
         <Menu closeOnSelect={false}>
-          <MenuButton as={Button} colorScheme='blue' minWidth='120px'>Share location with friends</MenuButton>
+          <MenuButton as={Button} colorScheme='blue' width='50%'>Share location with friends</MenuButton>
           <MenuList minWidth='240px'>
             <MenuOptionGroup type='checkbox'>
               {
@@ -435,6 +442,10 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
             </MenuOptionGroup>
           </MenuList>
         </Menu>
+      </Flex>
+      <Box marginTop={'auto'} marginLeft='auto' marginEnd={'1em'}>
+          <DeletingAlertDialog location={props.location} loadLocations={props.loadLocations}></DeletingAlertDialog>
+      </Box>
     </Flex>
   )
 }

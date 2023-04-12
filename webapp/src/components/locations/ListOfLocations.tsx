@@ -16,13 +16,13 @@ function ListOfLocations(props : ListProps) : JSX.Element {
    if(props.places.length === 0)
     return(
         <Flex
-            data-testid ='loadingView'
+          data-testid ='loadingView'
           direction={'column'}
           bg={'white'}
           width={"30vw"}
-          height={"100vh"}
+          height={"100%"}
           position={'absolute'} 
-          left={'5vw'}
+          left={'3vw'}
           top={0}
           zIndex={1}
           borderRight={"1px solid black"}
@@ -69,7 +69,7 @@ function ListOfLocations(props : ListProps) : JSX.Element {
         width={"30vw"}
         height={"100vh"}
         position={'absolute'} 
-        left={'5vw'}
+        left={'3vw'}
         top={0}
         zIndex={1}
         overflow='auto'
@@ -81,7 +81,7 @@ function ListOfLocations(props : ListProps) : JSX.Element {
                 top='2'
                 right='2'
         ></CloseButton>
-        <Flex flex={1} overflowY={'auto'} overflowX='clip' mt={16} direction={'column'}>
+        <Flex flex={1} overflowY={'auto'} overflowX='clip' mt={16} direction={'column'} px={5}>
         {
             props.places && props.places.map((place,i) => <LocationCard place={place} key ={i} setSelectedView={props.setSelectedView} loadLocations={props.loadLocations}/>)
         }

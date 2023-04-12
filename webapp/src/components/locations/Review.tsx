@@ -17,8 +17,9 @@ function Review (props : ReviewProps ) : JSX.Element{
         shadow='lg'
         direction={'column'}
         alignItems={'start'}
-        justifyContent = 'space-between'
         borderRadius={'lg'}
+        borderWidth={'1px'}
+        mt='3%'
         gap='0.5em'
         >
         <Flex

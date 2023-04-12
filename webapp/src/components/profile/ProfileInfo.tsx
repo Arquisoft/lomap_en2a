@@ -1,13 +1,14 @@
-import { Avatar, Text, Flex, VStack, Box, HStack,Icon, Button } from "@chakra-ui/react"
+import { Avatar, Text, Flex, VStack, Box, HStack,Icon, Button, CloseButton } from "@chakra-ui/react"
 import React, { useState } from "react"
-import { getNameFromPod} from "../../solid/solidManagement"
+import { getNameFromPod, getSolidFriends} from "../../solid/solidManagement"
 import { useSession } from '@inrupt/solid-ui-react';
 import { Location } from "../../types/types";
 import { FaStar} from "react-icons/fa";
-import {MdLocationOn} from "react-icons/md"
+import {MdLocationOn, MdPeopleAlt} from "react-icons/md"
 import {RiLogoutBoxLine} from 'react-icons/ri'
 
 type ProfileProps = {
+  setSelectedView: (viewName: JSX.Element) => void //function to change the selected view on the left
   locations : Array<Location>
 }
 
@@ -15,6 +16,7 @@ export function ProfileView(props:ProfileProps) {
   const session = useSession();
   const [name, setName] = React.useState("");
   const [avgRatings, setavgRatings] = useState(0)
+  const [numberFriends, setNumberFriends] = useState("Loading friends...")
 
   React.useEffect(() => {
     handleName()
@@ -23,6 +25,10 @@ export function ProfileView(props:ProfileProps) {
   React.useEffect(()=>{
     setavgRatings( getAverageOfAllLocations(props.locations))
   },[props.locations])
+
+  React.useEffect(() => {
+    getNumberOfFriends()
+  })
 
   const handleName = async () => {
     // if we have a valid webid, retrieve the name. Else retrieve generic unidentified name
@@ -50,6 +56,11 @@ export function ProfileView(props:ProfileProps) {
     return totalSum / totalSize;
   };
 
+  const getNumberOfFriends = async () => {
+    const n  = (await getSolidFriends(session.session.info.webId as string)).length
+    setNumberFriends(n.toString())
+  }
+
     return (
       <Flex
         direction={'column'}
@@ -57,13 +68,19 @@ export function ProfileView(props:ProfileProps) {
         width={"30vw"}
         height={"100vh"}
         position={'absolute'} 
-        left='5vw'
+        left='3vw'
         top={0}
         zIndex={1}
         borderRight={"1px solid black"}
         overflow='hidden'
         px={2}>
-        <Text fontSize='1.2em' borderBottomWidth='1px' margin={'20px'}>Profile Information</Text>
+          <CloseButton 
+              onClick={() => props.setSelectedView(<></>)}
+              position='absolute'
+              top='2'
+              right='2'
+          ></CloseButton>
+        <Text alignSelf='center' fontSize='2.2em' borderBottomWidth='1px' margin={'20px'}>Profile Information</Text>
         <VStack>
             <Avatar 
             marginTop={'20px'}
@@ -71,7 +88,7 @@ export function ProfileView(props:ProfileProps) {
             size='xl'/>
           <Text fontSize='1.2em' as="b">{name}</Text>
         </VStack>
-          <Box p={2} shadow='md' borderWidth='1px'>
+          <Box p={4} shadow='md' borderWidth='1px' marginLeft={'2em'} marginRight={'2em'} marginTop={'2em'}>
           <Text as="b" fontSize={'2x1'}>Statistics</Text>
             <HStack>
               <Icon as={MdLocationOn} color="red.500" />
@@ -83,8 +100,13 @@ export function ProfileView(props:ProfileProps) {
               <Text>Average rating for locations: </Text>
               <Text data-testid="avgRatings" as={'b'}>{Number.isNaN(avgRatings)?'No ratings':avgRatings.toFixed(2)}</Text>
             </HStack>
+            <HStack>
+              <Icon as={MdPeopleAlt} color="green" />
+              <Text>Number of friends: </Text>
+              <Text data-testid="numFriends" as={'b'}>{numberFriends}</Text>
+            </HStack>
           </Box>
-          <Box marginTop={'auto'} marginLeft='auto' marginEnd={'1em'}>
+          <Box marginTop={'auto'} marginLeft='auto' marginEnd={'2em'} marginBottom={'1em'}>
 
         <Button colorScheme='red' leftIcon={<Icon as={RiLogoutBoxLine} width='max-content' height={'2 em'} minHeight={'10px'} minWidth={'10px'} />}
           size='lg'

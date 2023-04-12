@@ -21,7 +21,7 @@ import { Category } from '../Category';
 import { useToast } from "@chakra-ui/react";
 import {createLocation} from "../../solid/solidManagement";
 import {useSession} from "@inrupt/solid-ui-react";
-import {MdOutlineAddLocationAlt} from "react-icons/md";
+import {MdOutlineAddLocationAlt, MdArrowDropDown} from "react-icons/md";
 
 type AddLocationProps = {
     setSelectedView: (viewName: JSX.Element) => void //function to change the selected view on the left
@@ -161,143 +161,150 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
 
     return (
         <form onSubmit={handleSubmit}>
-        <Flex className="flex menu" px={2} height = {'100%'} overflowY={'auto'}>
-            <Flex className="flex section">
-                <CloseButton 
-                    onClick={() => props.setSelectedView(<></>)}
-                    position='absolute'
-                    top='2'
-                    right='2'
-                ></CloseButton>
-            </Flex>
-            <Flex className="flex section">
-                <Text as={'b'} fontSize={'x-large'}>Name:</Text>
-                <Input
-                    value={name}
-                    onChange={(e:any) => setName(e.target.value)}                                        
-                    placeholder="Location's name"
-                    size='sm'
-                />
-            </Flex>
-
-            <Flex className="flex section">
-                <Text as={'b'} fontSize={'x-large'}>Coordinates:</Text>
-                <Input
-                    value={coordsValue}
-                    onChange={(e:any) => {
-                        checkCoordinates(e.target.value);
-                        if (!areValidCoords) {
-                            e.target.style.borderColor = "red"
-                        } else {
-                            e.target.style.borderColor = "inherit"
-                        }
-                        setCoordsValue(e.target.value);
-                    }}
-                    placeholder='Ej: 43.35484910218162, -5.851277716083629'
-                    size='sm'
-                />
-            </Flex>
-
-            <Flex className="flex section">
-                <Text as={'b'} fontSize={'x-large'}>Description:</Text>
-                <Textarea
-                    value={description}
-                    onChange={(e:any) => setDescription(e.target.value)}
-                    placeholder='Insert a description of the location'
-                    size='sm'
-                />
-            </Flex>
-
-            <Flex className="flex section">
-                <Text as={'b'} fontSize={'x-large'}>Select categories:</Text>
-                <Menu closeOnSelect={false}>
-                    <MenuButton as={Button} color='white' background='#4299e1' minWidth='120px'>Select Category</MenuButton>
-                    <MenuList minWidth='240px'>
-                        <MenuOptionGroup type='checkbox'>
-                            {
-                                categories.map((kind,i) => { // as many possible categories as items in Category enum
-                                    return (
-                                        <MenuItemOption key={i} value={kind} onClick={(e) => handleCheckedCategory(e)}
-                                        >{kind}</MenuItemOption>
-                                    )
-                                })
+            <Flex 
+                direction={'column'}
+                backgroundColor={'white'}
+                width={'30%'}
+                height='100%'
+                position='absolute'
+                left='3%'
+                top='0'
+                z-index='1'
+                gap='4%'
+                px={'1%'} overflowY={'auto'}>
+                <Flex direction='column'>
+                    <Text marginTop='4%' width='fit-content' 
+                    fontSize='2.2em' alignSelf='center' borderBottomWidth='1px'>Add a place</Text>
+                    <Flex direction={'column'}>
+                        <CloseButton 
+                            onClick={() => props.setSelectedView(<></>)}
+                            position='absolute'
+                            top='2%'
+                            right='3%'
+                        ></CloseButton>
+                    </Flex>
+                </Flex>
+                <Flex direction={'row'} marginLeft={'5%'} marginRight={'3%'} gap='10%'>
+                    <Input
+                        value={name}
+                        onChange={(e:any) => setName(e.target.value)}                                        
+                        placeholder="Place name"
+                        size='lg'
+                        width='50%'
+                        height='160%'
+                    />
+                    <Menu closeOnSelect={false}>
+                            <MenuButton as={Button} rightIcon={<MdArrowDropDown/>} color='white' background='#4299e1' 
+                                width={'27%'} height={'160%'}>Category
+                            </MenuButton>
+                            <MenuList minWidth='240px'>
+                                <MenuOptionGroup type='checkbox'>
+                                    {
+                                    categories.map((kind,i) => { // as many possible categories as items in Category enum
+                                        return (
+                                            <MenuItemOption key={i} value={kind} onClick={(e) => handleCheckedCategory(e)}
+                                            >{kind}</MenuItemOption>
+                                        )
+                                    })
+                                    }
+                                </MenuOptionGroup>
+                            </MenuList>
+                        </Menu>
+                </Flex>
+                <Flex direction={'column'} marginLeft={'5%'} marginRight={'3%'}>
+                    <Input
+                        value={coordsValue}
+                        onChange={(e:any) => {
+                            checkCoordinates(e.target.value);
+                            if (!areValidCoords) {
+                                e.target.style.borderColor = "red"
+                            } else {
+                                e.target.style.borderColor = "inherit"
                             }
-                        </MenuOptionGroup>
-                    </MenuList>
-                </Menu>
+                            setCoordsValue(e.target.value);
+                        }}
+                        placeholder='Ej: 43.35484910218162, -5.851277716083629'
+                        size='lg'
+                    />
+                </Flex>
+
+                <Flex direction={'column'} marginLeft={'5%'} marginRight={'3%'}>
+                    <Textarea
+                        value={description}
+                        onChange={(e:any) => setDescription(e.target.value)}
+                        placeholder='Place description'
+                        size='lg'
+                    />
+                </Flex>
+                
+                <Flex direction={'column'} marginLeft={'5%'} marginRight={'3%'} gap='5%'>
+                    <label className={"label upload-file"}
+                    htmlFor="image-input">Add images</label>
+                    <Input className={"upload-file"}
+                        id={"image-input"}
+                        hidden={true}
+                        type="file"
+                        accept='image/*'
+                        htmlSize={200}
+                        onChange={async function(e) {
+                            //imgs = []; // array of images empty
+                            let reader = new FileReader(); // create reader
+                            let files = e.target.files !== null ? e.target.files : []; // obtain files
+                            for (let image of files){
+                                let res = await readFileAsync(image, reader); // wait for the result
+                                //imgs.push(res); // add file to array
+                                setImgs(oldArray => [...oldArray, res]);
+                            }
+                        }}
+                        multiple>
+                    </Input>
+
+                    <HStack shouldWrapChildren={true} display='flex' marginTop={'2%'}
+                        overflowX='auto' height={'200px'}>
+                        {
+                            imgs.length ? 
+                            (
+                                imgs.map((image,i)=>{
+                                    return (
+                                        <Image
+                                            key={i}
+                                            src={image as string}
+                                            width='200'
+                                            height='200'
+                                            borderRadius='lg'
+                                            fallbackSrc='https://www.resultae.com/wp-content/uploads/2018/07/reloj-100.jpg'>
+                                        </Image>
+                                    );
+                                })
+                            ) 
+                            : 
+                            (<></>)
+                        }
+                    </HStack>
+                </Flex>
+                <Box alignSelf={'center'} marginTop={'auto'} marginBottom={'10%'}>
+                    {addingLocationProcess ? (
+                        <Button leftIcon={<Spinner size={"xs"}/>}
+                                colorScheme={'blue'}
+                                variant={'outline'}
+                                type={'submit'}
+                                disabled
+                                height={'170%'}
+                                fontSize={'2xl'}>
+                            Adding location
+                        </Button>
+                    ) : (
+                        <Button leftIcon={<MdOutlineAddLocationAlt/>}
+                                colorScheme={'blue'}
+                                variant={'outline'}
+                                type={'submit'}
+                                height={'170%'}
+                                fontSize={'2xl'}>
+                            Add location
+                        </Button>
+                    )}
+                </Box>
             </Flex>
-
-            <Flex className="flex section">
-                <Text paddingBottom={'0.5em'} as={'b'} fontSize={'x-large'}>
-                    Add images to your location:
-                </Text>
-                <label className={"label upload-file"}
-                       htmlFor="image-input">
-                    <i className="fa fa-cloud-upload"></i> Upload images
-                </label>
-                <Input className={"upload-file"}
-                       id={"image-input"}
-                       hidden={true}
-                       type="file"
-                       accept='image/*'
-                       border={'0'}
-                       onChange={async function(e) {
-                           //imgs = []; // array of images empty
-                           let reader = new FileReader(); // create reader
-                           let files = e.target.files !== null ? e.target.files : []; // obtain files
-                           for (let image of files){
-                               let res = await readFileAsync(image, reader); // wait for the result
-                               //imgs.push(res); // add file to array
-                               setImgs(oldArray => [...oldArray, res]);
-                           }
-                       }}
-                       multiple
-                >
-                </Input>
-
-
-                <HStack shouldWrapChildren={true} display='flex' overflowX='auto'  height={'fit-content'}>
-                    {
-                        imgs.length ? (
-                            imgs.map((image,i)=>{
-                                return (
-                                    <Image
-                                        key={i}
-                                        src={image as string}
-                                        width='200'
-                                        height='200'
-                                        borderRadius='lg'
-                                        fallbackSrc='https://www.resultae.com/wp-content/uploads/2018/07/reloj-100.jpg'>
-                                    </Image>
-                                );
-                            })
-                        ) : (
-                            <>
-
-                            </>
-                        )
-                    }
-                </HStack>
-            </Flex>
-            <Box>
-                {addingLocationProcess ? (
-                    <Button leftIcon={<Spinner size={"xs"}/>}
-                            colorScheme={'blue'}
-                            variant={'outline'}
-                            type={'submit'}
-                            disabled>
-                        Adding location
-                    </Button>
-                ) : (
-                    <Button leftIcon={<MdOutlineAddLocationAlt/>}
-                            colorScheme={'blue'}
-                            variant={'outline'}
-                            type={'submit'}>
-                        Add location
-                    </Button>
-                )}
-            </Box>
-        </Flex>
         </form>
     );
 }

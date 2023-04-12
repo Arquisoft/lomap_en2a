@@ -1,11 +1,15 @@
 import React, { useContext, useState } from 'react'
-import {Flex,Text, Button, Input,  InputRightElement, InputGroup} from "@chakra-ui/react";
+import {Flex,Text, Button, Input,  InputRightElement, InputGroup, CloseButton} from "@chakra-ui/react";
 import { addSolidFriend,getSolidFriends} from "../../solid/solidManagement";
 import type { Friend } from "../../types/types";
 import FriendsDetail from './FriendsDetail';
 import { useSession } from '@inrupt/solid-ui-react';
 
-function Friends() : JSX.Element {
+type FriendsProps = {
+  setSelectedView: (viewName: JSX.Element) => void //function to change the selected view on the left
+}
+
+function Friends(props:FriendsProps) : JSX.Element {
   //we load the session
   const session = useSession()
 
@@ -44,45 +48,45 @@ function Friends() : JSX.Element {
         <Flex
           direction={'column'}
           bg={'white'}
-          width={"30vw"}
-          height={"100vh"}
+          width={"30%"}
+          height={"100%"}
           position={'absolute'} 
-          left='5vw'
+          left='3%'
           top={0}
           zIndex={1}
-          borderRight={"1px solid black"}
-          overflow='hidden'
-          px={2}>
-          
-    
+          borderWidth={'1px'}
+          overflow='hidden'>
+          <CloseButton 
+                    onClick={() => props.setSelectedView(<></>)}
+                    position='absolute'
+                    top='2%'
+                    right='3%'
+          ></CloseButton>
           { 
-            
             session.session.info.isLoggedIn ?
-            <Flex direction={"column"}>
-              <Text fontSize='1.2em' borderBottomWidth='1px' margin={'20px'}>Add Friend</Text>
+            <Flex direction={"column"} marginTop={'5%'} width={'90%'} marginLeft={'3%'}>
+              <Text fontSize='1.9em' borderBottomWidth='1px' alignSelf='center'
+              marginTop='2%' marginBottom='3%'>Add Friend to Solid</Text>
               
-              <form onSubmit={handleSubmitSolid} >
-                <InputGroup>
-                <Input data-testid ='inputFriends' placeholder='Friend URL' type='text' id="newFriend" name="newFriend"required/>
-                <InputRightElement>
-                <Button type='submit'>+</Button> 
-                </InputRightElement>
-                
-                </InputGroup>
-                {error && <Text>{errorMessage}</Text> }
-                
-              </form>
-              <Text fontSize='1.2em' borderBottomWidth='1px' margin={'20px'}>Friends</Text>
-              <Flex flex={1} overflowY={'scroll'}overflowX={'scroll'} mt={3} direction={'column'} >
+              <Flex direction='row' width={'95%'} marginLeft='4%'>
+                <Input data-testid ='inputFriends' width='98%' placeholder='Friend webID' 
+                  type='text' id="newFriend" name="newFriend" required size='lg'/>
+                  <Button size='lg' backgroundColor='blue.300' 
+                    color={'white'} marginRight={'0%'} onClick={(event) => handleSubmitSolid(event)}>+</Button>                   
+                  {error && <Text>{errorMessage}</Text> }
+              </Flex>
+              <Text fontSize='1.9em' borderBottomWidth='1px' 
+              marginTop={'4%'} alignSelf='center'>Current Solid Friends</Text>
+              <Flex flex={1} overflowY={'scroll'}overflowX={'scroll'} width={'100%'} 
+                mt={'3%'} direction={'column'} margin={'2%'} px={'2%'}>
               {
-                  friends.map((f,i) => <FriendsDetail friend={f} key ={i}/>)
+                  friends.length > 0 ? friends.map((f,i) => <FriendsDetail friend={f} key ={i}/>) 
+                  : <Text margin='auto'>Uups! It seems you don't have any friends...</Text>
               }
               </Flex>
             </Flex>
             :
-            <Text fontSize='1.2em' borderBottomWidth='1px' margin={'20px'}>You are not logged in</Text>
-
-            
+            <Text fontSize='1.2em' borderBottomWidth='1px' margin={'3%'}>You are not logged in</Text>
           }
           
         </Flex>

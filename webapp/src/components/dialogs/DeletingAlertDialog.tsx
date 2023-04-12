@@ -8,7 +8,7 @@ import {
     AlertDialogOverlay,
     useDisclosure, Button, Icon, useToast
 } from '@chakra-ui/react'
-import {RxCross2} from "react-icons/rx";
+import {MdDelete} from 'react-icons/md'
 import {deleteLocation} from "../../solid/solidManagement";
 import {useSession} from "@inrupt/solid-ui-react";
 import { Location } from "../../types/types";
@@ -50,12 +50,12 @@ export function DeletingAlertDialog(props:any) {
 
     return (
         <>
-            <Button colorScheme='red'
-                    onClick={onOpen}
-                    size='lg'
-                    leftIcon={<Icon as={RxCross2} width='max-content' height={'2.5vw'} minHeight={'10px'} minWidth={'10px'}/>}
-                    marginBottom={'1em'}
-            >
+            <Button 
+                colorScheme='red'
+                onClick={onOpen}
+                size='lg'
+                leftIcon={<Icon as={MdDelete} width='2.5vh' height={'2.5vw'}/>}
+                marginBottom={'1em'}>
                 Delete location
             </Button>
 
