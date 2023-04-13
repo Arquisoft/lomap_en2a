@@ -1,9 +1,10 @@
 import React, { useContext, useState } from 'react'
-import {Flex,Text, Button, Input,  InputRightElement, InputGroup, CloseButton} from "@chakra-ui/react";
+import {Flex,Text, Button, Input, Icon,  InputRightElement, InputGroup, CloseButton, Spinner} from "@chakra-ui/react";
 import { addSolidFriend,getSolidFriends} from "../../solid/solidManagement";
 import type { Friend } from "../../types/types";
 import FriendsDetail from './FriendsDetail';
 import { useSession } from '@inrupt/solid-ui-react';
+import {MdAdd, MdPersonAdd} from "react-icons/md";
 
 type FriendsProps = {
   setSelectedView: (viewName: JSX.Element) => void //function to change the selected view on the left
@@ -20,6 +21,7 @@ function Friends(props:FriendsProps) : JSX.Element {
 
   const[error, setError]=React.useState(false);
   const[errorMessage,setErrorMessage]=React.useState("");
+  const[addIcon, setAddIcon] = React.useState(<MdPersonAdd></MdPersonAdd>)
 
   React.useEffect(() => {
     handleFriends()
@@ -39,11 +41,13 @@ function Friends(props:FriendsProps) : JSX.Element {
   }
 
   
-  const handleSubmitSolid= (event)=>{
+  const handleSubmitSolid= async (event)=>{
     event.preventDefault();
+    setAddIcon(<Spinner size={"xs"}/>)
     let value = (document.getElementById("newFriend")as HTMLInputElement).value;
-    const result = addSolidFriend(webId as string,value);
-    result.then(r=>{setError(r.error);setErrorMessage(r.errorMessage);})
+    const result = await addSolidFriend(webId as string,value);
+    setAddIcon(<MdPersonAdd/>)
+    setError(result.error);setErrorMessage(result.errorMessage);
     handleFriends();
   }
 
@@ -75,9 +79,11 @@ function Friends(props:FriendsProps) : JSX.Element {
                 <Input data-testid ='inputFriends' width='98%' placeholder='Friend webID' 
                   type='text' id="newFriend" name="newFriend" required size='lg'/>
                   <Button size='lg' backgroundColor='blue.300' 
-                    color={'white'} marginRight={'0%'} onClick={(event) => handleSubmitSolid(event)}>+</Button>                   
-                  {error && <Text>{errorMessage}</Text> }
+                    color={'white'} marginRight={'0%'} onClick={(event) => handleSubmitSolid(event)}
+                    leftIcon={addIcon}
+                  ></Button>                   
               </Flex>
+              {error && <Text marginLeft='5%'>{errorMessage}</Text> }
               <Text fontSize='1.9em' borderBottomWidth='1px' 
               marginTop={'4%'} alignSelf='center'>Current Solid Friends</Text>
               <Flex flex={1} overflowY={'scroll'}overflowX={'scroll'} width={'100%'} 
