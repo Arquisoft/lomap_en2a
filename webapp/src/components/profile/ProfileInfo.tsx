@@ -71,7 +71,7 @@ export function ProfileView(props:ProfileProps) {
         left='3%'
         top={0}
         zIndex={1}
-        borderRight={"1px solid black"}
+        borderRightWidth={'1px'}
         overflow='hidden'
         px={2}>
           <CloseButton 

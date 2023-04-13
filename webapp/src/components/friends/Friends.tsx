@@ -4,7 +4,7 @@ import { addSolidFriend,getSolidFriends} from "../../solid/solidManagement";
 import type { Friend } from "../../types/types";
 import FriendsDetail from './FriendsDetail';
 import { useSession } from '@inrupt/solid-ui-react';
-import {MdAdd, MdPersonAdd} from "react-icons/md";
+import {MdPersonAdd} from "react-icons/md";
 
 type FriendsProps = {
   setSelectedView: (viewName: JSX.Element) => void //function to change the selected view on the left

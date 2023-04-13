@@ -22,7 +22,7 @@ function ListOfLocations(props : ListProps) : JSX.Element {
           width={"30vw"}
           height={"100%"}
           position={'absolute'} 
-          left={'3vw'}
+          left={'3%'}
           top={0}
           zIndex={1}
           borderRight={"1px solid black"}
@@ -35,30 +35,7 @@ function ListOfLocations(props : ListProps) : JSX.Element {
                 top='2'
                 right='2'
             ></CloseButton>
-            <Box padding ="6" boxShadow ='lg' bg='white' mt={3}>
-                <SkeletonCircle size = '10'/>
-                <SkeletonText mt='4' noOfLines={4} spacing='4'/>
-            </Box>
             
-            <Box padding ="6" boxShadow ='lg' bg='white' mt={3}>
-                <SkeletonCircle size = '10'/>
-                <SkeletonText mt='4' noOfLines={4} spacing='4'/>
-            </Box>
-
-            <Box padding ="6" boxShadow ='lg' bg='white' mt={3}>
-                <SkeletonCircle size = '10'/>
-                <SkeletonText mt='4' noOfLines={4} spacing='4'/>
-            </Box>
-
-            <Box padding ="6" boxShadow ='lg' bg='white' mt={3}>
-                <SkeletonCircle size = '10'/>
-                <SkeletonText mt='4' noOfLines={4} spacing='4'/>
-            </Box>
-
-            <Box padding ="6" boxShadow ='lg' bg='white' mt={3}>
-                <SkeletonCircle size = '10'/>
-                <SkeletonText mt='4' noOfLines={4} spacing='4'/>
-            </Box>
         </Flex>
     );
 
