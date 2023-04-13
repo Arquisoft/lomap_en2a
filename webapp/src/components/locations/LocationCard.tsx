@@ -17,10 +17,10 @@ function LocationCard (props : PlaceDetailProps ) : JSX.Element{
   return (
     <Flex
         bg= {'white'}
-        px={4}
-        py={2}
-        mb={2}
-        maxWidth='40vw'
+        px={'2%'}
+        py={'2%'}
+        mb={'2%'}
+        maxWidth='100%'
         shadow='lg'
         direction={'column'}
         alignItems={'start'}
@@ -37,8 +37,8 @@ function LocationCard (props : PlaceDetailProps ) : JSX.Element{
                 direction={'column'}
                 justifyContent={'start'}
                 alignItems={'start'}
-                width='17vw'
-                px={2}
+                width='70%'
+                px={'2%'}
                 >
                 <Flex
                  alignItems={'center'}
@@ -61,9 +61,10 @@ function LocationCard (props : PlaceDetailProps ) : JSX.Element{
             </Flex>
             <Image 
                 objectFit={'cover'}
-                width={'120px'}
-                height={'120px'}
+                width={'20%'}
+                height={'100%'}
                 rounded='lg'
+                alignSelf={'center'}
                 src={
                     props.place.images?.length?
                         props.place.images[0] as string 

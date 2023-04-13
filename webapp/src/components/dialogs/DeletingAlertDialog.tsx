@@ -53,10 +53,10 @@ export function DeletingAlertDialog(props:any) {
             <Button 
                 colorScheme='red'
                 onClick={onOpen}
-                size='lg'
-                leftIcon={<Icon as={MdDelete} width='2.5vh' height={'2.5vw'}/>}
-                marginBottom={'1em'}>
-                Delete location
+                size='md'
+                marginBottom={'6%'}
+                width='fit-content'>
+                <Icon as={MdDelete}/>
             </Button>
 
             <AlertDialog leastDestructiveRef={cancelRef}

@@ -1,6 +1,6 @@
 import React,{ useState,useEffect } from 'react';
 import { Text,Stack, HStack, Image, Box, Flex, Button, Icon, Heading, Divider, useDisclosure, Textarea, Input, Grid, Progress, Tab, TabList, TabPanel, TabPanels, Tabs, CloseButton} from "@chakra-ui/react"
-import {MdOutlineRateReview} from 'react-icons/md'
+import {MdOutlineRateReview, MdShare} from 'react-icons/md'
 
 import {Popover,PopoverTrigger,PopoverContent,PopoverCloseButton, Menu, MenuButton, MenuItem, MenuItemOption, MenuList, MenuOptionGroup} from '@chakra-ui/react'
 import {FormControl,FormLabel,FormErrorMessage,FormHelperText,} from '@chakra-ui/react'
@@ -135,7 +135,7 @@ const RatingSection = ({location, setLocation, session})=>{
               addLocationScore(session.session.info.webId, localLocation, value)
 
           }}></StarRating>
-          <HStack gap='1.5em' placeContent={'center'} width={'full'}>
+          <HStack gap='10%' placeContent={'center'} width={'full'}>
             <Stack alignItems={'center'}>
               <Text>Average rating:</Text>
               <Text data-testid ='avgRatings' as={'b'} fontSize='2xl'>{Number.isNaN(average)? 0 : average.toFixed(2)}</Text>
@@ -147,9 +147,9 @@ const RatingSection = ({location, setLocation, session})=>{
           </HStack>
         </Stack>
         <Stack alignItems={'center'}>
-          <Grid templateColumns={'repeat(2,1fr)'} gap='0.5vw' width={'full'}>
+          <Grid templateColumns={'repeat(2,1fr)'} gap='5%' width={'full'}>
             <Stack>
-              <Flex gap={'1em'} alignItems={'baseline'} direction={'row'}>
+              <Flex gap={'3%'} alignItems={'baseline'} direction={'row'}>
                 <Text>1</Text>
                 <Progress rounded={'md'} width={'full'} value={(one * 100) / total} size='sm' colorScheme={'yellow'}></Progress>
               </Flex>
@@ -195,7 +195,7 @@ const ReviewSection =  ( {location ,setLocation,session}) =>{
 
   return (
     <>
-      <Box marginLeft={'4%'}>
+      <Box marginLeft={'10%'}>
         <Popover
             isOpen={isOpen}
             initialFocusRef={firstFieldRef}
@@ -208,7 +208,7 @@ const ReviewSection =  ( {location ,setLocation,session}) =>{
               <Button data-testid ='buttonReview' colorScheme={'green'} size='sm' leftIcon ={<MdOutlineRateReview/>} >Add review</Button>
             </PopoverTrigger>
             <PopoverContent >
-              <Box zIndex={'3'} padding='1.1em'>
+              <Box padding='6%' marginLeft='5%'>
               <PopoverCloseButton data-testid='closeButtonReview' />
                   <FormControl isInvalid={errorOnBody}  >
                     <FormLabel fontSize={'1.6em'}>Leave a review </FormLabel>
@@ -343,40 +343,60 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
         overflowY='auto'
         px={2}
         >
-      <Text
-        fontSize='2.2em'
-        marginTop={'4%'}
-        marginLeft={'5%'}
-        >
-        {location.name}
-      </Text>
-      <CloseButton 
-                onClick={() => props.setSelectedView(<></>)}
-                position='absolute'
-                top='2'
-                right='2'
-        ></CloseButton>
-      <Divider marginTop={'2%'} borderWidth={'2px'} borderRadius={"lg"} width='100%' />
+          <Flex direction='row' alignItems='center' marginTop={'8%'} marginLeft='5%'>
+            <Text
+              fontSize='2.2em'
+              marginLeft={'5%'}
+              >
+              {location.name}
+            </Text>
+            <Flex direction='row' gap='8%' marginLeft='auto' marginRight='5%'>
+              <DeletingAlertDialog location={props.location} loadLocations={props.loadLocations}></DeletingAlertDialog>
+              <Menu closeOnSelect={false}>
+              <MenuButton as={Button} colorScheme='blue' marginBottom='6%' marginLeft='auto' marginEnd='4%' 
+                width='fit-content'><Icon as={MdShare}/></MenuButton>
+              <MenuList minWidth='240px'>
+                <MenuOptionGroup type='checkbox'>
+                  {
+                    friends.map((friend) => {
+                      return (
+                          <MenuItemOption value={friend.webID} onClick={(e) => handleCheckedFriend(e)}
+                          >{friend.webID}</MenuItemOption>
+                      )
+                    })
+                  }
+                </MenuOptionGroup>
+              </MenuList>
+            </Menu>
+            </Flex>
+          </Flex>
+          <CloseButton 
+                    onClick={() => props.setSelectedView(<></>)}
+                    position='absolute'
+                    top='2'
+                    right='2'
+            ></CloseButton>
+          <Divider marginTop={'2%'} borderWidth={'2px'} borderRadius={"lg"} width='100%' />
 
-      <Text marginLeft='5%' fontSize={'1.6em'} >Related information:</Text>
-      <Flex
-        direction={'column'}
-        overflowY='auto'
-        marginBottom='1%'
-        maxHeight={'30%'}
-        minHeight='15%'
-        bgColor='blackAlpha.50'
-        marginLeft='5%'
-        marginRight={'2%'}
-        borderRadius='lg'
-        >
-        <Text
-          textAlign={'justify'}
-          marginLeft='3%'
-          marginTop='2%'>
-            {location.description.trim().length > 0 ? location.description : 'No description for this location'}
-        </Text>
-      </Flex>
+          <Text marginLeft='10%' fontSize={'1.6em'} >Related information:</Text>
+          <Flex
+            direction={'column'}
+            overflowY='auto'
+            marginBottom='1%'
+            maxHeight={'30%'}
+            minHeight='15%'
+            bgColor='blackAlpha.50'
+            marginLeft='10%'
+            marginRight={'2%'}
+            borderRadius='lg'
+            >
+            <Text
+              textAlign={'justify'}
+              marginLeft='3%'
+              marginTop='2%'>
+                {location.description.trim().length > 0 ? location.description : 'No description for this location'}
+            </Text>
+          </Flex>
 
       <Divider marginTop={'2%'} borderWidth={'2px'} borderRadius={"lg"} width='100%'/>
 
@@ -403,7 +423,7 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
           })
         )
         :
-        <Flex marginLeft={'5%'} direction={'row'} alignItems={'center'} width={'100%'}>
+        <Flex marginLeft={'10%'} direction={'row'} alignItems={'center'} width={'100%'}>
           <Image
             src={images.noPicture}
             width='100'
@@ -416,12 +436,12 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
       </Flex>
 
       <Divider marginTop={'2%'} marginBottom={'2%'} borderWidth={'2px'} borderRadius={"lg"} width='100%'/> 
-        <Tabs isFitted={true} variant='enclosed' mx='5%'>
+        <Tabs isFitted={true} variant='enclosed' mx='5%' marginLeft='5%'>
           <TabList>
             <Tab >Reviews</Tab>
             <Tab >Ratings</Tab>
           </TabList>
-          <TabPanels>
+          <TabPanels alignSelf='center'>
             <TabPanel>
               <ReviewSection location={location} setLocation={setlocation} session={session} ></ReviewSection>
             </TabPanel>
@@ -432,26 +452,6 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
         </Tabs>
 
       <Divider marginBottom={'2%'} marginTop={'2%'} borderWidth={'2px'} borderRadius={"lg"} width='100%'/>    
-      <Flex height={'20%'} width={'100%'} justify={'center'} mb={'5%'}>
-        <Menu closeOnSelect={false}>
-          <MenuButton as={Button} colorScheme='blue' width='50%'>Share location with friends</MenuButton>
-          <MenuList minWidth='240px'>
-            <MenuOptionGroup type='checkbox'>
-              {
-                friends.map((friend) => {
-                  return (
-                      <MenuItemOption value={friend.webID} onClick={(e) => handleCheckedFriend(e)}
-                      >{friend.webID}</MenuItemOption>
-                  )
-                })
-              }
-            </MenuOptionGroup>
-          </MenuList>
-        </Menu>
-      </Flex>
-      <Box marginTop={'auto'} marginLeft='auto' marginEnd={'1em'}>
-          <DeletingAlertDialog location={props.location} loadLocations={props.loadLocations}></DeletingAlertDialog>
-      </Box>
     </Flex>
   )
 }

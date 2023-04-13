@@ -65,10 +65,10 @@ export function ProfileView(props:ProfileProps) {
       <Flex
         direction={'column'}
         bg={'white'}
-        width={"30vw"}
-        height={"100vh"}
+        width={"30%"}
+        height={"100%"}
         position={'absolute'} 
-        left='3vw'
+        left='3%'
         top={0}
         zIndex={1}
         borderRight={"1px solid black"}
@@ -77,18 +77,18 @@ export function ProfileView(props:ProfileProps) {
           <CloseButton 
               onClick={() => props.setSelectedView(<></>)}
               position='absolute'
-              top='2'
-              right='2'
+              top='2%'
+              right='2%'
           ></CloseButton>
-        <Text alignSelf='center' fontSize='2.2em' borderBottomWidth='1px' margin={'20px'}>Profile Information</Text>
+        <Text alignSelf='center' fontSize='2.2em' borderBottomWidth='1px' margin={'2%'}>Profile Information</Text>
         <VStack>
             <Avatar 
-            marginTop={'20px'}
+            marginTop={'2%'}
             bg='red.500'
             size='xl'/>
           <Text fontSize='1.2em' as="b">{name}</Text>
         </VStack>
-          <Box p={4} shadow='md' borderWidth='1px' marginLeft={'2em'} marginRight={'2em'} marginTop={'2em'}>
+          <Box p={'4%'} shadow='md' borderWidth='1px' marginLeft={'5%'} marginRight={'5%'} marginTop={'5%'}>
           <Text as="b" fontSize={'2x1'}>Statistics</Text>
             <HStack>
               <Icon as={MdLocationOn} color="red.500" />
@@ -106,9 +106,9 @@ export function ProfileView(props:ProfileProps) {
               <Text data-testid="numFriends" as={'b'}>{numberFriends}</Text>
             </HStack>
           </Box>
-          <Box marginTop={'auto'} marginLeft='auto' marginEnd={'2em'} marginBottom={'1em'}>
+          <Box marginTop={'auto'} marginLeft='auto' marginEnd={'5%'} marginBottom={'3%'}>
 
-        <Button colorScheme='red' leftIcon={<Icon as={RiLogoutBoxLine} width='max-content' height={'2 em'} minHeight={'10px'} minWidth={'10px'} />}
+        <Button colorScheme='red' leftIcon={<Icon as={RiLogoutBoxLine} width='max-content' height={'5%'} minHeight={'1%'} minWidth={'1%'} />}
           size='lg'
           onClick={() => {
             session.logout();

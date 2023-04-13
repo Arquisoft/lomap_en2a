@@ -1,5 +1,6 @@
-import React from 'react'
-import { Box, Button, ChakraProvider, Checkbox, CheckboxGroup, Flex, HStack, Input, Menu, MenuButton, MenuDivider, MenuItemOption, MenuList, MenuOptionGroup, Tag, TagLabel } from "@chakra-ui/react";
+import React, { useState } from 'react'
+import { Box, Button, ChakraProvider, Checkbox, useCheckboxGroup, 
+  Flex, HStack, Popover, CheckboxGroup, Menu, MenuButton, MenuItemOption, MenuList, MenuOptionGroup} from "@chakra-ui/react";
 import {GoogleMap, Marker, useJsApiLoader} from '@react-google-maps/api';
 import LocationInfo from '../locations/LocationInfo';
 import AddLocationForm from '../locations/AddLocationForm';
@@ -8,6 +9,7 @@ import { SessionInfo } from '@inrupt/solid-ui-react/dist/src/hooks/useSession';
 import { useSession } from '@inrupt/solid-ui-react';
 import { getSolidFriends } from "../../solid/solidManagement";
 import type { Friend, Location } from "../../types/types"
+
 
 
 type MapProps = {
@@ -164,7 +166,7 @@ const Map = ( props : MapProps) => {
                       friends.map((friend) => {
                         return (
                           <MenuItemOption value={friend.webID as string}
-                              onClick={(e) => filteringFriends(e)}>
+                              onClick={(e) =>filteringFriends(e) }>
                             {friend.webID as string}</MenuItemOption>
                         )
                       })
