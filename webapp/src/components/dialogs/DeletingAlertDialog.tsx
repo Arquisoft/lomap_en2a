@@ -6,7 +6,7 @@ import {
     AlertDialogHeader,
     AlertDialogContent,
     AlertDialogOverlay,
-    useDisclosure, Button, Icon, useToast
+    useDisclosure, Button, Icon, useToast, Spinner
 } from '@chakra-ui/react'
 import {MdDelete} from 'react-icons/md'
 import {deleteLocation} from "../../solid/solidManagement";
@@ -20,8 +20,12 @@ export function DeletingAlertDialog(props:any) {
     const cancelRef:any = React.useRef();
     const session = useSession();
     const toast = useToast();
+    const [disabled, setDisabled] = React.useState(false);
+    const [deleteIcon, setDeleteIcon] = React.useState(<></>)
 
     function deleteLoc(location: Location) {
+        setDisabled(true)
+        setDeleteIcon(<Spinner size={"xs"}/>)
         if(session.session.info.webId && location.url)
             deleteLocation(session.session.info.webId ,location.url.toString()).then(
                 ()=> {
@@ -44,7 +48,7 @@ export function DeletingAlertDialog(props:any) {
                         isClosable: true,
                     });
                 }
-            )
+            ) 
     }
 
 
@@ -79,13 +83,15 @@ export function DeletingAlertDialog(props:any) {
                                 Cancel
                             </Button>
                             <Button colorScheme='red'
-                                    onClick={()=> {
-                                        deleteLoc(props.location);
-                                        onClose();
-                                    }}
-                                    ml={3}>
+                                onClick={()=> {
+                                    deleteLoc(props.location);
+                                }}
+                                leftIcon={deleteIcon}
+                                isDisabled={disabled}
+                                ml={3}>
                                 Delete
                             </Button>
+                            
                         </AlertDialogFooter>
                     </AlertDialogContent>
                 </AlertDialogOverlay>
