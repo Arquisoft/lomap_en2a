@@ -6,6 +6,7 @@ import { Location } from "../../types/types";
 import { FaStar} from "react-icons/fa";
 import {MdLocationOn, MdPeopleAlt} from "react-icons/md"
 import {RiLogoutBoxLine} from 'react-icons/ri'
+import { LogoutAlertDialog } from '../dialogs/LogoutAlertDialog';
 
 type ProfileProps = {
   setSelectedView: (viewName: JSX.Element) => void //function to change the selected view on the left
@@ -107,16 +108,8 @@ export function ProfileView(props:ProfileProps) {
             </HStack>
           </Box>
           <Box marginTop={'auto'} marginLeft='auto' marginEnd={'5%'} marginBottom={'3%'}>
-
-        <Button colorScheme='red' leftIcon={<Icon as={RiLogoutBoxLine} width='max-content' height={'5%'} minHeight={'1%'} minWidth={'1%'} />}
-          size='lg'
-          onClick={() => {
-            session.logout();
-          }}
-        >
-          Logout
-        </Button>
-      </Box>
+        <LogoutAlertDialog></LogoutAlertDialog>
+        </Box>
       </Flex>
     )
   }
