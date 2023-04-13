@@ -2,6 +2,22 @@ import type { Location as LocationType, Review }from "../../../restapi/locations
 import type { Review as ReviewType} from "../../../restapi/locations/Location";
 import type { Friend } from "../../../restapi/users/User";
 import { fetch } from "@inrupt/solid-client-authn-browser";
+
+import {
+  getSolidDatasetWithAcl,
+  hasResourceAcl,
+  hasFallbackAcl,
+  hasAccessibleAcl,
+  createAcl,
+  createAclFromFallbackAcl,
+  getResourceAcl,
+  setAgentResourceAccess,
+  saveAclFor,
+} from "@inrupt/solid-client";
+
+// Friends second iteration
+import { Friends } from 'solid-auth-client';
+
 import {
   createThing, removeThing,Thing,getThing, setThing,buildThing,
   getSolidDataset, saveSolidDatasetAt, getThingAll,
@@ -100,9 +116,15 @@ export async function getLocations(webID:string) {
       // get the path of the actual location
       let path = getStringNoLocale(locationPath, SCHEMA_INRUPT.identifier) as string;
       // get the location : Location from the dataset of that location
-      let location = await getLocationFromDataset(path)
-      // add the location to the array
-      locations.push(location)
+      try{
+        let location = await getLocationFromDataset(path)
+        locations.push(location)
+        // add the location to the array
+      }
+      catch(error){
+        //The url is not accessed(no permision)
+      }
+     
     }
   } catch (error) {
     // if the location dataset does no exist, return empty array of locations
@@ -179,12 +201,14 @@ export async function getLocationReviews(folder:string) {
       let content = getStringNoLocale(review, SCHEMA_INRUPT.description) as string;
       let date = new Date(getStringNoLocale(review, SCHEMA_INRUPT.startDate) as string);
       let webId = getStringNoLocale(review, SCHEMA_INRUPT.Person) as string;
+      let name = getStringNoLocale(await getUserProfile(webId),FOAF.name) as string;
 
       let newReview : ReviewType = {
         title: title,
         content: content,
         date: date,
-        webId: webId
+        webId: webId,
+        username: name
       }
 
       reviews.push(newReview);
@@ -242,34 +266,6 @@ export async function getLocationImage(imagesFolderUrl:string){
     images = [];
   }
   return images;
-}
-
-export async function getFriends(webID:string) {
-  
-  let friendURLs = getUrlAll(await getUserProfile(webID), VCARD.Contact);
-  let friends: Friend[] = [];
-
-  // for each friend url, get the fields of the object
-  for (let friend of friendURLs) {
-    let name = getStringNoLocale(
-      await getUserProfile(friend),
-      VCARD.Name
-    ) as string;
-    let webId = getStringNoLocale(
-      await getUserProfile(friend),
-      VCARD.url
-    ) as string;
-    
-
-    if (friend)
-      friends.push({
-        username: name,
-        webID : webId
-      });
-  }
-  
-  return friends;
-
 }
 
 // WRITE FUNCTIONS
@@ -494,30 +490,168 @@ export async function deleteLocation(webID:string, locationUrl: string) {
   }
 }
 
-export async function addFriend(webID:string, friend:Friend): Promise<{ error: boolean, errorMessage: string }> {
-    let profile = webID.split("#")[0]; //just in case there is extra information in the url
-    // get the dataset from the url
-    let dataSet = await getSolidDataset(profile, {fetch: fetch});  
-  
-    let dataSetThing = getThing(dataSet, webID) as Thing;
-
-    try {
-      let existsFriend = getUrlAll(dataSetThing, FOAF.knows)
-      if (existsFriend.some((url) => url === friend.webID)){
-        return{error:true,errorMessage:"You are already friends with this user!"}
+/**
+ * Grant/ Revoke permissions of friends regarding a particular location
+ * @param friend webID of the friend to grant or revoke permissions
+ * @param locationURL location to give/revoke permission to
+ * @param giveAccess if true, permissions are granted, if false permissions are revoked
+ */
+export async function setAccessToFriend(friend:string, locationURL:string, giveAccess:boolean){
+  let myInventory = `${locationURL.split("private")[0]}private/lomap/inventory/index.ttl`
+  await giveAccessToInventory(myInventory, friend);
+  let resourceURL = locationURL.split("#")[0]; // dataset path
+  // Fetch the SolidDataset and its associated ACL, if available:
+  let myDatasetWithAcl;
+  try {
+    myDatasetWithAcl = await getSolidDatasetWithAcl(resourceURL, {fetch: fetch});
+    // Obtain the SolidDataset's own ACL, if available, or initialise a new one, if possible:
+    let resourceAcl;
+    if (!hasResourceAcl(myDatasetWithAcl)) {
+      if (!hasAccessibleAcl(myDatasetWithAcl)) {
+        //  "The current user does not have permission to change access rights to this Resource."
+      }
+      if (!hasFallbackAcl(myDatasetWithAcl)) {
+        // create new access control list
+        resourceAcl = createAcl(myDatasetWithAcl);
       }
       else{
-        // We create the friend
-      let newFriend = buildThing(dataSetThing)
-      .addUrl(FOAF.knows, friend.webID as string)
-      .build();
-
-      // insert friend in dataset
-      dataSet = setThing(dataSet, dataSetThing);
-      dataSet = await saveSolidDatasetAt(webID, dataSet, {fetch: fetch})
-      return{error:false,errorMessage:""}
+        // create access control list from fallback
+        resourceAcl = createAclFromFallbackAcl(myDatasetWithAcl);
       }
-    } catch (error){
-      return{error:true,errorMessage:"Not a valid webId!"}
+    } else {
+      // get the access control list of the dataset
+      resourceAcl = getResourceAcl(myDatasetWithAcl);
     }
+
+  let updatedAcl;
+  if (giveAccess) {
+    // grant permissions
+    updatedAcl = setAgentResourceAccess(
+      resourceAcl,
+      friend,
+      { read: true, append: true, write: false, control: false }
+    );
+  }
+  else{
+    // revoke permissions
+    updatedAcl = setAgentResourceAccess(
+      resourceAcl,
+      friend,
+      { read: false, append: false, write: false, control: false }
+    );
+  }
+  // save the access control list
+  await saveAclFor(myDatasetWithAcl, updatedAcl, {fetch: fetch});
+  }
+  catch (error){ // catch any possible thrown errors
+    console.log(error)
+  }
+}
+
+export async function giveAccessToInventory(resourceURL:string, friend:string){
+  let myDatasetWithAcl;
+  try {
+    myDatasetWithAcl = await getSolidDatasetWithAcl(resourceURL, {fetch: fetch}); // inventory
+    // Obtain the SolidDataset's own ACL, if available, or initialise a new one, if possible:
+    let resourceAcl;
+    if (!hasResourceAcl(myDatasetWithAcl)) {
+      if (!hasAccessibleAcl(myDatasetWithAcl)) {
+        //  "The current user does not have permission to change access rights to this Resource."
+      }
+      if (!hasFallbackAcl(myDatasetWithAcl)) {
+        // create new access control list
+        resourceAcl = createAcl(myDatasetWithAcl);
+      }
+      else{
+        // create access control list from fallback
+        resourceAcl = createAclFromFallbackAcl(myDatasetWithAcl);
+      }
+    } else {
+      // get the access control list of the dataset
+      resourceAcl = getResourceAcl(myDatasetWithAcl);
+    }
+
+  let updatedAcl;
+    // grant permissions
+    updatedAcl = setAgentResourceAccess(
+      resourceAcl,
+      friend,
+      { read: true, append: true, write: false, control: false }
+    );
+  // save the access control list
+  await saveAclFor(myDatasetWithAcl, updatedAcl, {fetch: fetch});
+  }
+  catch (error){ // catch any possible thrown errors
+    console.log(error)
+  }
+}
+
+
+//Friends
+export async function addSolidFriend(webID: string,friendURL: string): Promise<{error:boolean, errorMessage:string}>{
+  let profile = webID.split("#")[0];
+  let dataSet = await getSolidDataset(profile+"#me", {fetch: fetch});//dataset card me
+
+  let thing =await getThing(dataSet, profile+"#me") as Thing; // :me from dataset
+
+  try{
+    let newFriend = buildThing(thing)
+    .addUrl(FOAF.knows, friendURL as string)
+    .build();
+      
+    const urlRegex = /^https:\/\/[a-zA-Z0-9]+\.(solid|inrupt)\.net\/card#me$/i;//RegExp to check if it's a valid URL.
+
+    let friends = await getSolidFriends(webID);
+    if(friends.some(f => f.webID === friendURL))
+      return{error:true,errorMessage:"You are already friends"}
+
+    dataSet = setThing(dataSet, newFriend);
+    dataSet = await saveSolidDatasetAt(webID, dataSet, {fetch: fetch})
+  } catch(err){
+    return{error:true,errorMessage:"The url is not valid."}
+  }
+
+  return{error:false,errorMessage:""}
+
+}
+
+export async function getSolidFriends(webID:string) {
+  let test = getUrl(await getUserProfile(webID), FOAF.knows);
+  let friendURLs = getUrlAll(await getUserProfile(webID), FOAF.knows);
+  let friends: Friend[] = [];
+
+  // for each friend url, get the fields of the object
+  for (let friend of friendURLs) {
+    
+    try{
+      
+      let name = getStringNoLocale(await getUserProfile(friend),FOAF.name);
+      let imageUrl: string | null = null;
+    
+      let pic = getUrl(await getUserProfile(friend),VCARD.hasPhoto);
+
+      
+
+      if (friend)
+      friends.push({
+        username: name as string,
+        webID : friend,
+        pfp: pic as string
+      });
+
+    } catch(err){
+
+    }
+  }
+  
+  return friends;
+
+}
+
+export  function getSolidName(webID:string)  {
+ // let name = await getSolidFriends(webId).then(friendsPromise => {return friendsPromise})
+
+  let name =  getUserProfile(webID).then(u => getStringNoLocale(u,FOAF.name)).then(p => {return p as string});
+
+  
 }

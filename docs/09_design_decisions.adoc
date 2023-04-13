@@ -8,20 +8,20 @@ To refer to the documented architectural decision about Google Maps API, click o
 
 https://github.com/Arquisoft/lomap_en2a/wiki/ARD---Map-API[Google Maps API]
 
-=== MySQL DataBase
-To refer to the documented architectural decision about MySQL DataBase, click on the link below. +
+=== No DB usage
+https://github.com/Arquisoft/lomap_en2a/wiki/ARD-not-Db-usage[No DB usage]
+This decision cancels out the following two:
+* https://github.com/Arquisoft/lomap_en2a/wiki/ARD---Data-Base[MySQL DB]
+* https://github.com/Arquisoft/lomap_en2a/wiki/ARD-Storing-user's-ID-in-DB[Storing users' ID in DB]
 
-https://github.com/Arquisoft/lomap_en2a/wiki/ARD---Data-Base[MySQL DB]
+=== Design and UI Technologies
+==== First UI mockup
+https://github.com/Arquisoft/lomap_en2a/wiki/First-mock-up-of-the-application-UI[First mockup]
+==== Chakra UI library
+https://github.com/Arquisoft/lomap_en2a/wiki/ARD-Use-of-ChakraUI[Use of ChakraUI as REact component library]
 
-=== Storing users' ID in DB
-==== Problem
-For performance reasons, there are some data that should be stored in a centralized way, in other words, using our data base. For now, we have decided to store the user IDs this way.
-
-==== Advantages
-Storing this piece of information in this way, we can save the application some time wasting operations, such as having to scan all the users pods in order to retrieve the wanted ID. This ID will be used, for example, in friend requests.
-
-==== Alternatives
-We considered the option of storing the user ID in the user pod, but for performance reasons, this was discarded.
+=== Solid Pod Structure
+https://github.com/Arquisoft/lomap_en2a/wiki/Solid-Pod-Structure[File directory hierarchy in pod]
 
 
 [role="arc42help"]
@@ -42,7 +42,7 @@ Stakeholders of your system should be able to comprehend and retrace your decisi
 .Form
 Various options:
 
-* List or table, ordered by importance and consequences or:
+* ListOfLocations or table, ordered by importance and consequences or:
 * more detailed in form of separate sections per decision
 * ADR (architecture decision record) for every important decision
 ****

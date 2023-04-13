@@ -1,10 +1,31 @@
-import React from 'react'
+import React, {useEffect, useState} from 'react'
+import './AddLocationForm.css'
 import { Location } from '../../../restapi/locations/Location'
-import {Button, Checkbox, Flex, Input, Menu, MenuButton, MenuItem, MenuItemOption, MenuList, MenuOptionGroup, Text, Textarea} from "@chakra-ui/react";
+import {
+    Button,
+    Checkbox, Divider,
+    Flex, HStack,
+    Icon, Image,
+    Input,
+    Menu,
+    MenuButton,
+    MenuItem,
+    MenuItemOption,
+    MenuList,
+    MenuOptionGroup,
+    Text,
+    Textarea,
+    Box, Spinner
+} from "@chakra-ui/react";
 import { Category } from './Category';
+import { useToast } from "@chakra-ui/react";
+import {createLocation} from "../solid/solidManagement";
+import {useSession} from "@inrupt/solid-ui-react";
+import {MdOutlineAddLocationAlt} from "react-icons/md";
 
 type AddLocationProps = {
-    onSubmit: (location: Location) => void
+    loadLocations: () => Promise<void>
+    clickedCoords: any;
 }
 
 /**
@@ -23,55 +44,109 @@ async function readFileAsync(file, reader) : Promise<string> {
 }
 
 
-function AddLocationForm(props : AddLocationProps) : JSX.Element {
+
+function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
+    const [session, setSession] = useState(useSession());
     const [name, setName] = React.useState('');
-
-    const [latValue, setLatValue] = React.useState('');    
-
-    const [lonValue, setLonValue] = React.useState('');
-
+    const [coordsValue, setCoordsValue] = React.useState(props.clickedCoords);
     const [description, setDescription] = React.useState('');
+    const [addingLocationProcess, setAddingLocationProcess] = useState(false);
+
 
     let checkedCategories : string[] = [];
 
     const categories = Object.values(Category); // array of strings containing the values of the categories
 
-    let imgs: string[] = [];
+    //let imgs: string[] = [];
+    const [imgs, setImgs] = React.useState<string[]>([]);
 
-    const regexLat = /^(-?[1-8]?\d(?:\.\d{1,18})?|90(?:\.0{1,18})?)$/;
-    const regexLon = /^(-?(?:1[0-7]|[1-9])?\d(?:\.\d{1,18})?|180(?:\.0{1,18})?)$/;
-    function checkCoordinates(lat: string, lon: string): boolean {
-        let validLat = regexLat.test(lat);
-        let validLon = regexLon.test(lon);
-        return validLat && validLon;
+
+    let lat: number, lon: number;
+    let areValidCoords: boolean = false;
+    let isValidName: boolean = !name || name.trim().length === 0;
+
+
+    function addLocation(location:Location):void{
+        if(session.session.info.webId)
+            createLocation(session.session.info.webId ,location).then(
+                ()=> {
+                    props.loadLocations();
+                    toast({
+                        title: 'Location added.',
+                        description: "The location was added to your pod.",
+                        status: 'success',
+                        duration: 5000,
+                        isClosable: true,
+                    });
+                    setAddingLocationProcess(false);
+                },
+                ()=> {
+                    toast({
+                        title: 'Error.',
+                        description: "The location couldn't be added to your pod.",
+                        status: 'error',
+                        duration: 5000,
+                        isClosable: true,
+                    });
+                    setAddingLocationProcess(false);
+                }
+            )
     }
+
+    const regexCoords = /^-?(90|[0-8]?\d)(\.\d+)?, *-?(180|1[0-7]\d|\d?\d)(\.\d+)?$/;
+    function checkCoordinates(coords: string): void {
+        areValidCoords = regexCoords.test(coords);
+    }
+
+    function handleCoordsValue(coords: string):void {
+        let separatedCoords = coords.split(',');
+        console.log(separatedCoords[0]);
+        lat = Number(separatedCoords[0]);
+        lon = Number(separatedCoords[1]);
+    }
+
+    const toast = useToast();
 
     const handleSubmit = (e:any) => {
         e.preventDefault();
+
+        setAddingLocationProcess(true);
+        checkCoordinates(coordsValue);
+
+        if (isValidName) {
+            return;
+        }
+
+        if (!areValidCoords) {
+            alert("areValidCoords da false");
+            return;
+        }
+
         // if no category was selected, autoselect 'Other'
         if (checkedCategories.length == 0){
             checkedCategories.push(Category.Other)
         }
-        //if (checkCoordinates(latValue, lonValue)) {
-            let l : Location = {name: name,
-                                coordinates: {
-                                    lng: Number(lonValue),
-                                    lat: Number(latValue)
-                                },
-                                description: description,
-                                images : imgs,
-                                category: checkedCategories}
-            props.onSubmit(l);
-            return;
-        //}
+
+        handleCoordsValue(coordsValue);
+        let l : Location = {
+            name: name.trimStart().trimEnd(),
+            coordinates: {
+                lng: lon,
+                lat: lat
+            },
+            category: categories,
+            description: description.trimStart().trimEnd(),
+            images : imgs
+        }
+
+        addLocation(l);
 
     };
-
     /**
      * Add/Delete category to/from the location
-     * @param e 
+     * @param e
      */
-    const handleCheckedCategory = (e) => {       
+    const handleCheckedCategory = (e) => {
         // if the index is > -1, means that the location already had this category and the user wants to erase it
         const index = checkedCategories.indexOf(e.target.innerText); //use innerText to get the name of the category
         if (index > -1) { // only splice array when item is found
@@ -85,100 +160,159 @@ function AddLocationForm(props : AddLocationProps) : JSX.Element {
 
     return (
         <form onSubmit={handleSubmit}>
-        <Flex
-            direction={'column'}
-            bg={'white'}
-            width={"30vw"}
-            height={"100vh"}
-            position={'absolute'}
-            left={'5vw'}
-            top={0}
-            zIndex={1}
-            overflow='hidden'
-            px={2}
-            rowGap="2em"            
-        >
-            <Flex direction={'column'}>
-                <Text>Nombre:</Text>
+        <Flex className="flex menu" px={2} height = {'100%'} overflowY={'auto'}>
+            <Flex className="flex section">
+                <Text as={'b'} fontSize={'x-large'}>Name:</Text>
                 <Input
                     value={name}
                     onChange={(e:any) => setName(e.target.value)}                                        
-                    placeholder='Nombre'
+                    placeholder="Location's name"
                     size='sm'
                 />
             </Flex>
 
-            <Flex direction={'column'}>
-                <Text>Latitud:</Text>
+            <Flex className="flex section">
+                <Text as={'b'} fontSize={'x-large'}>Coordinates:</Text>
                 <Input
-                    value={latValue}
-                    onChange={(e:any) => setLatValue(e.target.value)}
-                    placeholder='Inserte latitud'
-                    size='sm'
-                />
-
-                <Text>Longitud:</Text>
-                <Input
-                    value={lonValue}
-                    onChange={(e:any) => setLonValue(e.target.value)}
-                    placeholder='Inserte longitud'
+                    value={coordsValue}
+                    onChange={(e:any) => {
+                        checkCoordinates(e.target.value);
+                        if (!areValidCoords) {
+                            e.target.style.borderColor = "red"
+                        } else {
+                            e.target.style.borderColor = "inherit"
+                        }
+                        setCoordsValue(e.target.value);
+                    }}
+                    placeholder='Ej: 43.35484910218162, -5.851277716083629'
                     size='sm'
                 />
             </Flex>
 
-            <Flex direction={'column'}>
-                <Text>Descripción:</Text>
+            <Flex className="flex section">
+                <Text as={'b'} fontSize={'x-large'}>Description:</Text>
                 <Textarea
                     value={description}
                     onChange={(e:any) => setDescription(e.target.value)}
-                    placeholder='Inserte una descripción del lugar'
+                    placeholder='Insert a description of the location'
                     size='sm'
                 />
             </Flex>
 
-            <Menu closeOnSelect={false}>
-                <MenuButton as={Button} colorScheme='blue' minWidth='120px'>Select Category</MenuButton>
-                <MenuList minWidth='240px'>
-                  <MenuOptionGroup type='checkbox'>
-                    {
-                      categories.map((kind) => { // as many possible categories as items in Category enum
-                        return (
-                          <MenuItemOption value={kind} onClick={(e) => handleCheckedCategory(e)}
-                          >{kind}</MenuItemOption>
-                        )
-                      })
-                    }
-                  </MenuOptionGroup>
-                </MenuList>
-              </Menu>
-            
-            <Input 
-                type="file" 
-                accept='image/*' 
-                onChange={async function(e) {
-                    imgs = []; // array of images empty
-                    var reader = new FileReader(); // create reader
-                    let files = e.target.files !== null ? e.target.files : []; // obtain files
-                    for (let image of files){
-                        let res = await readFileAsync(image, reader); // wait for the result
-                        imgs.push(res); // add file to array
-                    }
-                }} 
-                multiple>
+            <Flex className="flex section">
+                <Text as={'b'} fontSize={'x-large'}>Select categories:</Text>
+                <Menu closeOnSelect={false}>
+                    <MenuButton as={Button} colorScheme='orange' minWidth='120px'>Select Category</MenuButton>
+                    <MenuList minWidth='240px'>
+                        <MenuOptionGroup type='checkbox'>
+                            {
+                                categories.map((kind,i) => { // as many possible categories as items in Category enum
+                                    return (
+                                        <MenuItemOption key={i} value={kind} onClick={(e) => handleCheckedCategory(e)}
+                                        >{kind}</MenuItemOption>
+                                    )
+                                })
+                            }
+                        </MenuOptionGroup>
+                    </MenuList>
+                </Menu>
+            </Flex>
 
-            </Input>
-            
-            <Button colorScheme={'orange'}
-                    variant={'outline'}
-                    type={'submit'}
-            >
-                Añadir
-            </Button>
+            <Flex className="flex section">
+                <Text paddingBottom={'0.5em'} as={'b'} fontSize={'x-large'}>
+                    Add images to your location:
+                </Text>
+                <label className={"label upload-file"}
+                       htmlFor="image-input">
+                    <i className="fa fa-cloud-upload"></i> Upload images
+                </label>
+                <Input className={"upload-file"}
+                       id={"image-input"}
+                       hidden={true}
+                       type="file"
+                       accept='image/*'
+                       border={'0'}
+                       onChange={async function(e) {
+                           //imgs = []; // array of images empty
+                           let reader = new FileReader(); // create reader
+                           let files = e.target.files !== null ? e.target.files : []; // obtain files
+                           for (let image of files){
+                               let res = await readFileAsync(image, reader); // wait for the result
+                               //imgs.push(res); // add file to array
+                               setImgs(oldArray => [...oldArray, res]);
+                           }
+                       }}
+                       multiple
+                >
+                </Input>
+
+
+                <HStack shouldWrapChildren={true} display='flex' overflowX='auto'  height={'fit-content'}>
+                    {
+                        imgs.length ? (
+                            imgs.map((image,i)=>{
+                                return (
+                                    <Image
+                                        key={i}
+                                        src={image as string}
+                                        width='200'
+                                        height='200'
+                                        borderRadius='lg'
+                                        fallbackSrc='https://www.resultae.com/wp-content/uploads/2018/07/reloj-100.jpg'>
+                                    </Image>
+                                );
+                            })
+                        ) : (
+                            <>
+
+                            </>
+                        )
+                    }
+                </HStack>
+            </Flex>
+            <Box>
+                {addingLocationProcess ? (
+                    <Button leftIcon={<Spinner size={"xs"}/>}
+                            colorScheme={'orange'}
+                            variant={'outline'}
+                            type={'submit'}
+                            disabled>
+                        Adding location
+                    </Button>
+                ) : (
+                    <Button leftIcon={<MdOutlineAddLocationAlt/>}
+                            colorScheme={'orange'}
+                            variant={'outline'}
+                            type={'submit'}>
+                        Add location
+                    </Button>
+                )}
+            </Box>
         </Flex>
         </form>
     );
 }
 
+function AddLocationButton(props:any) : JSX.Element {
+    return (
+        props.addingLocationProcess ? (
+            <Button leftIcon={<Spinner size={"xs"}/>}
+                    colorScheme={'orange'}
+                    variant={'outline'}
+                    type={'submit'}
+                    disabled>
+                Adding location
+            </Button>
+        ) : (
+            <Button leftIcon={<MdOutlineAddLocationAlt/>}
+                    colorScheme={'orange'}
+                    variant={'outline'}
+                    type={'submit'}>
+                Add location
+            </Button>
+        )
+    );
+}
 
 
-export default AddLocationForm;
+export default AddLocationFormComp;

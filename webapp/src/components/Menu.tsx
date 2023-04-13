@@ -1,17 +1,17 @@
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { Flex, Button, Icon, Box } from "@chakra-ui/react";
 import { MdList, MdLocationOn, MdMap, MdPeopleAlt, MdPerson } from "react-icons/md"
 import { Location } from '../../../restapi/locations/Location';
-import List from './List';
+import ListOfLocations from './ListOfLocations';
 import AddLocationForm from './AddLocationForm';
 import Friends from './Friends';
 import { ProfileView } from './ProfileInfo';
 
+
 type MenuProps = {
-  setSelectedView: (view: JSX.Element) => void,
+  changeViewTo: (view: JSX.Element) => void,
   locations : Array<Location>,
-  deleteLoc : (location:Location) =>void,
-  addLocation : (location:Location) =>void
+  loadLocations : () => Promise<void>
 }
 
 
@@ -20,7 +20,9 @@ function Menu(props: MenuProps): JSX.Element {
   const [insideMenu, setinsideMenu] = useState(false)
 
   return (
-    <Flex direction={'column'}
+    <Flex 
+          data-testid='bigContainer'
+          direction={'column'}
           bg={'white'}
           width={"fit-content"}
           minWidth={"5vw"}
@@ -31,6 +33,7 @@ function Menu(props: MenuProps): JSX.Element {
           bottom={-4}
           zIndex={1}
           overflow='hidden'
+          borderRight={"1px solid black"}
           px={2}
           boxShadow ='lg'
           onMouseOver={()=> {setinsideMenu(true)}}
@@ -53,57 +56,64 @@ function Menu(props: MenuProps): JSX.Element {
                   marginTop={3}
             >
               <Box>
-                <Button leftIcon={<Icon as={MdMap} width='max-content' height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
+                <Button
+                data-testid={'Map View'}
+                 leftIcon={<Icon as={MdMap} width='max-content' height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
                         bg={'white'}
                         color={'black'}
                         size='lg'
                         height={'5vh'}
-                        onClick={() => { setinsideMenu(false); props.setSelectedView(<></>); }}>
-                  Map view
+                        onClick={() => { setinsideMenu(false); props.changeViewTo(<></>); }}>
+                  Map View
                 </Button>
               </Box>
 
               <Box>
-                <Button leftIcon={<Icon as={MdList} width='max-content' height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
+                <Button
+                data-testid={'List of Locations'} 
+                leftIcon={<Icon as={MdList} width='max-content' height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
                         bg={'white'}
                         color={'black'}
                         size='lg'
                         onClick={() => {
                           setinsideMenu(false);
-                          props.setSelectedView(
-                            <List deleteLocation={props.deleteLoc}
-                               setSelectedView={(view)=> props.setSelectedView(view)} places={props.locations}  />
+                          props.changeViewTo(
+                            <ListOfLocations setSelectedView={(view)=> props.changeViewTo(view)} places={props.locations} loadLocations={props.loadLocations} />
                             );
                         }}>
-                  Location list
+                  List of Locations
                 </Button>
               </Box>
 
               <Box>
-                <Button leftIcon={<Icon as={MdLocationOn} width='max-content' height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
+                <Button 
+                data-testid={'Add location'}
+                leftIcon={<Icon as={MdLocationOn} width='max-content' height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
                         bg={'white'}
                         color={'black'}
                         size='lg'
                         onClick={
                           () => {
                             setinsideMenu(false);
-                            props.setSelectedView(
-                              <AddLocationForm onSubmit={props.addLocation}/>
+                            props.changeViewTo(
+                              <AddLocationForm loadLocations={props.loadLocations} clickedCoords={''}/>
                             );
                           }
                         }>
-                  Add location
+                  Add Location
                 </Button>
               </Box>
 
               <Box>
-                <Button leftIcon={<Icon alignContent={'left'} as={MdPeopleAlt} width='max-content' height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
+                <Button
+                data-testid={'Add friends'}
+                leftIcon={<Icon alignContent={'left'} as={MdPeopleAlt} width='max-content' height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
                         bg={'white'}
                         color={'black'}
                         size='lg'
                         onClick={() => {
                           setinsideMenu(false);
-                          props.setSelectedView(
+                          props.changeViewTo(
                             <Friends/>
                           );
                         }}
@@ -113,14 +123,16 @@ function Menu(props: MenuProps): JSX.Element {
               </Box>
 
               <Box marginTop={'auto'}>
-                <Button leftIcon={<Icon as={MdPerson} width='max-content' height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
+                <Button 
+                data-testid={'Profile'}
+                leftIcon={<Icon as={MdPerson} width='max-content' height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
                         bg={'white'}
                         color={'black'}
                         size='lg'
                         onClick={() => {
                           setinsideMenu(false);
-                          props.setSelectedView(
-                            <ProfileView></ProfileView>
+                          props.changeViewTo(
+                            <ProfileView locations={props.locations}></ProfileView>
                           );
                         }}
                 >
@@ -132,6 +144,7 @@ function Menu(props: MenuProps): JSX.Element {
           :
           (
             <Flex
+              data-testid='smallContainer'
               direction={'column'}
               bg={'white'}
               width={"fit-content"}

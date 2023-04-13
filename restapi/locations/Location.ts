@@ -1,10 +1,10 @@
 
 
 export type Location = {
-    url? : String,
-    name : String,
+    url? : string,
+    name : string,
     coordinates : Coordinates,
-    description : String,
+    description : string,
     category: Array<string>,
     
     reviews ?: Array<Review>,
@@ -21,5 +21,6 @@ export type Review = {
     webId:string,
     date: Date,
     title:string,
-    content:string
+    content:string,
+    username:string
 };

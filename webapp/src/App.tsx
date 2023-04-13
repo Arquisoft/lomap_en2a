@@ -1,13 +1,14 @@
+// External imports
 import React, { useState, useEffect } from 'react';
 import { ChakraProvider, HStack, Input, Tag, TagLabel, TagLeftIcon } from '@chakra-ui/react';
 import {Flex} from "@chakra-ui/react";
-import { Location } from '../../restapi/locations/Location';
-import Map from './components/Map';
 
+// Our imports
 import './App.css';
+import { Location } from '../../restapi/locations/Location';
 import Login from './components/login/Login';
-import {createLocation, deleteLocation, getLocations} from './solid/solidManagement'
-
+import Map from './components/Map';
+import {createLocation, deleteLocation, getLocations,getSolidFriends} from './solid/solidManagement'
 import Menu from './components/Menu';
 import { useSession } from '@inrupt/solid-ui-react';
 
@@ -19,6 +20,12 @@ function App(): JSX.Element {
   const [selectedView, setselectedView] = useState(<></>);
   const [session, setSession] = useState(useSession());
 
+
+  const getNewLocation = (location:Location) => {
+    locations.push(location);
+    createLocation(session.session.info.webId as string, location);
+  }
+
   //we get the locations for the user and fetch them to the list
   useEffect(()=>{
     loadLocations();
@@ -28,26 +35,18 @@ function App(): JSX.Element {
   async function loadLocations(){
     if(session.session.info.webId){
       let locationList = await getLocations(session.session.info.webId)
+      //Friends Locations
+      let friends = await getSolidFriends(session.session.info.webId);
+
+      for (let friend of friends){
+        let locations = await getLocations(friend.webID as string)
+        locationList= locationList.concat(locations);
+      }
       setLocations(locationList);
       setselectedView(<></>);
     }
   }
 
-  function deleteLoc( location:Location){
-    if(session.session.info.webId && location.url)
-      deleteLocation(session.session.info.webId ,location.url.toString()).then(
-        ()=> loadLocations()
-      )
-    
-  }
-  
-  function addLocation(location:Location){
-    if(session.session.info.webId)
-      createLocation(session.session.info.webId ,location).then(
-        ()=> loadLocations()
-      )
-
-  }
 
 
   //get the user's current location and save it for the map to use it as a center
@@ -57,7 +56,8 @@ function App(): JSX.Element {
       setCoordinates({lat: latitude , lng : longitude});
     })
   },[]);
-  
+
+
   return (
     <>
       <ChakraProvider>
@@ -70,16 +70,15 @@ function App(): JSX.Element {
           maxHeight={'100vh'}
           position={'relative'}
           >
-            <Map /*center = {coordinates}*/ 
-            deleteLocation={deleteLoc} 
-            locations={locations} 
-              changeViewTo= {(newView : JSX.Element) => {setselectedView(newView)}}/>
+            <Map loadLocations={loadLocations}
+                 locations={locations}
+                 changeViewTo= {(newView : JSX.Element) => {setselectedView(newView)}}
+              />
             {
               selectedView ?  selectedView  :  <></>
             }
-            <Menu deleteLoc={deleteLoc}
-                  addLocation={addLocation}
-                  setSelectedView= {(newView : JSX.Element) => {setselectedView(newView)}} 
+            <Menu loadLocations={loadLocations}
+                  changeViewTo= {(newView : JSX.Element) => {setselectedView(newView)}}
                   locations = {locations}
                   />
             {
@@ -87,7 +86,7 @@ function App(): JSX.Element {
                 <Login></Login>
               ) : <></>
             }
-            
+
         </Flex>
       </ChakraProvider>
     </>
