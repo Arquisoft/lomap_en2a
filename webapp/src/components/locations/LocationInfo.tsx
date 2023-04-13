@@ -110,7 +110,7 @@ const RatingSection = ({location, setLocation, session})=>{
   return (
     <>
       <Grid templateRows={'repeat(2,1fr)'} >
-        <Stack alignItems={'center'} gap='0em'>
+        <Stack alignItems={'center'} gap='0%'>
           <Text fontSize='1.2em'>Give a rating to this location</Text>
           <StarRating
             defaultValue={
@@ -153,23 +153,23 @@ const RatingSection = ({location, setLocation, session})=>{
                 <Text>1</Text>
                 <Progress rounded={'md'} width={'full'} value={(one * 100) / total} size='sm' colorScheme={'yellow'}></Progress>
               </Flex>
-              <Flex gap={'1em'} alignItems={'baseline'} direction={'row'}>
+              <Flex gap={'3%'} alignItems={'baseline'} direction={'row'}>
                 <Text>2</Text>
                 <Progress rounded={'md'} width={'full'} value={(two * 100) / total} size='sm' colorScheme={'yellow'}></Progress>
               </Flex>
             </Stack>
             <Stack>
-              <Flex gap={'1em'} alignItems={'baseline'} direction={'row'}>
+              <Flex gap={'3%'} alignItems={'baseline'} direction={'row'}>
                 <Text>3</Text>
                 <Progress rounded={'md'} width={'full'} value={(three * 100) / total} size='sm' colorScheme={'yellow'}></Progress>
               </Flex>
-              <Flex gap={'1em'} alignItems={'baseline'} direction={'row'}>
+              <Flex gap={'3%'} alignItems={'baseline'} direction={'row'}>
                 <Text>4</Text>
                 <Progress rounded={'md'} width={'full'} value={(four * 100) / total} size='sm' colorScheme={'yellow'}></Progress>
               </Flex>
             </Stack>
           </Grid>
-          <Flex gap={'1em'} width={'14.5vw'} justifyContent='center' alignItems={'baseline'} direction={'row'}>
+          <Flex gap={'3%'} width={'60%'} justifyContent='center' alignItems={'baseline'} direction={'row'}>
             <Text>5</Text>
             <Progress rounded={'md'} width={'full'} value={(five * 100) / total} size='sm' colorScheme={'yellow'}></Progress>
           </Flex>
@@ -283,7 +283,7 @@ const ReviewSection =  ( {location ,setLocation,session}) =>{
             date={rev.date}/>
             )})
           :
-          <Text>No reviews for this location, be the first one to leave one</Text>
+          <Text marginTop='2%'>There aren't any reviews for this location... Be the first to leave one!</Text>
       }
       </Flex>
     </>
@@ -358,7 +358,7 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
               <Menu closeOnSelect={false}>
               <MenuButton as={Button} colorScheme='blue' marginBottom='6%' marginLeft='auto' marginEnd='4%' 
                 width='fit-content'><Icon as={MdShare}/></MenuButton>
-              <MenuList minWidth='240px'>
+              <MenuList minWidth='100%'>
                 {
                   friends.length > 0 ? 
                   <MenuOptionGroup type='checkbox'>
@@ -381,8 +381,8 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
           <CloseButton 
                     onClick={() => props.setSelectedView(<></>)}
                     position='absolute'
-                    top='2'
-                    right='2'
+                    top='1%'
+                    right='1%'
             ></CloseButton>
           <Divider marginTop={'2%'} borderWidth={'2px'} borderRadius={"lg"} width='100%' />
 

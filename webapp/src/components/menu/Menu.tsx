@@ -43,15 +43,15 @@ function Menu(props: MenuProps): JSX.Element {
             <Flex direction={'column'}
                   bg={'white'}
                   width={"fit-content"}
-                  minWidth={"5vw"}
-                  height={"100vh"}
+                  minWidth={"5%"}
+                  height={"100%"}
                   left={0}
                   top={0}
                   zIndex={1}
                   overflow='hidden'
                   px={2}
                   alignItems='left'
-                  marginTop={3}
+                  marginTop={'3%'}
             >
               <Box>
                 <Button

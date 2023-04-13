@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Box, Button, ChakraProvider, Checkbox, useCheckboxGroup, 
+import { Box, Button, ChakraProvider, Checkbox, useCheckboxGroup, Text,
   Flex, HStack, Popover, CheckboxGroup, Menu, MenuButton, MenuItemOption, MenuList, MenuOptionGroup} from "@chakra-ui/react";
 import {GoogleMap, Marker, useJsApiLoader} from '@react-google-maps/api';
 import LocationInfo from '../locations/LocationInfo';
@@ -36,7 +36,7 @@ const Map = ( props : MapProps) => {
   const [filteredLocations, setFilteredLocations] = React.useState<Array<Location>>([]) //need constant for the filter to work
   const [friends, setFriends] = React.useState<Friend[]>([]);
   const [checkedFriends, setCheckedFriends] = React.useState<string[]>([]);
-
+  const [friendChargingMsg, setFriendChargingMsg] = React.useState("Loading friends... ")
 
 
   const onUnmount = React.useCallback(function callback() {setMap(null)}, [])
@@ -82,13 +82,11 @@ const Map = ( props : MapProps) => {
     setFilteredLocations(filtered) // update value of const
   }
 
-  React.useEffect(() => {
-    handleFriends()
-  }, [friends]);
-
   const handleFriends = async () => {
     if (session.session.info.webId !== undefined && session.session.info.webId !== ""){
       const n  = await getSolidFriends(session.session.info.webId);
+      if (n.length == 0)
+        setFriendChargingMsg("Add friends to see their locations!")
       setFriends(n);
     }
     else{
@@ -155,33 +153,39 @@ const Map = ( props : MapProps) => {
           <HStack
             direction={'column'}
             alignContent={'left'}
-            marginLeft='38vw'
+            marginLeft='40%'
             overflowX='scroll'
-            marginRight='5'>
+            marginEnd='2%'
+            marginTop='2%'>
               <Menu closeOnSelect={false}>
-                <MenuButton as={Button} colorScheme='blue' minWidth='120px'>Friend Filter</MenuButton>
-                <MenuList minWidth='240px'>
-                  <MenuOptionGroup type='checkbox'>
+                <MenuButton onClick={async () => await handleFriends()} as={Button} colorScheme='blue' minWidth='10%'>Friend Filter</MenuButton>
+                <MenuList minWidth='20%'>
+                  {
+                    friends.length > 0 ? 
+                    <MenuOptionGroup type='checkbox'>
                     {
                       friends.map((friend) => {
                         return (
                           <MenuItemOption value={friend.webID as string}
-                              onClick={(e) =>filteringFriends(e) }>
+                              onClick={(e) =>{ filteringFriends(e) }}>
                             {friend.webID as string}</MenuItemOption>
                         )
                       })
                     }
-                  </MenuOptionGroup>
+                  </MenuOptionGroup> 
+                    :
+                    <Text>{friendChargingMsg}</Text>
+                  }
                 </MenuList>
               </Menu>
-              <HStack height={20} width={200}>
+              <HStack>
               {
                 categories.map((filter) => { // create as many buttons as categories to filter
                   return (
                     <Button
                       borderRadius={25}
                       value={filter}
-                      minWidth={90}
+                      minWidth={'15%'}
                       bgColor={'blue.100'}
                       onClick={(e) => handleFilter(e)}
                       >
@@ -190,7 +194,7 @@ const Map = ( props : MapProps) => {
                   )
                 })
               }
-                <Button minWidth={100}
+                <Button minWidth={'19%'}
                   onClick={(e) => {
                     setCheckedFilters(false);
                     setCheckedFriends([])

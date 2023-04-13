@@ -11,9 +11,9 @@ function Review (props : ReviewProps ) : JSX.Element{
   return (
     <Flex
         bg= {'white'}
-        px={4}
-        py={2}
-        mb={2}
+        px={'4%'}
+        py={'2%'}
+        mb={'2%'}
         shadow='lg'
         direction={'column'}
         alignItems={'start'}

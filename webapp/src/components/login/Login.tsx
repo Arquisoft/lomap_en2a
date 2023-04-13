@@ -21,6 +21,7 @@ function Login() : JSX.Element  {
   ]
   
   const handleSubmit = async (e) => {
+    setDisabled(true);
     e.preventDefault(); //if not used, the page will reload and data will be lost
     login({
       redirectUrl: window.location.href, // after redirect, come to the actual page
@@ -28,6 +29,9 @@ function Login() : JSX.Element  {
       clientName: "Lo Map",
     });
   };
+
+  const [loginMessage, setLoginMessage] = useState("")
+  const [isDisabled, setDisabled] = useState(false);
 
   return (
       (!(session as SessionInfo).session.info.isLoggedIn) ? (
@@ -59,11 +63,13 @@ function Login() : JSX.Element  {
             <InputGroup  visibility={(customSelected)?"visible":"hidden"} size='sm' width={'80%'} >
               <Input data-testid ='inputCustomPodProvider' placeholder='URL of custom pod provider' onChange ={(e)=>setuserChoice(e.target.value.toString())} onBlur={(e)=>e.target.value = ''}/>
             </InputGroup>
-
-            <Button onClick={handleSubmit} colorScheme='blue' padding={'1.5vw'} marginTop='auto'>Login</Button>
+            <Button 
+            onClick={(e) => {setLoginMessage("Logging in..."); handleSubmit(e); }} 
+            colorScheme='blue' padding={'1.5vw'} marginTop='auto' isDisabled={isDisabled}>Login</Button>
+            <Text>{loginMessage}</Text>
           </Flex> 
         </Flex>
-      ) : <></>
+      ) : <>{setLoginMessage("")}</>
   )
 }
 
