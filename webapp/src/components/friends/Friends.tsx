@@ -16,6 +16,7 @@ function Friends(props:FriendsProps) : JSX.Element {
   const webId = session.session.info.webId;
   const [friends, setFriends] = React.useState<Friend[]>([]);
   const[isLoged, setLogged] = React.useState(false);
+  const[friendChargingMsg, setFriendChargingMsg] = React.useState("Loading...")
 
   const[error, setError]=React.useState(false);
   const[errorMessage,setErrorMessage]=React.useState("");
@@ -28,6 +29,8 @@ function Friends(props:FriendsProps) : JSX.Element {
     if (webId !== undefined && webId !== ""){
       const n  = await getSolidFriends(webId)
       setFriends(n);
+      if (n.length == 0)
+        setFriendChargingMsg("Uups! It seems you don't have any friends...")
       setLogged(true);
     }
     else{
@@ -81,7 +84,7 @@ function Friends(props:FriendsProps) : JSX.Element {
                 mt={'3%'} direction={'column'} margin={'2%'} px={'2%'}>
               {
                   friends.length > 0 ? friends.map((f,i) => <FriendsDetail friend={f} key ={i}/>) 
-                  : <Text margin='auto'>Uups! It seems you don't have any friends...</Text>
+                  : <Text margin='auto'>{friendChargingMsg}</Text>
               }
               </Flex>
             </Flex>

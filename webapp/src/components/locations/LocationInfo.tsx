@@ -298,6 +298,7 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
   const [location, setlocation] = useState(props.location)
   const [friends, setFriends] = React.useState<Friend[]>([]);
   let checkedFriends : string[] = [];
+  const [friendsChargingMsg, setFriendChargingMsg] = useState("Loading...")
 
   React.useEffect(() => {
     handleFriends()
@@ -306,6 +307,8 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
   const handleFriends = async () => {
     if ( webId !== undefined && webId !== ""){
       const n  = await getSolidFriends(webId).then(friendsPromise => {return friendsPromise});
+      if (n.length == 0)
+        setFriendChargingMsg("Add a friend to share the location!")
       setFriends(n);
     }
     else{
@@ -356,16 +359,21 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
               <MenuButton as={Button} colorScheme='blue' marginBottom='6%' marginLeft='auto' marginEnd='4%' 
                 width='fit-content'><Icon as={MdShare}/></MenuButton>
               <MenuList minWidth='240px'>
-                <MenuOptionGroup type='checkbox'>
-                  {
-                    friends.map((friend) => {
-                      return (
-                          <MenuItemOption value={friend.webID} onClick={(e) => handleCheckedFriend(e)}
-                          >{friend.webID}</MenuItemOption>
-                      )
-                    })
-                  }
-                </MenuOptionGroup>
+                {
+                  friends.length > 0 ? 
+                  <MenuOptionGroup type='checkbox'>
+                    {
+                      friends.map((friend) => {
+                        return (
+                            <MenuItemOption value={friend.webID} onClick={(e) => handleCheckedFriend(e)}
+                            >{friend.webID}</MenuItemOption>
+                        )
+                      })
+                    }
+                  </MenuOptionGroup> 
+                  :
+                  <Text>{friendsChargingMsg}</Text>
+                }
               </MenuList>
             </Menu>
             </Flex>
@@ -408,7 +416,7 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
         (
           location.images?.map((image,i)=>{
             return (
-              <HStack width={'100%'} marginLeft={'4%'} shouldWrapChildren={true} overflowY='auto'
+              <HStack width={'100%'} marginTop='2%' marginLeft={'9%'} shouldWrapChildren={true} overflowY='auto'
                   display='flex' overflowX='auto' minHeight={200}  height={'fit-content'}>
                     <Image
                       key={i}

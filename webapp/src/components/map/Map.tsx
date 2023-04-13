@@ -84,7 +84,7 @@ const Map = ( props : MapProps) => {
 
   React.useEffect(() => {
     handleFriends()
-  }, [session.session.info.isLoggedIn]);
+  }, [friends]);
 
   const handleFriends = async () => {
     if (session.session.info.webId !== undefined && session.session.info.webId !== ""){
