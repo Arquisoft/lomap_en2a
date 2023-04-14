@@ -17,8 +17,8 @@ LoMap is the perfect way to explore🔍 and share the world around you with your
 
 <a name="lomap"></a>
 ## 🔭LoMap
-With the initiative of the Council of Brussels and the collaboration of the <b>Solid community<b>, we are eager to present you THE maps software system: LoMap.  
-This application allows our users to have personalized maps about places and local businesses in a city, wherever they may be. ALl the users personal data will be stored in their personal pods, that could be provided by <b>Inrupt<b>, <b>Solid<b> or any other pod supplier. In addition to this, users can have the chance to share their map and information with their friends.
+With the initiative of the Council of Brussels and the collaboration of the <b>Solid community</b>, we are eager to present you THE maps software system: LoMap.  
+This application allows our users to have personalized maps about places and local businesses in a city, wherever they may be. ALl the users personal data will be stored in their personal pods, that could be provided by <b>Inrupt</b>, <b>Solid</b> or any other pod supplier. In addition to this, users can have the chance to share their map and information with their friends.
 
 To start using LoMap, just follow the steps below and 🔮 may the map be with you 🔮
 
@@ -70,7 +70,6 @@ You should be able to access the application in [http://localhost:3000](http://l
 You can get more information about the repository in the other README files:
 - Documentation: https://github.com/arquisoft/lomap_en2a/tree/master/docs
 - Webapp: https://github.com/arquisoft/lomap_en2a/tree/master/webapp
-- Restapi: https://github.com/arquisoft/lomap_en2a/tree/master/restapi
 
 
 <a name="deployment"></a>
