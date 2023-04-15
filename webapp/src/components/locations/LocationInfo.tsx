@@ -408,7 +408,6 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
           </Flex>
 
       <Divider marginTop={'2%'} borderWidth={'2px'} borderRadius={"lg"} width='100%'/>
-
       <Flex
         direction={'column'}
         width={'100%'}>
@@ -432,7 +431,7 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
           })
         )
         :
-        <Flex marginLeft={'10%'} direction={'row'} alignItems={'center'} width={'100%'}>
+        <Flex marginLeft={'10%'} direction={'row'} alignItems={'center'} >
           <Image
             src={images.noPicture}
             width='100'
