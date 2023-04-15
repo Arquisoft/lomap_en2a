@@ -269,7 +269,7 @@ const ReviewSection =  ( {location ,setLocation,session}) =>{
           </PopoverContent>
         </Popover>
       </Box>
-      <Flex mx={'4%'} maxHeight={'sm'} direction={'column'} overflowY={'auto'}>
+      <Flex mx={'4%'} maxHeight={'sm'} direction={'column'}>
       {
         localLocation.reviews.length > 0?  
           (localLocation.reviews as Array<ReviewType>)
@@ -345,6 +345,7 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
         zIndex={1}
         overflowY='auto'
         px={2}
+        paddingBottom={'15%'}
         >
           <Flex direction='row' alignItems='center' marginTop={'8%'} marginLeft='5%'>
             <Text
@@ -386,7 +387,7 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
             ></CloseButton>
           <Divider marginTop={'2%'} borderWidth={'2px'} borderRadius={"lg"} width='100%' />
 
-          <Text marginLeft='10%' fontSize={'1.6em'} >Related information:</Text>
+          <Text marginLeft='10%' fontSize={'1.6em'} >Description:</Text>
           <Flex
             direction={'column'}
             overflowY='auto'
@@ -458,8 +459,6 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
             </TabPanel>
           </TabPanels>
         </Tabs>
-
-      <Divider marginBottom={'2%'} marginTop={'2%'} borderWidth={'2px'} borderRadius={"lg"} width='100%'/>    
     </Flex>
   )
 }

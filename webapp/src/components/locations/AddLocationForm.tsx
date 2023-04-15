@@ -174,7 +174,7 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
                 px={'1%'} overflowY={'auto'}>
                 <Flex direction='column'>
                     <Text marginTop='4%' width='fit-content' 
-                    fontSize='2.2em' alignSelf='center' borderBottomWidth='1px'>Add a place</Text>
+                    fontSize='2.2em' alignSelf='center' borderBottomWidth='1px'>Add a location</Text>
                     <Flex direction={'column'}>
                         <CloseButton 
                             onClick={() => props.setSelectedView(<></>)}
@@ -188,7 +188,7 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
                     <Input
                         value={name}
                         onChange={(e:any) => setName(e.target.value)}                                        
-                        placeholder="Place name"
+                        placeholder="Location name"
                         size='lg'
                         width='50%'
                         height='160%'
@@ -223,7 +223,7 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
                             }
                             setCoordsValue(e.target.value);
                         }}
-                        placeholder='Ej: 43.35484910218162, -5.851277716083629'
+                        placeholder='Location coordinates, Ej: 43.3534, -5.8512'
                         size='lg'
                     />
                 </Flex>
@@ -232,7 +232,7 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
                     <Textarea
                         value={description}
                         onChange={(e:any) => setDescription(e.target.value)}
-                        placeholder='Place description'
+                        placeholder='Location description'
                         size='lg'
                     />
                 </Flex>
