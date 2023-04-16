@@ -6,6 +6,9 @@ on:
   push:
     branches: ['**']
 
+env:
+  REACT_APP_GOOGLE_MAPS_API_KEY: ${{ secrets.REACT_APP_GOOGLE_MAPS_API_KEY }}
+
 jobs:
   unit-test-webapp:
     runs-on: ubuntu-latest
