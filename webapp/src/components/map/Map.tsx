@@ -84,11 +84,12 @@ const Map = ( props : MapProps) => {
     setFilteredLocations(filtered);
   };
   
-
+  // execute handleFilter() once the category has been updated
   React.useEffect(() => {
     handleFilter()
   }, [checkedCategory]);
 
+  // handle clicks on the category filter buttons
   const handleCategoryClick = (e) => {
       setAreCheckedFilters(true);
       setCheckedCategory(e.target.value);
@@ -137,6 +138,7 @@ const Map = ( props : MapProps) => {
                         return (
                           <MenuItemOption value={friend.webID as string}
                               onClick={(e:any) =>{ 
+                                // check if it is being selected or unselected
                                 let index = checkedFriends.indexOf(e.target.innerText);
                                 (index == -1)? checkedFriends.push(e.target.innerText) : 
                                   checkedFriends.splice(index, 1);
@@ -181,7 +183,8 @@ const Map = ( props : MapProps) => {
           {
             !areCheckedFilters? 
             (
-              props.locations.map((place, i) => ( // necessary to use a const, if not it does not work (dont know why)
+              // if no filters are checked, use the global locations
+              props.locations.map((place, i) => (
               <Marker
                   position={{lat: Number(place.coordinates.lat), lng: Number(place.coordinates.lng)}}
                   onClick={() => handlePlaceClick(place)}
@@ -189,7 +192,7 @@ const Map = ( props : MapProps) => {
             )
             :
             (
-              filteredLocations.map((place, i) => ( // necessary to use a const, if not it does not work (dont know why)
+              filteredLocations.map((place, i) => (
               <Marker
                   position={{lat: Number(place.coordinates.lat), lng: Number(place.coordinates.lng)}}
                   onClick={() => handlePlaceClick(place)}
