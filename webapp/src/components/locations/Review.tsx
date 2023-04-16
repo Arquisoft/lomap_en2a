@@ -1,10 +1,10 @@
-import {Flex, Text,Image, Box, Avatar} from '@chakra-ui/react'
+import {Flex, Text, Box, Avatar} from '@chakra-ui/react'
 
 type ReviewProps = {
     username: string,
     title:string,
     content:string,
-    date: Date
+    date: string
 }
 
 function Review (props : ReviewProps ) : JSX.Element{
@@ -30,14 +30,14 @@ function Review (props : ReviewProps ) : JSX.Element{
             alignItems='start'
             gap={'0.2em'}> 
                 <Avatar 
-                    bg={['red.500','blue.500','green.500','orange.500'].at( Math.random() * (3 - 0))}
+                    bg={'blue.500'}
                     size='xs'/>
                 <Text as={'b'} fontSize='0.8em'>
                     {props.username}
                 </Text>
             </Flex>
             <Text marginLeft={'auto'} textColor='grey' fontSize={'0.9em'}>
-                {new Date(props.date).toLocaleString()}
+                {props.date}
             </Text>
         </Flex>
         <Box width='full'>

@@ -141,11 +141,7 @@ const Map = ( props : MapProps) => {
 
             onClick= { (clickedCoords) => {
               let lat = clickedCoords.latLng?.lat();
-              console.log("lat = ",lat);
-
               let lon = clickedCoords.latLng?.lng();
-              console.log("lon = ",lon);
-
               handleMapClick(lat,lon);
             }}
             //use inside of the options the styles property and personalyce a style in https://mapstyle.withgoogle.com/
@@ -180,9 +176,10 @@ const Map = ( props : MapProps) => {
               </Menu>
               <HStack>
               {
-                categories.map((filter) => { // create as many buttons as categories to filter
+                categories.map((filter,i) => { // create as many buttons as categories to filter
                   return (
                     <Button
+                      key={i}
                       borderRadius={25}
                       value={filter}
                       minWidth={'15%'}
@@ -207,6 +204,7 @@ const Map = ( props : MapProps) => {
             !areCheckedFilters? // if no filter was pressed or clean filters button was clicked, this value is false
             (props.locations.map((place, i) => (
               <Marker
+                  key={i}
                   position={{lat: Number(place.coordinates.lat), lng: Number(place.coordinates.lng)}}
                   onClick={() => handlePlaceClick(place)}
               ></Marker>)))
