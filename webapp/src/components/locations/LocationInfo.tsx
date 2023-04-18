@@ -389,7 +389,7 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
             {
               location.category.map((category, index) => {
                 return (
-                  <Badge 
+                  <Badge padding='1%' borderRadius='10' 
                   colorScheme={colors[index % colors.length]}>{category}
                   </Badge>
                 )
@@ -425,21 +425,21 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
         {
         location.images?.length?
         (
-          location.images?.map((image,i)=>{
-            return (
-              <HStack width={'100%'} marginTop='2%' marginLeft={'9%'} shouldWrapChildren={true} overflowY='auto'
-                  display='flex' overflowX='auto' minHeight={200}  height={'fit-content'}>
-                    <Image
-                      key={i}
-                      src={image as string}
-                      width='200'
-                      height='200'
-                      borderRadius='lg'
-                      fallbackSrc='https://www.resultae.com/wp-content/uploads/2018/07/reloj-100.jpg'>
-                    </Image>
-              </HStack>
-            )
-          })
+          <HStack marginTop='2%' marginLeft={'9%'} shouldWrapChildren={true} overflowY='auto'
+                  display='flex' overflowX='auto' minHeight={200}  height={'fit-content'} paddingRight='4%'>
+            {location.images?.map((image,i)=>{
+              return (
+                <Image
+                  key={i}
+                  src={image as string}
+                  width='200'
+                  height='200'
+                  borderRadius='lg'
+                  fallbackSrc='https://www.resultae.com/wp-content/uploads/2018/07/reloj-100.jpg'>
+                </Image>
+              )
+              })}
+          </HStack>
         )
         :
         <Flex marginLeft={'10%'} direction={'row'} alignItems={'center'} >
