@@ -10,7 +10,8 @@ import { ProfileView } from '../profile/ProfileInfo';
 
 type MenuProps = {
   changeViewTo: (view: JSX.Element) => void,
-  locations : Array<Location>,
+  ownLocations : Array<Location>,
+  friendLocations : Array<Location>,
   loadLocations : () => Promise<void>
 }
 
@@ -77,7 +78,11 @@ function Menu(props: MenuProps): JSX.Element {
                 onClick={() => {
                   setinsideMenu(false);
                   props.changeViewTo(
-                    <ListOfLocations setSelectedView={(view)=> props.changeViewTo(view)} places={props.locations} loadLocations={props.loadLocations} />
+                    <ListOfLocations 
+                      setSelectedView={(view)=> props.changeViewTo(view)} 
+                      ownLocations={props.ownLocations}
+                      friendLocations={props.friendLocations}
+                      loadLocations={props.loadLocations} />
                     );
                 }}>
                   List of Locations
@@ -131,7 +136,7 @@ function Menu(props: MenuProps): JSX.Element {
                 onClick={() => {
                   setinsideMenu(false);
                   props.changeViewTo(
-                    <ProfileView setSelectedView={(view)=> props.changeViewTo(view)} locations={props.locations}></ProfileView>
+                    <ProfileView setSelectedView={(view)=> props.changeViewTo(view)} locations={props.ownLocations}></ProfileView>
                   );
                 }}
                 >

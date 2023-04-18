@@ -160,6 +160,7 @@ const Map = ( props : MapProps) => {
                 categories.map((filter, index) => { // create as many buttons as categories to filter
                   return (
                     <Button
+                      key={index}
                       borderRadius={25}
                       value={filter}
                       minWidth={'15%'}

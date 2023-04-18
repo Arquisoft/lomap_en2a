@@ -303,7 +303,7 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
 
   React.useEffect(() => {
     handleFriends()
-  }, [friends]);
+  }, []); //TODO deleted here friends
 
   const handleFriends = async () => {
     if ( webId !== undefined && webId !== ""){
@@ -313,7 +313,7 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
       setFriends(n);
     }
     else{
-      // setFriends([]);
+      setFriends([]);
     }
   }
 
@@ -364,7 +364,9 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
               <DeletingAlertDialog location={props.location} loadLocations={props.loadLocations}></DeletingAlertDialog>
               <Menu closeOnSelect={false}>
                 <MenuButton as={Button} colorScheme='blue' 
-                  width='fit-content'><Icon as={MdShare}/></MenuButton>
+                  width='fit-content'>
+                    <Icon as={MdShare}/>
+                </MenuButton>
                 <MenuList minWidth='100%'>
                   {
                     friends.length > 0 ? 

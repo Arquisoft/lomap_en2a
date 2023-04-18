@@ -26,7 +26,7 @@ function Login() : JSX.Element  {
     login({
       redirectUrl: window.location.href, // after redirect, come to the actual page
       oidcIssuer: userChoice, // redirect to the url
-      clientName: "Lo Map",
+      clientName: "LoMap",
     });
   };
 
