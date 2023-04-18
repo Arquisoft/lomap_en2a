@@ -66,7 +66,7 @@ const Map = ( props : MapProps) => {
   const handleFriends = async () => {
     if (session.session.info.webId !== undefined && session.session.info.webId !== ""){
       const n  = await getSolidFriends(session.session.info.webId);
-      if (n.length == 0)
+      if (n.length === 0)
         setFriendChargingMsg("Add friends to see their locations!")
       setFriends(n);
     }
@@ -112,11 +112,7 @@ const Map = ( props : MapProps) => {
 
             onClick= { (clickedCoords) => {
               let lat = clickedCoords.latLng?.lat();
-              console.log("lat = ",lat);
-
               let lon = clickedCoords.latLng?.lng();
-              console.log("lon = ",lon);
-
               handleMapClick(lat,lon);
             }}
             //use inside of the options the styles property and personalyce a style in https://mapstyle.withgoogle.com/
@@ -160,6 +156,7 @@ const Map = ( props : MapProps) => {
                 categories.map((filter, index) => { // create as many buttons as categories to filter
                   return (
                     <Button
+                      key={index}
                       borderRadius={25}
                       value={filter}
                       minWidth={'15%'}
@@ -187,6 +184,7 @@ const Map = ( props : MapProps) => {
               // if no filters are checked, use the global locations
               props.locations.map((place, i) => (
               <Marker
+                  key={i}
                   position={{lat: Number(place.coordinates.lat), lng: Number(place.coordinates.lng)}}
                   onClick={() => handlePlaceClick(place)}
               ></Marker>))

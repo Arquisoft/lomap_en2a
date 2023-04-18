@@ -1,8 +1,8 @@
 import React,{ useState,useEffect } from 'react';
-import { Text, Badge, Stack, HStack, Image, Box, Flex, Button, Icon, Heading, Divider, useDisclosure, Textarea, Input, Grid, Progress, Tab, TabList, TabPanel, TabPanels, Tabs, CloseButton} from "@chakra-ui/react"
+import {Badge, Text,Stack, HStack, Image, Box, Flex, Button, Icon, Divider, useDisclosure, Textarea, Input, Grid, Progress, Tab, TabList, TabPanel, TabPanels, Tabs, CloseButton} from "@chakra-ui/react"
 import {MdOutlineRateReview, MdShare} from 'react-icons/md'
 
-import {Popover,PopoverTrigger,PopoverContent,PopoverCloseButton, Menu, MenuButton, MenuItem, MenuItemOption, MenuList, MenuOptionGroup} from '@chakra-ui/react'
+import {Popover,PopoverTrigger,PopoverContent,PopoverCloseButton, Menu, MenuButton, MenuItemOption, MenuList, MenuOptionGroup} from '@chakra-ui/react'
 import {FormControl,FormLabel,FormErrorMessage,FormHelperText,} from '@chakra-ui/react'
 import Review  from "./Review";
 import { FaStar, FaStarHalfAlt } from "react-icons/fa";
@@ -180,6 +180,39 @@ const RatingSection = ({location, setLocation, session})=>{
   )
 };
 
+/**
+ * Function that sorts the reviews by date and returns the sorted representation of
+ * the reviews so that the newest ones are shown first
+ */
+function getRepresentedReviews( reviews) : any {
+  if(reviews === undefined || reviews.length === 0){
+    return <Text marginTop='2%'>There aren't any reviews for this location... Be the first to leave one!</Text>
+  }
+  return reviews.sort((a : ReviewType,b : ReviewType)=> {
+    if(a.date === undefined || b.date === undefined){
+      return 0; //in the case the date is not defined we don't sort
+    }
+    let [datePartA, timePartA] = a.date.split(", ");
+    let [dayA, monthA, yearA] = datePartA.split("/");
+    let [hoursA, minutesA, secondsA] = timePartA.split(":");
+
+    let [datePartB, timePartB] = b.date.split(", ");
+    let [dayB, monthB, yearB] = datePartB.split("/");
+    let [hoursB, minutesB, secondsB] = timePartB.split(":");
+
+    let dateA = new Date(parseInt(yearA), parseInt(monthA) - 1, parseInt(dayA), parseInt(hoursA), parseInt(minutesA), parseInt(secondsA));
+    let dateB = new Date(parseInt(yearB), parseInt(monthB) - 1, parseInt(dayB), parseInt(hoursB), parseInt(minutesB), parseInt(secondsB));
+    return dateB.getTime() - dateA.getTime()})
+  .map((rev,i)=>{return (
+  <Review
+    key={i}
+    title={rev.title as string}
+    username={rev.username}
+    content={rev.content as string}
+    date={rev.date}/>
+    )})
+}
+
 const ReviewSection =  ( {location ,setLocation,session}) =>{
   const {isOpen, onOpen, onClose } = useDisclosure();
   const [title, settitle] = useState('')
@@ -192,6 +225,7 @@ const ReviewSection =  ( {location ,setLocation,session}) =>{
   let localLocation = location;
 
   getNameFromPod(session.session.info.webId).then(res=> setusername(res));
+  
 
   return (
     <>
@@ -244,7 +278,7 @@ const ReviewSection =  ( {location ,setLocation,session}) =>{
                         let review : ReviewType = {
                           title:title,
                           content:input,
-                          date:new Date(),
+                          date: new Date().toLocaleString() ,
                           webId : session.session.info.webId,
                           username: username
                         };
@@ -253,13 +287,16 @@ const ReviewSection =  ( {location ,setLocation,session}) =>{
                           localLocation.reviews = new Array<ReviewType>();
                         }
                         localLocation.reviews.push(review)
-
                         //we repaint the localLocation being showed
                         setLocation(localLocation)
                         //we persist the update on the Solid pod
 
                         // make call to the solidManagement module here
                         addLocationReview(localLocation, review)
+
+                        //we clear the values intoduced
+                        settitle('')
+                        setInput('')
                         //we close the add review window
                         onClose()
                       }}
@@ -271,25 +308,14 @@ const ReviewSection =  ( {location ,setLocation,session}) =>{
       </Box>
       <Flex mx={'4%'} maxHeight={'sm'} direction={'column'}>
       {
-        localLocation.reviews.length > 0?  
-          (localLocation.reviews as Array<ReviewType>)
-          .sort((a : ReviewType,b : ReviewType)=> b.date.getTime() - a.date.getTime())
-          .map((rev,i)=>{return (
-          <Review
-            key={i}
-            title={rev.title as string}
-            username={rev.username}
-            content={rev.content as string}
-            date={rev.date}/>
-            )})
-          :
-          <Text marginTop='2%'>There aren't any reviews for this location... Be the first to leave one!</Text>
+        getRepresentedReviews(localLocation.reviews)     
       }
       </Flex>
     </>
 
   )
 }
+
 
 
 export default function LocationInfo (props : LocationInfoProps) : JSX.Element { 
@@ -301,19 +327,19 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
   let checkedFriends : string[] = [];
   const [friendsChargingMsg, setFriendChargingMsg] = useState("Loading...")
 
-  React.useEffect(() => {
+  useEffect(() => {
     handleFriends()
-  }, [friends]);
+  }, []);//TODO this may be slowing application beacause the handlefriends in the useEffect is called every time the friends array changes and inside it it is changing the array of friends so we have here a loop
 
   const handleFriends = async () => {
     if ( webId !== undefined && webId !== ""){
       const n  = await getSolidFriends(webId).then(friendsPromise => {return friendsPromise});
-      if (n.length == 0)
+      if (n.length === 0)
         setFriendChargingMsg("Add a friend to share the location!")
       setFriends(n);
     }
     else{
-      // setFriends([]);
+      setFriends([]);
     }
   }
 
@@ -345,6 +371,7 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
         bottom={-4}
         zIndex={1}
         overflowY='auto'
+        overflowX='hidden'
         px={2}
         paddingBottom={'15%'}
         >
@@ -419,27 +446,24 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
           </Flex>
 
       <Divider marginTop={'2%'} borderWidth={'2px'} borderRadius={"lg"} width='100%'/>
-      <Flex
-        direction={'column'}
-        width={'100%'}>
+
+      <HStack width={'85%'} marginTop='2%' marginLeft={'9%'} shouldWrapChildren={true} overflowY='auto'
+                   overflowX='auto' height='fit-content' minHeight={220}>
         {
         location.images?.length?
         (
-          <HStack marginTop='2%' marginLeft={'9%'} shouldWrapChildren={true} overflowY='auto'
-                  display='flex' overflowX='auto' minHeight={200}  height={'fit-content'} paddingRight='4%'>
-            {location.images?.map((image,i)=>{
-              return (
-                <Image
-                  key={i}
-                  src={image as string}
-                  width='200'
-                  height='200'
-                  borderRadius='lg'
-                  fallbackSrc='https://www.resultae.com/wp-content/uploads/2018/07/reloj-100.jpg'>
-                </Image>
-              )
-              })}
-          </HStack>
+          location.images?.map((image,i)=>{
+            return (
+              <Image
+                key={i}
+                src={image as string}
+                width='200'
+                height='200'
+                borderRadius='lg'
+                fallbackSrc='https://www.resultae.com/wp-content/uploads/2018/07/reloj-100.jpg'>
+              </Image>
+            )
+          })
         )
         :
         <Flex marginLeft={'10%'} direction={'row'} alignItems={'center'} >
@@ -452,7 +476,7 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
         </Flex>
         }
           
-      </Flex>
+        </HStack>
 
       <Divider marginTop={'2%'} marginBottom={'2%'} borderWidth={'2px'} borderRadius={"lg"} width='100%'/> 
         <Tabs isFitted={true} variant='enclosed' mx='5%' marginLeft='5%'>

@@ -197,7 +197,7 @@ export async function getLocationReviews(folder:string) {
       // get review information
       let title = getStringNoLocale(review, SCHEMA_INRUPT.name) as string;
       let content = getStringNoLocale(review, SCHEMA_INRUPT.description) as string;
-      let date = new Date(getStringNoLocale(review, SCHEMA_INRUPT.startDate) as string);
+      let date = getStringNoLocale(review, SCHEMA_INRUPT.startDate) as string;
       let webId = getStringNoLocale(review, SCHEMA_INRUPT.Person) as string;
       let name = getStringNoLocale(await getUserProfile(webId),FOAF.name) as string;
 
@@ -208,7 +208,6 @@ export async function getLocationReviews(folder:string) {
         webId: webId,
         username: name
       }
-
       reviews.push(newReview);
     }
 
@@ -396,7 +395,7 @@ export async function addLocationReview(location:LocationType, review:ReviewType
   let newReview = buildThing(createThing())
     .addStringNoLocale(SCHEMA_INRUPT.name, review.title)
     .addStringNoLocale(SCHEMA_INRUPT.description, review.content)
-    .addStringNoLocale(SCHEMA_INRUPT.startDate, review.date.toDateString())
+    .addStringNoLocale(SCHEMA_INRUPT.startDate, review.date)
     .addStringNoLocale(SCHEMA_INRUPT.Person, review.webId)
     .addUrl(VCARD.Type, VCARD.hasNote)
     .build();
