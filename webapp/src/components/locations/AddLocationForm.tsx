@@ -71,15 +71,16 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
         if(session.session.info.webId)
             createLocation(session.session.info.webId ,location).then(
                 ()=> {
-                    props.loadLocations();
-                    toast({
-                        title: 'Location added.',
-                        description: "The location was added to your pod.",
-                        status: 'success',
-                        duration: 5000,
-                        isClosable: true,
-                    });
-                    setAddingLocationProcess(false);
+                    props.loadLocations().then(()=> {
+                        toast({
+                            title: 'Location added.',
+                            description: "The location was added to your pod.",
+                            status: 'success',
+                            duration: 5000,
+                            isClosable: true,
+                        });
+                        setAddingLocationProcess(false);
+                    });            
                 },
                 ()=> {
                     toast({
