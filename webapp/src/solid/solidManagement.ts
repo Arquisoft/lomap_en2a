@@ -1,5 +1,6 @@
 import type { Friend, Location as LocationType, Review as ReviewType } from "../types/types";
 import { fetch } from "@inrupt/solid-client-authn-browser";
+import { overwriteFile, getSourceUrl } from "@inrupt/solid-client";
 
 import {
   getSolidDatasetWithAcl,
@@ -287,10 +288,10 @@ export async function createLocation(webID:string, location:LocationType) {
 
   // path for the new location dataset
   let individualLocationFolder = `${baseURL}private/lomap/locations/${locationId}/index.ttl`
-
+  let folder = `${baseURL}private/lomap/locations/${locationId}`
   // create dataset for the location
   try {
-    await createLocationDataSet(individualLocationFolder, location, locationId)
+    await createLocationDataSet(folder,individualLocationFolder, location, locationId)
   } catch (error) {
     console.log(error)
   }
@@ -354,9 +355,10 @@ export async function createInventory(locationsFolder: string, location:Location
  * @param location contains the location to be created
  * @param id contains the location uuid
  */
-export async function createLocationDataSet(locationFolder:string, location:LocationType, id:string) {
+export async function createLocationDataSet(folder:string,locationFolder:string, location:LocationType, id:string) {
   let locationIdUrl = `${locationFolder}#${id}` // construct the url of the location
 
+  let locationImages = folder+"/images";
   // create dataset for the location
   let dataSet = createSolidDataset();
   let categoriesSerialized = serializeCategories(location.category); // serialize categories
@@ -375,7 +377,7 @@ export async function createLocationDataSet(locationFolder:string, location:Loca
   dataSet = setThing(dataSet, newLocation); // store thing in dataset
   // save dataset to later add the images
   dataSet = await saveSolidDatasetAt(locationFolder, dataSet, {fetch: fetch}) // save dataset 
-  await addLocationImage(locationFolder, location); // store the images
+  await addImages(locationImages, location); // store the images
   try {
     await saveSolidDatasetAt(locationFolder, dataSet, {fetch: fetch}) // save dataset 
   } catch (error) {
@@ -457,6 +459,23 @@ export async function addLocationImage(url: string, location:LocationType) {
       }
     }
   );
+}
+
+export async function addImages(url: string, location:LocationType){
+  location.imagesAsFile?.forEach(async image => {
+    try {
+      const savedFile = await overwriteFile(  
+        url+"/"+image.name,                              // URL for the file.
+        image,                                       // File
+        { contentType: image.type, fetch: fetch }    // mimetype if known, fetch from the authenticated session
+      );
+      console.log(`File saved at ${getSourceUrl(savedFile)}`);
+  
+    } catch (error) {
+      console.error(error);
+    }
+  })
+  
 }
 
 /**
