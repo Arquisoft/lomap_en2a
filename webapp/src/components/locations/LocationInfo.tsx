@@ -10,7 +10,8 @@ import images from '../../static/images/images'
 import { useSession } from '@inrupt/solid-ui-react';
 import { SessionInfo } from '@inrupt/solid-ui-react/dist/src/hooks/useSession';
 import {addLocationReview, addLocationScore, getNameFromPod } from '../../solid/solidManagement';
-import { DeletingAlertDialog } from '../dialogs/DeletingAlertDialog';
+import { DeletingLocationAlertDialog} from '../dialogs/DeletingLocationAlertDialog';
+
 import { getSolidFriends, setAccessToFriend } from "../../solid/solidManagement";
 import type { Friend ,Location, Review as ReviewType} from "../../types/types";
 
@@ -204,12 +205,14 @@ function getRepresentedReviews( reviews) : any {
     let dateB = new Date(parseInt(yearB), parseInt(monthB) - 1, parseInt(dayB), parseInt(hoursB), parseInt(minutesB), parseInt(secondsB));
     return dateB.getTime() - dateA.getTime()})
   .map((rev,i)=>{return (
-  <Review
-    key={i}
-    title={rev.title as string}
-    username={rev.username}
-    content={rev.content as string}
-    date={rev.date}/>
+    <Flex direction='row'>
+      <Review
+        key={i}
+        title={rev.title as string}
+        username={rev.username}
+        content={rev.content as string}
+        date={rev.date}/>
+    </Flex>
     )})
 }
 
@@ -385,10 +388,10 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
               fontSize='2.2em'
               marginLeft={'5%'}
               >
-              {location.name} 
+              {location.name}
             </Text>
             <Flex direction='row' marginLeft='auto' marginEnd='4%' gap='5%'>
-              <DeletingAlertDialog location={props.location} loadLocations={props.loadLocations}></DeletingAlertDialog>
+              <DeletingLocationAlertDialog location={props.location} loadLocations={props.loadLocations}></DeletingLocationAlertDialog>
               <Menu closeOnSelect={false}>
                 <MenuButton as={Button} colorScheme='blue' 
                   width='fit-content'><Icon as={MdShare}/></MenuButton>

@@ -1,4 +1,4 @@
-import type { Friend, Location as LocationType, Review as ReviewType } from "../types/types";
+import type { Friend, Location as LocationType, Review, Review as ReviewType } from "../types/types";
 import { fetch } from "@inrupt/solid-client-authn-browser";
 
 import {
@@ -29,6 +29,7 @@ import { DatasetContext } from "@inrupt/solid-ui-react";
 import { FOAF, VCARD, SCHEMA_INRUPT, RDF} from "@inrupt/vocab-common-rdf"
 
 import {v4 as uuid} from "uuid" // for the uuids of the locations
+import { data } from "jquery";
 
 // ****************************************
 /*
@@ -486,6 +487,28 @@ export async function deleteLocation(webID:string, locationUrl: string) {
     return Promise.reject()
   }
 }
+
+
+export async function deleteReview(locationUrl:string, review:Review){
+  let datasetPath = locationUrl.split('#')[0] // get until index.ttl
+  let reviews : ReviewType[] = [];
+  try {
+    let dataSet = await getSolidDataset(datasetPath, {fetch:fetch}); // get location dataset
+    // get the review thing in the dataset of the location. as getThingAll returns Thing[], get the first item in the array
+    let reviews = getThingAll(dataSet).filter((thing) => getUrl(thing, VCARD.Type) === VCARD.hasNote 
+      && getStringNoLocale(thing, SCHEMA_INRUPT.name) as string === review.title && getStringNoLocale(thing, SCHEMA_INRUPT.startDate) as string === review.date
+      && getStringNoLocale(thing, SCHEMA_INRUPT.Person) as string === review.webId && getStringNoLocale(thing, SCHEMA_INRUPT.description) as string === review.content);
+    let reviewToDelete = reviews.at(0) as Thing;
+    await removeThing(dataSet, reviewToDelete)
+    await saveSolidDatasetAt(datasetPath, dataSet, {fetch:fetch})
+  } catch (error) {
+    // if any error happened, return false (the review has not been deleted)
+    return false;
+  }
+  // return true if the review has been deleted
+  return true;
+}
+
 
 /**
  * Grant/ Revoke permissions of friends regarding a particular location
