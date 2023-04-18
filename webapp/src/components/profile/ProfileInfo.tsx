@@ -1,4 +1,4 @@
-import { Avatar, Text, Flex, VStack, Box, HStack,Icon, Button, CloseButton } from "@chakra-ui/react"
+import { Avatar, Text, Flex, VStack, Box, HStack,Icon, Checkbox, Button, CloseButton } from "@chakra-ui/react"
 import React, { useState } from "react"
 import { getNameFromPod, getSolidFriends} from "../../solid/solidManagement"
 import { useSession } from '@inrupt/solid-ui-react';
@@ -62,49 +62,51 @@ export function ProfileView(props:ProfileProps) {
     setNumberFriends(n.toString())
   }
 
-    return (
-      <Flex
-        direction={'column'}
-        bg={'white'}
-        width={"30%"}
-        height={"100%"}
-        position={'absolute'} 
-        left='3%'
-        top={0}
-        zIndex={1}
-        borderRightWidth={'1px'}
-        overflow='hidden'
-        px={2}>
-        <CloseButton onClick={() => props.setSelectedView(<></>)} position='absolute' top='2%' right='2%'></CloseButton>
-        <Text alignSelf='center' fontSize='2.2em' borderBottomWidth='1px' margin={'2%'}>Profile Information</Text>
-        <VStack>
-            <Avatar 
-            marginTop={'2%'}
-            bg='red.500'
-            size='xl'/>
-          <Text fontSize='1.2em' as="b">{name}</Text>
-        </VStack>
-        <Box p={'4%'} shadow='md' borderWidth='1px' marginLeft={'5%'} marginRight={'5%'} marginTop={'5%'}>
-          <Text as="b" fontSize={'2x1'}>Statistics</Text>
-          <HStack>
-            <Icon as={MdLocationOn} color="red.500" />
-            <Text>Number of locations:</Text>
-            <Text data-testid="nLocations" as={'b'}>{props.locations.length}</Text>
-          </HStack>
-          <HStack>
-            <Icon as={FaStar} color="yellow.500" />
-            <Text>Average rating for locations: </Text>
-            <Text data-testid="avgRatings" as={'b'}>{Number.isNaN(avgRatings)?'No ratings':avgRatings.toFixed(2)}</Text>
-          </HStack>
-          <HStack>
-            <Icon as={MdPeopleAlt} color="green" />
-            <Text>Number of friends: </Text>
-            <Text data-testid="numFriends" as={'b'}>{numberFriends}</Text>
-          </HStack>
-        </Box>
-        <Box marginTop={'auto'} marginLeft='auto' marginEnd={'5%'} marginBottom={'3%'}>
-          <LogoutAlertDialog></LogoutAlertDialog>
-        </Box>
-      </Flex>
-    )
-  }
+  
+
+  return (
+    <Flex
+      direction={'column'}
+      bg={'white'}
+      width={"30%"}
+      height={"100%"}
+      position={'absolute'} 
+      left='3%'
+      top={0}
+      zIndex={1}
+      borderRightWidth={'1px'}
+      overflow='hidden'
+      px={2}>
+      <CloseButton onClick={() => props.setSelectedView(<></>)} position='absolute' top='2%' right='2%'></CloseButton>
+      <Text alignSelf='center' fontSize='2.2em' borderBottomWidth='1px' margin={'2%'}>Profile Information</Text>
+      <VStack>
+          <Avatar 
+          marginTop={'2%'}
+          bg='red.500'
+          size='xl'/>
+        <Text fontSize='1.2em' as="b">{name}</Text>
+      </VStack>
+      <Box p={'4%'} shadow='md' borderWidth='1px' marginLeft={'5%'} marginRight={'5%'} marginTop={'5%'}>
+        <Text as="b" fontSize={'2x1'}>Statistics</Text>
+        <HStack>
+          <Icon as={MdLocationOn} color="red.500" />
+          <Text>Number of locations:</Text>
+          <Text data-testid="nLocations" as={'b'}>{props.locations.length}</Text>
+        </HStack>
+        <HStack>
+          <Icon as={FaStar} color="yellow.500" />
+          <Text>Average rating for locations: </Text>
+          <Text data-testid="avgRatings" as={'b'}>{Number.isNaN(avgRatings)?'No ratings':avgRatings.toFixed(2)}</Text>
+        </HStack>
+        <HStack>
+          <Icon as={MdPeopleAlt} color="green" />
+          <Text>Number of friends: </Text>
+          <Text data-testid="numFriends" as={'b'}>{numberFriends}</Text>
+        </HStack>
+      </Box>
+      <Box marginTop={'auto'} marginLeft='auto' marginEnd={'5%'} marginBottom={'3%'}>
+        <LogoutAlertDialog></LogoutAlertDialog>
+      </Box>
+    </Flex>
+  )
+}
