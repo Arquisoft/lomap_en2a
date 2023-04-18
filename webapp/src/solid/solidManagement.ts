@@ -208,8 +208,6 @@ export async function getLocationReviews(folder:string) {
         webId: webId,
         username: name
       }
-      console.log(newReview)
-
       reviews.push(newReview);
     }
 

@@ -293,6 +293,10 @@ const ReviewSection =  ( {location ,setLocation,session}) =>{
 
                         // make call to the solidManagement module here
                         addLocationReview(localLocation, review)
+
+                        //we clear the values intoduced
+                        settitle('')
+                        setInput('')
                         //we close the add review window
                         onClose()
                       }}
@@ -324,7 +328,7 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
 
   useEffect(() => {
     handleFriends()
-  }, [friends]);//TODO this may be slowing application beacause the handlefriends in the useEffect is called every time the friends array changes and inside it it is changing the array of friends so we have here a loop
+  }, []);//TODO this may be slowing application beacause the handlefriends in the useEffect is called every time the friends array changes and inside it it is changing the array of friends so we have here a loop
 
   const handleFriends = async () => {
     if ( webId !== undefined && webId !== ""){
@@ -334,7 +338,7 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
       setFriends(n);
     }
     else{
-      // setFriends([]);
+      setFriends([]);
     }
   }
 
@@ -366,6 +370,7 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
         bottom={-4}
         zIndex={1}
         overflowY='auto'
+        overflowX='hidden'
         px={2}
         >
           <Flex direction='row' alignItems='center' marginTop={'8%'} marginLeft='5%'>
@@ -430,25 +435,21 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
 
       <Divider marginTop={'2%'} borderWidth={'2px'} borderRadius={"lg"} width='100%'/>
 
-      <Flex
-        direction={'column'}
-        width={'100%'}>
+      <HStack width={'85%'} marginTop='2%' marginLeft={'9%'} shouldWrapChildren={true} overflowY='auto'
+                   overflowX='auto' height='fit-content' minHeight={220}>
         {
         location.images?.length?
         (
           location.images?.map((image,i)=>{
             return (
-              <HStack width={'100%'} marginTop='2%' marginLeft={'9%'} shouldWrapChildren={true} overflowY='auto'
-                  display='flex' overflowX='auto' minHeight={200}  height={'fit-content'}>
-                    <Image
-                      key={i}
-                      src={image as string}
-                      width='200'
-                      height='200'
-                      borderRadius='lg'
-                      fallbackSrc='https://www.resultae.com/wp-content/uploads/2018/07/reloj-100.jpg'>
-                    </Image>
-              </HStack>
+              <Image
+                key={i}
+                src={image as string}
+                width='200'
+                height='200'
+                borderRadius='lg'
+                fallbackSrc='https://www.resultae.com/wp-content/uploads/2018/07/reloj-100.jpg'>
+              </Image>
             )
           })
         )
@@ -463,7 +464,7 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
         </Flex>
         }
           
-      </Flex>
+        </HStack>
 
       <Divider marginTop={'2%'} marginBottom={'2%'} borderWidth={'2px'} borderRadius={"lg"} width='100%'/> 
         <Tabs isFitted={true} variant='enclosed' mx='5%' marginLeft='5%'>
