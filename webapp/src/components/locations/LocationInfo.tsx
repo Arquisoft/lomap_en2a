@@ -1,5 +1,5 @@
 import React,{ useState,useEffect } from 'react';
-import { Text,Stack, HStack, Image, Box, Flex, Button, Icon, Divider, useDisclosure, Textarea, Input, Grid, Progress, Tab, TabList, TabPanel, TabPanels, Tabs, CloseButton} from "@chakra-ui/react"
+import {Badge, Text,Stack, HStack, Image, Box, Flex, Button, Icon, Divider, useDisclosure, Textarea, Input, Grid, Progress, Tab, TabList, TabPanel, TabPanels, Tabs, CloseButton} from "@chakra-ui/react"
 import {MdOutlineRateReview, MdShare} from 'react-icons/md'
 
 import {Popover,PopoverTrigger,PopoverContent,PopoverCloseButton, Menu, MenuButton, MenuItemOption, MenuList, MenuOptionGroup} from '@chakra-ui/react'
@@ -306,7 +306,7 @@ const ReviewSection =  ( {location ,setLocation,session}) =>{
           </PopoverContent>
         </Popover>
       </Box>
-      <Flex mx={'4%'} maxHeight={'sm'} direction={'column'} overflowY={'auto'}>
+      <Flex mx={'4%'} maxHeight={'sm'} direction={'column'}>
       {
         getRepresentedReviews(localLocation.reviews)     
       }
@@ -323,6 +323,7 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
   const webId = session.session.info.webId;
   const [location, setlocation] = useState(props.location)
   const [friends, setFriends] = React.useState<Friend[]>([]);
+  const colors = ['teal', 'purple', 'pink', 'blue', 'green', 'orange'];
   let checkedFriends : string[] = [];
   const [friendsChargingMsg, setFriendChargingMsg] = useState("Loading...")
 
@@ -372,48 +373,59 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
         overflowY='auto'
         overflowX='hidden'
         px={2}
+        paddingBottom={'15%'}
         >
-          <Flex direction='row' alignItems='center' marginTop={'8%'} marginLeft='5%'>
+          <Flex direction='row' gap='8%' marginLeft='auto' marginRight='3%' marginTop='2%'>
+            <CloseButton 
+                    onClick={() => props.setSelectedView(<></>)}
+            ></CloseButton>
+          </Flex>
+          <Flex direction='row' marginLeft='5%'>
             <Text
               fontSize='2.2em'
               marginLeft={'5%'}
               >
-              {location.name}
+              {location.name} 
             </Text>
-            <Flex direction='row' gap='8%' marginLeft='auto' marginRight='5%'>
+            <Flex direction='row' marginLeft='auto' marginEnd='4%' gap='5%'>
               <DeletingAlertDialog location={props.location} loadLocations={props.loadLocations}></DeletingAlertDialog>
               <Menu closeOnSelect={false}>
-              <MenuButton as={Button} colorScheme='blue' marginBottom='6%' marginLeft='auto' marginEnd='4%' 
-                width='fit-content'><Icon as={MdShare}/></MenuButton>
-              <MenuList minWidth='100%'>
-                {
-                  friends.length > 0 ? 
-                  <MenuOptionGroup type='checkbox'>
-                    {
-                      friends.map((friend) => {
-                        return (
-                            <MenuItemOption value={friend.webID} onClick={(e) => handleCheckedFriend(e)}
-                            >{friend.webID}</MenuItemOption>
-                        )
-                      })
-                    }
-                  </MenuOptionGroup> 
-                  :
-                  <Text>{friendsChargingMsg}</Text>
-                }
-              </MenuList>
-            </Menu>
+                <MenuButton as={Button} colorScheme='blue' 
+                  width='fit-content'><Icon as={MdShare}/></MenuButton>
+                <MenuList minWidth='100%'>
+                  {
+                    friends.length > 0 ? 
+                    <MenuOptionGroup type='checkbox'>
+                      {
+                        friends.map((friend) => {
+                          return (
+                              <MenuItemOption value={friend.webID} onClick={(e) => handleCheckedFriend(e)}
+                              >{friend.webID}</MenuItemOption>
+                          )
+                        })
+                      }
+                    </MenuOptionGroup> 
+                    :
+                    <Text>{friendsChargingMsg}</Text>
+                  }
+                </MenuList>
+              </Menu>
             </Flex>
           </Flex>
-          <CloseButton 
-                    onClick={() => props.setSelectedView(<></>)}
-                    position='absolute'
-                    top='1%'
-                    right='1%'
-            ></CloseButton>
+          <Flex gap='2%' marginLeft='10%' marginTop='2%'>
+            {
+              location.category.map((category, index) => {
+                return (
+                  <Badge padding='1%' borderRadius='10' 
+                  colorScheme={colors[index % colors.length]}>{category}
+                  </Badge>
+                )
+              })
+            }
+          </Flex>
           <Divider marginTop={'2%'} borderWidth={'2px'} borderRadius={"lg"} width='100%' />
 
-          <Text marginLeft='10%' fontSize={'1.6em'} >Related information:</Text>
+          <Text marginLeft='10%' fontSize={'1.6em'} >Description:</Text>
           <Flex
             direction={'column'}
             overflowY='auto'
@@ -454,7 +466,7 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
           })
         )
         :
-        <Flex marginLeft={'10%'} direction={'row'} alignItems={'center'} width={'100%'}>
+        <Flex marginLeft={'10%'} direction={'row'} alignItems={'center'} >
           <Image
             src={images.noPicture}
             width='100'
@@ -481,8 +493,6 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
             </TabPanel>
           </TabPanels>
         </Tabs>
-
-      <Divider marginBottom={'2%'} marginTop={'2%'} borderWidth={'2px'} borderRadius={"lg"} width='100%'/>    
     </Flex>
   )
 }

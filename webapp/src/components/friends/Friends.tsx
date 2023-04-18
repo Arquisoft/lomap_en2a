@@ -31,7 +31,7 @@ function Friends(props:FriendsProps) : JSX.Element {
     if (webId !== undefined && webId !== ""){
       const n  = await getSolidFriends(webId)
       setFriends(n);
-      if (n.length == 0)
+      if (n.length === 0)
         setFriendChargingMsg("Uups! It seems you don't have any friends...")
       setLogged(true);
     }
@@ -62,7 +62,7 @@ function Friends(props:FriendsProps) : JSX.Element {
           top={0}
           zIndex={1}
           borderWidth={'1px'}
-          overflow='hidden'>
+          overflow='auto'>
           <CloseButton 
                     onClick={() => props.setSelectedView(<></>)}
                     position='absolute'
@@ -86,7 +86,7 @@ function Friends(props:FriendsProps) : JSX.Element {
               {error && <Text marginLeft='5%'>{errorMessage}</Text> }
               <Text fontSize='1.9em' borderBottomWidth='1px' 
               marginTop={'4%'} alignSelf='center'>Current Solid Friends</Text>
-              <Flex flex={1} overflowY={'scroll'}overflowX={'scroll'} width={'100%'} 
+              <Flex flex={1} overflowY={'auto'}overflowX={'auto'} width={'100%'} 
                 mt={'3%'} direction={'column'} margin={'2%'} px={'2%'}>
               {
                   friends.length > 0 ? friends.map((f,i) => <FriendsDetail friend={f} key ={i}/>) 

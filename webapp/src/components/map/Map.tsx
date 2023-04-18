@@ -30,13 +30,13 @@ const Map = ( props : MapProps) => {
     lng: -5.874621861782328
   };
 
-  const [center, setCenter] = React.useState(init)
-  const [map, setMap] = React.useState(null)
-  const [areCheckedFilters, setCheckedFilters] = React.useState<boolean>(false) // check if there are any filters checked, if not show all locations
-  const [filteredLocations, setFilteredLocations] = React.useState<Array<Location>>([]) //need constant for the filter to work
-  const [friends, setFriends] = React.useState<Friend[]>([]);
-  const [checkedFriends, setCheckedFriends] = React.useState<string[]>([]);
-  const [friendChargingMsg, setFriendChargingMsg] = React.useState("Loading friends... ")
+  const [center, setCenter] = useState(init)
+  const [map, setMap] = useState(null)
+  const [areCheckedFilters, setCheckedFilters] = useState<boolean>(false) // check if there are any filters checked, if not show all locations
+  const [filteredLocations, setFilteredLocations] = useState<Array<Location>>([]) //need constant for the filter to work
+  const [friends, setFriends] = useState<Friend[]>([]);
+  const [checkedFriends, setCheckedFriends] = useState<string[]>([]);
+  const [friendChargingMsg, setFriendChargingMsg] = useState("Loading friends... ")
 
 
   const onUnmount = React.useCallback(function callback() {setMap(null)}, [])
@@ -59,6 +59,7 @@ const Map = ( props : MapProps) => {
     props.changeViewTo(<AddLocationForm setSelectedView={(view)=> props.changeViewTo(view)} loadLocations={props.loadLocations} clickedCoords={clickedCoords}/>);
   }
 
+  const colors = ['teal', 'purple', 'pink', 'blue', 'green', 'orange'];
   const categories = Object.values(Category); // array of strings containing the values of the categories
 
   // only filtering by one category. cannot filter by multiple at once (possible but not urgent enhancement)
@@ -85,7 +86,7 @@ const Map = ( props : MapProps) => {
   const handleFriends = async () => {
     if (session.session.info.webId !== undefined && session.session.info.webId !== ""){
       const n  = await getSolidFriends(session.session.info.webId);
-      if (n.length == 0)
+      if (n.length === 0)
         setFriendChargingMsg("Add friends to see their locations!")
       setFriends(n);
     }
@@ -100,7 +101,7 @@ const Map = ( props : MapProps) => {
 
     const friendIndex = checkedFriends.indexOf(e.target.innerText) // if it is -1, the filter was not applied
 
-    if (friendIndex == -1){
+    if (friendIndex === -1){
       // añadir el nuevo friend a los checked friends
       checkedFriends.push(e.target.innerText as string);
       // para cada localizacion mirar si su creador coincide con algun checkedfriend
@@ -176,14 +177,14 @@ const Map = ( props : MapProps) => {
               </Menu>
               <HStack>
               {
-                categories.map((filter,i) => { // create as many buttons as categories to filter
+                categories.map((filter, index) => { // create as many buttons as categories to filter
                   return (
                     <Button
-                      key={i}
+                      key={index}
                       borderRadius={25}
                       value={filter}
                       minWidth={'15%'}
-                      bgColor={'blue.100'}
+                      bgColor={`${colors[index % colors.length]}.50`}
                       onClick={(e) => handleFilter(e)}
                       >
                       {filter}
