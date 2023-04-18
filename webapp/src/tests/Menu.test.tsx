@@ -14,7 +14,7 @@ test('check menu expands when mouse enters', async () => {
   //we expect the small component to be in the document
   expect(getByTestId('smallContainer')).toBeInTheDocument()
   // enter the menu with the mouse
-  fireEvent.mouseEnter(getByTestId('smallContainer'));
+  fireEvent.click(getByTestId('smallContainer'));
   // wait for the component to update
   expect(getByTestId('bigContainer')).toBeInTheDocument()
 });

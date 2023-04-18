@@ -59,6 +59,7 @@ const Map = ( props : MapProps) => {
     props.changeViewTo(<AddLocationForm setSelectedView={(view)=> props.changeViewTo(view)} loadLocations={props.loadLocations} clickedCoords={clickedCoords}/>);
   }
 
+  const colors = ['teal', 'purple', 'pink', 'blue', 'green', 'orange'];
   const categories = Object.values(Category); // array of strings containing the values of the categories
 
 
@@ -156,14 +157,14 @@ const Map = ( props : MapProps) => {
               </Menu>
               <HStack>
               {
-                categories.map((filter) => { // create as many buttons as categories to filter
+                categories.map((filter, index) => { // create as many buttons as categories to filter
                   return (
                     <Button
                       borderRadius={25}
                       value={filter}
                       minWidth={'15%'}
-                      bgColor={'blue.100'}
                       onClick={(e:any) => handleCategoryClick(e)}
+                      bgColor={`${colors[index % colors.length]}.50`}
                       >
                       {filter}
                     </Button>
