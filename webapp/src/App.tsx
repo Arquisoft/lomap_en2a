@@ -5,11 +5,11 @@ import {Flex} from "@chakra-ui/react";
 
 // Our imports
 import './App.css';
-import { Location } from '../../restapi/locations/Location';
+import { Location } from './types/types';
 import Login from './components/login/Login';
-import Map from './components/Map';
+import Map from './components/map/Map';
 import {createLocation, deleteLocation, getLocations,getSolidFriends} from './solid/solidManagement'
-import Menu from './components/Menu';
+import Menu from './components/menu/Menu';
 import { useSession } from '@inrupt/solid-ui-react';
 
 

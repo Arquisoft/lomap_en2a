@@ -4,7 +4,7 @@ import { useSession } from "@inrupt/solid-ui-react";
 import { Button, Flex, Input, InputGroup, Radio, RadioGroup, Stack, Image, Text } from "@chakra-ui/react";
 import { SessionInfo } from "@inrupt/solid-ui-react/dist/src/hooks/useSession";
 import { login } from "@inrupt/solid-client-authn-browser";
-import lomap_logo from "../../lomap_logo.png";
+import images from "../../static/images/images";
 import {useState } from "react";
 
 function Login() : JSX.Element  {
@@ -21,6 +21,7 @@ function Login() : JSX.Element  {
   ]
   
   const handleSubmit = async (e) => {
+    setDisabled(true);
     e.preventDefault(); //if not used, the page will reload and data will be lost
     login({
       redirectUrl: window.location.href, // after redirect, come to the actual page
@@ -29,11 +30,14 @@ function Login() : JSX.Element  {
     });
   };
 
+  const [loginMessage, setLoginMessage] = useState("")
+  const [isDisabled, setDisabled] = useState(false);
+
   return (
       (!(session as SessionInfo).session.info.isLoggedIn) ? (
         <Flex className={'backgroundAlphaColor'}>
           <Flex className={'loginPopup'} px={2}>
-            <Image src={lomap_logo} width='20vw'></Image>
+            <Image src={images.logo} width='20vw'></Image>
 
             <Text fontSize={'2xl'}>
                 Select your Solid pod provider:
@@ -59,11 +63,13 @@ function Login() : JSX.Element  {
             <InputGroup  visibility={(customSelected)?"visible":"hidden"} size='sm' width={'80%'} >
               <Input data-testid ='inputCustomPodProvider' placeholder='URL of custom pod provider' onChange ={(e)=>setuserChoice(e.target.value.toString())} onBlur={(e)=>e.target.value = ''}/>
             </InputGroup>
-
-            <Button onClick={handleSubmit} colorScheme='blue' padding={'1.5vw'} marginTop='auto'>Login</Button>
+            <Button 
+            onClick={(e) => {setLoginMessage("Logging in..."); handleSubmit(e); }} 
+            colorScheme='blue' padding={'1.5vw'} marginTop='auto' isDisabled={isDisabled}>Login</Button>
+            <Text>{loginMessage}</Text>
           </Flex> 
         </Flex>
-      ) : <></>
+      ) : <>{setLoginMessage("")}</>
   )
 }
 

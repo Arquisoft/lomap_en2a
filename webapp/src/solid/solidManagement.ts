@@ -1,6 +1,4 @@
-import type { Location as LocationType, Review }from "../../../restapi/locations/Location";
-import type { Review as ReviewType} from "../../../restapi/locations/Location";
-import type { Friend } from "../../../restapi/users/User";
+import type { Friend, Location as LocationType, Review as ReviewType } from "../types/types";
 import { fetch } from "@inrupt/solid-client-authn-browser";
 
 import {

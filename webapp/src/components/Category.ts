@@ -1,4 +1,4 @@
-import { Location } from "../../../restapi/locations/Location";
+import { Location } from "../types/types";
 
 export enum Category {
     Shop="Shop", Bar="Bar", Sight="Sight", 
