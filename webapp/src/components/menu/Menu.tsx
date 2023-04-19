@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Flex, Button, Icon, Box, Text } from "@chakra-ui/react";
 import { MdList, MdLocationOn, MdMap, MdPeopleAlt, MdPerson, MdShareLocation } from "react-icons/md"
 import { Location } from '../../types/types';
@@ -20,6 +20,16 @@ type MenuProps = {
 
 function Menu(props: MenuProps): JSX.Element {
   const [insideMenu, setinsideMenu] = useState(false)
+  const [ownLocations, setownLocations] = useState(props.ownLocations)
+  const [friendLocations, setfriendLocations] = useState(props.friendLocations)
+  const [loading, setLoading] = useState(props.loading)
+
+  useEffect(() => {
+    console.log('cambio en props de menu')
+    setownLocations(props.ownLocations)
+    setfriendLocations(props.friendLocations)
+    setLoading(props.loading)
+  }, [props.ownLocations, props.friendLocations, props.loading])
 
   return (
     <Flex 
@@ -80,11 +90,11 @@ function Menu(props: MenuProps): JSX.Element {
                   setinsideMenu(false);
                   props.changeViewTo(
                     <ListOfLocations 
-                      setSelectedView={(view)=> props.changeViewTo(view)} 
-                      ownLocations={props.ownLocations}
-                      friendLocations={props.friendLocations}
-                      loadLocations={props.loadLocations}
-                      loading =  {props.loading} />
+                          setSelectedView={(view : JSX.Element)=> props.changeViewTo(view)} 
+                          ownLocations= {ownLocations}
+                          friendLocations={friendLocations}
+                          loadLocations={()=>{return props.loadLocations()}}
+                          loading =  {loading} />
                     );
                 }}>
                   List of Locations
@@ -138,7 +148,7 @@ function Menu(props: MenuProps): JSX.Element {
                 onClick={() => {
                   setinsideMenu(false);
                   props.changeViewTo(
-                    <ProfileView setSelectedView={(view)=> props.changeViewTo(view)} locations={props.ownLocations}></ProfileView>
+                    <ProfileView setSelectedView={(view)=> props.changeViewTo(view)} locations={ownLocations}></ProfileView>
                   );
                 }}
                 >

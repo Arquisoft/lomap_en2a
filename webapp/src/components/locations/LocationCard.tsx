@@ -91,7 +91,7 @@ function LocationCard (props : PlaceDetailProps ) : JSX.Element{
                         isTruncated>
                         {props.place.name}
                     </Text>
-                </Flex>
+                </Flex> 
                 <LocationRating location={props.place}></LocationRating>
                 <Text  
                     fontSize='x1'

@@ -1,5 +1,5 @@
 // External imports
-import React,{ useState, useEffect } from 'react';
+import React,{ useState, useEffect, Component } from 'react';
 import { ChakraProvider, useToast,Box } from '@chakra-ui/react';
 import {Flex} from "@chakra-ui/react";
 
@@ -40,7 +40,7 @@ function LoadingToast({loading}) : JSX.Element{
 
 function App(): JSX.Element {
   const [coordinates, setCoordinates] = useState({lng:0, lat:0});
-  const [locations, setLocations] = useState<Array<Location>>([]);
+  const [ownLocations, setOwnLocations] = useState<Array<Location>>([]);
   const [loadingLocations, setloadingLocations] = useState(true);
   const [friendLocations, setFriendLocations] = useState<Array<Location>>([]);
   //stores the actual view currently selected
@@ -48,7 +48,7 @@ function App(): JSX.Element {
   const [session, setSession] = useState(useSession());
 
   const getNewLocation = (location:Location) => {
-    locations.push(location);
+    ownLocations.push(location);
     createLocation(session.session.info.webId as string, location);
   }
 
@@ -61,7 +61,7 @@ function App(): JSX.Element {
   async function loadLocations(){
     if(session.session.info.webId){
       //we update the user's locations
-      setLocations(await getLocations(session.session.info.webId))
+      setOwnLocations(await getLocations(session.session.info.webId))
       //we update the loading state for children components
       setloadingLocations(false);
 
@@ -74,7 +74,12 @@ function App(): JSX.Element {
         locationList= locationList.concat(locations);
       }
       setFriendLocations(locationList);
-      //setselectedView(<></>);
+      
+      //we force the selected view to refresh
+      let temp = selectedView;
+      
+      //setselectedView(temp);
+      //HERE
     }
   }
 
@@ -101,15 +106,15 @@ function App(): JSX.Element {
         position={'relative'}
         >
           <Map loadLocations={loadLocations}
-                locations={locations}
+                locations={ownLocations.concat(friendLocations)}
                 changeViewTo= {(newView : JSX.Element) => {setselectedView(newView)}}
             />
           {
-            selectedView ?  selectedView  :  <></>
+            selectedView 
           }
           <Menu loadLocations={loadLocations}
                 changeViewTo= {(newView : JSX.Element) => {setselectedView(newView)}}
-                ownLocations = {locations}
+                ownLocations = {ownLocations}
                 friendLocations = {friendLocations}
                 loading = {loadingLocations}
                 />
