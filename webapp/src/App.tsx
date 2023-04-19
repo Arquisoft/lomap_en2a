@@ -12,14 +12,27 @@ import {createLocation, getLocations,getSolidFriends} from './solid/solidManagem
 import Menu from './components/menu/Menu';
 import { useSession } from '@inrupt/solid-ui-react';
 
+/**
+ * This component renders the possible toast indicating that the app is loading locations from the pod
+ * @param loading -> boolean that indicates if the app is loading locations from the pod
+ * @returns empty component
+ */
 function LoadingToast({loading}) : JSX.Element{
   const toast = useToast();
   if(loading){
+    //this prevents from having 2 toasts at the same time
+    toast.closeAll();
+    //we show a toast indicating that the app is loading locations from the pod
     toast({
       title: 'Loading locations from your pod...',
       status: 'info',
+      description: 'This may take a while',
       isClosable: false,
-    })
+    });
+  }
+  else{
+    //if not loading, we close the toast
+    toast.closeAll();
   }
   return (<></>)
 }
@@ -33,8 +46,6 @@ function App(): JSX.Element {
   //stores the actual view currently selected
   const [selectedView, setselectedView] = useState(<></>);
   const [session, setSession] = useState(useSession());
-
-  //const toast = useToast();
 
   const getNewLocation = (location:Location) => {
     locations.push(location);
@@ -53,8 +64,6 @@ function App(): JSX.Element {
       setLocations(await getLocations(session.session.info.webId))
       //we update the loading state for children components
       setloadingLocations(false);
-      //we close the loading info toast
-      //toast.closeAll()
 
       //we now try to load the friends' locations
       //Friends Locations
@@ -102,6 +111,7 @@ function App(): JSX.Element {
                 changeViewTo= {(newView : JSX.Element) => {setselectedView(newView)}}
                 ownLocations = {locations}
                 friendLocations = {friendLocations}
+                loading = {loadingLocations}
                 />
           {
             !session.session.info.isLoggedIn ? (

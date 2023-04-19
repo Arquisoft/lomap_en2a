@@ -13,6 +13,7 @@ import {addLocationReview, addLocationScore, getNameFromPod } from '../../solid/
 import { DeletingAlertDialog } from '../dialogs/DeletingAlertDialog';
 import { getSolidFriends, setAccessToFriend } from "../../solid/solidManagement";
 import type { Friend ,Location, Review as ReviewType} from "../../types/types";
+import CategoriesBubble from './CategoriesBubbles';
 
 type LocationInfoProps = {
   location : Location
@@ -297,7 +298,6 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
   const webId = session.session.info.webId;
   const [location, setlocation] = useState(props.location)
   const [friends, setFriends] = React.useState<Friend[]>([]);
-  const colors = ['teal', 'purple', 'pink', 'blue', 'green', 'orange'];
   let checkedFriends : string[] = [];
   const [friendsChargingMsg, setFriendChargingMsg] = useState("Loading...")
 
@@ -387,17 +387,7 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
               </Menu>
             </Flex>
           </Flex>
-          <Flex gap='2%' marginLeft='10%' marginTop='2%'>
-            {
-              location.category.map((category, index) => {
-                return (
-                  <Badge padding='1%' borderRadius='10' 
-                  colorScheme={colors[index % colors.length]}>{category}
-                  </Badge>
-                )
-              })
-            }
-          </Flex>
+          <CategoriesBubble location={location}></CategoriesBubble>
           <Divider marginTop={'2%'} borderWidth={'2px'} borderRadius={"lg"} width='100%' />
 
           <Text marginLeft='10%' fontSize={'1.6em'} >Description:</Text>

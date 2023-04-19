@@ -188,16 +188,18 @@ const Map = ( props : MapProps) => {
               // if no filters are checked, use the global locations
               props.locations.map((place, i) => (
               <Marker
-                  position={{lat: Number(place.coordinates.lat), lng: Number(place.coordinates.lng)}}
-                  onClick={() => handlePlaceClick(place)}
+                key={i}
+                position={{lat: Number(place.coordinates.lat), lng: Number(place.coordinates.lng)}}
+                onClick={() => handlePlaceClick(place)}
               ></Marker>))
             )
             :
             (
               filteredLocations.map((place, i) => (
               <Marker
-                  position={{lat: Number(place.coordinates.lat), lng: Number(place.coordinates.lng)}}
-                  onClick={() => handlePlaceClick(place)}
+                key={i}
+                position={{lat: Number(place.coordinates.lat), lng: Number(place.coordinates.lng)}}
+                onClick={() => handlePlaceClick(place)}
               ></Marker>))
             )
           }

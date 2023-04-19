@@ -13,6 +13,7 @@ type MenuProps = {
   ownLocations : Array<Location>,
   friendLocations : Array<Location>,
   loadLocations : () => Promise<void>
+  loading : boolean
 }
 
 
@@ -82,7 +83,8 @@ function Menu(props: MenuProps): JSX.Element {
                       setSelectedView={(view)=> props.changeViewTo(view)} 
                       ownLocations={props.ownLocations}
                       friendLocations={props.friendLocations}
-                      loadLocations={props.loadLocations} />
+                      loadLocations={props.loadLocations}
+                      loading =  {props.loading} />
                     );
                 }}>
                   List of Locations
