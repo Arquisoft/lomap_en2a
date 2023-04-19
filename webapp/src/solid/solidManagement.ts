@@ -488,7 +488,12 @@ export async function deleteLocation(webID:string, locationUrl: string) {
   }
 }
 
-
+/**
+ * Delete review from a location given the location url and the review to be deleted
+ * @param locationUrl contains the location url
+ * @param review contains the review
+ * @returns true if the review could be deleted, false if not
+ */
 export async function deleteReview(locationUrl:string, review:Review){
   let datasetPath = locationUrl.split('#')[0] // get until index.ttl
   let reviews : ReviewType[] = [];
@@ -499,7 +504,7 @@ export async function deleteReview(locationUrl:string, review:Review){
       && getStringNoLocale(thing, SCHEMA_INRUPT.name) as string === review.title && getStringNoLocale(thing, SCHEMA_INRUPT.startDate) as string === review.date
       && getStringNoLocale(thing, SCHEMA_INRUPT.Person) as string === review.webId && getStringNoLocale(thing, SCHEMA_INRUPT.description) as string === review.content);
     let reviewToDelete = reviews.at(0) as Thing;
-    await removeThing(dataSet, reviewToDelete)
+    dataSet = await removeThing(dataSet, reviewToDelete)
     await saveSolidDatasetAt(datasetPath, dataSet, {fetch:fetch})
   } catch (error) {
     // if any error happened, return false (the review has not been deleted)

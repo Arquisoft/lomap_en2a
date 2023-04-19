@@ -1,16 +1,16 @@
 import React,{ useState,useEffect } from 'react';
 import {Badge, Text,Stack, HStack, Image, Box, Flex, Button, Icon, Divider, useDisclosure, Textarea, Input, Grid, Progress, Tab, TabList, TabPanel, TabPanels, Tabs, CloseButton} from "@chakra-ui/react"
-import {MdOutlineRateReview, MdShare} from 'react-icons/md'
+import {MdOutlineRateReview, MdShare, MdDelete} from 'react-icons/md'
 
 import {Popover,PopoverTrigger,PopoverContent,PopoverCloseButton, Menu, MenuButton, MenuItemOption, MenuList, MenuOptionGroup} from '@chakra-ui/react'
-import {FormControl,FormLabel,FormErrorMessage,FormHelperText,} from '@chakra-ui/react'
+import {FormControl,FormLabel,FormErrorMessage,FormHelperText, useToast} from '@chakra-ui/react'
 import Review  from "./Review";
 import { FaStar, FaStarHalfAlt } from "react-icons/fa";
 import images from '../../static/images/images'
 import { useSession } from '@inrupt/solid-ui-react';
 import { SessionInfo } from '@inrupt/solid-ui-react/dist/src/hooks/useSession';
-import {addLocationReview, addLocationScore, getNameFromPod } from '../../solid/solidManagement';
-import { DeletingLocationAlertDialog} from '../dialogs/DeletingLocationAlertDialog';
+import {addLocationReview, addLocationScore, getNameFromPod, deleteReview } from '../../solid/solidManagement';
+import { DeletingAlertDialog} from '../dialogs/DeletingLocationAlertDialog';
 
 import { getSolidFriends, setAccessToFriend } from "../../solid/solidManagement";
 import type { Friend ,Location, Review as ReviewType} from "../../types/types";
@@ -181,42 +181,8 @@ const RatingSection = ({location, setLocation, session})=>{
   )
 };
 
-/**
- * Function that sorts the reviews by date and returns the sorted representation of
- * the reviews so that the newest ones are shown first
- */
-function getRepresentedReviews( reviews) : any {
-  if(reviews === undefined || reviews.length === 0){
-    return <Text marginTop='2%'>There aren't any reviews for this location... Be the first to leave one!</Text>
-  }
-  return reviews.sort((a : ReviewType,b : ReviewType)=> {
-    if(a.date === undefined || b.date === undefined){
-      return 0; //in the case the date is not defined we don't sort
-    }
-    let [datePartA, timePartA] = a.date.split(", ");
-    let [dayA, monthA, yearA] = datePartA.split("/");
-    let [hoursA, minutesA, secondsA] = timePartA.split(":");
-
-    let [datePartB, timePartB] = b.date.split(", ");
-    let [dayB, monthB, yearB] = datePartB.split("/");
-    let [hoursB, minutesB, secondsB] = timePartB.split(":");
-
-    let dateA = new Date(parseInt(yearA), parseInt(monthA) - 1, parseInt(dayA), parseInt(hoursA), parseInt(minutesA), parseInt(secondsA));
-    let dateB = new Date(parseInt(yearB), parseInt(monthB) - 1, parseInt(dayB), parseInt(hoursB), parseInt(minutesB), parseInt(secondsB));
-    return dateB.getTime() - dateA.getTime()})
-  .map((rev,i)=>{return (
-    <Flex direction='row'>
-      <Review
-        key={i}
-        title={rev.title as string}
-        username={rev.username}
-        content={rev.content as string}
-        date={rev.date}/>
-    </Flex>
-    )})
-}
-
 const ReviewSection =  ( {location ,setLocation,session}) =>{
+  const toast = useToast();
   const {isOpen, onOpen, onClose } = useDisclosure();
   const [title, settitle] = useState('')
   const [input, setInput] = useState('')
@@ -227,9 +193,78 @@ const ReviewSection =  ( {location ,setLocation,session}) =>{
   //we use a local version of the location because the passed one is the reference to the usestate one
   let localLocation = location;
 
-  getNameFromPod(session.session.info.webId).then(res=> setusername(res));
-  
+  const [reviews, setReviews] = useState<ReviewType[]>(localLocation.reviews);
 
+    /**
+   * Function that sorts the reviews by date and returns the sorted representation of
+   * the reviews so that the newest ones are shown first
+   */
+  function getRepresentedReviews() : any {
+    if(reviews === undefined || reviews.length === 0){
+      return <Text marginTop='2%'>There aren't any reviews for this location... Be the first to leave one!</Text>
+    }
+    return reviews.sort((a : ReviewType,b : ReviewType)=> {
+      if(a.date === undefined || b.date === undefined){
+        return 0; //in the case the date is not defined we don't sort
+      }
+      let [datePartA, timePartA] = a.date.split(", ");
+      let [dayA, monthA, yearA] = datePartA.split("/");
+      let [hoursA, minutesA, secondsA] = timePartA.split(":");
+  
+      let [datePartB, timePartB] = b.date.split(", ");
+      let [dayB, monthB, yearB] = datePartB.split("/");
+      let [hoursB, minutesB, secondsB] = timePartB.split(":");
+  
+      let dateA = new Date(parseInt(yearA), parseInt(monthA) - 1, parseInt(dayA), parseInt(hoursA), parseInt(minutesA), parseInt(secondsA));
+      let dateB = new Date(parseInt(yearB), parseInt(monthB) - 1, parseInt(dayB), parseInt(hoursB), parseInt(minutesB), parseInt(secondsB));
+      return dateB.getTime() - dateA.getTime()})
+    .map((rev,i)=>{return (
+      <Flex direction='row' gap='2%' alignItems='center'>
+        <Review
+          key={i}
+          title={rev.title as string}
+          username={rev.username}
+          content={rev.content as string}
+          date={rev.date}/>
+          <Button colorScheme='red'
+            title="Delete review"
+            onClick={()=> handleDelete(rev)}
+            size='md'
+            marginBottom={'6%'}
+            width='fit-content'
+            marginLeft={'auto'}>
+            <Icon as={MdDelete}/>
+          </Button>
+      </Flex>
+      )})
+  }
+
+  getNameFromPod(session.session.info.webId).then(res=> setusername(res));
+
+  const handleDelete = async (review:ReviewType) => {
+    let isDeleted = await deleteReview(localLocation.url, review)
+    if (isDeleted) {
+      setReviews(reviews.filter(rev => rev !== review)) // change for re-rendering the component
+      localLocation.reviews = reviews; // change in memory object
+      toast({
+        title: 'Review deleted.',
+        description: "The review was deleted from the location.",
+        status: 'success',
+        duration: 5000,
+        isClosable: true,
+    })
+    }
+    else {
+      toast({
+        title: 'Error in deleting.',
+        description: "The review could not be deleted. Make sure you have access to this location.",
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+    })
+    }
+  }
+  
   return (
     <>
       <Box marginLeft={'10%'}>
@@ -311,7 +346,7 @@ const ReviewSection =  ( {location ,setLocation,session}) =>{
       </Box>
       <Flex mx={'4%'} maxHeight={'sm'} direction={'column'}>
       {
-        getRepresentedReviews(localLocation.reviews)     
+        getRepresentedReviews()
       }
       </Flex>
     </>
@@ -391,7 +426,7 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
               {location.name}
             </Text>
             <Flex direction='row' marginLeft='auto' marginEnd='4%' gap='5%'>
-              <DeletingLocationAlertDialog location={props.location} loadLocations={props.loadLocations}></DeletingLocationAlertDialog>
+              <DeletingAlertDialog location={props.location} loadLocations={props.loadLocations}></DeletingAlertDialog>
               <Menu closeOnSelect={false}>
                 <MenuButton as={Button} colorScheme='blue' 
                   width='fit-content'><Icon as={MdShare}/></MenuButton>
@@ -489,10 +524,10 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
           </TabList>
           <TabPanels alignSelf='center'>
             <TabPanel>
-              <ReviewSection location={location} setLocation={setlocation} session={session} ></ReviewSection>
+              <ReviewSection location={location} setLocation={setlocation} session={session}></ReviewSection>
             </TabPanel>
             <TabPanel>
-              <RatingSection location={location} setLocation={setlocation} session={session} ></RatingSection>
+              <RatingSection location={location} setLocation={setlocation} session={session}></RatingSection>
             </TabPanel>
           </TabPanels>
         </Tabs>
