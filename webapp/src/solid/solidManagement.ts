@@ -1,6 +1,6 @@
 import type { Friend, Location as LocationType, Review as ReviewType } from "../types/types";
 import { fetch } from "@inrupt/solid-client-authn-browser";
-import { overwriteFile, getSourceUrl } from "@inrupt/solid-client";
+import { overwriteFile, getSourceUrl,getFile,isRawData, getContentType } from "@inrupt/solid-client";
 
 import {
   getSolidDatasetWithAcl,
@@ -142,7 +142,7 @@ export async function getLocationFromDataset(locationPath:string){
   let datasetPath = locationPath.split('#')[0] // get until index.ttl
   let locationDataset = await getSolidDataset(datasetPath, {fetch: fetch}) // get the whole dataset
   let locationAsThing = getThing(locationDataset, locationPath) as Thing; // get the location as thing
-
+  let imagesUrl = datasetPath.slice(0,-9)+"images";//WORKING
   // retrieve location information
   let name = getStringNoLocale(locationAsThing, SCHEMA_INRUPT.name) as string; 
   let longitude = getStringNoLocale(locationAsThing, SCHEMA_INRUPT.longitude) as string; 
@@ -162,7 +162,7 @@ export async function getLocationFromDataset(locationPath:string){
   }
   
   let locationImages: string [] = []; // initialize array to store the images as strings
-  locationImages = await getLocationImage(datasetPath); // get the images
+  locationImages = await getLocationImage(imagesUrl); // get the images
   let reviews: ReviewType[] = []; // initialize array to store the reviews
   reviews = await getLocationReviews(datasetPath) // get the reviews
   let scores : Map<string, number>; // map to store the ratings
@@ -256,10 +256,23 @@ export async function getLocationImage(imagesFolderUrl:string){
     let imagesDataSet = await getSolidDataset(imagesFolderUrl, {fetch: fetch}); // get images dataset
     imagesThings = getThingAll(imagesDataSet) // get all the things in the images dataset
     for (let image of imagesThings){
-      let img = getStringNoLocale(image, SCHEMA_INRUPT.image) as string; // get the path of the folder
-      if (img !== null)
-        images.push(img);
+      try{
+      const file = await getFile(
+        image.url,               // File in Pod to Read
+        { fetch: fetch }       // fetch from authenticated session
+      );
+      console.log( `Fetched a ${getContentType(file)} file from ${getSourceUrl(file)}.`);
+      console.log(`The file is ${isRawData(file) ? "not " : ""}a dataset.`);
+      if(isRawData(file)){
+        //URL.createObjectURL(file);
+        images.push(URL.createObjectURL(file));
+      }
+    }catch(e){
+
     }
+  
+      
+      }
   } catch (error){
     // if the dataset does not exist, return empty array of images
     images = [];
@@ -377,9 +390,10 @@ export async function createLocationDataSet(folder:string,locationFolder:string,
   dataSet = setThing(dataSet, newLocation); // store thing in dataset
   // save dataset to later add the images
   dataSet = await saveSolidDatasetAt(locationFolder, dataSet, {fetch: fetch}) // save dataset 
-  await addImages(locationImages, location); // store the images
+  console.log(locationFolder);
+  await addImages(locationImages, folder,location); // store the images
   try {
-    await saveSolidDatasetAt(locationFolder, dataSet, {fetch: fetch}) // save dataset 
+    //await saveSolidDatasetAt(locationFolder, dataSet, {fetch: fetch}) // save dataset 
   } catch (error) {
     console.log(error)
   }
@@ -460,20 +474,25 @@ export async function addLocationImage(url: string, location:LocationType) {
     }
   );
 }
-
-export async function addImages(url: string, location:LocationType){
+//WORKING
+export async function addImages(url: string,index:string, location:LocationType){
+  let locationDataset = await getSolidDataset(index, {fetch: fetch})
+  let thing = await getThing(locationDataset, index+"/index.ttl") as Thing;
   location.imagesAsFile?.forEach(async image => {
-    try {
+  
       const savedFile = await overwriteFile(  
         url+"/"+image.name,                              // URL for the file.
         image,                                       // File
         { contentType: image.type, fetch: fetch }    // mimetype if known, fetch from the authenticated session
       );
+      let urlSaved = getSourceUrl(savedFile);
       console.log(`File saved at ${getSourceUrl(savedFile)}`);
-  
-    } catch (error) {
-      console.error(error);
-    }
+      let newImage = buildThing(createThing({name: "image"}))
+      .addUrl(SCHEMA_INRUPT.image, urlSaved)
+      .build();
+      locationDataset = setThing(locationDataset, newImage);
+        console.log(locationDataset);
+      locationDataset = await saveSolidDatasetAt(index+"/index.ttl",locationDataset,{fetch:fetch});
   })
   
 }
