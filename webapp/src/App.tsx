@@ -31,6 +31,15 @@ function App(): JSX.Element {
     loadLocations();
   },[session.session.info.isLoggedIn]);
 
+  async function loadUserLocations(){
+    let locList = locations;
+    if(session.session.info.webId){
+      let list = await getLocations(session.session.info.webId)
+      locList = locList.concat(list)
+    }
+    setLocations(locList);
+    setselectedView(<></>);
+  }
 
   async function loadLocations(){
     if(session.session.info.webId){
@@ -81,6 +90,7 @@ function App(): JSX.Element {
             <Map loadLocations={loadLocations}
                  locations={locations}
                  changeViewTo= {(newView : JSX.Element) => {setselectedView(newView)}}
+                loadUserLocations={loadUserLocations}
               />
             {
               selectedView ?  selectedView  :  <></>
@@ -88,6 +98,7 @@ function App(): JSX.Element {
             <Menu loadLocations={loadLocations}
                   changeViewTo= {(newView : JSX.Element) => {setselectedView(newView)}}
                   locations = {locations}
+                  loadUserLocations={loadUserLocations}
                   />
             {
               !session.session.info.isLoggedIn ? (

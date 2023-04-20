@@ -16,6 +16,7 @@ type MapProps = {
     locations : Array<Location>
     changeViewTo: (viewName: JSX.Element) => void //function to change the selected view on the left
     loadLocations : () => Promise<void>
+    loadUserLocations: ()=> Promise<void>
 }
 
 const Map = ( props : MapProps) => {
@@ -57,7 +58,7 @@ const Map = ( props : MapProps) => {
     let clickedCoords = lat + ", " + lon;
 
     props.changeViewTo(<></>);
-    props.changeViewTo(<AddLocationForm setSelectedView={(view)=> props.changeViewTo(view)} loadLocations={props.loadLocations} clickedCoords={clickedCoords}/>);
+    props.changeViewTo(<AddLocationForm setSelectedView={(view)=> props.changeViewTo(view)} loadLocations={props.loadLocations} clickedCoords={clickedCoords} loadUserLocations={props.loadUserLocations}/>);
   }
 
   const colors = ['teal', 'purple', 'pink', 'blue', 'green', 'orange'];

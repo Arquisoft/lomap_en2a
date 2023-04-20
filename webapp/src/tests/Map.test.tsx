@@ -92,7 +92,7 @@ tests basicos porque no detecta que el mapa este cargado y de ahi ya no se puede
 
 //this is not really working but i leave it here because test suite must have at least one test
 test('Check with no locations no markers in map',async () => {
-    const {container}= render(<Map locations={[]} changeViewTo={()=>{}} loadLocations={jest.fn()}></Map>)
+    const {container}= render(<Map locations={[]} changeViewTo={()=>{}} loadLocations={jest.fn()} loadUserLocations={jest.fn()}></Map>)
     //we check with no locations = no markers
     const markers = container.querySelectorAll('div[role="button"] img');
     expect(markers.length).toBe(0)

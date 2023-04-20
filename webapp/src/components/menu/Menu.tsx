@@ -11,7 +11,8 @@ import { ProfileView } from '../profile/ProfileInfo';
 type MenuProps = {
   changeViewTo: (view: JSX.Element) => void,
   locations : Array<Location>,
-  loadLocations : () => Promise<void>
+  loadLocations : () => Promise<void>,
+  loadUserLocations: () => Promise<void>
 }
 
 
@@ -95,7 +96,7 @@ function Menu(props: MenuProps): JSX.Element {
                   () => {
                     setinsideMenu(false);
                     props.changeViewTo(
-                      <AddLocationForm setSelectedView={(view)=> props.changeViewTo(view)} loadLocations={props.loadLocations} clickedCoords={''}/>
+                      <AddLocationForm setSelectedView={(view)=> props.changeViewTo(view)} loadLocations={props.loadLocations} clickedCoords={''} loadUserLocations={props.loadUserLocations}/>
                     );
                   }
                 }>

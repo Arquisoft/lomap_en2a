@@ -26,6 +26,7 @@ import {MdOutlineAddLocationAlt, MdArrowDropDown} from "react-icons/md";
 type AddLocationProps = {
     setSelectedView: (viewName: JSX.Element) => void //function to change the selected view on the left
     loadLocations: () => Promise<void>
+    loadUserLocations: ()=> Promise<void>
     clickedCoords: any;
 }
 
@@ -71,7 +72,7 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
         if(session.session.info.webId)
             createLocation(session.session.info.webId ,location).then(
                 ()=> {
-                    props.loadLocations();
+                    props.loadUserLocations();//WORKING
                     toast({
                         title: 'Location added.',
                         description: "The location was added to your pod.",
