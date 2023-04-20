@@ -8,7 +8,7 @@ import './App.css';
 import { Location } from './types/types';
 import Login from './components/login/Login';
 import Map from './components/map/Map';
-import {createLocation, deleteLocation, getLocations,getSolidFriends} from './solid/solidManagement'
+import {createLocation, deleteLocation, getLocations,getSolidFriends,getFriendsID} from './solid/solidManagement'
 import Menu from './components/menu/Menu';
 import { useSession } from '@inrupt/solid-ui-react';
 
@@ -36,12 +36,20 @@ function App(): JSX.Element {
     if(session.session.info.webId){
       let locationList = await getLocations(session.session.info.webId)
       //Friends Locations
-      let friends = await getSolidFriends(session.session.info.webId);
+      let friends = await getFriendsID(session.session.info.webId);
 
-      for (let friend of friends){
+      const requests = friends.map(friend => getLocations(friend as string));
+    
+      const results = await Promise.all(requests);
+      for(let locArray of results){
+        locationList = locationList.concat(locArray);
+      }
+    //  locationList.concat(results);
+      /**for (let friend of friends){ //WORKING
         let locations = await getLocations(friend.webID as string)
         locationList= locationList.concat(locations);
       }
+      */
       setLocations(locationList);
       setselectedView(<></>);
     }

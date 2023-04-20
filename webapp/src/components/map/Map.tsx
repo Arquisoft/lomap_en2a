@@ -218,6 +218,7 @@ const Map = ( props : MapProps) => {
                 <Marker
                     position={{lat: Number(place.coordinates.lat), lng: Number(place.coordinates.lng)}}
                     onClick={() => handlePlaceClick(place)}
+                    
                 ></Marker>))
             )
           }
