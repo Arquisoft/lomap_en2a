@@ -261,11 +261,8 @@ export async function getLocationImage(imagesFolderUrl:string){
         image.url,               // File in Pod to Read
         { fetch: fetch }       // fetch from authenticated session
       );
-      console.log( `Fetched a ${getContentType(file)} file from ${getSourceUrl(file)}.`);
-      console.log(`The file is ${isRawData(file) ? "not " : ""}a dataset.`);
-      if(isRawData(file)){
-        //URL.createObjectURL(file);
-        images.push(URL.createObjectURL(file));
+      if(isRawData(file)){//If it's a file(not dataset)
+        images.push(URL.createObjectURL(file));//Creates the file as URL and pushes it to the
       }
     }catch(e){
 
@@ -454,45 +451,24 @@ export async function addLocationScore(webId:string, location:LocationType, scor
   }
 }
 
+
+
 /**
- * Add the location images to the given folder
- * @param url contains the folder of the images
- * @param location contains the location
+ * Adds locations to the given folder. 
+ * @param url folder for the images
+ * @param index dataset
+ * @param location location to store it's images
  */
-export async function addLocationImage(url: string, location:LocationType) {
-  let locationDataset = await getSolidDataset(url, {fetch: fetch})
-  location.images?.forEach(async image => { // for each image of the location, build a thing and store it in dataset
-      let newImage = buildThing(createThing({name: image}))
-      .addStringNoLocale(SCHEMA_INRUPT.image, image)
-      .build();
-      locationDataset = setThing(locationDataset, newImage);
-      try {
-        locationDataset = await saveSolidDatasetAt(url, locationDataset, {fetch: fetch});
-      } catch (error){
-        console.log(error);
-      }
-    }
-  );
-}
-//WORKING
 export async function addImages(url: string,index:string, location:LocationType){
   let locationDataset = await getSolidDataset(index, {fetch: fetch})
   let thing = await getThing(locationDataset, index+"/index.ttl") as Thing;
   location.imagesAsFile?.forEach(async image => {
   
       const savedFile = await overwriteFile(  
-        url+"/"+image.name,                              // URL for the file.
-        image,                                       // File
-        { contentType: image.type, fetch: fetch }    // mimetype if known, fetch from the authenticated session
+        url+"/"+image.name,                              
+        image,                                       
+        { contentType: image.type, fetch: fetch }    
       );
-      let urlSaved = getSourceUrl(savedFile);
-      console.log(`File saved at ${getSourceUrl(savedFile)}`);
-      let newImage = buildThing(createThing({name: "image"}))
-      .addUrl(SCHEMA_INRUPT.image, urlSaved)
-      .build();
-      locationDataset = setThing(locationDataset, newImage);
-        console.log(locationDataset);
-      locationDataset = await saveSolidDatasetAt(index+"/index.ttl",locationDataset,{fetch:fetch});
   })
   
 }
