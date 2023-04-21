@@ -20,10 +20,11 @@ type MapProps = {
 
 const Map = ( props : MapProps) => {
   const session = useSession();
-  const { isLoaded } = useJsApiLoader({
+  const { isLoaded } = useJsApiLoader({ 
     id: 'google-map-script',
-    googleMapsApiKey: "AIzaSyDoBBaaNXrLKzcv5R1itc7qvip3Xk5_Sy0"
-  })
+        //we get the google maps api key from the enviroment variables
+        googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY as string
+      })
 
   const init = {
     lat: 43.37776784391247,
@@ -204,7 +205,7 @@ const Map = ( props : MapProps) => {
 
   return (
       <Box>
-        <h1>An error occurred while loading the map</h1>
+        <h1>Loading the map...</h1>
       </Box>
   );
 }
