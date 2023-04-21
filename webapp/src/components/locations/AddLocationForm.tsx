@@ -60,8 +60,8 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
 
     //let imgs: string[] = [];
     const [imgs, setImgs] = React.useState<string[]>([]);
-
-
+    const [imgsFiles, setImgsFiles] = React.useState<File[]>([]);
+ 
     let lat: number, lon: number;
     let areValidCoords: boolean = false;
     let isValidName: boolean = !name || name.trim().length === 0;
@@ -137,7 +137,8 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
             },
             category: checkedCategories,
             description: description.trimStart().trimEnd(),
-            images : imgs
+            imagesAsFile : imgsFiles
+
         }
 
         addLocation(l);
@@ -254,6 +255,7 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
                                 let res = await readFileAsync(image, reader); // wait for the result
                                 //imgs.push(res); // add file to array
                                 setImgs(oldArray => [...oldArray, res]);
+                                setImgsFiles(oldArray => [...oldArray,image]);
                             }
                         }}
                         multiple>
