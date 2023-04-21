@@ -75,11 +75,7 @@ function App(): JSX.Element {
       }
       setFriendLocations(locationList);
       
-      //we force the selected view to refresh
-      let temp = selectedView;
-      
-      //setselectedView(temp);
-      //HERE
+      setselectedView(<></>);
     }
   }
 

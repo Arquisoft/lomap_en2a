@@ -112,10 +112,8 @@ const Map = ( props : MapProps) => {
 
             onClick= { (clickedCoords) => {
               let lat = clickedCoords.latLng?.lat();
-              console.log("lat = ",lat);
 
               let lon = clickedCoords.latLng?.lng();
-              console.log("lon = ",lon);
 
               handleMapClick(lat,lon);
             }}

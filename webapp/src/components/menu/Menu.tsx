@@ -25,7 +25,6 @@ function Menu(props: MenuProps): JSX.Element {
   const [loading, setLoading] = useState(props.loading)
 
   useEffect(() => {
-    console.log('cambio en props de menu')
     setownLocations(props.ownLocations)
     setfriendLocations(props.friendLocations)
     setLoading(props.loading)

@@ -1,5 +1,5 @@
 import { Location } from '../../types/types';
-import {Flex,HStack, Text,Image,Icon} from '@chakra-ui/react'
+import {Flex,HStack, Text,Image,Icon,Box,VStack} from '@chakra-ui/react'
 import LocationInfo from '../locations/LocationInfo';
 import images from '../../static/images/images'
 import { FaStar, FaStarHalfAlt } from 'react-icons/fa';
@@ -78,31 +78,36 @@ function LocationCard (props : PlaceDetailProps ) : JSX.Element{
                 alignItems={'start'}
                 width='70%'
                 px={'2%'}
+                gap={'1.1em'}
                 >
-                <Flex
-                 alignItems={'center'}
-                 justifyContent={'space-between'}
-                 direction='row'
-                 width={'full'}>
-                    <Text 
-                        textTransform={'capitalize'} 
-                        fontSize={'large'}
-                        fontWeight={'500'}
-                        isTruncated>
-                        {props.place.name}
-                    </Text>
-                </Flex> 
-                <LocationRating location={props.place}></LocationRating>
+                <VStack alignItems={'start'}>
+                  <Flex
+                  alignItems={'center'}
+                  justifyContent={'space-between'}
+                  direction='row'
+                  width={'full'}>
+                      <Text 
+                          textTransform={'capitalize'} 
+                          fontSize={'large'}
+                          fontWeight={'500'}
+                          isTruncated>
+                          {props.place.name}
+                      </Text>
+                  </Flex> 
+                  <LocationRating location={props.place} ></LocationRating>
+                </VStack>
                 <Text  
                     fontSize='x1'
-                    noOfLines={3}>
+                    noOfLines={2}>
                         {props.place.description}
                 </Text>
-                <BubbleContainer location={props.place}></BubbleContainer>
+                <Box marginTop={'auto'}>
+                  <BubbleContainer location={props.place} ></BubbleContainer>
+                </Box>
             </Flex>
             <Image 
                 objectFit={'cover'}
-                width={'25%'}
+                width={'23%'}
                 height={'100%'}
                 rounded='lg'
                 alignSelf={'center'}

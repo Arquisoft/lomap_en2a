@@ -101,7 +101,7 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
 
     function handleCoordsValue(coords: string):void {
         let separatedCoords = coords.split(',');
-        console.log(separatedCoords[0]);
+
         lat = Number(separatedCoords[0]);
         lon = Number(separatedCoords[1]);
     }

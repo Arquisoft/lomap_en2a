@@ -145,7 +145,7 @@ function ListOfLocations(props : ListProps) : JSX.Element {
             top='2%'
             right='2%'
         ></CloseButton>
-        <Button onClick={() => {console.log(props.ownLocations,props.friendLocations,props.loading)}}>asdñflk</Button>
+    
 
         <Text as='b' fontSize='3xl' marginTop={'2%'} marginLeft={'5%'}>List of Locations</Text>
         <Divider marginTop={'2%'} marginBottom={'2%'} borderWidth={'2px'} borderRadius={"lg"} width='100%'/> 
