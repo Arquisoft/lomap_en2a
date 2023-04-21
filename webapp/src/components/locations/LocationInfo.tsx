@@ -191,9 +191,10 @@ const ReviewSection =  ( {location ,setLocation,session}) =>{
   let errorOnBody = input.trim().length === 0;
   //we use a local version of the location because the passed one is the reference to the usestate one
   let localLocation = location;
-
-  getNameFromPod(session.session.info.webId).then(res=> setusername(res));
-
+  //we get the name of the user
+  useEffect(() => {
+    getNameFromPod(session.session.info.webId).then(res=> setusername(res));
+  }, []);
   return (
     <>
       <Box marginLeft={'10%'}>
