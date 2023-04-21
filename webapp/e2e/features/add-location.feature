@@ -1,4 +1,4 @@
-Feature: Adding a new location
+ Feature: Adding a new location
 
 Scenario: The user is registered in the site
   Given A registered user goes to the Add Location form

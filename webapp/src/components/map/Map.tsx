@@ -22,7 +22,7 @@ const Map = ( props : MapProps) => {
   const session = useSession();
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: "AIzaSyASYfjo4_435pVgG-kiB3cqaDXp-77j2O8"
+    googleMapsApiKey: "AIzaSyDoBBaaNXrLKzcv5R1itc7qvip3Xk5_Sy0"
   })
 
   const init = {

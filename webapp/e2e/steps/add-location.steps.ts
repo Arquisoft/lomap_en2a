@@ -11,7 +11,7 @@ defineFeature(feature, test => {
     beforeAll(async () => {
         browser = process.env.GITHUB_ACTIONS
             ? await puppeteer.launch()
-            : await puppeteer.launch({ headless: false, slowMo: 50 });
+            : await puppeteer.launch({ headless: false, slowMo: 100 });
         page = await browser.newPage();
 
         await page
@@ -27,10 +27,17 @@ defineFeature(feature, test => {
         given("A registered user goes to the Add Location form", async () => {
             await expect(page).toClick("span", {text:"Inrupt"})
             await expect(page).toClick("button", {text:"Login"})
-            await expect(page).toClick("iframe")
+            await expect(page).toClick("div", {text:})
+            await expect(page).toClick("button", {text:"Add Location"})
         });
 
+        when("I fill the data in the form and press submit", async () => {
 
+        });
+
+        then("A confirmation message should be shown in the screen", async () => {
+
+        });
 
     })
 
