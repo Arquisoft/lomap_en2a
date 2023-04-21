@@ -205,7 +205,7 @@ const Map = ( props : MapProps) => {
 
   return (
       <Box>
-        <h1>An error occurred while loading the map</h1>
+        <h1>Loading the map...</h1>
       </Box>
   );
 }
