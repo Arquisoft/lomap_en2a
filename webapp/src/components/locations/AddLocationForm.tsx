@@ -3,7 +3,7 @@ import './AddLocationForm.css'
 import { Location } from '../../types/types'; 
 import {
     Button,
-    Checkbox, Divider,
+    Tooltip, Divider,
     Flex, HStack,
     Icon, Image,
     Input,
@@ -22,6 +22,9 @@ import { useToast } from "@chakra-ui/react";
 import {createLocation} from "../../solid/solidManagement";
 import {useSession} from "@inrupt/solid-ui-react";
 import {MdOutlineAddLocationAlt, MdArrowDropDown} from "react-icons/md";
+import {RxCross2,RxCheck} from "react-icons/rx";
+import {MdEdit} from "react-icons/md";
+import {BsQuestionCircle} from "react-icons/bs";
 
 type AddLocationProps = {
     setSelectedView: (viewName: JSX.Element) => void //function to change the selected view on the left
@@ -48,22 +51,25 @@ async function readFileAsync(file, reader) : Promise<string> {
 
 function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
     const [session, setSession] = useState(useSession());
-    const [name, setName] = React.useState('');
-    const [coordsValue, setCoordsValue] = React.useState(props.clickedCoords);
-    const [description, setDescription] = React.useState('');
+    const [name, setName] = useState('');
+    const [areValidCoords, setAreValidCoords] = useState(false);
+    const [coordsValue, setCoordsValue] = useState(props.clickedCoords);
+    const [description, setDescription] = useState('');
     const [addingLocationProcess, setAddingLocationProcess] = useState(false);
+    const [editingManualCoordinates,setEditingManualCoordinates] = useState(false);
+    const [imgs, setImgs] = useState<string[]>([]);
 
+    useEffect(() => {
+        checkCoordinates(coordsValue);
+    }
+    , [coordsValue]);
 
     let checkedCategories : string[] = [];
 
     const categories = Object.values(Category); // array of strings containing the values of the categories
 
-    //let imgs: string[] = [];
-    const [imgs, setImgs] = React.useState<string[]>([]);
-
 
     let lat: number, lon: number;
-    let areValidCoords: boolean = false;
     let isValidName: boolean = !name || name.trim().length === 0;
 
 
@@ -96,7 +102,7 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
 
     const regexCoords = /^-?(90|[0-8]?\d)(\.\d+)?, *-?(180|1[0-7]\d|\d?\d)(\.\d+)?$/;
     function checkCoordinates(coords: string): void {
-        areValidCoords = regexCoords.test(coords);
+        setAreValidCoords(regexCoords.test(coords));
     }
 
     function handleCoordsValue(coords: string):void {
@@ -195,7 +201,7 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
                     />
                     <Menu closeOnSelect={false}>
                             <MenuButton as={Button} rightIcon={<MdArrowDropDown/>} color='white' background='#4299e1' 
-                                width={'27%'} height={'160%'}>Category
+                                width={'27%'} height={'160%'}>Categories
                             </MenuButton>
                             <MenuList minWidth='240px'>
                                 <MenuOptionGroup type='checkbox'>
@@ -211,18 +217,51 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
                             </MenuList>
                         </Menu>
                 </Flex>
-                <Flex direction={'column'} marginLeft={'5%'} marginRight={'3%'}>
+                <Flex direction={'column'} marginLeft={'5%'} marginRight={'3%'} gap='0.8em'
+                >
+                    <HStack>
+                        <Text fontSize='1.5em' >Coordinates</Text>
+                        <Button leftIcon={<MdEdit/>} color='white' background='#4299e1'  marginLeft={'auto'}
+                            onClick={()=>{ setEditingManualCoordinates(!editingManualCoordinates) }}>
+                            Edit manually
+                        </Button>
+                    </HStack>
+                    {/*Circle element with a x in the middle of it */}
+                    <HStack>
+                        {
+                        areValidCoords ?
+                        <>
+                            <Box width = '3em' height = '3em' borderRadius = '50%' display='flex' alignItems = 'center' justifyContent = 'center' backgroundColor = 'green.500'>
+                                <RxCheck size='2.5em' color='white'></RxCheck>
+                            </Box>
+                            <Text alignSelf='center' fontSize='1.1em'>Valid coordinates selected</Text>
+                            <Box width = '1.5em' height = '1.5em' borderRadius = '50%' display='flex' alignItems = 'center' justifyContent = 'center' backgroundColor = 'blue.500'>
+                                <Tooltip borderRadius='1em' label="Edit coordinates manually or click on the map to select them."> 
+                                    <span>
+                                        <BsQuestionCircle size='2em' color='white'></BsQuestionCircle>
+                                    </span>
+                                </Tooltip> 
+                            </Box>
+                        </>
+                        :
+                        <>
+                            <Box width = '3em' height = '3em' borderRadius = '50%' display='flex' alignItems = 'center' justifyContent = 'center' backgroundColor = 'red.500'>
+                                <RxCross2 size='2.5em' color='white'></RxCross2>
+                            </Box>
+                            <Text alignSelf='center' fontSize='1.1em'>Select valid coordinates</Text>
+                            <Box width = '1.5em' height = '1.5em' borderRadius = '50%' display='flex' alignItems = 'center' justifyContent = 'center' backgroundColor = 'blue.500'>
+                                <Tooltip borderRadius='1em' label="Edit coordinates manually or click on the map to select them."> 
+                                    <span>
+                                        <BsQuestionCircle size='2em' color='white'></BsQuestionCircle>
+                                    </span>
+                                </Tooltip> 
+                            </Box>
+                        </>}
+                    </HStack>
                     <Input
+                        hidden={!editingManualCoordinates}
                         value={coordsValue}
-                        onChange={(e:any) => {
-                            checkCoordinates(e.target.value);
-                            if (!areValidCoords) {
-                                e.target.style.borderColor = "red"
-                            } else {
-                                e.target.style.borderColor = "inherit"
-                            }
-                            setCoordsValue(e.target.value);
-                        }}
+                        onChange={(e:any) => setCoordsValue(e.target.value)}
                         placeholder='Location coordinates, Ej: 43.3534, -5.8512'
                         size='lg'
                     />
@@ -299,7 +338,9 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
                                 variant={'outline'}
                                 type={'submit'}
                                 height={'170%'}
-                                fontSize={'2xl'}>
+                                fontSize={'2xl'}
+                                disabled={!areValidCoords || name.trim().length == 0}
+                                >
                             Add location
                         </Button>
                     )}
