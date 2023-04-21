@@ -7,7 +7,7 @@ import AddLocationForm from '../locations/AddLocationForm';
 import { Category, isLocationOfCategory } from '../Category';
 import { SessionInfo } from '@inrupt/solid-ui-react/dist/src/hooks/useSession';
 import { useSession } from '@inrupt/solid-ui-react';
-import { getSolidFriends } from "../../solid/solidManagement";
+import { getSolidFriends, getFriendsID } from "../../solid/solidManagement";
 import type { Friend, Location } from "../../types/types"
 
 
@@ -171,7 +171,7 @@ const Map = ( props : MapProps) => {
                         return (
                           <MenuItemOption value={friend.webID as string}
                               onClick={(e) =>{ filteringFriends(e) }}>
-                            {friend.webID as string}</MenuItemOption>
+                            {friend.username as string}</MenuItemOption>
                         )
                       })
                     }

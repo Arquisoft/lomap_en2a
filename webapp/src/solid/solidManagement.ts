@@ -100,15 +100,12 @@ export async function getNameFromPod(webID: string){
 
 export async function getLocation(locationPath): Promise<LocationType |null>{
   try{
-  let path = getStringNoLocale(locationPath, SCHEMA_INRUPT.identifier) as string;
+    let path = getStringNoLocale(locationPath, SCHEMA_INRUPT.identifier) as string;
     let location = await getLocationFromDataset(path)
     return location;
   }catch(error){
     return null;
   }
-    // add the location to the array
-  
-  
 }
 
 /**
@@ -136,23 +133,6 @@ export async function getLocations(webID:string) {
     let successfulResults = [];
     return successfulResults;
   }
-   /**for (let locationPath of locationPaths) { // for each location in the dataset
-      // get the path of the actual location
-      let path = getStringNoLocale(locationPath, SCHEMA_INRUPT.identifier) as string;
-      // get the location : Location from the dataset of that location
-       getLocation(path);
-      try{
-        let location = await getLocationFromDataset(path)
-        locations.push(location)
-        // add the location to the array
-      }
-      catch(error){
-        //The url is not accessed(no permision)
-      }
-      
-    }*/ //WORKING
-  
-  // return the locations
   
 }
 
@@ -413,7 +393,7 @@ export async function createLocationDataSet(folder:string,locationFolder:string,
   // save dataset to later add the images
   dataSet = await saveSolidDatasetAt(locationFolder, dataSet, {fetch: fetch}) // save dataset 
   console.log(locationFolder);
-  await addImages(locationImages, folder,location); // store the images
+  await addImages(locationImages,location); // store the images
   try {
     //await saveSolidDatasetAt(locationFolder, dataSet, {fetch: fetch}) // save dataset 
   } catch (error) {
@@ -481,10 +461,9 @@ export async function addLocationScore(webId:string, location:LocationType, scor
 /**
  * Adds locations to the given folder. 
  * @param url folder for the images
- * @param index dataset
  * @param location location to store it's images
  */
-export async function addImages(url: string,index:string, location:LocationType){
+export async function addImages(url: string, location:LocationType){
   location.imagesAsFile?.forEach(async image => {
   
       const savedFile = await overwriteFile(  
@@ -659,12 +638,12 @@ export async function getSolidFriends(webID:string) {
   let test = getUrl(await getUserProfile(webID), FOAF.knows);
   let friendURLs = getUrlAll(await getUserProfile(webID), FOAF.knows);
   let friends: Friend[] = [];
-//WORKING
+
   let req = friendURLs.map(friend => getFriendDetails(friend))
   const results = await Promise.allSettled(req);
   const successfulResults = results
   .filter(result => result.status === 'fulfilled')
-  .map(result => result.status === 'fulfilled' ? result.value : null)
+  .map(result => result.status === 'fulfilled' ? result.value : null)//WORKING
   .filter(value => value !== null) as Friend[];
   return successfulResults;
 }
