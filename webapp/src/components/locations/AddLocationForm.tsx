@@ -311,26 +311,5 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
     );
 }
 
-function AddLocationButton(props:any) : JSX.Element {
-    return (
-        props.addingLocationProcess ? (
-            <Button leftIcon={<Spinner size={"xs"}/>}
-                    colorScheme={'blue'}
-                    variant={'outline'}
-                    type={'submit'}
-                    disabled>
-                Adding location
-            </Button>
-        ) : (
-            <Button leftIcon={<MdOutlineAddLocationAlt/>}
-                    colorScheme={'blue'}
-                    variant={'outline'}
-                    type={'submit'}>
-                Add location
-            </Button>
-        )
-    );
-}
-
 
 export default AddLocationFormComp;

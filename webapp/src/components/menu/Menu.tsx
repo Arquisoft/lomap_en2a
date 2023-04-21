@@ -35,7 +35,8 @@ function Menu(props: MenuProps): JSX.Element {
           borderRightWidth={'thin'}
           px={2}
           boxShadow ='lg'
-          onClick={()=> insideMenu? setinsideMenu(false) : setinsideMenu(true)}
+          onClick={()=> insideMenu? ()=>{} : setinsideMenu(true)}
+          onMouseLeave={()=> {setinsideMenu(false)}}
     >
       {
         insideMenu ?

@@ -1,11 +1,12 @@
 import * as React from "react";
 import './Login.css';
 import { useSession } from "@inrupt/solid-ui-react";
-import { Button, Flex, Input, InputGroup, Radio, RadioGroup, Stack, Image, Text } from "@chakra-ui/react";
+import {Button, Flex, Input, InputGroup, Radio, RadioGroup, Stack, Image, Text, Spinner} from "@chakra-ui/react";
 import { SessionInfo } from "@inrupt/solid-ui-react/dist/src/hooks/useSession";
 import { login } from "@inrupt/solid-client-authn-browser";
 import images from "../../static/images/images";
 import {useState } from "react";
+import {MdOutlineAddLocationAlt} from "react-icons/md";
 
 function Login() : JSX.Element  {
 
@@ -13,6 +14,7 @@ function Login() : JSX.Element  {
 
   const [userChoice, setuserChoice] = useState('https://solidcommunity.net/');
   const [customSelected, setcustomSelected] = useState(false)
+  const [nowLoggingIn, setNowLoggingIn] = useState(false);
   
   const providerOptions = [
       { value: 'https://solidcommunity.net/', label: 'Solid Community' },
@@ -27,7 +29,7 @@ function Login() : JSX.Element  {
       redirectUrl: window.location.href, // after redirect, come to the actual page
       oidcIssuer: userChoice, // redirect to the url
       clientName: "Lo Map",
-    });
+    }).then(() => setNowLoggingIn(false) );
   };
 
   const [loginMessage, setLoginMessage] = useState("")
@@ -63,10 +65,29 @@ function Login() : JSX.Element  {
             <InputGroup  visibility={(customSelected)?"visible":"hidden"} size='sm' width={'80%'} >
               <Input data-testid ='inputCustomPodProvider' placeholder='URL of custom pod provider' onChange ={(e)=>setuserChoice(e.target.value.toString())} onBlur={(e)=>e.target.value = ''}/>
             </InputGroup>
-            <Button 
-            onClick={(e) => {setLoginMessage("Logging in..."); handleSubmit(e); }} 
-            colorScheme='blue' padding={'1.5vw'} marginTop='auto' isDisabled={isDisabled}>Login</Button>
-            <Text>{loginMessage}</Text>
+            {nowLoggingIn ? (
+                <Button leftIcon={<Spinner size={"xs"} />}
+                        colorScheme='blue'
+                        padding={'1.5vw'}
+                        marginTop='auto'
+                        isDisabled={isDisabled}
+                >
+                    Login
+                </Button>
+            ) : (
+                <Button onClick={(e) => {
+                            //setLoginMessage("Logging in...");
+                            handleSubmit(e);
+                            setNowLoggingIn(true);
+                        }}
+                        colorScheme='blue'
+                        padding={'1.5vw'}
+                        marginTop='auto'
+                        isDisabled={isDisabled}
+                >
+                    Login
+                </Button>
+            )}
           </Flex> 
         </Flex>
       ) : <>{setLoginMessage("")}</>
