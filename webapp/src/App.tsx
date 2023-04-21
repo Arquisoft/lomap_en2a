@@ -45,7 +45,6 @@ function App(): JSX.Element {
         locationList= locationList.concat(locations);
       }
       setLocations(locationList);
-      setselectedView(<></>);
     }
   }
 

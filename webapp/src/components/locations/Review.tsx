@@ -21,6 +21,7 @@ function Review (props : ReviewProps ) : JSX.Element{
         borderWidth={'1px'}
         mt='3%'
         gap='0.5em'
+        width='full'
         >
         <Flex
             direction={'row'}
