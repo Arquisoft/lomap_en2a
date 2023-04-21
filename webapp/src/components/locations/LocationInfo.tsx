@@ -228,15 +228,22 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
             username={rev.username}
             content={rev.content as string}
             date={rev.date}/>
-            <Button colorScheme='red'
-              title="Delete review"
-              onClick={()=> handleDelete(rev)}
-              size='md'
-              marginBottom={'6%'}
-              width='fit-content'
-              marginLeft={'auto'}>
-              <Icon as={MdDelete}/>
-            </Button>
+            {
+              session.session.info.webId == rev.webId ? 
+              (
+                <Button colorScheme='red'
+                  title="Delete review"
+                  onClick={()=> handleDelete(rev)}
+                  size='md'
+                  marginBottom={'6%'}
+                  width='fit-content'
+                  marginLeft={'auto'}>
+                  <Icon as={MdDelete}/>
+                </Button>
+              ) : (
+                <></>
+              )
+            }
         </Flex>
         )})
     }
@@ -356,11 +363,6 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
   
     )
   }
-
-
-
-
-
 
   const session = useSession();
   const webId = session.session.info.webId;
