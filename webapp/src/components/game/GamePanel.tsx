@@ -175,7 +175,7 @@ export function GamePanel(props:GamePanelProps) {
       overflow='auto'
       px={2}>
       <CloseButton onClick={() => props.setSelectedView(<></>)} position='absolute' top='2%' right='2%'></CloseButton>
-      <Text alignSelf='center' fontSize='1.5vw' borderBottomWidth='1px' margin={'2%'}>Progess Record</Text>
+      <Text alignSelf='center' fontSize='1.5vw' borderBottomWidth='1px' margin={'2%'}>Progress Record</Text>
       <Text alignSelf='center' fontSize='1vw' margin={'2%'}>Keep adding locations to increase your trophies and rank!</Text>
       <Flex px={'1vw'} marginTop={'2%'} marginLeft='1vw' direction='row' width={'100%'}>
         <Flex alignItems={'center'} width={'fit-content'} gap='6%' borderWidth={'2px'} px='4%' borderRadius={'25'} bgColor={'gray.200'}>
