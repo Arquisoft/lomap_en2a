@@ -22,13 +22,15 @@ defineFeature(feature, test => {
     });
 
     test("The user is registered in the site",({given,when,then}) => {
-
-
         given("A registered user goes to the Add Location form", async () => {
-            await expect(page).toClick("span", {text:"Inrupt"})
-            await expect(page).toClick("button", {text:"Login"})
-            await expect(page).toClick("div", {text:})
-            await expect(page).toClick("button", {text:"Add Location"})
+            await expect(page).toClick("span", {text:"Inrupt"});
+            await expect(page).toClick("button", {text:"Login"});
+            let element = await page.waitForSelector('div[data-testid="smallContainer"]');
+            // @ts-ignore
+            await element.click();
+            element = await page.waitForSelector('button[data-testid="Add location"]');
+            // @ts-ignore
+            await element.click();
         });
 
         when("I fill the data in the form and press submit", async () => {
@@ -36,7 +38,7 @@ defineFeature(feature, test => {
         });
 
         then("A confirmation message should be shown in the screen", async () => {
-
+            //await expect(page).toMatch('You have been registered in the system!')
         });
 
     })
