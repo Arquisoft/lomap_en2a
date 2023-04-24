@@ -17,7 +17,7 @@ import type { Friend ,Location, Review as ReviewType} from "../../types/types";
 type LocationInfoProps = {
   location : Location
   loadLocations: () => Promise<void>
-  setSelectedView: (viewName: JSX.Element) => void //function to change the selected view on the left
+  setSelectedView: (viewName: string) => void //function to change the selected view on the left
 };
 
 
@@ -350,7 +350,7 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
         >
           <Flex direction='row' gap='8%' marginLeft='auto' marginRight='3%' marginTop='2%'>
             <CloseButton 
-                    onClick={() => props.setSelectedView(<></>)}
+                    onClick={() => props.setSelectedView('Map')}
             ></CloseButton>
           </Flex>
           <Flex direction='row' marginLeft='5%'>

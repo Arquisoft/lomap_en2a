@@ -15,8 +15,11 @@ import {TbMap2} from "react-icons/tb";
 
 type MapProps = {
     locations : Array<Location>
-    changeViewTo: (viewName: JSX.Element) => void //function to change the selected view on the left
+    changeViewTo: (viewName: string) => void //function to change the selected view on the left
     loadLocations : () => Promise<void>
+    setClickedCoordinates : (coordinates: string) => void
+    clickedCoordinates : string
+    selectedView : string
 }
 
 const Map = ( props : MapProps) => {
@@ -73,15 +76,20 @@ const Map = ( props : MapProps) => {
     
     setCenter(newCenter)
     
-    props.changeViewTo(<LocationInfo setSelectedView={(view) =>props.changeViewTo(view)} location={location} loadLocations={props.loadLocations}></LocationInfo>);
+    props.changeViewTo('LocationInfo');
   }
 
   function handleMapClick(lat:any,lon:any):void {
     // get coordinates where clicked
     let clickedCoords = lat + ", " + lon;
 
-    props.changeViewTo(<></>);
-    props.changeViewTo(<AddLocationForm setSelectedView={(view)=> props.changeViewTo(view)} loadLocations={props.loadLocations} clickedCoords={clickedCoords}/>);
+    //we update the currently clicked coordinates
+    props.setClickedCoordinates(clickedCoords);
+
+    //if the currently selected view is not the add location form, we change it to it
+    if (props.selectedView !== 'AddLocationForm'){
+      props.changeViewTo('AddLocationForm');
+    }
   }
 
   const colors = ['teal', 'purple', 'pink', 'blue', 'green', 'orange'];
@@ -121,18 +129,6 @@ const Map = ( props : MapProps) => {
       setCheckedCategory(e.target.value);
   }
 
-  const customMapStyle = [ //TODO delete this 
-    {
-      featureType: "all",
-      elementType: "all",
-      stylers: [
-        {
-          cursor: "url('https://maps.google.com/mapfiles/ms/icons/red-dot.png'), auto",
-        },
-      ],
-    },
-  ];
-
 
   if (isLoaded)
   //when the addLocationMode is activated the cursor will be the MdAddLocationAlt icon
@@ -161,7 +157,6 @@ const Map = ( props : MapProps) => {
                     east: 180,
                   }
                 },
-                styles: customMapStyle,
               }}
               onClick= { (clickedCoords) => {
                 //we check if the user is in location creation mode

@@ -7,7 +7,7 @@ import { useSession } from '@inrupt/solid-ui-react';
 import {MdPersonAdd} from "react-icons/md";
 
 type FriendsProps = {
-  setSelectedView: (viewName: JSX.Element) => void //function to change the selected view on the left
+  setSelectedView: (viewName: string) => void //function to change the selected view on the left
 }
 
 function Friends(props:FriendsProps) : JSX.Element {
@@ -64,7 +64,7 @@ function Friends(props:FriendsProps) : JSX.Element {
           borderWidth={'1px'}
           overflow='auto'>
           <CloseButton 
-                    onClick={() => props.setSelectedView(<></>)}
+                    onClick={() => props.setSelectedView('Map')}
                     position='absolute'
                     top='2%'
                     right='3%'

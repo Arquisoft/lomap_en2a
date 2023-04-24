@@ -9,7 +9,7 @@ import {RiLogoutBoxLine} from 'react-icons/ri'
 import { LogoutAlertDialog } from '../dialogs/LogoutAlertDialog';
 
 type ProfileProps = {
-  setSelectedView: (viewName: JSX.Element) => void //function to change the selected view on the left
+  setSelectedView: (viewName: string) => void //function to change the selected view on the left
   locations : Array<Location>
 }
 
@@ -77,7 +77,7 @@ export function ProfileView(props:ProfileProps) {
       borderRightWidth={'1px'}
       overflow='hidden'
       px={2}>
-      <CloseButton onClick={() => props.setSelectedView(<></>)} position='absolute' top='2%' right='2%'></CloseButton>
+      <CloseButton onClick={() => props.setSelectedView('Map')} position='absolute' top='2%' right='2%'></CloseButton>
       <Text alignSelf='center' fontSize='2.2em' borderBottomWidth='1px' margin={'2%'}>Profile Information</Text>
       <VStack>
           <Avatar 

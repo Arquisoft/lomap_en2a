@@ -8,8 +8,9 @@ import React from 'react';
 type PlaceDetailProps = {
     place : Location;
     key : number;
-    setSelectedView: (viewName: JSX.Element) => void //function to change the selected view on the left
+    setSelectedView: (viewName: string) => void //function to change the selected view on the left
     loadLocations: () => Promise<void>
+    setSelectedLocation: (location: Location ) => void
 }
 
 function LocationCard (props : PlaceDetailProps ) : JSX.Element{
@@ -27,8 +28,11 @@ function LocationCard (props : PlaceDetailProps ) : JSX.Element{
         justifyContent = 'space-between'
         borderRadius={'lg'}
         //change the view to the information view of the location being clicked
-        onClick={
-            () => props.setSelectedView(<LocationInfo setSelectedView={props.setSelectedView} location={props.place} loadLocations={props.loadLocations}></LocationInfo>)
+        onClick={() => 
+            {
+                //we update the selected location to be the one on this card
+                props.setSelectedLocation(props.place);
+                props.setSelectedView('LocationInfo')}
         }
         cursor={'pointer'}
     >

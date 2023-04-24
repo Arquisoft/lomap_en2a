@@ -27,9 +27,10 @@ import {MdEdit} from "react-icons/md";
 import {BsQuestionCircle} from "react-icons/bs";
 
 type AddLocationProps = {
-    setSelectedView: (viewName: JSX.Element) => void //function to change the selected view on the left
+    setSelectedView: (viewName: string) => void //function to change the selected view on the left
     loadLocations: () => Promise<void>
-    clickedCoords: any;
+    clickedCoordinates: string;
+    setClickedCoordinates: (coords: string) => void;
 }
 
 /**
@@ -53,7 +54,7 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
     const [session, setSession] = useState(useSession());
     const [name, setName] = useState('');
     const [areValidCoords, setAreValidCoords] = useState(false);
-    const [coordsValue, setCoordsValue] = useState(props.clickedCoords);
+    const [coordsValue, setCoordsValue] = useState('');
     const [description, setDescription] = useState('');
     const [addingLocationProcess, setAddingLocationProcess] = useState(false);
     const [editingManualCoordinates,setEditingManualCoordinates] = useState(false);
@@ -63,6 +64,15 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
         checkCoordinates(coordsValue);
     }
     , [coordsValue]);
+
+    //we update the state of the coordsvalue when props.clickedCoordinates changes
+    useEffect(() => {
+        console.log("props.clickedCoordinates changed");
+        console.log(props);
+        setCoordsValue(props.clickedCoordinates);
+        console.log("coordsValue: " + coordsValue);
+        console.log("props.clickedCoordinates: " + props.clickedCoordinates);
+    });
 
     let checkedCategories : string[] = [];
 
@@ -183,7 +193,7 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
                     fontSize='2.2em' alignSelf='center' borderBottomWidth='1px'>Add a location</Text>
                     <Flex direction={'column'}>
                         <CloseButton 
-                            onClick={() => props.setSelectedView(<></>)}
+                            onClick={() => props.setSelectedView('Map')}
                             position='absolute'
                             top='2%'
                             right='3%'

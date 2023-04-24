@@ -6,12 +6,15 @@ import ListOfLocations from '../locations/ListOfLocations';
 import AddLocationForm from '../locations/AddLocationForm';
 import Friends from '../friends/Friends';
 import { ProfileView } from '../profile/ProfileInfo';
+import App from '../../App';
 
 
 type MenuProps = {
-  changeViewTo: (view: JSX.Element) => void,
+  changeViewTo: (view: string) => void,
   locations : Array<Location>,
   loadLocations : () => Promise<void>
+  clickedCoordinates : string
+  setClickedCoordinates : (coordinates : string) => void
 }
 
 
@@ -62,7 +65,7 @@ function Menu(props: MenuProps): JSX.Element {
                   size='lg'
                   width={'fi-content'}
                   height={'5vh'}
-                  onClick={() => { setinsideMenu(false); props.changeViewTo(<></>); }}>
+                  onClick={() => { setinsideMenu(false); props.changeViewTo('Map'); }}>
                   Map View
                 </Button>
               </Box>
@@ -77,7 +80,7 @@ function Menu(props: MenuProps): JSX.Element {
                 onClick={() => {
                   setinsideMenu(false);
                   props.changeViewTo(
-                    <ListOfLocations setSelectedView={(view)=> props.changeViewTo(view)} places={props.locations} loadLocations={props.loadLocations} />
+                    'ListOfLocations'
                     );
                 }}>
                   List of Locations
@@ -94,8 +97,8 @@ function Menu(props: MenuProps): JSX.Element {
                 onClick={
                   () => {
                     setinsideMenu(false);
-                    props.changeViewTo(
-                      <AddLocationForm setSelectedView={(view)=> props.changeViewTo(view)} loadLocations={props.loadLocations} clickedCoords={''}/>
+                    props.changeViewTo( 
+                      'AddLocationForm'
                     );
                   }
                 }>
@@ -113,7 +116,7 @@ function Menu(props: MenuProps): JSX.Element {
                 onClick={() => {
                   setinsideMenu(false);
                   props.changeViewTo(
-                    <Friends setSelectedView={(view)=> props.changeViewTo(view)}/>
+                    'Friends'
                   );
                 }}
                 >
@@ -131,7 +134,7 @@ function Menu(props: MenuProps): JSX.Element {
                 onClick={() => {
                   setinsideMenu(false);
                   props.changeViewTo(
-                    <ProfileView setSelectedView={(view)=> props.changeViewTo(view)} locations={props.locations}></ProfileView>
+                    'ProfileView'
                   );
                 }}
                 >

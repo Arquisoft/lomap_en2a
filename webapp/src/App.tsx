@@ -10,15 +10,41 @@ import Login from './components/login/Login';
 import Map from './components/map/Map';
 import {createLocation, deleteLocation, getLocations,getSolidFriends} from './solid/solidManagement'
 import Menu from './components/menu/Menu';
+import AddLocationForm from './components/locations/AddLocationForm';
+import ListOfLocations from './components/locations/ListOfLocations';
+import Friends from './components/friends/Friends';
+import LocationInfo from './components/locations/LocationInfo';
+import { ProfileView } from './components/profile/ProfileInfo';
 import { useSession } from '@inrupt/solid-ui-react';
 
 
 function App(): JSX.Element {
-  const [coordinates, setCoordinates] = useState({lng:0, lat:0});
+  const session = useSession(); 
+  const [userCoordinates, setUserCoordinates] = useState({lng:0, lat:0});
   const [locations, setLocations] = useState<Array<Location>>([]);
   //stores the actual view currently selected
-  const [selectedView, setselectedView] = useState(<></>);
-  const [session, setSession] = useState(useSession());
+  // const [selectedView, setselectedView] = useState<JSX.Element>(<></>); //TODO 
+  const [nameSelectedView, setNameSelectedView] = useState<string>("Map");
+  
+  //information on the clicked coordinates stored here
+  const [clickedCoordinates, setClickedCoordinates] = useState<string>("");
+  //information on the currently selected location
+  const [selectedLocation, setSelectedLocation] = useState<Location>(undefined!);
+  
+
+  
+  const modifyViewToBe = (viewName : string) => {
+    setNameSelectedView(viewName);
+    //setselectedView(views[viewName]);
+  }
+
+  useEffect(()=> {
+    //we force the addlocation componet to update when the clicked coordinates change
+    console.log("clicked coordinates changed in app");
+    console.log(clickedCoordinates)
+    
+  },[clickedCoordinates]);
+
 
 
   const getNewLocation = (location:Location) => {
@@ -43,7 +69,7 @@ function App(): JSX.Element {
         locationList= locationList.concat(locations);
       }
       setLocations(locationList);
-      setselectedView(<></>);
+      //setselectedView(<></>);
     }
   }
 
@@ -53,7 +79,7 @@ function App(): JSX.Element {
   useEffect(()=>{
     navigator.geolocation.getCurrentPosition(({coords : {latitude,longitude}}) =>{
       //we set the coordinates to be the ones of the user for them to be passed to the map
-      setCoordinates({lat: latitude , lng : longitude});
+      setUserCoordinates({lat: latitude , lng : longitude});
     })
   },[]);
 
@@ -72,14 +98,76 @@ function App(): JSX.Element {
           >
             <Map loadLocations={loadLocations}
                  locations={locations}
-                 changeViewTo= {(newView : JSX.Element) => {setselectedView(newView)}}
+                 changeViewTo={(viewName : string)=> {setNameSelectedView(viewName)}}
+                 setClickedCoordinates={setClickedCoordinates}
+                 clickedCoordinates={clickedCoordinates}
+                 selectedView={nameSelectedView}
               />
             {
-              selectedView ?  selectedView  :  <></>
+              (() => {
+                switch (nameSelectedView) {
+                  case "Map":
+                    return <></>;
+                  case "AddLocationForm":
+                    return (
+                      <AddLocationForm
+                        setSelectedView={(viewName: string) => {
+                          setNameSelectedView(viewName);
+                        }}
+                        loadLocations={loadLocations}
+                        clickedCoordinates={clickedCoordinates}
+                        setClickedCoordinates={setClickedCoordinates}
+                      />
+                    );
+                  case "ListOfLocations":
+                    return (
+                      <ListOfLocations
+                        setSelectedView={(viewName: string) => {
+                          setNameSelectedView(viewName);
+                        }}
+                        places={locations}
+                        loadLocations={loadLocations}
+                        setSelectedLocation={setSelectedLocation}
+                      />
+                    );
+                  case "Friends":
+                    return (
+                      <Friends
+                        setSelectedView={(viewName: string) => {
+                          setNameSelectedView(viewName);
+                        }}
+                      />
+                    );
+                  case "ProfileView":
+                    return (
+                      <ProfileView
+                        setSelectedView={(viewName: string) => {
+                          setNameSelectedView(viewName);
+                        }}
+                        locations={locations}
+                      />
+                    );
+                  case "LocationInfo":
+                    return (
+                      <LocationInfo
+                        setSelectedView={(viewName: string) => {
+                          setNameSelectedView(viewName);
+                        }}
+                        location={selectedLocation}
+                        loadLocations={loadLocations}
+                      />
+                    );
+                  default:
+                    return null;
+                }
+              })()
             }
+
             <Menu loadLocations={loadLocations}
-                  changeViewTo= {(newView : JSX.Element) => {setselectedView(newView)}}
+                  changeViewTo={(viewName : string)=> {setNameSelectedView(viewName)}}
                   locations = {locations}
+                  clickedCoordinates = {clickedCoordinates}
+                  setClickedCoordinates = {setClickedCoordinates}
                   />
             {
               !session.session.info.isLoggedIn ? (

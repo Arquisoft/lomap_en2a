@@ -3,13 +3,15 @@ import { act, fireEvent, render, screen, waitFor } from "@testing-library/react"
 import Menu from '../components/menu/Menu';
 
 test('check menu contains 5 options', async () => {
-  const { container } = render(<Menu loadLocations={jest.fn()} locations={[]} changeViewTo={jest.fn()}></Menu>)
+  const { container } = render(<Menu loadLocations={jest.fn()} locations={[]} changeViewTo={jest.fn()} setClickedCoordinates={jest.fn()}
+  clickedCoordinates={'0,0'}></Menu>)
   //we check there are 5 icons = svg
   expect(container.querySelectorAll('svg').length).toBe(5)
 })
 
 test('check menu expands when mouse enters', async () => {
-  const { getByTestId } = render(<Menu loadLocations={jest.fn()} locations={[]} changeViewTo={jest.fn()} />
+  const { getByTestId } = render(<Menu loadLocations={jest.fn()} locations={[]} changeViewTo={jest.fn()} setClickedCoordinates={jest.fn()}
+  clickedCoordinates={'0,0'}/>
   );
   //we expect the small component to be in the document
   expect(getByTestId('smallContainer')).toBeInTheDocument()
@@ -20,7 +22,8 @@ test('check menu expands when mouse enters', async () => {
 });
 
 test('check menu shrinks when mouse exits', async () => {
-  const { getByTestId } = render(<Menu loadLocations={jest.fn()} locations={[]} changeViewTo={jest.fn()} />
+  const { getByTestId } = render(<Menu loadLocations={jest.fn()} locations={[]} changeViewTo={jest.fn()} setClickedCoordinates={jest.fn()}
+  clickedCoordinates={'0,0'}/>
   );
   // enter the menu with the mouse
   fireEvent.mouseEnter(getByTestId('smallContainer'));
@@ -45,6 +48,8 @@ test.each([/*'Map view', 'Location list', 'Add location',*/ 'Add friends', 'Prof
         changeViewTo={(view) => {
           viewUpdated = true;
         }}
+        setClickedCoordinates={jest.fn()}
+        clickedCoordinates={'0,0'}
       />
     );
     // enter the menu with the mouse

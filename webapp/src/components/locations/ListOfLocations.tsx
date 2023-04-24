@@ -7,7 +7,8 @@ import  LocationCard  from './LocationCard';
 
 type ListProps = {
     places : Array<Location>;
-    setSelectedView: (viewName: JSX.Element) => void //function to change the selected view on the left
+    setSelectedView: (viewName: string) => void //function to change the selected view on the left
+    setSelectedLocation: (location: Location) => void
     loadLocations: () => Promise<void>
 }
 
@@ -30,7 +31,7 @@ function ListOfLocations(props : ListProps) : JSX.Element {
           px={2}
           >
             <CloseButton 
-                onClick={() => props.setSelectedView(<></>)}
+                onClick={() => props.setSelectedView('Map')}
                 position='absolute'
                 top='2'
                 right='2'
@@ -53,7 +54,7 @@ function ListOfLocations(props : ListProps) : JSX.Element {
         px={'2%'}
         >
         <CloseButton 
-                onClick={() => props.setSelectedView(<></>)}
+                onClick={() => props.setSelectedView('Map')}
                 position='absolute'
                 top='2%'
                 right='2%'
@@ -61,7 +62,7 @@ function ListOfLocations(props : ListProps) : JSX.Element {
         <Flex flex={1} overflowY={'auto'} overflowX='clip' mt={'10%'} direction={'column'} px={'2%'}>
         {
             props.places && props.places.map((place,i) => 
-            <LocationCard place={place} key ={i} setSelectedView={props.setSelectedView} loadLocations={props.loadLocations}/>)
+            <LocationCard place={place} key ={i} setSelectedView={props.setSelectedView} loadLocations={props.loadLocations} setSelectedLocation={props.setSelectedLocation}/>)
         }
         </Flex>
     </Flex>);
