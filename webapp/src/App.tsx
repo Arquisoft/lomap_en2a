@@ -1,7 +1,8 @@
 // External imports
 import React, { useState, useEffect } from 'react';
-import { ChakraProvider, HStack, Input, Tag, TagLabel, TagLeftIcon } from '@chakra-ui/react';
+import { ChakraProvider, Button } from '@chakra-ui/react';
 import {Flex} from "@chakra-ui/react";
+import { MdAddLocationAlt } from 'react-icons/md';
 
 // Our imports
 import './App.css';
@@ -26,26 +27,18 @@ function App(): JSX.Element {
   // const [selectedView, setselectedView] = useState<JSX.Element>(<></>); //TODO 
   const [nameSelectedView, setNameSelectedView] = useState<string>("Map");
   
-  //information on the clicked coordinates stored here
+  //information on the clicked coordinates stored here 
   const [clickedCoordinates, setClickedCoordinates] = useState<string>("");
+  //if the user is in Location creation mode
+  const [inLocationCreationMode, setInLocationCreationMode] = React.useState<boolean>(false);
   //information on the currently selected location
   const [selectedLocation, setSelectedLocation] = useState<Location>(undefined!);
-  
 
   
   const modifyViewToBe = (viewName : string) => {
     setNameSelectedView(viewName);
     //setselectedView(views[viewName]);
   }
-
-  useEffect(()=> {
-    //we force the addlocation componet to update when the clicked coordinates change
-    console.log("clicked coordinates changed in app");
-    console.log(clickedCoordinates)
-    
-  },[clickedCoordinates]);
-
-
 
   const getNewLocation = (location:Location) => {
     locations.push(location);
@@ -75,6 +68,7 @@ function App(): JSX.Element {
 
 
 
+
   //get the user's current location and save it for the map to use it as a center
   useEffect(()=>{
     navigator.geolocation.getCurrentPosition(({coords : {latitude,longitude}}) =>{
@@ -96,13 +90,36 @@ function App(): JSX.Element {
           maxHeight={'100vh'}
           position={'relative'}
           >
-            <Map loadLocations={loadLocations}
+            <Map
                  locations={locations}
                  changeViewTo={(viewName : string)=> {setNameSelectedView(viewName)}}
                  setClickedCoordinates={setClickedCoordinates}
                  clickedCoordinates={clickedCoordinates}
                  selectedView={nameSelectedView}
+                 setInLocationCreationMode={setInLocationCreationMode}
+                 inLocationCreationMode={inLocationCreationMode}
+                 setSelectedLocation={setSelectedLocation}
               />
+            {
+              //we define as the button (circle sized) that will be placed at the botton right corner of the map
+              //and that will have the icon MdAddLocationAlt from react-icons. The button will be red and the icon will be white
+              //once clicked it will toggle the state inLocationCreationMode
+            }  
+
+            <Button
+              size="lg"
+              borderRadius="50%"
+              width="4.5em"
+              height="4.5em"
+              position="absolute"
+              bottom="2em"
+              right="4em"
+              colorScheme="red"
+              onClick={() => {  setInLocationCreationMode(!inLocationCreationMode) }}
+            >
+              <MdAddLocationAlt  size="4.5em" color={"white"}/> 
+            </Button>
+               
             {
               (() => {
                 switch (nameSelectedView) {
@@ -116,7 +133,7 @@ function App(): JSX.Element {
                         }}
                         loadLocations={loadLocations}
                         clickedCoordinates={clickedCoordinates}
-                        setClickedCoordinates={setClickedCoordinates}
+                        setInLocationCreationMode={setInLocationCreationMode}
                       />
                     );
                   case "ListOfLocations":

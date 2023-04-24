@@ -30,7 +30,7 @@ type AddLocationProps = {
     setSelectedView: (viewName: string) => void //function to change the selected view on the left
     loadLocations: () => Promise<void>
     clickedCoordinates: string;
-    setClickedCoordinates: (coords: string) => void;
+    setInLocationCreationMode: (activated : boolean) => void;
 }
 
 /**
@@ -67,11 +67,7 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
 
     //we update the state of the coordsvalue when props.clickedCoordinates changes
     useEffect(() => {
-        console.log("props.clickedCoordinates changed");
-        console.log(props);
         setCoordsValue(props.clickedCoordinates);
-        console.log("coordsValue: " + coordsValue);
-        console.log("props.clickedCoordinates: " + props.clickedCoordinates);
     });
 
     let checkedCategories : string[] = [];
@@ -117,7 +113,6 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
 
     function handleCoordsValue(coords: string):void {
         let separatedCoords = coords.split(',');
-        console.log(separatedCoords[0]);
         lat = Number(separatedCoords[0]);
         lon = Number(separatedCoords[1]);
     }

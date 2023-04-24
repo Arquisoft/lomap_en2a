@@ -13,13 +13,16 @@ import {MdAddLocationAlt} from "react-icons/md";
 import {TbMap2} from "react-icons/tb";
 
 
+
 type MapProps = {
     locations : Array<Location>
     changeViewTo: (viewName: string) => void //function to change the selected view on the left
-    loadLocations : () => Promise<void>
     setClickedCoordinates : (coordinates: string) => void
     clickedCoordinates : string
     selectedView : string
+    setInLocationCreationMode : (inLocationCreationMode: boolean) => void
+    inLocationCreationMode : boolean
+    setSelectedLocation : (location: Location) => void
 }
 
 const Map = ( props : MapProps) => {
@@ -43,28 +46,12 @@ const Map = ( props : MapProps) => {
   const [checkedFriends, setCheckedFriends] = React.useState<string[]>([]);
   const [friendChargingMsg, setFriendChargingMsg] = React.useState("Loading friends... ")
   //this state indicates if the user is in LOCATION CREATION MODE
-  const [inLocationCreationMode, setInLocationCreationMode] = React.useState<boolean>(false);
+  const [inLocationCreationMode, setInLocationCreationMode] = React.useState<boolean>(props.inLocationCreationMode);
 
-  function locationCreationModeButton(){
-    //we define as the return type the button (circle sized) that will be placed at the botton right corner of the map
-    //and that will have the icon MdAddLocationAlt from react-icons. The button will be red and the icon will be white
-    //once clicked it will toggle the state inLocationCreationMode
-    return(
-      <Button
-        size="lg"
-        borderRadius="50%"
-        width="4.5em"
-        height="4.5em"
-        position="absolute"
-        bottom="2em"
-        right="4em"
-        colorScheme={inLocationCreationMode? "red" :  "blue"}
-        onClick={() => setInLocationCreationMode(!inLocationCreationMode)}
-      >
-        <MdAddLocationAlt  size="4.5em" color={inLocationCreationMode?"black" : "white"}/> 
-      </Button>
-    ) 
-  }
+  //we update the state of the location creation mode when the prop changes
+  React.useEffect(() => {
+    setInLocationCreationMode(props.inLocationCreationMode);
+  }, [props.inLocationCreationMode]);
 
   const onUnmount = React.useCallback(function callback() {setMap(null)}, [])
 
@@ -74,8 +61,8 @@ const Map = ( props : MapProps) => {
       lng: location.coordinates.lng as number
     }
     
-    setCenter(newCenter)
-    
+    // setCenter(newCenter) //TODO fix
+    props.setSelectedLocation(location);
     props.changeViewTo('LocationInfo');
   }
 
@@ -85,6 +72,8 @@ const Map = ( props : MapProps) => {
 
     //we update the currently clicked coordinates
     props.setClickedCoordinates(clickedCoords);
+    //we update the state of the location creation mode
+    props.setInLocationCreationMode(false);
 
     //if the currently selected view is not the add location form, we change it to it
     if (props.selectedView !== 'AddLocationForm'){
@@ -251,11 +240,26 @@ const Map = ( props : MapProps) => {
                 ></Marker>))
               )
             }
+            {
+              //we place a marker on the map where the user is currently trying to add a location
+              //the coordinates are the ones received as a prop called 'clickedCoordinates' with string format
+              // "lat, lon" having as icon the MdAddLocationAlt icon
+              props.clickedCoordinates.length > 0?
+              <Marker
+                position={{lat: Number(props.clickedCoordinates.split(",")[0]), lng: Number(props.clickedCoordinates.split(",")[1])}}
+                icon={{
+                  url: "https://maps.google.com/mapfiles/ms/icons/green-dot.png",
+                  scaledSize: new window.google.maps.Size(40, 40),
+                  origin: new window.google.maps.Point(0, 0),
+                  anchor: new window.google.maps.Point(15, 15)
+                }}
+              ></Marker>
+              :
+              <></>
+                
+            }
           </GoogleMap>
         </Box>
-        {
-          locationCreationModeButton()
-        }
         {
           //if the location creation mode is activated, we will show a panel at the botton indicating
           //the application is recording the next click on the map . 
