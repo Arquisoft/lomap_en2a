@@ -90,6 +90,7 @@ function LocationCard (props : PlaceDetailProps ) : JSX.Element{
                           textTransform={'capitalize'} 
                           fontSize={'large'}
                           fontWeight={'500'}
+                          width={'70%'}
                           isTruncated>
                           {props.place.name}
                       </Text>

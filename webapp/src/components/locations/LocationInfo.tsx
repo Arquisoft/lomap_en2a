@@ -346,6 +346,7 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
         bottom={-4}
         zIndex={1}
         overflowY='auto'
+        overflowX='hidden'
         px={2}
         paddingBottom={'15%'}
         >
@@ -354,9 +355,11 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
                     onClick={() => props.setSelectedView(<></>)}
             ></CloseButton>
           </Flex>
-          <Flex direction='row' marginLeft='5%'>
+          <Flex direction='row' marginLeft='5%'width='90%' >
             <Text
+              word-wrap="break-word"
               fontSize='2.2em'
+              width='70%'
               marginLeft={'5%'}
               >
               {location.name} 
