@@ -53,14 +53,10 @@ function App(): JSX.Element {
     
       const results = await Promise.all(requests);
       for(let locArray of results){
+        locArray.forEach(location =>location.isFriend = true);
         locationList = locationList.concat(locArray);
       }
-    //  locationList.concat(results);
-      /**for (let friend of friends){ //WORKING
-        let locations = await getLocations(friend.webID as string)
-        locationList= locationList.concat(locations);
-      }
-      */
+    
       setLocations(locationList);
     }
   }

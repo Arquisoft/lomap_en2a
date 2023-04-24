@@ -19,6 +19,9 @@ type MapProps = {
     loadUserLocations: ()=> Promise<void>
 }
 
+const blueIcon = 'http://maps.google.com/mapfiles/ms/icons/blue.png';
+const redIcon = 'http://maps.google.com/mapfiles/ms/icons/red.png';
+
 const Map = ( props : MapProps) => {
   const session = useSession();
   const { isLoaded } = useJsApiLoader({ 
@@ -189,6 +192,11 @@ const Map = ( props : MapProps) => {
                   key={i}
                   position={{lat: Number(place.coordinates.lat), lng: Number(place.coordinates.lng)}}
                   onClick={() => handlePlaceClick(place)}
+                  icon={
+                    place.isFriend
+                      ? blueIcon
+                      : redIcon
+                  }
               ></Marker>))
             )
             :
@@ -197,6 +205,11 @@ const Map = ( props : MapProps) => {
               <Marker
                   position={{lat: Number(place.coordinates.lat), lng: Number(place.coordinates.lng)}}
                   onClick={() => handlePlaceClick(place)}
+                  icon={
+                    place.isFriend
+                      ? blueIcon
+                      : redIcon
+                  }
               ></Marker>))
             )
           }
