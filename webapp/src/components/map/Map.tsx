@@ -23,8 +23,8 @@ const Map = ( props : MapProps) => {
   const { isLoaded } = useJsApiLoader({ 
     id: 'google-map-script',
         //we get the google maps api key from the enviroment variables
-        googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY as string
-      })
+        googleMapsApiKey: "AIzaSyDoBBaaNXrLKzcv5R1itc7qvip3Xk5_Sy0"
+  })
 
   const init = {
     lat: 43.37776784391247,
