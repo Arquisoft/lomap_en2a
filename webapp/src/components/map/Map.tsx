@@ -143,7 +143,7 @@ const Map = ( props : MapProps) => {
                                   checkedFriends.splice(index, 1);
                                 handleFilter()
                                 setAreCheckedFilters(checkedFriends.length != 0 || checkedCategory != "") }}>
-                            {friend.username as string}</MenuItemOption>
+                            {friend.webID as string}</MenuItemOption>
                         )
                       })
                     }
