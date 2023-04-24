@@ -23,7 +23,7 @@ export type Coordinates = {
 
 export type Review = {
     webId:string,
-    date: Date,
+    date: string,
     title:string,
     content:string,
     username:string

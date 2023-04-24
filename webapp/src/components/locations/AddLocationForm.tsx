@@ -136,7 +136,7 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
                 lng: lon,
                 lat: lat
             },
-            category: categories,
+            category: checkedCategories,
             description: description.trimStart().trimEnd(),
             imagesAsFile : imgsFiles
 
@@ -309,27 +309,6 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
                 </Box>
             </Flex>
         </form>
-    );
-}
-
-function AddLocationButton(props:any) : JSX.Element {
-    return (
-        props.addingLocationProcess ? (
-            <Button leftIcon={<Spinner size={"xs"}/>}
-                    colorScheme={'blue'}
-                    variant={'outline'}
-                    type={'submit'}
-                    disabled>
-                Adding location
-            </Button>
-        ) : (
-            <Button leftIcon={<MdOutlineAddLocationAlt/>}
-                    colorScheme={'blue'}
-                    variant={'outline'}
-                    type={'submit'}>
-                Add location
-            </Button>
-        )
     );
 }
 

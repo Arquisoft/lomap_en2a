@@ -20,6 +20,8 @@ function App(): JSX.Element {
   const [selectedView, setselectedView] = useState(<></>);
   const [session, setSession] = useState(useSession());
 
+  const [isLoggedIn, setIsLoggedIn] = useState(true)
+
 
   const getNewLocation = (location:Location) => {
     locations.push(location);
@@ -60,11 +62,8 @@ function App(): JSX.Element {
       }
       */
       setLocations(locationList);
-      setselectedView(<></>);
     }
   }
-
-
 
   //get the user's current location and save it for the map to use it as a center
   useEffect(()=>{
@@ -72,7 +71,17 @@ function App(): JSX.Element {
       //we set the coordinates to be the ones of the user for them to be passed to the map
       setCoordinates({lat: latitude , lng : longitude});
     })
+    handleRedirectAfterLogin();
   },[]);
+
+  async function handleRedirectAfterLogin() {
+    await session.session.handleIncomingRedirect(window.location.href);
+    if (session.session.info.isLoggedIn) {
+      setIsLoggedIn(true);
+    }
+    else
+      setIsLoggedIn(false);
+  }
 
 
   return (
@@ -101,7 +110,7 @@ function App(): JSX.Element {
                   loadUserLocations={loadUserLocations}
                   />
             {
-              !session.session.info.isLoggedIn ? (
+              !isLoggedIn ? (
                 <Login></Login>
               ) : <></>
             }
