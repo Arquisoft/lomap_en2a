@@ -1,7 +1,7 @@
 import { defineFeature, loadFeature } from "jest-cucumber";
 import puppeteer from "puppeteer";
 
-const feature = loadFeature('./features/add-location.feature');
+const feature = loadFeature('./features/delete-location.feature');
 
 let page: puppeteer.Page;
 let browser: puppeteer.Browser;
@@ -22,9 +22,9 @@ defineFeature(feature, test => {
         jest.setTimeout(100000);
     });
 
-    test("The user is registered in the site",({given,when,then}) => {
+    test("A user deletes a location",({given,when,and,then}) => {
         jest.setTimeout(100000);
-        given("A registered user goes to the Add Location form", async () => {
+        given("The user logs in", async () => {
             await expect(page).toClick("span", {text:"Inrupt"});
             await expect(page).toClick("button", {text:"Login"});
             
@@ -47,7 +47,15 @@ defineFeature(feature, test => {
             await page.waitForTimeout(3000)
         });
 
-        when("I fill the data in the form and press submit", async () => {
+        and("goes to the Add Location form", () => {
+
+        })
+        
+        and("fills the form with data", () => {
+
+        })
+
+        when("The user clicks the delete location button", async () => {
             const [name] = await page.$x('/html/body/div[1]/div/form/div/div[2]/input');
             name.type('New York')
             await page.waitForTimeout(3000); 
@@ -65,7 +73,7 @@ defineFeature(feature, test => {
 
         });
 
-        then("A confirmation message should be shown in the screen", async () => {
+        then("A confirmation of deletion message is shown in the screen", async () => {
             await page.waitForTimeout(7000); // wait for 10 seconds
             await expect(page).toMatch('Location added')
         });
