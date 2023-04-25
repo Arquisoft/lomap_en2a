@@ -34,7 +34,7 @@ export function DeletingAlertDialog(props:any) {
                             title: 'Location deleted.',
                             description: "The location was deleted from your pod.",
                             status: 'success',
-                            duration: 5000,
+                            duration: 15000,
                             isClosable: true,
                         })
                     );

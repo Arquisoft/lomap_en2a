@@ -36,46 +36,40 @@ defineFeature(feature, test => {
             await page.click('#login')
 
             await page.waitForNavigation(); // wait for the redirect
-            // await page.waitForTimeout(30000); // wait for 25 seconds (load locations??)
-            await page.waitForTimeout(8000);
+            await page.waitForTimeout(30000); // wait for 25 seconds (load locations??)
             
+        });
+
+        and("goes to the list of locations", async () => {
             const [menu] = await page.$x('/html/body/div[1]/div/div[2]/div');
             await menu.click();
             
-            const [add] = await page.$x('/html/body/div[1]/div/div[2]/div/div[3]/button')
-            await add.click();
+            const [list] = await page.$x('/html/body/div[1]/div/div[2]/div/div[2]/button')
+            await list.click();
             await page.waitForTimeout(3000)
-        });
-
-        and("goes to the Add Location form", () => {
-
         })
         
-        and("fills the form with data", () => {
-
+        and("selects a location", async () => {
+            const [location] = await page.$x('/html/body/div[1]/div/div[2]/div/div[1]/div');
+            await location.click();
+            await page.waitForTimeout(3000)
         })
 
         when("The user clicks the delete location button", async () => {
-            const [name] = await page.$x('/html/body/div[1]/div/form/div/div[2]/input');
-            name.type('New York')
-            await page.waitForTimeout(3000); 
+            const [deleteButton] = await page.$x('/html/body/div[1]/div/div[2]/div[2]/div/button[1]'); // delete button
+            await deleteButton.click();
+            await page.waitForTimeout(2000)
             
-            const [coordinates] = await page.$x('/html/body/div[1]/div/form/div/div[3]/input');
-            coordinates.type('33,33')
-            await page.waitForTimeout(3000); 
 
-            const [description] = await page.$x('/html/body/div[1]/div/form/div/div[4]/textarea');
-            description.type('Description')
-            await page.waitForTimeout(3000); 
-
-            const [submit] = await page.$x('/html/body/div[1]/div/form/div/div[6]/button');
-            submit.click()
+            const [confirmation] = await page.$x('/html/body/div[3]/div/div[3]/div/section/footer/button[2]'); // confirmation button
+            await confirmation.click();
+            
 
         });
 
         then("A confirmation of deletion message is shown in the screen", async () => {
-            await page.waitForTimeout(7000); // wait for 10 seconds
-            await expect(page).toMatch('Location added')
+            await page.waitForTimeout(22000); // wait for 10 seconds
+            await expect(page).toMatch('Location deleted.')
         });
 
     })
