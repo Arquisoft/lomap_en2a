@@ -361,6 +361,7 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
               fontSize='2.2em'
               width='70%'
               marginLeft={'5%'}
+              maxWidth='60%'
               >
               {location.name} 
             </Text>
@@ -394,7 +395,7 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
           <CategoriesBubble location={location}></CategoriesBubble>
           <Divider marginTop={'2%'} borderWidth={'2px'} borderRadius={"lg"} width='100%' />
 
-          <Text marginLeft='10%' fontSize={'1.6em'} >Description:</Text>
+          <Text marginLeft='10%' fontSize={'1.6em'} >Description</Text>
           <Flex
             direction={'column'}
             overflowY='auto'
