@@ -1,19 +1,19 @@
 import React,{ useState,useEffect } from 'react';
-import {Badge, Text,Stack, HStack, Image, Box, Flex, Button, Icon, Divider, useDisclosure, Textarea, Input, Grid, Progress, Tab, TabList, TabPanel, TabPanels, Tabs, CloseButton} from "@chakra-ui/react"
-import {MdOutlineRateReview, MdShare, MdDelete} from 'react-icons/md'
+import { Text, Badge, Stack, HStack, Image, Box, Flex, Button, Icon, Heading, Divider, useDisclosure, Textarea, Input, Grid, Progress, Tab, TabList, TabPanel, TabPanels, Tabs, CloseButton} from "@chakra-ui/react"
+import {MdOutlineRateReview, MdShare} from 'react-icons/md'
 
-import {Popover,PopoverTrigger,PopoverContent,PopoverCloseButton, Menu, MenuButton, MenuItemOption, MenuList, MenuOptionGroup} from '@chakra-ui/react'
-import {FormControl,FormLabel,FormErrorMessage,FormHelperText, useToast} from '@chakra-ui/react'
+import {Popover,PopoverTrigger,PopoverContent,PopoverCloseButton, Menu, MenuButton, MenuItem, MenuItemOption, MenuList, MenuOptionGroup} from '@chakra-ui/react'
+import {FormControl,FormLabel,FormErrorMessage,FormHelperText,} from '@chakra-ui/react'
 import Review  from "./Review";
 import { FaStar, FaStarHalfAlt } from "react-icons/fa";
 import images from '../../static/images/images'
 import { useSession } from '@inrupt/solid-ui-react';
 import { SessionInfo } from '@inrupt/solid-ui-react/dist/src/hooks/useSession';
-import {addLocationReview, addLocationScore, getNameFromPod, deleteReview } from '../../solid/solidManagement';
-import { DeletingAlertDialog} from '../dialogs/DeletingLocationAlertDialog';
-
+import {addLocationReview, addLocationScore, getNameFromPod } from '../../solid/solidManagement';
+import { DeletingAlertDialog } from '../dialogs/DeletingAlertDialog';
 import { getSolidFriends, setAccessToFriend } from "../../solid/solidManagement";
 import type { Friend ,Location, Review as ReviewType} from "../../types/types";
+import CategoriesBubble from './CategoriesBubbles';
 
 type LocationInfoProps = {
   location : Location
@@ -181,206 +181,135 @@ const RatingSection = ({location, setLocation, session})=>{
   )
 };
 
-export default function LocationInfo (props : LocationInfoProps) : JSX.Element { 
+const ReviewSection =  ( {location ,setLocation,session}) =>{
+  const {isOpen, onOpen, onClose } = useDisclosure();
+  const [title, settitle] = useState('')
+  const [input, setInput] = useState('')
+  const [username, setusername] = useState('')
+  const firstFieldRef = React.useRef(null);
+  let errorOnTitle = title.trim().length === 0;
+  let errorOnBody = input.trim().length === 0;
+  //we use a local version of the location because the passed one is the reference to the usestate one
+  let localLocation = location;
+  //we get the name of the user
+  useEffect(() => {
+    getNameFromPod(session.session.info.webId).then(res=> setusername(res));
+  }, []);
+  return (
+    <>
+      <Box marginLeft={'10%'}>
+        <Popover
+            isOpen={isOpen}
+            initialFocusRef={firstFieldRef}
+            onOpen={onOpen}
+            onClose={onClose}
+            placement='bottom'
+            closeOnBlur={false}
+          >
+            <PopoverTrigger>
+              <Button data-testid ='buttonReview' colorScheme={'green'} size='sm' leftIcon ={<MdOutlineRateReview/>} >Add review</Button>
+            </PopoverTrigger>
+            <PopoverContent >
+              <Box padding='6%' marginLeft='5%'>
+              <PopoverCloseButton data-testid='closeButtonReview' />
+                  <FormControl isInvalid={errorOnBody}  >
+                    <FormLabel fontSize={'1.6em'}>Leave a review </FormLabel>
+                    <FormLabel>Title</FormLabel>
+                    <Input 
+                      data-testid ='inputTitle'
+                      ref={firstFieldRef}
+                      value={title}
+                      onChange={(e:any) => settitle(e.target.value)}
+                      placeholder='Title of review'/>
 
-  const ReviewSection =  ( {location ,setLocation,session}) =>{
-    const toast = useToast();
-    const {isOpen, onOpen, onClose } = useDisclosure();
-    const [title, settitle] = useState('')
-    const [input, setInput] = useState('')
-    const [username, setusername] = useState('')
-    const firstFieldRef = React.useRef(null);
-    let errorOnTitle = title.trim().length === 0;
-    let errorOnBody = input.trim().length === 0;
-    //we use a local version of the location because the passed one is the reference to the usestate one
-    let localLocation = location;
-  
-    const [reviews, setReviews] = useState<ReviewType[]>(localLocation.reviews);
-  
-      /**
-     * Function that sorts the reviews by date and returns the sorted representation of
-     * the reviews so that the newest ones are shown first
-     */
-    function getRepresentedReviews() : any {
-      if(reviews === undefined || reviews.length === 0){
-        return <Text marginTop='2%'>There aren't any reviews for this location... Be the first to leave one!</Text>
-      }
-      return reviews.sort((a : ReviewType,b : ReviewType)=> {
-        if(a.date === undefined || b.date === undefined){
-          return 0; //in the case the date is not defined we don't sort
-        }
-        let [datePartA, timePartA] = a.date.split(", ");
-        let [dayA, monthA, yearA] = datePartA.split("/");
-        let [hoursA, minutesA, secondsA] = timePartA.split(":");
-    
-        let [datePartB, timePartB] = b.date.split(", ");
-        let [dayB, monthB, yearB] = datePartB.split("/");
-        let [hoursB, minutesB, secondsB] = timePartB.split(":");
-    
-        let dateA = new Date(parseInt(yearA), parseInt(monthA) - 1, parseInt(dayA), parseInt(hoursA), parseInt(minutesA), parseInt(secondsA));
-        let dateB = new Date(parseInt(yearB), parseInt(monthB) - 1, parseInt(dayB), parseInt(hoursB), parseInt(minutesB), parseInt(secondsB));
-        return dateB.getTime() - dateA.getTime()})
-      .map((rev,i)=>{return (
-        <Flex direction='row' gap='2%' alignItems='center'>
+                    {!errorOnTitle ?
+                      <FormHelperText>Give a descriptive title to the review</FormHelperText>
+                      :
+                      <FormErrorMessage>Review must have a title</FormErrorMessage>
+                    }
+                    <FormLabel>Body</FormLabel>
+                    <Textarea
+                      data-testid ='inputBody'
+                      placeholder="Body of the review"
+                      value={input}
+                      onChange={(e) => setInput(e.target.value)}
+                      overflowY='auto'
+                      resize={'none'}/>
+                    {!errorOnBody ?
+                      <FormHelperText>Give a descriptive review body</FormHelperText>
+                      :
+                      <FormErrorMessage>Body of the review is required</FormErrorMessage>
+                    }
+                    <Button data-testid ='submitReviewButton' mt='2%' marginLeft={'auto'} colorScheme={'teal'} disabled={errorOnBody || errorOnTitle}
+                      onClick={()=>{
+                        //create a new Review with the info of the current user
+                        let review : ReviewType = {
+                          title:title,
+                          content:input,
+                          date:new Date(),
+                          webId : session.session.info.webId,
+                          username: username
+                        };
+                        //we add it to the current location
+                        if(localLocation.reviews === undefined){ //if no array we initialize it
+                          localLocation.reviews = new Array<ReviewType>();
+                        }
+                        localLocation.reviews.push(review)
+
+                        //we repaint the localLocation being showed
+                        setLocation(localLocation)
+                        //we persist the update on the Solid pod
+
+                        // make call to the solidManagement module here
+                        addLocationReview(localLocation, review)
+                        //we close the add review window
+                        onClose()
+                      }}
+                      >Submit review</Button>
+                  </FormControl>
+              </Box>
+          </PopoverContent>
+        </Popover>
+      </Box>
+      <Flex mx={'4%'} maxHeight={'sm'} direction={'column'}>
+      {
+        localLocation.reviews.length > 0?  
+          (localLocation.reviews as Array<ReviewType>)
+          .sort((a : ReviewType,b : ReviewType)=> b.date.getTime() - a.date.getTime())
+          .map((rev,i)=>{return (
           <Review
             key={i}
             title={rev.title as string}
             username={rev.username}
             content={rev.content as string}
             date={rev.date}/>
-            {
-              session.session.info.webId == rev.webId ? 
-              (
-                <Button colorScheme='red'
-                  title="Delete review"
-                  onClick={()=> handleDelete(rev)}
-                  size='md'
-                  marginBottom={'6%'}
-                  width='fit-content'
-                  marginLeft={'auto'}>
-                  <Icon as={MdDelete}/>
-                </Button>
-              ) : (
-                <></>
-              )
-            }
-        </Flex>
-        )})
-    }
-  
-    getNameFromPod(session.session.info.webId).then(res=> setusername(res));
-  
-    const handleDelete = async (review:ReviewType) => {
-      let isDeleted = await deleteReview(localLocation.url, review)
-      if (isDeleted) {
-        setReviews(reviews.filter(rev => rev !== review)) // change for re-rendering the component
-        localLocation.reviews = reviews; // change in memory object
-        toast({
-          title: 'Review deleted.',
-          description: "The review was deleted from the location.",
-          status: 'success',
-          duration: 5000,
-          isClosable: true,
-      })
+            )})
+          :
+          <Text marginTop='2%'>There aren't any reviews for this location... Be the first to leave one!</Text>
       }
-      else {
-        toast({
-          title: 'Error in deleting.',
-          description: "The review could not be deleted. Make sure you have access to this location.",
-          status: 'error',
-          duration: 5000,
-          isClosable: true,
-      })
-      }
-      props.loadLocations()
-    }
-    
-    return (
-      <>
-        <Box marginLeft={'10%'}>
-          <Popover
-              isOpen={isOpen}
-              initialFocusRef={firstFieldRef}
-              onOpen={onOpen}
-              onClose={onClose}
-              placement='bottom'
-              closeOnBlur={false}
-            >
-              <PopoverTrigger>
-                <Button data-testid ='buttonReview' colorScheme={'green'} size='sm' leftIcon ={<MdOutlineRateReview/>} >Add review</Button>
-              </PopoverTrigger>
-              <PopoverContent >
-                <Box padding='6%' marginLeft='5%'>
-                <PopoverCloseButton data-testid='closeButtonReview' />
-                    <FormControl isInvalid={errorOnBody}  >
-                      <FormLabel fontSize={'1.6em'}>Leave a review </FormLabel>
-                      <FormLabel>Title</FormLabel>
-                      <Input 
-                        data-testid ='inputTitle'
-                        ref={firstFieldRef}
-                        value={title}
-                        onChange={(e:any) => settitle(e.target.value)}
-                        placeholder='Title of review'/>
-  
-                      {!errorOnTitle ?
-                        <FormHelperText>Give a descriptive title to the review</FormHelperText>
-                        :
-                        <FormErrorMessage>Review must have a title</FormErrorMessage>
-                      }
-                      <FormLabel>Body</FormLabel>
-                      <Textarea
-                        data-testid ='inputBody'
-                        placeholder="Body of the review"
-                        value={input}
-                        onChange={(e) => setInput(e.target.value)}
-                        overflowY='auto'
-                        resize={'none'}/>
-                      {!errorOnBody ?
-                        <FormHelperText>Give a descriptive review body</FormHelperText>
-                        :
-                        <FormErrorMessage>Body of the review is required</FormErrorMessage>
-                      }
-                      <Button data-testid ='submitReviewButton' mt='2%' marginLeft={'auto'} colorScheme={'teal'} disabled={errorOnBody || errorOnTitle}
-                        onClick={()=>{
-                          //create a new Review with the info of the current user
-                          let review : ReviewType = {
-                            title:title,
-                            content:input,
-                            date: new Date().toLocaleString() ,
-                            webId : session.session.info.webId,
-                            username: username
-                          };
-                          //we add it to the current location
-                          if(localLocation.reviews === undefined){ //if no array we initialize it
-                            localLocation.reviews = new Array<ReviewType>();
-                          }
-                          localLocation.reviews.push(review)
-                          //we repaint the localLocation being showed
-                          setLocation(localLocation)
-                          //we persist the update on the Solid pod
-  
-                          // make call to the solidManagement module here
-                          addLocationReview(localLocation, review)
-  
-                          //we clear the values intoduced
-                          settitle('')
-                          setInput('')
-                          //we close the add review window
-                          onClose()
-                        }}
-                        >Submit review</Button>
-                    </FormControl>
-                </Box>
-            </PopoverContent>
-          </Popover>
-        </Box>
-        <Flex mx={'4%'} maxHeight={'sm'} direction={'column'}>
-        {
-          getRepresentedReviews()
-        }
-        </Flex>
-      </>
-  
-    )
-  }
+      </Flex>
+    </>
 
+  )
+}
+
+
+export default function LocationInfo (props : LocationInfoProps) : JSX.Element { 
   const session = useSession();
   const webId = session.session.info.webId;
   const [location, setlocation] = useState(props.location)
   const [friends, setFriends] = React.useState<Friend[]>([]);
-  const colors = ['teal', 'purple', 'pink', 'blue', 'green', 'orange'];
   let checkedFriends : string[] = [];
   const [friendsChargingMsg, setFriendChargingMsg] = useState("Loading...")
 
-  useEffect(() => {
+  React.useEffect(() => {
     handleFriends()
-    props.loadLocations()
-  }, []);//TODO this may be slowing application beacause the handlefriends in the useEffect is called every time the friends array changes and inside it it is changing the array of friends so we have here a loop
+  }, []); //TODO deleted here friends
 
   const handleFriends = async () => {
     if ( webId !== undefined && webId !== ""){
       const n  = await getSolidFriends(webId).then(friendsPromise => {return friendsPromise});
-      if (n.length === 0)
+      if (n.length == 0)
         setFriendChargingMsg("Add a friend to share the location!")
       setFriends(n);
     }
@@ -426,18 +355,23 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
                     onClick={() => props.setSelectedView(<></>)}
             ></CloseButton>
           </Flex>
-          <Flex direction='row' marginLeft='5%'>
+          <Flex direction='row' marginLeft='5%'width='90%' >
             <Text
+              word-wrap="break-word"
               fontSize='2.2em'
+              width='70%'
               marginLeft={'5%'}
+              maxWidth='60%'
               >
-              {location.name}
+              {location.name} 
             </Text>
             <Flex direction='row' marginLeft='auto' marginEnd='4%' gap='5%'>
               <DeletingAlertDialog location={props.location} loadLocations={props.loadLocations}></DeletingAlertDialog>
               <Menu closeOnSelect={false}>
                 <MenuButton as={Button} colorScheme='blue' 
-                  width='fit-content'><Icon as={MdShare}/></MenuButton>
+                  width='fit-content'>
+                    <Icon as={MdShare}/>
+                </MenuButton>
                 <MenuList minWidth='100%'>
                   {
                     friends.length > 0 ? 
@@ -458,20 +392,10 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
               </Menu>
             </Flex>
           </Flex>
-          <Flex gap='2%' marginLeft='10%' marginTop='2%'>
-            {
-              location.category.map((category, index) => {
-                return (
-                  <Badge padding='1%' borderRadius='10' 
-                  colorScheme={colors[index % colors.length]}>{category}
-                  </Badge>
-                )
-              })
-            }
-          </Flex>
+          <CategoriesBubble location={location}></CategoriesBubble>
           <Divider marginTop={'2%'} borderWidth={'2px'} borderRadius={"lg"} width='100%' />
 
-          <Text marginLeft='10%' fontSize={'1.6em'} >Description:</Text>
+          <Text marginLeft='10%' fontSize={'1.6em'} >Description</Text>
           <Flex
             direction={'column'}
             overflowY='auto'
@@ -492,24 +416,27 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
           </Flex>
 
       <Divider marginTop={'2%'} borderWidth={'2px'} borderRadius={"lg"} width='100%'/>
-
-      <HStack width={'85%'} marginTop='2%' marginLeft={'9%'} shouldWrapChildren={true} overflowY='auto'
-                   overflowX='auto' height='fit-content' minHeight={220}>
+      <Flex
+        direction={'column'}
+        width={'100%'}>
         {
         location.images?.length?
         (
-          location.images?.map((image,i)=>{
-            return (
-              <Image
-                key={i}
-                src={image as string}
-                width='200'
-                height='200'
-                borderRadius='lg'
-                fallbackSrc='https://www.resultae.com/wp-content/uploads/2018/07/reloj-100.jpg'>
-              </Image>
-            )
-          })
+          <HStack marginTop='2%' marginLeft={'9%'} shouldWrapChildren={true} overflowY='auto'
+                  display='flex' overflowX='auto' minHeight={200}  height={'fit-content'} paddingRight='4%'>
+            {location.images?.map((image,i)=>{
+              return (
+                <Image
+                  key={i}
+                  src={image as string}
+                  width='200'
+                  height='200'
+                  borderRadius='lg'
+                  fallbackSrc='https://www.resultae.com/wp-content/uploads/2018/07/reloj-100.jpg'>
+                </Image>
+              )
+              })}
+          </HStack>
         )
         :
         <Flex marginLeft={'10%'} direction={'row'} alignItems={'center'} >
@@ -522,7 +449,7 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
         </Flex>
         }
           
-        </HStack>
+      </Flex>
 
       <Divider marginTop={'2%'} marginBottom={'2%'} borderWidth={'2px'} borderRadius={"lg"} width='100%'/> 
         <Tabs isFitted={true} variant='enclosed' mx='5%' marginLeft='5%'>
@@ -532,10 +459,10 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
           </TabList>
           <TabPanels alignSelf='center'>
             <TabPanel>
-              <ReviewSection location={location} setLocation={setlocation} session={session}></ReviewSection>
+              <ReviewSection location={location} setLocation={setlocation} session={session} ></ReviewSection>
             </TabPanel>
             <TabPanel>
-              <RatingSection location={location} setLocation={setlocation} session={session}></RatingSection>
+              <RatingSection location={location} setLocation={setlocation} session={session} ></RatingSection>
             </TabPanel>
           </TabPanels>
         </Tabs>

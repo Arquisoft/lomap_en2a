@@ -1,23 +1,35 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Flex, Button, Icon, Box, Text } from "@chakra-ui/react";
-import { MdList, MdLocationOn, MdMap, MdPeopleAlt, MdPerson, MdShareLocation } from "react-icons/md"
+import { MdList, MdLocationOn, MdMap, MdPeopleAlt, MdPerson, MdOutlineSportsEsports } from "react-icons/md"
 import { Location } from '../../types/types';
 import ListOfLocations from '../locations/ListOfLocations';
 import AddLocationForm from '../locations/AddLocationForm';
 import Friends from '../friends/Friends';
 import { ProfileView } from '../profile/ProfileInfo';
+import {GamePanel} from '../game/GamePanel'
 
 
 type MenuProps = {
   changeViewTo: (view: JSX.Element) => void,
-  locations : Array<Location>,
+  ownLocations : Array<Location>,
+  friendLocations : Array<Location>,
   loadLocations : () => Promise<void>
+  loading : boolean
 }
 
 
 
 function Menu(props: MenuProps): JSX.Element {
   const [insideMenu, setinsideMenu] = useState(false)
+  const [ownLocations, setownLocations] = useState(props.ownLocations)
+  const [friendLocations, setfriendLocations] = useState(props.friendLocations)
+  const [loading, setLoading] = useState(props.loading)
+
+  useEffect(() => {
+    setownLocations(props.ownLocations)
+    setfriendLocations(props.friendLocations)
+    setLoading(props.loading)
+  }, [props.ownLocations, props.friendLocations, props.loading])
 
   return (
     <Flex 
@@ -35,8 +47,7 @@ function Menu(props: MenuProps): JSX.Element {
           borderRightWidth={'thin'}
           px={2}
           boxShadow ='lg'
-          onClick={()=> insideMenu? ()=>{} : setinsideMenu(true)}
-          onMouseLeave={()=> {setinsideMenu(false)}}
+          onClick={()=> insideMenu? setinsideMenu(false) : setinsideMenu(true)}
     >
       {
         insideMenu ?
@@ -78,7 +89,12 @@ function Menu(props: MenuProps): JSX.Element {
                 onClick={() => {
                   setinsideMenu(false);
                   props.changeViewTo(
-                    <ListOfLocations setSelectedView={(view)=> props.changeViewTo(view)} places={props.locations} loadLocations={props.loadLocations} />
+                    <ListOfLocations 
+                          setSelectedView={(view : JSX.Element)=> props.changeViewTo(view)} 
+                          ownLocations= {ownLocations}
+                          friendLocations={friendLocations}
+                          loadLocations={()=>{return props.loadLocations()}}
+                          loading =  {loading} />
                     );
                 }}>
                   List of Locations
@@ -122,6 +138,23 @@ function Menu(props: MenuProps): JSX.Element {
                 </Button>
               </Box>
 
+              <Box>
+                <Button
+                leftIcon={<Icon alignContent={'left'} as={MdOutlineSportsEsports} width={'2.5em'} height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
+                bg={'white'}
+                color={'black'}
+                size='lg'
+                onClick={() => {
+                  setinsideMenu(false);
+                  props.changeViewTo(
+                    <GamePanel setSelectedView={(view)=> props.changeViewTo(view)} locations={props.locations}/>
+                  );
+                }}
+                >
+                  Progress 
+                </Button>
+              </Box>
+
               <Box marginTop={'auto'}>
                 <Button 
                 data-testid={'Profile'}
@@ -132,7 +165,7 @@ function Menu(props: MenuProps): JSX.Element {
                 onClick={() => {
                   setinsideMenu(false);
                   props.changeViewTo(
-                    <ProfileView setSelectedView={(view)=> props.changeViewTo(view)} locations={props.locations}></ProfileView>
+                    <ProfileView setSelectedView={(view)=> props.changeViewTo(view)} locations={ownLocations}></ProfileView>
                   );
                 }}
                 >
@@ -167,6 +200,9 @@ function Menu(props: MenuProps): JSX.Element {
               </Flex>
               <Flex direction='row' gap='2' alignItems={'center'}>
                 <Icon as={MdPeopleAlt} width='3em' height={'2.5vw'} cursor={'pointer'}/>
+              </Flex>
+              <Flex direction='row' gap='2' alignItems={'center'}>
+                <Icon as={MdOutlineSportsEsports} width='3em' height={'2.5vw'} cursor={'pointer'}/>
               </Flex>
               <Flex marginTop='auto' marginBottom={'2'} direction='row' gap='2' alignItems={'center'}>
                 <Icon as={MdPerson} width='3em' height={'2.5vw'} cursor={'pointer'}/>
