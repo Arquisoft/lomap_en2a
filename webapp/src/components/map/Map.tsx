@@ -251,6 +251,7 @@ const Map = ( props : MapProps) => {
                     key={i}
                     position={{lat: Number(place.coordinates.lat), lng: Number(place.coordinates.lng)}}
                     onClick={() => handlePlaceClick(place)}
+                    title={place.name}
                 ></Marker>))
               )
               :
@@ -259,6 +260,7 @@ const Map = ( props : MapProps) => {
                 <Marker
                     position={{lat: Number(place.coordinates.lat), lng: Number(place.coordinates.lng)}}
                     onClick={() => handlePlaceClick(place)}
+                    title={place.name}
                 ></Marker>))
               )
             }
@@ -269,14 +271,14 @@ const Map = ( props : MapProps) => {
               props.clickedCoordinates.length > 0?
               <Marker
                 position={{lat: Number(props.clickedCoordinates.split(",")[0]), lng: Number(props.clickedCoordinates.split(",")[1])}}
-                icon={
-                {
-                  url:  'http://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png',
+                icon={{
+                  url:  'http://maps.google.com/mapfiles/kml/pushpin/red-pushpin.png',
                   scaledSize: new window.google.maps.Size(40, 40),
                   origin: new window.google.maps.Point(0, 0),
-                  anchor: new window.google.maps.Point(20, 30)
-                }
-              }
+                  anchor: new window.google.maps.Point(15, 35)
+                }}
+                title={'Adding Location Here'}
+                animation = {window.google.maps.Animation.DROP}
               ></Marker>
               :
               <></>
