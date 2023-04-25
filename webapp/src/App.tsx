@@ -15,7 +15,10 @@ import { useSession } from '@inrupt/solid-ui-react';
 
 function App(): JSX.Element {
   const [coordinates, setCoordinates] = useState({lng:0, lat:0});
-  const [locations, setLocations] = useState<Array<Location>>([]);
+  //this state indicates if the user locations are being loaded
+  const [loading, setLoading] = useState(true);
+  const [ownLocations, setOwnLocations] = useState<Array<Location>>([]);
+  const [friendLocations, setFriendLocations] = useState<Array<Location>>([]);
   //stores the actual view currently selected
   const [selectedView, setselectedView] = useState(<></>);
   const [session, setSession] = useState(useSession());
@@ -24,7 +27,7 @@ function App(): JSX.Element {
 
 
   const getNewLocation = (location:Location) => {
-    locations.push(location);
+    ownLocations.push(location);
     createLocation(session.session.info.webId as string, location);
   }
 
@@ -36,15 +39,18 @@ function App(): JSX.Element {
 
   async function loadLocations(){
     if(session.session.info.webId){
-      let locationList = await getLocations(session.session.info.webId)
+      setOwnLocations(await getLocations(session.session.info.webId));
+      setLoading(false);
+
       //Friends Locations
       let friends = await getSolidFriends(session.session.info.webId);
 
+      let locationList: Array<Location> = [];
       for (let friend of friends){
-        let locations = await getLocations(friend.webID as string)
-        locationList= locationList.concat(locations);
+        let friendLocations = await getLocations(friend.webID);
+        locationList = locationList.concat(friendLocations);
       }
-      setLocations(locationList);
+      setFriendLocations(locationList);
     }
   }
 
@@ -80,7 +86,7 @@ function App(): JSX.Element {
           position={'relative'}
           >
             <Map loadLocations={loadLocations}
-                 locations={locations}
+                 locations={ownLocations.concat(friendLocations)}
                  changeViewTo= {(newView : JSX.Element) => {setselectedView(newView)}}
               />
             {
@@ -88,7 +94,9 @@ function App(): JSX.Element {
             }
             <Menu loadLocations={loadLocations}
                   changeViewTo= {(newView : JSX.Element) => {setselectedView(newView)}}
-                  locations = {locations}
+                  ownLocations = {ownLocations}
+                  friendLocations = {friendLocations}
+                  loading={loading}
                   />
             {
               !isLoggedIn ? (

@@ -91,7 +91,7 @@ export function DeletingAlertDialog(props:any) {
                                 ml={3}>
                                 Delete
                             </Button>
-                            
+
                         </AlertDialogFooter>
                     </AlertDialogContent>
                 </AlertDialogOverlay>
