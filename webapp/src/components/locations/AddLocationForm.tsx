@@ -53,9 +53,7 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
     const [coordsValue, setCoordsValue] = React.useState(props.clickedCoords);
     const [description, setDescription] = React.useState('');
     const [addingLocationProcess, setAddingLocationProcess] = useState(false);
-
-
-    let checkedCategories : string[] = [];
+    const [checkedCategories, setCheckedCategories] = useState<string[]>([])
 
     const categories = Object.values(Category); // array of strings containing the values of the categories
 
@@ -150,15 +148,13 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
      * @param e
      */
     const handleCheckedCategory = (e) => {
-        // if the index is > -1, means that the location already had this category and the user wants to erase it
-        const index = checkedCategories.indexOf(e.target.innerText); //use innerText to get the name of the category
-        if (index > -1) { // only splice array when item is found
-            checkedCategories.splice(index, 1); // 2nd parameter means remove one item only
+        const category = e.target.innerText;
+        if (checkedCategories.includes(category)) {
+            setCheckedCategories(checkedCategories.filter(c => c !== category));
+        } else {
+            setCheckedCategories([...checkedCategories, category]);
         }
-        // if the index was not in the checkedCategories means that the user wants to add the category to the location
-        else{
-            checkedCategories.push(e.target.innerText) // add category
-        }
+                
     }
 
     return (
