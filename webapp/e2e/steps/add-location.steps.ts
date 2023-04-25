@@ -11,7 +11,7 @@ defineFeature(feature, test => {
     beforeAll(async () => {
         browser = process.env.GITHUB_ACTIONS
             ? await puppeteer.launch()
-            : await puppeteer.launch({ headless: false, slowMo: 100 });
+            : await puppeteer.launch({ headless: false, slowMo: 100, args: ['--incognito'] });
         page = await browser.newPage();
 
         await page
@@ -25,6 +25,9 @@ defineFeature(feature, test => {
         given("A registered user goes to the Add Location form", async () => {
             await expect(page).toClick("span", {text:"Inrupt"});
             await expect(page).toClick("button", {text:"Login"});
+
+
+            
             let element = await page.waitForSelector('div[data-testid="smallContainer"]');
             // @ts-ignore
             await element.click();
