@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Flex, Button, Icon, Box, Text } from "@chakra-ui/react";
-import { MdList, MdLocationOn, MdMap, MdPeopleAlt, MdPerson, MdShareLocation } from "react-icons/md"
+import { MdList, MdLocationOn, MdMap, MdPeopleAlt, MdPerson, MdQuestionMark } from "react-icons/md"
 import { Location } from '../../types/types';
 import ListOfLocations from '../locations/ListOfLocations';
 import AddLocationForm from '../locations/AddLocationForm';
@@ -123,6 +123,19 @@ function Menu(props: MenuProps): JSX.Element {
               </Box>
 
               <Box marginTop={'auto'}>
+                <Button
+                    data-testid={'Tutorial'}
+                    leftIcon={<Icon as={MdQuestionMark} width={'2.5em'} height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
+                    bg={'white'}
+                    color={'black'}
+                    size='lg'
+                    onClick={() => {}}
+                >
+                  Tutorial
+                </Button>
+              </Box>
+
+              <Box>
                 <Button 
                 data-testid={'Profile'}
                 leftIcon={<Icon as={MdPerson} width={'2.5em'} height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
@@ -169,6 +182,9 @@ function Menu(props: MenuProps): JSX.Element {
                 <Icon as={MdPeopleAlt} width='3em' height={'2.5vw'} cursor={'pointer'}/>
               </Flex>
               <Flex marginTop='auto' marginBottom={'2'} direction='row' gap='2' alignItems={'center'}>
+                <Icon as={MdQuestionMark} width='3em' height={'2.5vw'} cursor={'pointer'}/>
+              </Flex>
+              <Flex marginBottom={'2'} direction='row' gap='2' alignItems={'center'}>
                 <Icon as={MdPerson} width='3em' height={'2.5vw'} cursor={'pointer'}/>
               </Flex>
             </Flex>

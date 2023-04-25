@@ -11,6 +11,7 @@ import Map from './components/map/Map';
 import {createLocation, deleteLocation, getLocations,getSolidFriends} from './solid/solidManagement'
 import Menu from './components/menu/Menu';
 import { useSession } from '@inrupt/solid-ui-react';
+import {IntroductionModalDialog} from "./components/dialogs/IntroductionModalDialog";
 
 
 function App(): JSX.Element {
@@ -93,7 +94,7 @@ function App(): JSX.Element {
             {
               !isLoggedIn ? (
                 <Login></Login>
-              ) : <></>
+              ) : <IntroductionModalDialog></IntroductionModalDialog>
             }
 
         </Flex>
