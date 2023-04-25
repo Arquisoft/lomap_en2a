@@ -118,6 +118,26 @@ const Map = ( props : MapProps) => {
       setCheckedCategory(e.target.value);
   }
 
+  const mapStyles = [
+    {
+      "featureType": "poi.business",
+      "stylers": [
+        {
+          "visibility": "off"
+        }
+      ]
+    },
+    {
+      "featureType": "poi.park",
+      "elementType": "labels.text",
+      "stylers": [
+        {
+          "visibility": "off"
+        }
+      ]
+    }
+  ]
+
 
   if (isLoaded)
   //when the addLocationMode is activated the cursor will be the MdAddLocationAlt icon
@@ -146,7 +166,9 @@ const Map = ( props : MapProps) => {
                     east: 180,
                   }
                 },
+                styles: mapStyles
               }}
+              
               onClick= { (clickedCoords) => {
                 //we check if the user is in location creation mode
                 if(inLocationCreationMode){
