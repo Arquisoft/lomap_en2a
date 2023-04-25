@@ -19,29 +19,34 @@ import {
 } from '@chakra-ui/react'
 import { useSession } from '@inrupt/solid-ui-react';
 import images from "../../static/images/images";
+import {MdQuestionMark} from "react-icons/md";
 
-export function IntroductionModalDialog(props:any) {
-    const { isOpen, onOpen, onClose } = useDisclosure({defaultIsOpen: true})
+export function TutorialModalDialog(props:any) {
+    const { isOpen, onOpen, onClose } = useDisclosure()
     const session = useSession()
-
-    // const customSize = defineStyle({
-    //     px: '6',
-    //     py: '2',
-    //     fontSize: 'sm'
-    // })
 
     return (
       <>
+        <Button data-testid={'Tutorial'}
+                leftIcon={<Icon as={MdQuestionMark} width={'2.5em'} height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
+                bg={'white'}
+                color={'black'}
+                size='lg'
+                onClick={onOpen}
+        >
+            Tutorial
+        </Button>
+
         <Modal size={"4xl"} isCentered isOpen={isOpen} onClose={onClose}>
           <ModalOverlay>
             <ModalContent>
               <ModalHeader fontSize='lg' fontWeight='bold'>
-                Welcome to LoMap!
+                Tutorial
               </ModalHeader>
               <ModalCloseButton/>
               <ModalBody>
-                <Text>With LoMap you can access to a map and add markers, routes and share it with your friends.</Text>
-                <Text paddingTop={'2em'}>You can find a tutorial inside the menu (click the sidebar at the left):</Text>
+                <Text>The tutorial test will be here.</Text>
+
                 <Image src={images.introDialogImg} marginTop={'1em'} border={'black solid'}></Image>
               </ModalBody>
   

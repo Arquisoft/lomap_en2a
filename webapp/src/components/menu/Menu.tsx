@@ -6,6 +6,7 @@ import ListOfLocations from '../locations/ListOfLocations';
 import AddLocationForm from '../locations/AddLocationForm';
 import Friends from '../friends/Friends';
 import { ProfileView } from '../profile/ProfileInfo';
+import {TutorialModalDialog} from "../dialogs/TutorialModalDialog";
 
 
 type MenuProps = {
@@ -123,16 +124,7 @@ function Menu(props: MenuProps): JSX.Element {
               </Box>
 
               <Box marginTop={'auto'}>
-                <Button
-                    data-testid={'Tutorial'}
-                    leftIcon={<Icon as={MdQuestionMark} width={'2.5em'} height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
-                    bg={'white'}
-                    color={'black'}
-                    size='lg'
-                    onClick={() => {}}
-                >
-                  Tutorial
-                </Button>
+                <TutorialModalDialog></TutorialModalDialog>
               </Box>
 
               <Box>
