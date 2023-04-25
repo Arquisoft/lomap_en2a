@@ -9,7 +9,7 @@ import { SessionInfo } from '@inrupt/solid-ui-react/dist/src/hooks/useSession';
 import { useSession } from '@inrupt/solid-ui-react';
 import { getSolidFriends } from "../../solid/solidManagement";
 import type { Friend, Location } from "../../types/types"
-import {MdAddLocationAlt} from "react-icons/md";
+import {MdOutlineAddLocation} from "react-icons/md";
 import {TbMap2} from "react-icons/tb";
 
 
@@ -269,12 +269,14 @@ const Map = ( props : MapProps) => {
               props.clickedCoordinates.length > 0?
               <Marker
                 position={{lat: Number(props.clickedCoordinates.split(",")[0]), lng: Number(props.clickedCoordinates.split(",")[1])}}
-                icon={{
-                  url: "https://maps.google.com/mapfiles/ms/icons/green-dot.png",
+                icon={
+                {
+                  url:  'http://maps.google.com/mapfiles/kml/pushpin/ylw-pushpin.png',
                   scaledSize: new window.google.maps.Size(40, 40),
                   origin: new window.google.maps.Point(0, 0),
-                  anchor: new window.google.maps.Point(15, 15)
-                }}
+                  anchor: new window.google.maps.Point(20, 30)
+                }
+              }
               ></Marker>
               :
               <></>

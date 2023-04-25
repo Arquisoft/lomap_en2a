@@ -33,7 +33,6 @@ function App(): JSX.Element {
   const [inLocationCreationMode, setInLocationCreationMode] = React.useState<boolean>(false);
   //information on the currently selected location
   const [selectedLocation, setSelectedLocation] = useState<Location>(undefined!);
-
   
   const modifyViewToBe = (viewName : string) => {
     setNameSelectedView(viewName);
@@ -128,12 +127,15 @@ function App(): JSX.Element {
                   case "AddLocationForm":
                     return (
                       <AddLocationForm
+                        locations={locations}
                         setSelectedView={(viewName: string) => {
                           setNameSelectedView(viewName);
                         }}
                         loadLocations={loadLocations}
                         clickedCoordinates={clickedCoordinates}
+                        setClickedCoordinates={setClickedCoordinates}
                         setInLocationCreationMode={setInLocationCreationMode}
+                        setSelectedLocation={setSelectedLocation}
                       />
                     );
                   case "ListOfLocations":

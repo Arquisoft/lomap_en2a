@@ -389,7 +389,7 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
             {
               location.category.map((category, index) => {
                 return (
-                  <Badge padding='1%' borderRadius='10' 
+                  <Badge key={index} padding='1%' borderRadius='10' 
                   colorScheme={colors[index % colors.length]}>{category}
                   </Badge>
                 )

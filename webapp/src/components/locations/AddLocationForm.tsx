@@ -27,10 +27,13 @@ import {MdEdit} from "react-icons/md";
 import {BsQuestionCircle} from "react-icons/bs";
 
 type AddLocationProps = {
+    locations: Location[];
     setSelectedView: (viewName: string) => void //function to change the selected view on the left
     loadLocations: () => Promise<void>
     clickedCoordinates: string;
+    setClickedCoordinates: (coords: string) => void;
     setInLocationCreationMode: (activated : boolean) => void;
+    setSelectedLocation: (location: Location) => void;
 }
 
 /**
@@ -60,15 +63,21 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
     const [editingManualCoordinates,setEditingManualCoordinates] = useState(false);
     const [imgs, setImgs] = useState<string[]>([]);
 
+
     useEffect(() => {
         checkCoordinates(coordsValue);
+        if(areValidCoords)
+        {
+            //we update the marker position on the map changing the selected coordinates in App.tsx
+            props.setClickedCoordinates(coordsValue);
+        }
     }
     , [coordsValue]);
 
     //we update the state of the coordsvalue when props.clickedCoordinates changes
     useEffect(() => {
         setCoordsValue(props.clickedCoordinates);
-    });
+    }, [props.clickedCoordinates]);
 
     let checkedCategories : string[] = [];
 
@@ -80,30 +89,48 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
 
 
     function addLocation(location:Location):void{
-        if(session.session.info.webId)
+        if(session.session.info.webId){
+            //we fake the addition of the location by means of adding it to the list of locations
+            //and indicating the user the location is being added to the pod in the background
+            props.locations.push(location);
+            
+            //we set the creation mode to false
+            setAddingLocationProcess(false);
+            //we reset the clicked coordinates to the default value
+            props.setClickedCoordinates('');
+            //we close the add location form
+            props.setSelectedView('Map');
+
+            //we reset the state of the form
+            setName('');
+            setDescription('');
+            setImgs([]);
+            setEditingManualCoordinates(false);
+            
+            //we perform a call to the function that adds the location to the pod
             createLocation(session.session.info.webId ,location).then(
                 ()=> {
+                    //we update the list of locations 
                     props.loadLocations();
                     toast({
                         title: 'Location added.',
-                        description: "The location was added to your pod.",
+                        description: "Location "+location.name+" was added to your pod.",
                         status: 'success',
                         duration: 5000,
                         isClosable: true,
                     });
-                    setAddingLocationProcess(false);
                 },
                 ()=> {
                     toast({
                         title: 'Error.',
-                        description: "The location couldn't be added to your pod.",
+                        description: "Location "+location.name+" couldn't be added to your pod.",
                         status: 'error',
                         duration: 5000,
                         isClosable: true,
                     });
-                    setAddingLocationProcess(false);
                 }
-            )
+            );
+        }
     }
 
     const regexCoords = /^-?(90|[0-8]?\d)(\.\d+)?, *-?(180|1[0-7]\d|\d?\d)(\.\d+)?$/;
@@ -255,7 +282,7 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
                             </Box>
                             <Text alignSelf='center' fontSize='1.1em'>Select valid coordinates</Text>
                             <Box width = '1.5em' height = '1.5em' borderRadius = '50%' display='flex' alignItems = 'center' justifyContent = 'center' backgroundColor = 'blue.500'>
-                                <Tooltip borderRadius='1em' label="Edit coordinates manually or click on the map to select them."> 
+                                <Tooltip borderRadius='1em' label="Edit coordinates manually or click on the button on the bottom right corner and click on the map to select them."> 
                                     <span>
                                         <BsQuestionCircle size='2em' color='white'></BsQuestionCircle>
                                     </span>
