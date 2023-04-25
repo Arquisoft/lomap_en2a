@@ -1,7 +1,7 @@
-Feature: Add a new location
+Feature: Add a new friend
 
-Scenario: A user logs into the site
-  Given The user goes to the Add Location form
-  And fills the form with data
-  When The user clicks the Add location button
-  Then The location is added
+Scenario: A user adds a new friend
+  Given The user logs in
+  And goes to Add a friend
+  When The user introduces a valid webId
+  Then The friend is added
