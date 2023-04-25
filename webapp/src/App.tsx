@@ -1,7 +1,7 @@
 // External imports
-import React, { useState, useEffect } from 'react';
-import { ChakraProvider, Button } from '@chakra-ui/react';
-import {Flex} from "@chakra-ui/react";
+import  { useState, useEffect } from 'react';
+import { ChakraProvider, Button, VStack } from '@chakra-ui/react';
+import {Flex,HStack,Text, Spinner} from "@chakra-ui/react";
 import { MdAddLocationAlt } from 'react-icons/md';
 
 // Our imports
@@ -9,12 +9,13 @@ import './App.css';
 import { Location } from './types/types';
 import Login from './components/login/Login';
 import Map from './components/map/Map';
-import {createLocation, deleteLocation, getLocations,getSolidFriends} from './solid/solidManagement'
+import {createLocation, getLocations,getSolidFriends} from './solid/solidManagement'
 import Menu from './components/menu/Menu';
 import AddLocationForm from './components/locations/AddLocationForm';
 import ListOfLocations from './components/locations/ListOfLocations';
 import Friends from './components/friends/Friends';
 import LocationInfo from './components/locations/LocationInfo';
+import {GamePanel} from './components/game/GamePanel'
 import { ProfileView } from './components/profile/ProfileInfo';
 import { useSession } from '@inrupt/solid-ui-react';
 
@@ -22,25 +23,19 @@ import { useSession } from '@inrupt/solid-ui-react';
 function App(): JSX.Element {
   const session = useSession(); 
   const [userCoordinates, setUserCoordinates] = useState({lng:0, lat:0});
-  const [locations, setLocations] = useState<Array<Location>>([]);
-  //stores the actual view currently selected
-  // const [selectedView, setselectedView] = useState<JSX.Element>(<></>); //TODO 
-  const [nameSelectedView, setNameSelectedView] = useState<string>("Map");
-  
-  //information on the clicked coordinates stored here 
-  const [clickedCoordinates, setClickedCoordinates] = useState<string>("");
-  //if the user is in Location creation mode
-  const [inLocationCreationMode, setInLocationCreationMode] = React.useState<boolean>(false);
-  //information on the currently selected location
-  const [selectedLocation, setSelectedLocation] = useState<Location>(undefined!);
-  
-  const modifyViewToBe = (viewName : string) => {
-    setNameSelectedView(viewName);
-    //setselectedView(views[viewName]);
-  }
+  //this state indicates if the user locations are being loaded
+  const [loading, setLoading] = useState(true);
+  const [ownLocations, setOwnLocations] = useState<Array<Location>>([]);
+  const [friendLocations, setFriendLocations] = useState<Array<Location>>([]);
+  const[isLoggedIn, setIsLoggedIn] = useState(false);
+  const [clickedCoordinates, setClickedCoordinates] = useState("");
+  const [inLocationCreationMode, setInLocationCreationMode] = useState(false);
+  const [selectedLocation, setSelectedLocation] = useState<Location>(ownLocations[0]);
+  const [nameSelectedView, setNameSelectedView] = useState("Map");
+
 
   const getNewLocation = (location:Location) => {
-    locations.push(location);
+    ownLocations.push(location);
     createLocation(session.session.info.webId as string, location);
   }
 
@@ -52,21 +47,20 @@ function App(): JSX.Element {
 
   async function loadLocations(){
     if(session.session.info.webId){
-      let locationList = await getLocations(session.session.info.webId)
+      setOwnLocations(await getLocations(session.session.info.webId));
+      setLoading(false);
+
       //Friends Locations
       let friends = await getSolidFriends(session.session.info.webId);
 
+      let locationList: Array<Location> = [];
       for (let friend of friends){
-        let locations = await getLocations(friend.webID as string)
-        locationList= locationList.concat(locations);
+        let friendLocations = await getLocations(friend.webID);
+        locationList = locationList.concat(friendLocations);
       }
-      setLocations(locationList);
-      //setselectedView(<></>);
+      setFriendLocations(locationList);
     }
   }
-
-
-
 
   //get the user's current location and save it for the map to use it as a center
   useEffect(()=>{
@@ -74,7 +68,17 @@ function App(): JSX.Element {
       //we set the coordinates to be the ones of the user for them to be passed to the map
       setUserCoordinates({lat: latitude , lng : longitude});
     })
+    handleRedirectAfterLogin();
   },[]);
+
+  async function handleRedirectAfterLogin() {
+    await session.session.handleIncomingRedirect(window.location.href);
+    if (session.session.info.isLoggedIn) {
+      setIsLoggedIn(true);
+    }
+    else
+      setIsLoggedIn(false);
+  }
 
 
   return (
@@ -90,7 +94,7 @@ function App(): JSX.Element {
           position={'relative'}
           >
             <Map
-                 locations={locations}
+                 locations={ownLocations.concat(friendLocations)}
                  changeViewTo={(viewName : string)=> {setNameSelectedView(viewName)}}
                  setClickedCoordinates={setClickedCoordinates}
                  clickedCoordinates={clickedCoordinates}
@@ -127,7 +131,7 @@ function App(): JSX.Element {
                   case "AddLocationForm":
                     return (
                       <AddLocationForm
-                        locations={locations}
+                        locations={ownLocations}
                         setSelectedView={(viewName: string) => {
                           setNameSelectedView(viewName);
                         }}
@@ -144,9 +148,11 @@ function App(): JSX.Element {
                         setSelectedView={(viewName: string) => {
                           setNameSelectedView(viewName);
                         }}
-                        places={locations}
+                        ownLocations={ownLocations}
+                        friendLocations={friendLocations}
                         loadLocations={loadLocations}
                         setSelectedLocation={setSelectedLocation}
+                        loading={loading}
                       />
                     );
                   case "Friends":
@@ -163,7 +169,7 @@ function App(): JSX.Element {
                         setSelectedView={(viewName: string) => {
                           setNameSelectedView(viewName);
                         }}
-                        locations={locations}
+                        locations={ownLocations.concat(friendLocations)}
                       />
                     );
                   case "LocationInfo":
@@ -176,6 +182,12 @@ function App(): JSX.Element {
                         loadLocations={loadLocations}
                       />
                     );
+                  case 'GameView':
+                    return (
+                      <GamePanel
+                        setSelectedView={(view)=> setNameSelectedView(view)}
+                        locations={ownLocations.concat(friendLocations)}/>
+                    );
                   default:
                     return null;
                 }
@@ -184,15 +196,52 @@ function App(): JSX.Element {
 
             <Menu loadLocations={loadLocations}
                   changeViewTo={(viewName : string)=> {setNameSelectedView(viewName)}}
-                  locations = {locations}
+                  ownLocations = {ownLocations}
+                  friendLocations = {friendLocations}
+                  loading={loading}
                   clickedCoordinates = {clickedCoordinates}
                   setClickedCoordinates = {setClickedCoordinates}
                   />
             {
-              !session.session.info.isLoggedIn ? (
+              !isLoggedIn ? (
                 <Login></Login>
               ) : <></>
             }
+            <HStack
+            padding='0.2em'
+            position='fixed'
+            bottom='0'
+            width='25em'
+            height='5em' 
+            marginBottom='1%'
+            hidden = {!loading || !isLoggedIn}
+            alignItems={'center'}
+            backgroundColor='blue.700'
+            borderRadius='1em'
+            boxShadow='0px 0px 10px 0px rgba(0,0,0,0.50)'
+            >
+            <Spinner
+              margin={'1.2em'}
+              thickness='5px'
+              speed='0.65s'
+              emptyColor='gray.200'
+              color='blue.500'
+              size='lg'
+            />
+            <VStack>
+              <Text 
+                textAlign='center'
+                fontSize='lg'
+                color='white'
+                as={'b'}
+                >Loading locations from your pod</Text>
+                <Text 
+                textAlign='center'
+                fontSize='1em'
+                color='white'
+                >This may take some time</Text>
+            </VStack>
+          </HStack>
 
         </Flex>
       </ChakraProvider>

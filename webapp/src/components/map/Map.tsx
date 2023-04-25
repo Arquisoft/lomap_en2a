@@ -1,15 +1,12 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Box, Button, ChakraProvider, VStack, Icon, Text,
-  Flex, HStack, Popover, CheckboxGroup, Menu, MenuButton, MenuItemOption, MenuList, MenuOptionGroup} from "@chakra-ui/react";
+ HStack, Menu, MenuButton, MenuItemOption, MenuList, MenuOptionGroup} from "@chakra-ui/react";
 import {GoogleMap, Marker, useJsApiLoader} from '@react-google-maps/api';
-import LocationInfo from '../locations/LocationInfo';
-import AddLocationForm from '../locations/AddLocationForm';
+
 import { Category, isLocationOfCategory } from '../Category';
-import { SessionInfo } from '@inrupt/solid-ui-react/dist/src/hooks/useSession';
 import { useSession } from '@inrupt/solid-ui-react';
 import { getSolidFriends } from "../../solid/solidManagement";
 import type { Friend, Location } from "../../types/types"
-import {MdOutlineAddLocation} from "react-icons/md";
 import {TbMap2} from "react-icons/tb";
 
 
@@ -27,10 +24,11 @@ type MapProps = {
 
 const Map = ( props : MapProps) => {
   const session = useSession();
-  const { isLoaded } = useJsApiLoader({
+  const { isLoaded } = useJsApiLoader({ 
     id: 'google-map-script',
-    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY as string
-  })
+        //we get the google maps api key from the enviroment variables
+        googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY as string
+      })
 
   const init = { //TODO fix this to be the user location
     lat: 43.37776784391247,
@@ -88,7 +86,7 @@ const Map = ( props : MapProps) => {
   const handleFriends = async () => {
     if (session.session.info.webId !== undefined && session.session.info.webId !== ""){
       const n  = await getSolidFriends(session.session.info.webId);
-      if (n.length == 0)
+      if (n.length === 0)
         setFriendChargingMsg("Add friends to see their locations!")
       setFriends(n);
     }
@@ -145,8 +143,7 @@ const Map = ( props : MapProps) => {
       <ChakraProvider>
         <Box
           width = '100%'
-          height = '100%'
-          cursor= "url('https://maps.google.com/mapfiles/ms/icons/red-dot.png'), auto">
+          height = '100%'>
           <GoogleMap 
               mapContainerStyle={{width: '100%', height: '100%'}}
               center={center}
@@ -195,9 +192,9 @@ const Map = ( props : MapProps) => {
                       friends.length > 0 ? 
                       <MenuOptionGroup type='checkbox' value={checkedFriends}>
                       {
-                        friends.map((friend) => {
+                        friends.map((friend,i) => {
                           return (
-                            <MenuItemOption value={friend.webID as string}
+                            <MenuItemOption key={i} value={friend.webID as string}
                                 onClick={(e:any) =>{ 
                                   // check if it is being selected or unselected
                                   let index = checkedFriends.indexOf(e.target.innerText);
@@ -315,7 +312,7 @@ const Map = ( props : MapProps) => {
 
   return (
       <Box>
-        <h1>An error occurred while loading the map</h1>
+        <h1>Loading the map...</h1>
       </Box>
   );
 }

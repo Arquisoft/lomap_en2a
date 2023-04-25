@@ -1,18 +1,21 @@
 import React, { useState } from 'react'
 import { Flex, Button, Icon, Box, Text } from "@chakra-ui/react";
-import { MdList, MdLocationOn, MdMap, MdPeopleAlt, MdPerson, MdShareLocation } from "react-icons/md"
+import { MdList, MdLocationOn, MdMap, MdPeopleAlt, MdPerson, MdOutlineSportsEsports } from "react-icons/md"
 import { Location } from '../../types/types';
 import ListOfLocations from '../locations/ListOfLocations';
 import AddLocationForm from '../locations/AddLocationForm';
 import Friends from '../friends/Friends';
 import { ProfileView } from '../profile/ProfileInfo';
+import {GamePanel} from '../game/GamePanel'
 import App from '../../App';
 
 
 type MenuProps = {
   changeViewTo: (view: string) => void,
-  locations : Array<Location>,
+  ownLocations : Array<Location>,
+  friendLocations : Array<Location>,
   loadLocations : () => Promise<void>
+  loading: boolean
   clickedCoordinates : string
   setClickedCoordinates : (coordinates : string) => void
 }
@@ -38,7 +41,8 @@ function Menu(props: MenuProps): JSX.Element {
           borderRightWidth={'thin'}
           px={2}
           boxShadow ='lg'
-          onClick={()=> insideMenu? setinsideMenu(false) : setinsideMenu(true)}
+          onClick={()=> insideMenu? ()=>{} : setinsideMenu(true)}
+          onMouseLeave={()=> {setinsideMenu(false)}}
     >
       {
         insideMenu ?
@@ -124,6 +128,23 @@ function Menu(props: MenuProps): JSX.Element {
                 </Button>
               </Box>
 
+              <Box>
+                <Button
+                leftIcon={<Icon alignContent={'left'} as={MdOutlineSportsEsports} width={'2.5em'} height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
+                bg={'white'}
+                color={'black'}
+                size='lg'
+                onClick={() => {
+                  setinsideMenu(false);
+                  props.changeViewTo(
+                    `GameView`
+                  );
+                }}
+                >
+                  Progress 
+                </Button>
+              </Box>
+
               <Box marginTop={'auto'}>
                 <Button 
                 data-testid={'Profile'}
@@ -169,6 +190,9 @@ function Menu(props: MenuProps): JSX.Element {
               </Flex>
               <Flex direction='row' gap='2' alignItems={'center'}>
                 <Icon as={MdPeopleAlt} width='3em' height={'2.5vw'} cursor={'pointer'}/>
+              </Flex>
+              <Flex direction='row' gap='2' alignItems={'center'}>
+                <Icon as={MdOutlineSportsEsports} width='3em' height={'2.5vw'} cursor={'pointer'}/>
               </Flex>
               <Flex marginTop='auto' marginBottom={'2'} direction='row' gap='2' alignItems={'center'}>
                 <Icon as={MdPerson} width='3em' height={'2.5vw'} cursor={'pointer'}/>

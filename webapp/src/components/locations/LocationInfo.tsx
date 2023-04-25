@@ -1,8 +1,8 @@
 import React,{ useState,useEffect } from 'react';
-import { Text, Badge, Stack, HStack, Image, Box, Flex, Button, Icon, Heading, Divider, useDisclosure, Textarea, Input, Grid, Progress, Tab, TabList, TabPanel, TabPanels, Tabs, CloseButton} from "@chakra-ui/react"
+import { Text, Stack, HStack, Image, Box, Flex, Button, Icon, Divider, useDisclosure, Textarea, Input, Grid, Progress, Tab, TabList, TabPanel, TabPanels, Tabs, CloseButton} from "@chakra-ui/react"
 import {MdOutlineRateReview, MdShare} from 'react-icons/md'
 
-import {Popover,PopoverTrigger,PopoverContent,PopoverCloseButton, Menu, MenuButton, MenuItem, MenuItemOption, MenuList, MenuOptionGroup} from '@chakra-ui/react'
+import {Popover,PopoverTrigger,PopoverContent,PopoverCloseButton, Menu, MenuButton, MenuItemOption, MenuList, MenuOptionGroup} from '@chakra-ui/react'
 import {FormControl,FormLabel,FormErrorMessage,FormHelperText,} from '@chakra-ui/react'
 import Review  from "./Review";
 import { FaStar, FaStarHalfAlt } from "react-icons/fa";
@@ -10,9 +10,10 @@ import images from '../../static/images/images'
 import { useSession } from '@inrupt/solid-ui-react';
 import { SessionInfo } from '@inrupt/solid-ui-react/dist/src/hooks/useSession';
 import {addLocationReview, addLocationScore, getNameFromPod } from '../../solid/solidManagement';
-import { DeletingAlertDialog } from '../dialogs/DeletingAlertDialog';
+import { DeletingAlertDialog } from '../dialogs/DeletingLocationAlertDialog'
 import { getSolidFriends, setAccessToFriend } from "../../solid/solidManagement";
 import type { Friend ,Location, Review as ReviewType} from "../../types/types";
+import CategoriesBubble from './CategoriesBubbles';
 
 type LocationInfoProps = {
   location : Location
@@ -190,9 +191,10 @@ const ReviewSection =  ( {location ,setLocation,session}) =>{
   let errorOnBody = input.trim().length === 0;
   //we use a local version of the location because the passed one is the reference to the usestate one
   let localLocation = location;
-
-  getNameFromPod(session.session.info.webId).then(res=> setusername(res));
-
+  //we get the name of the user
+  useEffect(() => {
+    getNameFromPod(session.session.info.webId).then(res=> setusername(res));
+  }, []);
   return (
     <>
       <Box marginLeft={'10%'}>
@@ -244,7 +246,7 @@ const ReviewSection =  ( {location ,setLocation,session}) =>{
                         let review : ReviewType = {
                           title:title,
                           content:input,
-                          date:new Date(),
+                          date:new Date().toISOString(),
                           webId : session.session.info.webId,
                           username: username
                         };
@@ -273,7 +275,7 @@ const ReviewSection =  ( {location ,setLocation,session}) =>{
       {
         localLocation.reviews.length > 0?  
           (localLocation.reviews as Array<ReviewType>)
-          .sort((a : ReviewType,b : ReviewType)=> b.date.getTime() - a.date.getTime())
+          .sort((a : ReviewType,b : ReviewType)=>new Date( b.date).getTime() - new Date(a.date).getTime())
           .map((rev,i)=>{return (
           <Review
             key={i}
@@ -297,13 +299,12 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
   const webId = session.session.info.webId;
   const [location, setlocation] = useState(props.location)
   const [friends, setFriends] = React.useState<Friend[]>([]);
-  const colors = ['teal', 'purple', 'pink', 'blue', 'green', 'orange'];
   let checkedFriends : string[] = [];
   const [friendsChargingMsg, setFriendChargingMsg] = useState("Loading...")
 
   React.useEffect(() => {
     handleFriends()
-  }, [friends]);
+  }, []); 
 
   const handleFriends = async () => {
     if ( webId !== undefined && webId !== ""){
@@ -313,7 +314,7 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
       setFriends(n);
     }
     else{
-      // setFriends([]);
+      setFriends([]);
     }
   }
 
@@ -345,6 +346,7 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
         bottom={-4}
         zIndex={1}
         overflowY='auto'
+        overflowX='hidden'
         px={2}
         paddingBottom={'15%'}
         >
@@ -353,9 +355,11 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
                     onClick={() => props.setSelectedView('Map')}
             ></CloseButton>
           </Flex>
-          <Flex direction='row' marginLeft='5%'>
+          <Flex direction='row' marginLeft='5%'width='90%' >
             <Text
+              word-wrap="break-word"
               fontSize='2.2em'
+              width='70%'
               marginLeft={'5%'}
               >
               {location.name} 
@@ -364,15 +368,17 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
               <DeletingAlertDialog location={props.location} loadLocations={props.loadLocations}></DeletingAlertDialog>
               <Menu closeOnSelect={false}>
                 <MenuButton as={Button} colorScheme='blue' 
-                  width='fit-content'><Icon as={MdShare}/></MenuButton>
+                  width='fit-content'>
+                    <Icon as={MdShare}/>
+                </MenuButton>
                 <MenuList minWidth='100%'>
                   {
                     friends.length > 0 ? 
                     <MenuOptionGroup type='checkbox'>
                       {
-                        friends.map((friend) => {
+                        friends.map((friend,i) => {
                           return (
-                              <MenuItemOption value={friend.webID} onClick={(e) => handleCheckedFriend(e)}
+                              <MenuItemOption key={i} value={friend.webID} onClick={(e) => handleCheckedFriend(e)}
                               >{friend.webID}</MenuItemOption>
                           )
                         })
@@ -385,17 +391,7 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
               </Menu>
             </Flex>
           </Flex>
-          <Flex gap='2%' marginLeft='10%' marginTop='2%'>
-            {
-              location.category.map((category, index) => {
-                return (
-                  <Badge key={index} padding='1%' borderRadius='10' 
-                  colorScheme={colors[index % colors.length]}>{category}
-                  </Badge>
-                )
-              })
-            }
-          </Flex>
+          <CategoriesBubble location={location}></CategoriesBubble>
           <Divider marginTop={'2%'} borderWidth={'2px'} borderRadius={"lg"} width='100%' />
 
           <Text marginLeft='10%' fontSize={'1.6em'} >Description:</Text>
