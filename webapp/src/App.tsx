@@ -1,6 +1,6 @@
 // External imports
-import React, { useState, useEffect } from 'react';
-import { ChakraProvider, HStack, Input, Tag, TagLabel, TagLeftIcon } from '@chakra-ui/react';
+import React,{ useState, useEffect, Component } from 'react';
+import { ChakraProvider, useToast,Box } from '@chakra-ui/react';
 import {Flex} from "@chakra-ui/react";
 
 // Our imports
@@ -8,23 +8,47 @@ import './App.css';
 import { Location } from './types/types';
 import Login from './components/login/Login';
 import Map from './components/map/Map';
-import {createLocation, deleteLocation, getLocations,getSolidFriends} from './solid/solidManagement'
+import {createLocation, getLocations,getSolidFriends} from './solid/solidManagement'
 import Menu from './components/menu/Menu';
 import { useSession } from '@inrupt/solid-ui-react';
+
+/**
+ * This component renders the possible toast indicating that the app is loading locations from the pod
+ * @param loading -> boolean that indicates if the app is loading locations from the pod
+ * @returns empty component
+ */
+function LoadingToast({loading}) : JSX.Element{
+  const toast = useToast();
+  if(loading){
+    //this prevents from having 2 toasts at the same time
+    toast.closeAll();
+    //we show a toast indicating that the app is loading locations from the pod
+    toast({
+      title: 'Loading locations from your pod...',
+      status: 'info',
+      description: 'This may take a while',
+      isClosable: false,
+    });
+  }
+  else{
+    //if not loading, we close the toast
+    toast.closeAll();
+  }
+  return (<></>)
+}
 
 
 function App(): JSX.Element {
   const [coordinates, setCoordinates] = useState({lng:0, lat:0});
-  const [locations, setLocations] = useState<Array<Location>>([]);
+  const [ownLocations, setOwnLocations] = useState<Array<Location>>([]);
+  const [loadingLocations, setloadingLocations] = useState(true);
+  const [friendLocations, setFriendLocations] = useState<Array<Location>>([]);
   //stores the actual view currently selected
   const [selectedView, setselectedView] = useState(<></>);
   const [session, setSession] = useState(useSession());
 
-  const [isLoggedIn, setIsLoggedIn] = useState(true)
-
-
   const getNewLocation = (location:Location) => {
-    locations.push(location);
+    ownLocations.push(location);
     createLocation(session.session.info.webId as string, location);
   }
 
@@ -36,17 +60,26 @@ function App(): JSX.Element {
 
   async function loadLocations(){
     if(session.session.info.webId){
-      let locationList = await getLocations(session.session.info.webId)
+      //we update the user's locations
+      setOwnLocations(await getLocations(session.session.info.webId))
+      //we update the loading state for children components
+      setloadingLocations(false);
+
+      //we now try to load the friends' locations
       //Friends Locations
       let friends = await getSolidFriends(session.session.info.webId);
-
+      let locationList : Array<Location> = [];
       for (let friend of friends){
         let locations = await getLocations(friend.webID as string)
         locationList= locationList.concat(locations);
       }
-      setLocations(locationList);
+      setFriendLocations(locationList);
+      
+      setselectedView(<></>);
     }
   }
+
+
 
   //get the user's current location and save it for the map to use it as a center
   useEffect(()=>{
@@ -54,51 +87,43 @@ function App(): JSX.Element {
       //we set the coordinates to be the ones of the user for them to be passed to the map
       setCoordinates({lat: latitude , lng : longitude});
     })
-    handleRedirectAfterLogin();
   },[]);
-
-  async function handleRedirectAfterLogin() {
-    await session.session.handleIncomingRedirect(window.location.href);
-    if (session.session.info.isLoggedIn) {
-      setIsLoggedIn(true);
-    }
-    else
-      setIsLoggedIn(false);
-  }
 
 
   return (
-    <>
-      <ChakraProvider>
-        <Flex
-          justifyContent={'center'}
-          alignItems={'center'}
-          width={'100vw'}
-          height={'100vh'}
-          maxWidth={'100vw'}
-          maxHeight={'100vh'}
-          position={'relative'}
-          >
-            <Map loadLocations={loadLocations}
-                 locations={locations}
-                 changeViewTo= {(newView : JSX.Element) => {setselectedView(newView)}}
-              />
-            {
-              selectedView ?  selectedView  :  <></>
-            }
-            <Menu loadLocations={loadLocations}
-                  changeViewTo= {(newView : JSX.Element) => {setselectedView(newView)}}
-                  locations = {locations}
-                  />
-            {
-              !isLoggedIn ? (
-                <Login></Login>
-              ) : <></>
-            }
+    <ChakraProvider>
+      <Flex
+        justifyContent={'center'}
+        alignItems={'center'}
+        width={'100vw'}
+        height={'100vh'}
+        maxWidth={'100vw'}
+        maxHeight={'100vh'}
+        position={'relative'}
+        >
+          <Map loadLocations={loadLocations}
+                locations={ownLocations.concat(friendLocations)}
+                changeViewTo= {(newView : JSX.Element) => {setselectedView(newView)}}
+            />
+          {
+            selectedView 
+          }
+          <Menu loadLocations={loadLocations}
+                changeViewTo= {(newView : JSX.Element) => {setselectedView(newView)}}
+                ownLocations = {ownLocations}
+                friendLocations = {friendLocations}
+                loading = {loadingLocations}
+                />
+          {
+            !session.session.info.isLoggedIn ? (
+              <Login></Login>
+            ) : 
+            <LoadingToast loading = {loadingLocations}></LoadingToast>
+          }
 
-        </Flex>
-      </ChakraProvider>
-    </>
+      </Flex>
+    </ChakraProvider>
+    
   );
 }
 

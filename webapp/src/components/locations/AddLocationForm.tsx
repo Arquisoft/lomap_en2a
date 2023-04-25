@@ -60,8 +60,8 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
 
     //let imgs: string[] = [];
     const [imgs, setImgs] = React.useState<string[]>([]);
-    const [imgsFiles, setImgsFiles] = React.useState<File[]>([]);
- 
+
+
     let lat: number, lon: number;
     let areValidCoords: boolean = false;
     let isValidName: boolean = !name || name.trim().length === 0;
@@ -101,7 +101,7 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
 
     function handleCoordsValue(coords: string):void {
         let separatedCoords = coords.split(',');
-        console.log(separatedCoords[0]);
+
         lat = Number(separatedCoords[0]);
         lon = Number(separatedCoords[1]);
     }
@@ -137,8 +137,7 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
             },
             category: checkedCategories,
             description: description.trimStart().trimEnd(),
-            imagesAsFile : imgsFiles
-
+            images : imgs
         }
 
         addLocation(l);
@@ -255,7 +254,6 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
                                 let res = await readFileAsync(image, reader); // wait for the result
                                 //imgs.push(res); // add file to array
                                 setImgs(oldArray => [...oldArray, res]);
-                                setImgsFiles(oldArray => [...oldArray,image]);
                             }
                         }}
                         multiple>
@@ -308,6 +306,27 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
                 </Box>
             </Flex>
         </form>
+    );
+}
+
+function AddLocationButton(props:any) : JSX.Element {
+    return (
+        props.addingLocationProcess ? (
+            <Button leftIcon={<Spinner size={"xs"}/>}
+                    colorScheme={'blue'}
+                    variant={'outline'}
+                    type={'submit'}
+                    disabled>
+                Adding location
+            </Button>
+        ) : (
+            <Button leftIcon={<MdOutlineAddLocationAlt/>}
+                    colorScheme={'blue'}
+                    variant={'outline'}
+                    type={'submit'}>
+                Add location
+            </Button>
+        )
     );
 }
 

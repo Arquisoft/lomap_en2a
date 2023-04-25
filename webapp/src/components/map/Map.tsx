@@ -20,11 +20,10 @@ type MapProps = {
 
 const Map = ( props : MapProps) => {
   const session = useSession();
-  const { isLoaded } = useJsApiLoader({ 
+  const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
-        //we get the google maps api key from the enviroment variables
-        googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY as string
-      })
+    googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY as string
+  })
 
   const init = {
     lat: 43.37776784391247,
@@ -67,7 +66,7 @@ const Map = ( props : MapProps) => {
   const handleFriends = async () => {
     if (session.session.info.webId !== undefined && session.session.info.webId !== ""){
       const n  = await getSolidFriends(session.session.info.webId);
-      if (n.length === 0)
+      if (n.length == 0)
         setFriendChargingMsg("Add friends to see their locations!")
       setFriends(n);
     }
@@ -113,7 +112,9 @@ const Map = ( props : MapProps) => {
 
             onClick= { (clickedCoords) => {
               let lat = clickedCoords.latLng?.lat();
+
               let lon = clickedCoords.latLng?.lng();
+
               handleMapClick(lat,lon);
             }}
             //use inside of the options the styles property and personalyce a style in https://mapstyle.withgoogle.com/
@@ -185,17 +186,18 @@ const Map = ( props : MapProps) => {
               // if no filters are checked, use the global locations
               props.locations.map((place, i) => (
               <Marker
-                  key={i}
-                  position={{lat: Number(place.coordinates.lat), lng: Number(place.coordinates.lng)}}
-                  onClick={() => handlePlaceClick(place)}
+                key={i}
+                position={{lat: Number(place.coordinates.lat), lng: Number(place.coordinates.lng)}}
+                onClick={() => handlePlaceClick(place)}
               ></Marker>))
             )
             :
             (
               filteredLocations.map((place, i) => (
               <Marker
-                  position={{lat: Number(place.coordinates.lat), lng: Number(place.coordinates.lng)}}
-                  onClick={() => handlePlaceClick(place)}
+                key={i}
+                position={{lat: Number(place.coordinates.lat), lng: Number(place.coordinates.lng)}}
+                onClick={() => handlePlaceClick(place)}
               ></Marker>))
             )
           }
@@ -205,7 +207,7 @@ const Map = ( props : MapProps) => {
 
   return (
       <Box>
-        <h1>Loading the map...</h1>
+        <h1>An error occurred while loading the map</h1>
       </Box>
   );
 }

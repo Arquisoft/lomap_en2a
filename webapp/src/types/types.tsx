@@ -12,8 +12,7 @@ export type Location = {
     
     reviews ?: Array<Review>,
     ratings ?: Map<string,Number>, //stars of the location <webId,number>
-    images?: Array<string>,
-    imagesAsFile?:Array<File>
+    images?: Array<string>
 };
 
 export type Coordinates = {
@@ -23,7 +22,7 @@ export type Coordinates = {
 
 export type Review = {
     webId:string,
-    date: string,
+    date: Date,
     title:string,
     content:string,
     username:string

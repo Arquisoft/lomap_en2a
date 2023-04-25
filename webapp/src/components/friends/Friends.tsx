@@ -31,7 +31,7 @@ function Friends(props:FriendsProps) : JSX.Element {
     if (webId !== undefined && webId !== ""){
       const n  = await getSolidFriends(webId)
       setFriends(n);
-      if (n.length === 0)
+      if (n.length == 0)
         setFriendChargingMsg("Uups! It seems you don't have any friends...")
       setLogged(true);
     }
