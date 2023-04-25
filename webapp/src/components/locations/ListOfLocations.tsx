@@ -1,11 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Location } from '../../types/types'
-import { useSession } from '@inrupt/solid-ui-react';
-import {Flex,Button,Box,VStack,Text, Icon, CloseButton,Divider,Tabs,TabList,Tab,TabPanels,TabPanel} from "@chakra-ui/react";
+
+import {Flex,VStack,Text, Icon, CloseButton,Divider,Tabs,TabList,Tab,TabPanels,TabPanel} from "@chakra-ui/react";
 import  LocationCard  from './LocationCard';
 import {MdOutlineLocationOff,MdEmojiPeople , } from 'react-icons/md'
 import {IoPeople} from 'react-icons/io5' 
 import {TbShareOff} from 'react-icons/tb'
+import {BsClockHistory} from 'react-icons/bs'
 
 
 
@@ -72,7 +73,18 @@ function ListOfLocations(props : ListProps) : JSX.Element {
             )
             : //if loading
             (
-                <Text>Loading</Text>
+                
+                <Flex flex={1} overflowY={'auto'} overflowX='clip' direction={'column'} align='center' justify='center' gap='1.2em'>
+                    <Text 
+                    textAlign='center'
+                    fontSize='2em'
+                    as={'b'}
+                    >Loading...</Text>
+                    <Icon as={BsClockHistory} color='blue.500' width={'5em'} height={'5em'} minHeight={'10px'} minWidth={'10px'} />
+                    <Text>
+                        Loading your friends locations
+                    </Text>
+                </Flex>
             )
             )
         }
@@ -120,7 +132,17 @@ function ListOfLocations(props : ListProps) : JSX.Element {
             )
             : //if loading
             (<>
-                <Text>Loading</Text>
+                <Flex flex={1} overflowY={'auto'} overflowX='clip' direction={'column'} align='center' justify='center' gap='1.2em'>
+                    <Text 
+                    textAlign='center'
+                    fontSize='2em'
+                    as={'b'}
+                    >Loading...</Text>
+                    <Icon as={BsClockHistory} color='blue.500' width={'5em'} height={'5em'} minHeight={'10px'} minWidth={'10px'} />
+                    <Text>
+                        Loading your locations
+                    </Text>
+                </Flex>
             </>)
             )
         }
