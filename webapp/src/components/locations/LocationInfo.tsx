@@ -281,6 +281,7 @@ const ReviewSection =  ( {location ,setLocation,session}) =>{
             key={i}
             title={rev.title as string}
             username={rev.username}
+            webId={rev.webId}
             content={rev.content as string}
             date={rev.date}/>
             )})

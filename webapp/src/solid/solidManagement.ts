@@ -89,6 +89,17 @@ export async function getUserProfile(webID: string) : Promise<Thing>{
 }
 
 /**
+ * This function returns the profile image of the user from the pod
+ * @param webID of the user
+ * @returns image url as string
+ */
+export async function getProfileImage(webID: string) : Promise<string>{
+  let profileThing = await getUserProfile(webID);
+  let image = getUrl(profileThing, VCARD.hasPhoto) as string;
+  return image;
+}
+
+/**
  * Get name of the user from the pod
  * @param webID contains the user webID
  * @returns name as string or 'John Doe' if unidentified
