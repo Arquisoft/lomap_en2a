@@ -103,6 +103,7 @@ function App(): JSX.Element {
                  setInLocationCreationMode={setInLocationCreationMode}
                  inLocationCreationMode={inLocationCreationMode}
                  setSelectedLocation={setSelectedLocation}
+                 selectedLocation={selectedLocation}
               />
             {
               //we define as the button (circle sized) that will be placed at the botton right corner of the map

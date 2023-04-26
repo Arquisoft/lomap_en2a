@@ -14,12 +14,13 @@ import {TbMap2} from "react-icons/tb";
 type MapProps = {
     locations : Array<Location>
     changeViewTo: (viewName: string) => void //function to change the selected view on the left
-    setClickedCoordinates : (coordinates: string) => void
-    clickedCoordinates : string
-    selectedView : string
-    setInLocationCreationMode : (inLocationCreationMode: boolean) => void
-    inLocationCreationMode : boolean
-    setSelectedLocation : (location: Location) => void
+    setClickedCoordinates : (coordinates: string) => void //function to change the coordinates of the location that has been clicked
+    clickedCoordinates : string //coordinates of the location that has been clicked
+    selectedView : string //indicates the view that is currently selected on the left
+    setInLocationCreationMode : (inLocationCreationMode: boolean) => void //function to change the state of the location creation mode
+    inLocationCreationMode : boolean //indicates if the user is in LOCATION CREATION MODE
+    setSelectedLocation : (location: Location) => void //changes the location that has the focus
+    selectedLocation : Location|null //location that has the focus
 }
 
 const Map = ( props : MapProps) => {
@@ -50,6 +51,19 @@ const Map = ( props : MapProps) => {
     
   }, []);
 
+  //when the selectedLocation is changed the center of the map will be the location that has the focus
+  useEffect(() => {
+    //if no selected location, we do nothing
+    if(props.selectedLocation === null || props.selectedLocation === undefined) return;
+
+    const newCenter = {
+      lat: props.selectedLocation.coordinates.lat.valueOf(),
+      lng: props.selectedLocation.coordinates.lng.valueOf()
+    }
+    
+    setCenter(newCenter)
+  }, [props.selectedLocation])
+
   //we update the state of the location creation mode when the prop changes
   React.useEffect(() => {
     setInLocationCreationMode(props.inLocationCreationMode);
@@ -58,20 +72,12 @@ const Map = ( props : MapProps) => {
   const onUnmount = React.useCallback(function callback() {setMap(null)}, [])
 
   const handlePlaceClick = (location) => {
-    const newCenter = {
-      lat: location.coordinates.lat.valueOf(),
-      lng: location.coordinates.lng.valueOf()
-    }
-    
-    setCenter(newCenter)
     props.setSelectedLocation(location);
     props.changeViewTo('Map');
     props.changeViewTo('LocationInfo');
   }
 
   function handleMapClick(lat:any,lon:any):void {
-    //we update the center of the map
-    setCenter({lat: lat, lng: lon});
 
     // get coordinates where clicked
     let clickedCoords = lat + ", " + lon;

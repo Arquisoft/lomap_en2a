@@ -83,7 +83,7 @@ tests basicos porque no detecta que el mapa este cargado y de ahi ya no se puede
 //       isLoaded: true,
 //       loadError: undefined
 //     });
-//     const {getByTestId}= render(<Map locations={testLocations} changeViewTo={()=>{}} deleteLocation={()=>{}}></Map>)
+//     const {getByTestId}= render(<Map selectedLocation={undefined} locations={testLocations} changeViewTo={()=>{}} deleteLocation={()=>{}}></Map>)
 //     //we expect the map to be loaded in the screen
 
 //     screen.debug()
@@ -92,19 +92,19 @@ tests basicos porque no detecta que el mapa este cargado y de ahi ya no se puede
 
 //this is not really working but i leave it here because test suite must have at least one test
 test('Check with no locations no markers in map',async () => {
-    const {container}= render(<Map locations={[]} changeViewTo={()=>{}} clickedCoordinates='' setSelectedLocation={jest.fn()} setClickedCoordinates={jest.fn()} selectedView={''} setInLocationCreationMode={jest.fn()} inLocationCreationMode={false} ></Map>)
+    const {container}= render(<Map selectedLocation={null} locations={[]} changeViewTo={()=>{}} clickedCoordinates='' setSelectedLocation={jest.fn()} setClickedCoordinates={jest.fn()} selectedView={''} setInLocationCreationMode={jest.fn()} inLocationCreationMode={false} ></Map>)
     //we check with no locations = no markers
     const markers = container.querySelectorAll('div[role="button"] img');
     expect(markers.length).toBe(0)
 })
 
 // test('Check with 1 locations 1 marker in the map',async () => {
-//     const {container}= render(<Map locations={[testLocations[0]]} changeViewTo={()=>{}} deleteLocation={()=>{}}></Map>)
+//     const {container}= render(<Map selectedLocation={undefined} locations={[testLocations[0]]} changeViewTo={()=>{}} deleteLocation={()=>{}}></Map>)
 //     expect(container.querySelector('div[role="button"] img')).toBeInTheDocument()
 // })
 
 // test('Check with n locations n marker in the map',async () => {
-//     const {container}= render(<Map locations={testLocations} changeViewTo={()=>{}} deleteLocation={()=>{}}></Map>)
+//     const {container}= render(<Map selectedLocation={undefined} locations={testLocations} changeViewTo={()=>{}} deleteLocation={()=>{}}></Map>)
     
 //     await waitFor(() => expect(container.querySelector('div[role="button"] img')).toBeInTheDocument())
 //     let markers = container.querySelectorAll('div[role="button"] img')
@@ -120,7 +120,7 @@ test('Check with no locations no markers in map',async () => {
 // test('Check click on a location to open location details',async () => {
 //     let selectedView = <></>
 //     //we modify this variable on change of view
-//     const {container}= render(<Map locations={testLocations} changeViewTo={(view)=>{ selectedView = view}} deleteLocation={()=>{}}></Map>)
+//     const {container}= render(<Map selectedLocation={undefined} locations={testLocations} changeViewTo={(view)=>{ selectedView = view}} deleteLocation={()=>{}}></Map>)
 //     expect(container.querySelector('[aria-label="Mapa"]'))
 //     //we wait the marker to appear
 //     await waitFor(() => container.querySelector('div[role="button"]'));

@@ -162,15 +162,22 @@ function ListOfLocations(props : ListProps) : JSX.Element {
         px={'2%'}
         >
             
-        <CloseButton 
-                onClick={() => props.setSelectedView('Map')}
-                position='absolute'
-                top='2%'
-                right='2%'
-        ></CloseButton>
+        
     
-
-        <Text as='b' fontSize='3xl' marginTop={'2%'} marginLeft={'5%'}>List of Locations</Text>
+        <Flex direction='column'>
+            <Text marginTop='4%' width='fit-content' 
+            fontSize='2.2em' alignSelf='center' borderBottomWidth='1px'>List of locations</Text>
+            <Flex direction={'column'}>
+                <CloseButton 
+                    onClick={() => {
+                        props.setSelectedView('Map') }}
+                    position='absolute'
+                    top='2%'
+                    right='3%'
+                ></CloseButton>
+            </Flex>
+        </Flex>
+        
         <Divider marginTop={'2%'} marginBottom={'2%'} borderWidth={'2px'} borderRadius={"lg"} width='100%'/> 
         { 
             <Tabs isFitted={true} variant='enclosed' >
