@@ -74,7 +74,7 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
                         title: 'Location added.',
                         description: "The location was added to your pod.",
                         status: 'success',
-                        duration: 5000,
+                        duration: 10000,
                         isClosable: true,
                     });
                     setAddingLocationProcess(false);
@@ -189,6 +189,7 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
                         size='lg'
                         width='50%'
                         height='160%'
+                        id='name'
                     />
                     <Menu closeOnSelect={false}>
                             <MenuButton as={Button} rightIcon={<MdArrowDropDown/>} color='white' background='#4299e1' 
@@ -222,6 +223,7 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
                         }}
                         placeholder='Location coordinates, Ej: 43.3534, -5.8512'
                         size='lg'
+                        id='coordinates'
                     />
                 </Flex>
 
@@ -231,6 +233,7 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
                         onChange={(e:any) => setDescription(e.target.value)}
                         placeholder='Location description'
                         size='lg'
+                        id='description'
                     />
                 </Flex>
                 
@@ -297,7 +300,8 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
                                 variant={'outline'}
                                 type={'submit'}
                                 height={'170%'}
-                                fontSize={'2xl'}>
+                                fontSize={'2xl'}
+                                id='addLocation'>
                             Add location
                         </Button>
                     )}

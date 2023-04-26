@@ -31,6 +31,7 @@ import { FOAF, VCARD, SCHEMA_INRUPT, RDF} from "@inrupt/vocab-common-rdf"
 
 import {v4 as uuid} from "uuid" // for the uuids of the locations
 
+
 // ****************************************
 /*
 === POD STRUCTURE ===
