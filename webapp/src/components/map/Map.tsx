@@ -65,6 +65,7 @@ const Map = ( props : MapProps) => {
     
     setCenter(newCenter)
     props.setSelectedLocation(location);
+    props.changeViewTo('Map');
     props.changeViewTo('LocationInfo');
   }
 
