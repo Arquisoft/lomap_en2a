@@ -1,11 +1,5 @@
 import React, {useEffect, useState} from "react";
 import {
-    AlertDialog,
-    AlertDialogBody,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogContent,
-    AlertDialogOverlay,
     useDisclosure,
     Button,
     Icon,
@@ -40,9 +34,6 @@ export function TutorialModalDialog(props:any) {
             setCurrentPage(page);
     };
 
-    // @ts-ignore
-    // @ts-ignore
-    // @ts-ignore
     return (
       <>
         <Button data-testid={'Tutorial'}
@@ -119,7 +110,14 @@ export function TutorialModalDialog(props:any) {
                       <ModalCloseButton/>
                       <ModalBody>
 
-                          <Text>The tutorial test will be here.</Text>
+                          <Text>
+                            In the Map View you will be able to see the map with all the locations you and 
+                            your friends created.
+                            You can click the button at the bottom right to enter the Adding Location mode. 
+                            The next left-click you do in the map will open the 
+                            <Link color={"blue.500"} onClick={()=>moveToPage(4)}>Add Location</Link>
+                            menu with that location.
+                          </Text>
 
                           <Image src={images.introDialogImg} marginTop={'1em'} border={'black solid'}></Image>
                           <Image src={images.introDialogImg} marginTop={'1em'} border={'black solid'}></Image>
@@ -156,11 +154,10 @@ export function TutorialModalDialog(props:any) {
                       </ModalHeader>
                       <ModalCloseButton/>
                       <Divider></Divider>
+
                       <ModalBody>
-
-
-                          <Text>The tutorial test will be here.</Text>
-                          <Text>The tutorial test will be here.</Text>
+                          <Text>In the List of Locations you can find all your saved locations.</Text>
+                          <Text>You can click one location to open its details. </Text>
 
                           <Image src={images.introDialogImg} marginTop={'1em'} border={'black solid'}></Image>
                       </ModalBody>
@@ -196,10 +193,16 @@ export function TutorialModalDialog(props:any) {
                       <ModalCloseButton/>
                       <Divider></Divider>
                       <ModalBody>
+                          <Text>
+                            This is where you can save a location. You can write the coordinates directly or
+                            use the Adding Location mode and just click on the place you want to add.
+                            You can choose the name of the location, add images, give a more detailed description and 
+                            give it one or more categories.
+                            Categories are useful if you want to keep your locations organized. You can also filter
+                            the locations by categories in the 
+                            <Link color={"blue.500"} onClick={()=>moveToPage(2)}>Map View</Link>.
 
-
-                          <Text>The tutorial test will be here.</Text>
-                          <Text>The tutorial test will be here.</Text>
+                          </Text>
 
                           <Image src={images.introDialogImg} marginTop={'1em'} border={'black solid'}></Image>
                       </ModalBody>
