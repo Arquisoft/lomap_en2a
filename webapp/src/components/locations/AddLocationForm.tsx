@@ -52,16 +52,14 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
     const [coordsValue, setCoordsValue] = React.useState(props.clickedCoords);
     const [description, setDescription] = React.useState('');
     const [addingLocationProcess, setAddingLocationProcess] = useState(false);
-
-
-    let checkedCategories : string[] = [];
+    const [checkedCategories, setCheckedCategories] = useState<string[]>([])
 
     const categories = Object.values(Category); // array of strings containing the values of the categories
 
     //let imgs: string[] = [];
     const [imgs, setImgs] = React.useState<string[]>([]);
-
-
+    const [imgsFiles, setImgsFiles] = React.useState<File[]>([]);
+ 
     let lat: number, lon: number;
     let areValidCoords: boolean = false;
     let isValidName: boolean = !name || name.trim().length === 0;
@@ -137,7 +135,8 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
             },
             category: checkedCategories,
             description: description.trimStart().trimEnd(),
-            images : imgs
+            imagesAsFile : imgsFiles
+
         }
 
         addLocation(l);
@@ -148,15 +147,13 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
      * @param e
      */
     const handleCheckedCategory = (e) => {
-        // if the index is > -1, means that the location already had this category and the user wants to erase it
-        const index = checkedCategories.indexOf(e.target.innerText); //use innerText to get the name of the category
-        if (index > -1) { // only splice array when item is found
-            checkedCategories.splice(index, 1); // 2nd parameter means remove one item only
+        const category = e.target.innerText;
+        if (checkedCategories.includes(category)) {
+            setCheckedCategories(checkedCategories.filter(c => c !== category));
+        } else {
+            setCheckedCategories([...checkedCategories, category]);
         }
-        // if the index was not in the checkedCategories means that the user wants to add the category to the location
-        else{
-            checkedCategories.push(e.target.innerText) // add category
-        }
+                
     }
 
     return (
@@ -257,6 +254,7 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
                                 let res = await readFileAsync(image, reader); // wait for the result
                                 //imgs.push(res); // add file to array
                                 setImgs(oldArray => [...oldArray, res]);
+                                setImgsFiles(oldArray => [...oldArray,image]);
                             }
                         }}
                         multiple>
@@ -310,27 +308,6 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
                 </Box>
             </Flex>
         </form>
-    );
-}
-
-function AddLocationButton(props:any) : JSX.Element {
-    return (
-        props.addingLocationProcess ? (
-            <Button leftIcon={<Spinner size={"xs"}/>}
-                    colorScheme={'blue'}
-                    variant={'outline'}
-                    type={'submit'}
-                    disabled>
-                Adding location
-            </Button>
-        ) : (
-            <Button leftIcon={<MdOutlineAddLocationAlt/>}
-                    colorScheme={'blue'}
-                    variant={'outline'}
-                    type={'submit'}>
-                Add location
-            </Button>
-        )
     );
 }
 

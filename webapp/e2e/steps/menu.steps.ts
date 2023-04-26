@@ -1,7 +1,7 @@
 import { defineFeature, loadFeature } from "jest-cucumber";
 import puppeteer from "puppeteer";
 
-const feature = loadFeature('./features/profile.feature');
+const feature = loadFeature('./features/menu.feature');
 
 let page: puppeteer.Page;
 let browser: puppeteer.Browser;
@@ -22,7 +22,7 @@ defineFeature(feature, test => {
         jest.setTimeout(100000);
     });
 
-    test("User checks its profile information",({given,when,then}) => {
+    test("User opens the menu",({given,when,then}) => {
         jest.setTimeout(100000);
         given("The user logs in", async () => {
             await expect(page).toClick("span", {text:"Inrupt"});
@@ -36,23 +36,23 @@ defineFeature(feature, test => {
             await page.click('#login')
 
             await page.waitForNavigation(); // wait for the redirect
-            // await page.waitForTimeout(30000); // wait for 25 seconds (load locations??)
             await page.waitForTimeout(8000);
             
+        });
+
+        when("The user clicks the menu", async () => {
             const [menu] = await page.$x('/html/body/div[1]/div/div[2]/div');
             await menu.click();
-            await page.waitForTimeout(3000)
         });
 
-        when("The user clicks the Profile button", async () => {
-            const [profile] = await page.$x('/html/body/div[1]/div/div[2]/div/div[6]/button')
-            await profile.click();
+        then("All options are displayed", async () => {
             await page.waitForTimeout(3000); // wait for 10 seconds
-
-        });
-
-        then("The profile is shown", async () => {
-            await expect(page).toMatch('Profile Information')
+            await expect(page).toMatch('Map View')
+            await expect(page).toMatch('List of Locations')
+            await expect(page).toMatch('Add Location')
+            await expect(page).toMatch('Add Friends')
+            await expect(page).toMatch('Progress')
+            await expect(page).toMatch('Profile')
         });
 
     })

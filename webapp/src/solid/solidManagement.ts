@@ -1,5 +1,6 @@
-import type { Friend, Location as LocationType, Review as ReviewType } from "../types/types";
+import type { Friend, Location as LocationType, Review, Review as ReviewType } from "../types/types";
 import { fetch } from "@inrupt/solid-client-authn-browser";
+import { overwriteFile, getSourceUrl,getFile,isRawData, getContentType } from "@inrupt/solid-client";
 
 import {
   getSolidDatasetWithAcl,
@@ -29,6 +30,7 @@ import { DatasetContext } from "@inrupt/solid-ui-react";
 import { FOAF, VCARD, SCHEMA_INRUPT, RDF} from "@inrupt/vocab-common-rdf"
 
 import {v4 as uuid} from "uuid" // for the uuids of the locations
+
 
 // ****************************************
 /*
@@ -141,7 +143,7 @@ export async function getLocationFromDataset(locationPath:string){
   let datasetPath = locationPath.split('#')[0] // get until index.ttl
   let locationDataset = await getSolidDataset(datasetPath, {fetch: fetch}) // get the whole dataset
   let locationAsThing = getThing(locationDataset, locationPath) as Thing; // get the location as thing
-
+  let imagesUrl = datasetPath.slice(0,-9)+"images";//WORKING
   // retrieve location information
   let name = getStringNoLocale(locationAsThing, SCHEMA_INRUPT.name) as string; 
   let longitude = getStringNoLocale(locationAsThing, SCHEMA_INRUPT.longitude) as string; 
@@ -161,7 +163,7 @@ export async function getLocationFromDataset(locationPath:string){
   }
   
   let locationImages: string [] = []; // initialize array to store the images as strings
-  locationImages = await getLocationImage(datasetPath); // get the images
+  locationImages = await getLocationImage(imagesUrl); // get the images
   let reviews: ReviewType[] = []; // initialize array to store the reviews
   reviews = await getLocationReviews(datasetPath) // get the reviews
   let scores : Map<string, number>; // map to store the ratings
@@ -254,10 +256,20 @@ export async function getLocationImage(imagesFolderUrl:string){
     let imagesDataSet = await getSolidDataset(imagesFolderUrl, {fetch: fetch}); // get images dataset
     imagesThings = getThingAll(imagesDataSet) // get all the things in the images dataset
     for (let image of imagesThings){
-      let img = getStringNoLocale(image, SCHEMA_INRUPT.image) as string; // get the path of the folder
-      if (img !== null)
-        images.push(img);
+      try{
+      const file = await getFile(
+        image.url,               // File in Pod to Read
+        { fetch: fetch }       // fetch from authenticated session
+      );
+      if(isRawData(file)){//If it's a file(not dataset)
+        images.push(URL.createObjectURL(file));//Creates the file as URL and pushes it to the
+      }
+    }catch(e){
+
     }
+  
+      
+      }
   } catch (error){
     // if the dataset does not exist, return empty array of images
     images = [];
@@ -286,10 +298,10 @@ export async function createLocation(webID:string, location:LocationType) {
 
   // path for the new location dataset
   let individualLocationFolder = `${baseURL}private/lomap/locations/${locationId}/index.ttl`
-
+  let folder = `${baseURL}private/lomap/locations/${locationId}`
   // create dataset for the location
   try {
-    await createLocationDataSet(individualLocationFolder, location, locationId)
+    await createLocationDataSet(folder,individualLocationFolder, location, locationId)
   } catch (error) {
     console.log(error)
   }
@@ -353,9 +365,10 @@ export async function createInventory(locationsFolder: string, location:Location
  * @param location contains the location to be created
  * @param id contains the location uuid
  */
-export async function createLocationDataSet(locationFolder:string, location:LocationType, id:string) {
+export async function createLocationDataSet(folder:string,locationFolder:string, location:LocationType, id:string) {
   let locationIdUrl = `${locationFolder}#${id}` // construct the url of the location
 
+  let locationImages = folder+"/images";
   // create dataset for the location
   let dataSet = createSolidDataset();
   let categoriesSerialized = serializeCategories(location.category); // serialize categories
@@ -374,9 +387,10 @@ export async function createLocationDataSet(locationFolder:string, location:Loca
   dataSet = setThing(dataSet, newLocation); // store thing in dataset
   // save dataset to later add the images
   dataSet = await saveSolidDatasetAt(locationFolder, dataSet, {fetch: fetch}) // save dataset 
-  await addLocationImage(locationFolder, location); // store the images
+  console.log(locationFolder);
+  await addImages(locationImages, folder,location); // store the images
   try {
-    await saveSolidDatasetAt(locationFolder, dataSet, {fetch: fetch}) // save dataset 
+    //await saveSolidDatasetAt(locationFolder, dataSet, {fetch: fetch}) // save dataset 
   } catch (error) {
     console.log(error)
   }
@@ -437,25 +451,26 @@ export async function addLocationScore(webId:string, location:LocationType, scor
   }
 }
 
+
+
 /**
- * Add the location images to the given folder
- * @param url contains the folder of the images
- * @param location contains the location
+ * Adds locations to the given folder. 
+ * @param url folder for the images
+ * @param index dataset
+ * @param location location to store it's images
  */
-export async function addLocationImage(url: string, location:LocationType) {
-  let locationDataset = await getSolidDataset(url, {fetch: fetch})
-  location.images?.forEach(async image => { // for each image of the location, build a thing and store it in dataset
-      let newImage = buildThing(createThing({name: image}))
-      .addStringNoLocale(SCHEMA_INRUPT.image, image)
-      .build();
-      locationDataset = setThing(locationDataset, newImage);
-      try {
-        locationDataset = await saveSolidDatasetAt(url, locationDataset, {fetch: fetch});
-      } catch (error){
-        console.log(error);
-      }
-    }
-  );
+export async function addImages(url: string,index:string, location:LocationType){
+  let locationDataset = await getSolidDataset(index, {fetch: fetch})
+  let thing = await getThing(locationDataset, index+"/index.ttl") as Thing;
+  location.imagesAsFile?.forEach(async image => {
+  
+      const savedFile = await overwriteFile(  
+        url+"/"+image.name,                              
+        image,                                       
+        { contentType: image.type, fetch: fetch }    
+      );
+  })
+  
 }
 
 /**
@@ -486,6 +501,33 @@ export async function deleteLocation(webID:string, locationUrl: string) {
     return Promise.reject()
   }
 }
+
+/**
+ * Delete review from a location given the location url and the review to be deleted
+ * @param locationUrl contains the location url
+ * @param review contains the review
+ * @returns true if the review could be deleted, false if not
+ */
+export async function deleteReview(locationUrl:string, review:Review){
+  let datasetPath = locationUrl.split('#')[0] // get until index.ttl
+  let reviews : ReviewType[] = [];
+  try {
+    let dataSet = await getSolidDataset(datasetPath, {fetch:fetch}); // get location dataset
+    // get the review thing in the dataset of the location. as getThingAll returns Thing[], get the first item in the array
+    let reviews = getThingAll(dataSet).filter((thing) => getUrl(thing, VCARD.Type) === VCARD.hasNote 
+      && getStringNoLocale(thing, SCHEMA_INRUPT.name) as string === review.title && getStringNoLocale(thing, SCHEMA_INRUPT.startDate) as string === review.date
+      && getStringNoLocale(thing, SCHEMA_INRUPT.Person) as string === review.webId && getStringNoLocale(thing, SCHEMA_INRUPT.description) as string === review.content);
+    let reviewToDelete = reviews.at(0) as Thing;
+    dataSet = await removeThing(dataSet, reviewToDelete)
+    await saveSolidDatasetAt(datasetPath, dataSet, {fetch:fetch})
+  } catch (error) {
+    // if any error happened, return false (the review has not been deleted)
+    return false;
+  }
+  // return true if the review has been deleted
+  return true;
+}
+
 
 /**
  * Grant/ Revoke permissions of friends regarding a particular location
