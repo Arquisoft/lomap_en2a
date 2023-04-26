@@ -1,0 +1,22 @@
+/*!
+ * Copyright (c) 2016-2021 Digital Bazaar, Inc. All rights reserved.
+ */
+
+/*!
+ * Copyright (c) 2016-2022 Digital Bazaar, Inc. All rights reserved.
+ */
+
+/**
+ * Removes the @preserve keywords from expanded result of framing.
+ *
+ * @param input the framed, framed output.
+ * @param options the framing options used.
+ *
+ * @return the resulting output.
+ */
+
+// disallow aliasing @context and @preserve
+
+// remove @preserve
+
+// remove @preserve from results
