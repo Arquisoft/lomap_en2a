@@ -1,15 +1,14 @@
 import { Avatar, Text, Flex, VStack, Box, HStack,Icon, Checkbox, Button, CloseButton } from "@chakra-ui/react"
 import React, { useState } from "react"
-import { getNameFromPod, getSolidFriends} from "../../solid/solidManagement"
+import { getNameFromPod, getSolidFriends, getProfileImage} from "../../solid/solidManagement"
 import { useSession } from '@inrupt/solid-ui-react';
 import { Location } from "../../types/types";
 import { FaStar} from "react-icons/fa";
 import {MdLocationOn, MdPeopleAlt} from "react-icons/md"
-import {RiLogoutBoxLine} from 'react-icons/ri'
 import { LogoutAlertDialog } from '../dialogs/LogoutAlertDialog';
 
 type ProfileProps = {
-  setSelectedView: (viewName: JSX.Element) => void //function to change the selected view on the left
+  setSelectedView: (viewName: string) => void //function to change the selected view on the left
   locations : Array<Location>
 }
 
@@ -18,9 +17,14 @@ export function ProfileView(props:ProfileProps) {
   const [name, setName] = React.useState("");
   const [avgRatings, setavgRatings] = useState(0)
   const [numberFriends, setNumberFriends] = useState("Loading friends...")
+  const [image, setImage] = useState("")
 
   React.useEffect(() => {
     handleName()
+    //we load the image of the user
+    getProfileImage(session.session.info.webId as string).then((image) => {
+      setImage(image)
+    })
   }, []);
 
   React.useEffect(()=>{
@@ -77,10 +81,11 @@ export function ProfileView(props:ProfileProps) {
       borderRightWidth={'1px'}
       overflow='hidden'
       px={2}>
-      <CloseButton onClick={() => props.setSelectedView(<></>)} position='absolute' top='2%' right='2%'></CloseButton>
+      <CloseButton onClick={() => props.setSelectedView('Map')} position='absolute' top='2%' right='2%'></CloseButton>
       <Text alignSelf='center' fontSize='2.2em' borderBottomWidth='1px' margin={'2%'}>Profile Information</Text>
       <VStack>
-          <Avatar 
+          <Avatar
+          src={image} 
           marginTop={'2%'}
           bg='red.500'
           size='xl'/>
