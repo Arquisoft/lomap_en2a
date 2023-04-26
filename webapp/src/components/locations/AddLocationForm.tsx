@@ -114,7 +114,7 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
                     props.loadLocations();
                     toast({
                         title: 'Location correctly added to your pod',
-                        description: "Location "+location.name+" was added to your pod.",
+                        description: "Location '"+location.name+"' was added to your pod.",
                         status: 'success',
                         duration: 5000,
                         isClosable: true,
@@ -123,7 +123,7 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
                 ()=> {
                     toast({
                         title: 'Error.',
-                        description: "Location "+location.name+" couldn't be added to your pod.",
+                        description: "Location '"+location.name+"' couldn't be added to your pod.",
                         status: 'error',
                         duration: 5000,
                         isClosable: true,
@@ -214,7 +214,10 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
                     fontSize='2.2em' alignSelf='center' borderBottomWidth='1px'>Add a location</Text>
                     <Flex direction={'column'}>
                         <CloseButton 
-                            onClick={() => props.setSelectedView('Map')}
+                            onClick={() => {
+                                props.setSelectedView('Map');
+                                props.setClickedCoordinates('');
+                                setAddingLocationProcess(false); }}
                             position='absolute'
                             top='2%'
                             right='3%'

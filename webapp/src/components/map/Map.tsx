@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useEffect} from 'react'
 import { Box, Button, ChakraProvider, VStack, Icon, Text,
  HStack, Menu, MenuButton, MenuItemOption, MenuList, MenuOptionGroup} from "@chakra-ui/react";
 import {GoogleMap, Marker, useJsApiLoader} from '@react-google-maps/api';
@@ -29,13 +29,7 @@ const Map = ( props : MapProps) => {
         //we get the google maps api key from the enviroment variables
         googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY as string
       })
-
-  const init = { //TODO fix this to be the user location
-    lat: 43.37776784391247,
-    lng: -5.874621861782328
-  };
-
-  const [center, setCenter] = React.useState(init)
+  const [center, setCenter] = React.useState( {lat: 43.37776784391247, lng: -5.874621861782328})
   const [map, setMap] = React.useState(null)
   const [areCheckedFilters, setAreCheckedFilters] = React.useState<boolean>(false);
   const [filteredLocations, setFilteredLocations] = React.useState<Array<Location>>([]) //need constant for the filter to work
@@ -46,6 +40,16 @@ const Map = ( props : MapProps) => {
   //this state indicates if the user is in LOCATION CREATION MODE
   const [inLocationCreationMode, setInLocationCreationMode] = React.useState<boolean>(props.inLocationCreationMode);
 
+  //set as center the user location
+  useEffect(() => {
+    // get the user's current location
+    navigator.geolocation.getCurrentPosition(position => {
+      const { latitude, longitude } = position.coords;
+      setCenter({ lat: latitude, lng: longitude });
+    });
+    
+  }, []);
+
   //we update the state of the location creation mode when the prop changes
   React.useEffect(() => {
     setInLocationCreationMode(props.inLocationCreationMode);
@@ -55,16 +59,19 @@ const Map = ( props : MapProps) => {
 
   const handlePlaceClick = (location) => {
     const newCenter = {
-      lat: location.coordinates.lat as number,
-      lng: location.coordinates.lng as number
+      lat: location.coordinates.lat.valueOf(),
+      lng: location.coordinates.lng.valueOf()
     }
     
-    // setCenter(newCenter) //TODO fix
+    setCenter(newCenter)
     props.setSelectedLocation(location);
     props.changeViewTo('LocationInfo');
   }
 
   function handleMapClick(lat:any,lon:any):void {
+    //we update the center of the map
+    setCenter({lat: lat, lng: lon});
+
     // get coordinates where clicked
     let clickedCoords = lat + ", " + lon;
 

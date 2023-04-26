@@ -38,6 +38,9 @@ export function DeletingAlertDialog(props:any) {
                             isClosable: true,
                         })
                     );
+                    setDisabled(false)
+                    onClose()
+                    props.setSelectedView('Map')
                 },
                 ()=> {
                     toast({
@@ -47,6 +50,8 @@ export function DeletingAlertDialog(props:any) {
                         duration: 5000,
                         isClosable: true,
                     });
+                    setDisabled(false)
+                    onClose()
                 }
             ) 
     }

@@ -273,7 +273,7 @@ const ReviewSection =  ( {location ,setLocation,session}) =>{
       </Box>
       <Flex mx={'4%'} maxHeight={'sm'} direction={'column'}>
       {
-        localLocation.reviews.length > 0?  
+        localLocation.reviews?.length > 0?  
           (localLocation.reviews as Array<ReviewType>)
           .sort((a : ReviewType,b : ReviewType)=>new Date( b.date).getTime() - new Date(a.date).getTime())
           .map((rev,i)=>{return (
@@ -365,7 +365,7 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
               {location.name} 
             </Text>
             <Flex direction='row' marginLeft='auto' marginEnd='4%' gap='5%'>
-              <DeletingAlertDialog location={props.location} loadLocations={props.loadLocations}></DeletingAlertDialog>
+              <DeletingAlertDialog location={props.location} loadLocations={props.loadLocations}  setSelectedView={props.setSelectedView}></DeletingAlertDialog>
               <Menu closeOnSelect={false}>
                 <MenuButton as={Button} colorScheme='blue' 
                   width='fit-content'>

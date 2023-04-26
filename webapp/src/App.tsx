@@ -41,7 +41,8 @@ function App(): JSX.Element {
 
   //we get the locations for the user and fetch them to the list
   useEffect(()=>{
-    loadLocations();
+    if(session.session.info.isLoggedIn)
+      loadLocations();
   },[session.session.info.isLoggedIn]);
 
 
