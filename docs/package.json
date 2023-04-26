@@ -1,5 +1,6 @@
 {
   "name": "docs",
+  "homepage": "https://arquisoft.github.io/lomap_en2a/docs",
   "version": "1.0.0",
   "description": "Npm project just for the docs",
   "main": "index.js",
