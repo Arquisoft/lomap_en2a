@@ -1,18 +1,24 @@
 import React, { useState } from 'react'
 import { Flex, Button, Icon, Box, Text } from "@chakra-ui/react";
-import { MdList, MdLocationOn, MdMap, MdPeopleAlt, MdPerson, MdQuestionMark } from "react-icons/md"
+import { MdList, MdLocationOn, MdMap, MdPeopleAlt, MdPerson, MdQuestionMark, MdOutlineSportsEsports } from "react-icons/md"
 import { Location } from '../../types/types';
 import ListOfLocations from '../locations/ListOfLocations';
 import AddLocationForm from '../locations/AddLocationForm';
 import Friends from '../friends/Friends';
 import { ProfileView } from '../profile/ProfileInfo';
+import {GamePanel} from '../game/GamePanel'
+import App from '../../App';
 import {TutorialModalDialog} from "../dialogs/TutorialModalDialog";
 
 
 type MenuProps = {
-  changeViewTo: (view: JSX.Element) => void,
-  locations : Array<Location>,
+  changeViewTo: (view: string) => void,
+  ownLocations : Array<Location>,
+  friendLocations : Array<Location>,
   loadLocations : () => Promise<void>
+  loading: boolean
+  clickedCoordinates : string
+  setClickedCoordinates : (coordinates : string) => void
 }
 
 
@@ -64,7 +70,7 @@ function Menu(props: MenuProps): JSX.Element {
                   size='lg'
                   width={'fi-content'}
                   height={'5vh'}
-                  onClick={() => { setinsideMenu(false); props.changeViewTo(<></>); }}>
+                  onClick={() => { setinsideMenu(false); props.changeViewTo('Map'); }}>
                   Map View
                 </Button>
               </Box>
@@ -79,7 +85,7 @@ function Menu(props: MenuProps): JSX.Element {
                 onClick={() => {
                   setinsideMenu(false);
                   props.changeViewTo(
-                    <ListOfLocations setSelectedView={(view)=> props.changeViewTo(view)} places={props.locations} loadLocations={props.loadLocations} />
+                    'ListOfLocations'
                     );
                 }}>
                   List of Locations
@@ -97,7 +103,7 @@ function Menu(props: MenuProps): JSX.Element {
                   () => {
                     setinsideMenu(false);
                     props.changeViewTo(
-                      <AddLocationForm setSelectedView={(view)=> props.changeViewTo(view)} loadLocations={props.loadLocations} clickedCoords={''}/>
+                      'AddLocationForm'
                     );
                   }
                 }>
@@ -115,11 +121,28 @@ function Menu(props: MenuProps): JSX.Element {
                 onClick={() => {
                   setinsideMenu(false);
                   props.changeViewTo(
-                    <Friends setSelectedView={(view)=> props.changeViewTo(view)}/>
+                    'Friends'
                   );
                 }}
                 >
                   Add friends
+                </Button>
+              </Box>
+
+              <Box>
+                <Button
+                leftIcon={<Icon alignContent={'left'} as={MdOutlineSportsEsports} width={'2.5em'} height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
+                bg={'white'}
+                color={'black'}
+                size='lg'
+                onClick={() => {
+                  setinsideMenu(false);
+                  props.changeViewTo(
+                    `GameView`
+                  );
+                }}
+                >
+                  Progress
                 </Button>
               </Box>
 
@@ -128,7 +151,7 @@ function Menu(props: MenuProps): JSX.Element {
               </Box>
 
               <Box>
-                <Button 
+                <Button
                 data-testid={'Profile'}
                 leftIcon={<Icon as={MdPerson} width={'2.5em'} height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
                 bg={'white'}
@@ -137,7 +160,7 @@ function Menu(props: MenuProps): JSX.Element {
                 onClick={() => {
                   setinsideMenu(false);
                   props.changeViewTo(
-                    <ProfileView setSelectedView={(view)=> props.changeViewTo(view)} locations={props.locations}></ProfileView>
+                    'ProfileView'
                   );
                 }}
                 >
@@ -172,6 +195,9 @@ function Menu(props: MenuProps): JSX.Element {
               </Flex>
               <Flex direction='row' gap='2' alignItems={'center'}>
                 <Icon as={MdPeopleAlt} width='3em' height={'2.5vw'} cursor={'pointer'}/>
+              </Flex>
+              <Flex direction='row' gap='2' alignItems={'center'}>
+                <Icon as={MdOutlineSportsEsports} width='3em' height={'2.5vw'} cursor={'pointer'}/>
               </Flex>
               <Flex marginTop='auto' marginBottom={'2'} direction='row' gap='2' alignItems={'center'}>
                 <Icon as={MdQuestionMark} width='3em' height={'2.5vw'} cursor={'pointer'}/>
