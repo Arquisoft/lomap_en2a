@@ -95,7 +95,7 @@ const Map = ( props : MapProps) => {
 
   const colors = ['teal', 'purple', 'pink', 'blue', 'green', 'orange'];
   const categories = Object.values(Category); // array of strings containing the values of the categories
-
+  const [activeIndex, setActiveIndex] = useState(null);
 
   const handleFriends = async () => {
     if (session.session.info.webId !== undefined && session.session.info.webId !== ""){
@@ -125,7 +125,8 @@ const Map = ( props : MapProps) => {
   }, [checkedCategory]);
 
   // handle clicks on the category filter buttons
-  const handleCategoryClick = (e) => {
+  const handleCategoryClick = (e, index) => {
+      setActiveIndex(index);
       setAreCheckedFilters(true);
       setCheckedCategory(e.target.value);
   }
@@ -224,62 +225,45 @@ const Map = ( props : MapProps) => {
                       :
                       <Text>{friendChargingMsg}</Text>
                     }
-                  </MenuList>
-                </Menu>
-                <HStack>
-                {
-                  categories.map((filter, index) => { // create as many buttons as categories to filter
-                    return (
-                      <Button
-                        key={index}
-                        borderRadius={25}
-                        value={filter}
-                        minWidth={'15%'}
-                        onClick={(e:any) => handleCategoryClick(e)}
-                        bgColor={`${colors[index % colors.length]}.50`}
-                        >
-                        {filter}
-                      </Button>
-                    )
-                  })
-                }
-                  <Button minWidth={'19%'}
-                    onClick={(e) => {
-                      setCheckedCategory("")
-                      setCheckedFriends([]);
-                      setAreCheckedFilters(false);
-                    }}
-                    >Clear Filters
-                  </Button>
-                </HStack>
-            </HStack>
-            {
-              !areCheckedFilters? 
-              (
-                // if no filters are checked, use the global locations
-                props.locations.map((place, i) => (
-                <Marker
-                    key={i}
-                    position={{lat: Number(place.coordinates.lat), lng: Number(place.coordinates.lng)}}
-                    onClick={() => handlePlaceClick(place)}
-                    title={place.name}
-                ></Marker>))
-              )
-              :
-              (
-                filteredLocations.map((place, i) => (
-                <Marker
-                    position={{lat: Number(place.coordinates.lat), lng: Number(place.coordinates.lng)}}
-                    onClick={() => handlePlaceClick(place)}
-                    title={place.name}
-                ></Marker>))
-              )
-            }
-            {
-              //we place a marker on the map where the user is currently trying to add a location
-              //the coordinates are the ones received as a prop called 'clickedCoordinates' with string format
-              // "lat, lon" having as icon the MdAddLocationAlt icon
-              props.clickedCoordinates.length > 0?
+                  </MenuOptionGroup> 
+                    :
+                    <Text>{friendChargingMsg}</Text>
+                  }
+                </MenuList>
+              </Menu>
+              <HStack>
+              {
+                categories.map((filter, index) => { // create as many buttons as categories to filter
+                  return (
+                    <Button
+                      key={index}
+                      borderRadius={25}
+                      value={filter}
+                      minWidth={'15%'}
+                      onClick={(e:any) => handleCategoryClick(e, index)}
+                      bgColor={activeIndex === index ? `${colors[index % colors.length]}.200` : `${colors[index % colors.length]}.50`}
+                      >
+                      {filter}
+                    </Button>
+                  )
+                })
+              }
+                <Button minWidth={'19%'}
+                  onClick={(e) => {
+                    setCheckedCategory("")
+                    setCheckedFriends([]);
+                    setActiveIndex(null)
+                    setAreCheckedFilters(false);
+                  }}
+                  >Clear Filters
+                </Button>
+              </HStack>
+          </HStack>
+          {
+            !areCheckedFilters? 
+            (
+              // if no filters are checked, use the global locations
+              props.locations.map((place, i) => (
               <Marker
                 position={{lat: Number(props.clickedCoordinates.split(",")[0]), lng: Number(props.clickedCoordinates.split(",")[1])}}
                 icon={{
