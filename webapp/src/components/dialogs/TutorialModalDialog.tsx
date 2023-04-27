@@ -48,7 +48,7 @@ export function TutorialModalDialog(props:any) {
 
         <Modal size={"4xl"} isCentered isOpen={isOpen} onClose={onClose}>
           <ModalOverlay>
-              <ModalContent >
+              <ModalContent height={'80%'} overflowY={'auto'}>
                 {(currentPage === 1) && (
                     <>
                         <ModalHeader fontSize='3xl' fontWeight='bold'>
