@@ -57,14 +57,17 @@ This is the actual state of the domain model, which will change along the develo
 [plantuml,Domain model,png]
 ----
 class Map
-    Map : - locations : ListOfLocations<Location>
+    Map : - locations : List<Location>
+    Map : + sharedLocations : List<Location>
 
 class Location
     Location : - latitude : double
     Location : - longitude : double    
     Location : - name : String
     Location : - description : String
+    Location : - images : List<Images>
     Location : - reviews : ListOfLocations<String>
+    Location : - rating : double
 
     Location : + getLatitude() : String
     Location : + getLongitude() : String
@@ -72,26 +75,18 @@ class Location
     Location : + getDescription() : String
 
 class User
-    User : maps : ListOfLocations<Map>
     User : friends : ListOfLocations<User>
 
 
 Map <-- "*" Location
-User "1" *--> "*" Map 
+User *--> "1" Map
 User --> "*" User
 ----
 
 === _Architecture and design patterns_
 
-.Architecture pattern: MVC
-We will use the MVC (Model-View-Controller) Pattern, which is very commonly used for developing applications with Graphical User Interfaces (GUIs). Both desktop and web applications use ir. It is simple but powerful, allowing us to separate the application in three different but interconnected parts or layers:
-
-* Model: contains the core functionality and data. It contains the data that the View layer will represent
-* View: displays information to the user. It passes the input information to the Controller layer.
-* Controller: handles the inputs from the users. It communicates with the Model layer.
-
-.Design pattern: Adapter
-We will use this pattern when working with the geolocalization API. We chose to use Google Maps for this, but maybe in the future we want or have to change it. To prevent and minimize the impact such a change could have in our application, we will use an Adapter pattern. This way only a few changes will be necessary in our code.
+.Just front-end and SOLID
+We decided to not use a restapi (back-end). This means our application will operate only with a front-end together with SOLID.
 
 === _Rules for using specific technology_
 
@@ -113,3 +108,21 @@ These are rules to be considered when implementing our code:
 === _User Experience (UX)_
 
 We want to have adaptable so it can be used in different devices. We also want it to have accessible interfaces, so we have to be careful with the use of colors, alternative texts and more details.
+
+=== _Development concepts_
+.Testing
+We have tested the application with different tests:
+
+* Unit testing: with the help of the SonarCloud tool to keep track of the code covered by these tests. The Continuous Integration practice was applied with GitHub Actions.
+* Acceptance tests with Cucumber: tests that are meant to be ran in front of the client. They were developed using user stories, which are simple and easy to understand. We applied the Behaviour-Driven Development.
+* Usability tests: with the help of people we know (family and friends), we tested our application usability.
+    Thanks to these tests, we found that some people had problems, and we decided to add a tutorial that people can check.
+    This way, they'll learn what can they use LoMap for, and how to use it.
+* Load tests: to measure the performance of the application while many users use it. The tool Gatling was used.
+
+.Deployment
+The application will be deployed to a cloud server.
+
+.Configurability
+The application will not have configurable features. An early idea was to include a "dark mode".
+Through the development we decided to discard these ideas in order to focus on a better application in general.
