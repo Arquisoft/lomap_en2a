@@ -122,20 +122,22 @@ export function TutorialModalDialog(props:any) {
                           <Text marginTop={"1em"} >
                               <b>You can add a location easily!</b>
                           </Text>
-                          <Image src={images.addingLocationFromMapView} height={"25em"} width={"auto"} marginTop={'1em'} border={'black solid 0.1em'} ></Image>
+                          <Image src={images.addingLocationFromMapView} marginTop={'0.5em'} border={'black solid 0.1em'} ></Image>
 
-                          <Text marginTop={"1em"} >
+                          <Text marginTop={"2em"} >
                               <b>Filter your locations to find what you want faster!</b>
                           </Text>
                           <Text>
                               While creating a location you can assign categories to it. These are very useful to keep your collection well organized.
-                              But that's not all. You can also use LoMap's filter system.
+                              But that's not all: you can also use LoMap's filter system.
                           </Text>
-                          <Image src={images.introDialogImg} marginTop={'1em'} border={'black solid'}></Image>
+                          <Image src={images.usingFilters} marginTop={'0.5em'} border={'black solid 0.1em'}></Image>
                       </ModalBody>
 
                       <ModalFooter>
                           <Flex justifyContent={"start"} margin={"auto"}>
+                              <Button onClick={prevPage}> Previous </Button>
+
                               <span
                                   className={""}
                                   onClick={() => setCurrentPage(1)}
@@ -149,11 +151,9 @@ export function TutorialModalDialog(props:any) {
                                   onClick={() => setCurrentPage(3)}
                               ></span>
 
-                              <Button onClick={prevPage}> Previous </Button>
+
                               <Button onClick={nextPage}> Next </Button>
                           </Flex>
-
-                          <Button colorScheme="blue" onClick={onClose}>Close</Button>
                       </ModalFooter>
                   </>
               )}
