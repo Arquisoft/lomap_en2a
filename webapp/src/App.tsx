@@ -9,7 +9,7 @@ import './App.css';
 import { Location } from './types/types';
 import Login from './components/login/Login';
 import Map from './components/map/Map';
-import {createLocation, getLocations,getSolidFriends} from './solid/solidManagement'
+import {createLocation, deleteLocation, getLocations,getSolidFriends,getFriendsID} from './solid/solidManagement'
 import Menu from './components/menu/Menu';
 import AddLocationForm from './components/locations/AddLocationForm';
 import ListOfLocations from './components/locations/ListOfLocations';
@@ -45,6 +45,14 @@ function App(): JSX.Element {
       loadLocations();
   },[session.session.info.isLoggedIn]);
 
+  async function loadUserLocations(){
+    let locList = ownLocations;
+    if(session.session.info.webId){
+      let list = await getLocations(session.session.info.webId)
+      locList = locList.concat(list)
+    }
+    setOwnLocations(locList);
+  }
 
   async function loadLocations(){
     if(session.session.info.webId){
@@ -52,12 +60,19 @@ function App(): JSX.Element {
       setLoading(false);
 
       //Friends Locations
-      let friends = await getSolidFriends(session.session.info.webId);
+      let friends = await getFriendsID(session.session.info.webId);
+
+      
+      const requests = friends.map(friend => getLocations(friend as string));
+      const results = await Promise.all(requests);
 
       let locationList: Array<Location> = [];
-      for (let friend of friends){
-        let friendLocations = await getLocations(friend.webID);
-        locationList = locationList.concat(friendLocations);
+
+      for(let locArray of results){
+        
+        locArray.forEach(location =>location.isFriend = true);
+
+        locationList = locationList.concat(locArray);
       }
       setFriendLocations(locationList);
     }
@@ -104,6 +119,7 @@ function App(): JSX.Element {
                  inLocationCreationMode={inLocationCreationMode}
                  setSelectedLocation={setSelectedLocation}
                  selectedLocation={selectedLocation}
+                loadUserLocations={loadUserLocations}
               />
             {
               //we define as the button (circle sized) that will be placed at the botton right corner of the map
@@ -138,6 +154,7 @@ function App(): JSX.Element {
                           setNameSelectedView(viewName);
                         }}
                         loadLocations={loadLocations}
+                        loadUserLocations={loadUserLocations}
                         clickedCoordinates={clickedCoordinates}
                         setClickedCoordinates={setClickedCoordinates}
                         setInLocationCreationMode={setInLocationCreationMode}
@@ -203,6 +220,7 @@ function App(): JSX.Element {
                   loading={loading}
                   clickedCoordinates = {clickedCoordinates}
                   setClickedCoordinates = {setClickedCoordinates}
+                  loadUserLocations={loadUserLocations}
                   />
             {
               !isLoggedIn ? (

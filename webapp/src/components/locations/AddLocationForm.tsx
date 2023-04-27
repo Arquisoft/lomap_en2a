@@ -29,6 +29,7 @@ type AddLocationProps = {
     locations: Location[];
     setSelectedView: (viewName: string) => void //function to change the selected view on the left
     loadLocations: () => Promise<void>
+    loadUserLocations: ()=> Promise<void>
     clickedCoordinates: string;
     setClickedCoordinates: (coords: string) => void;
     setInLocationCreationMode: (activated : boolean) => void;
@@ -110,8 +111,7 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
             //we perform a call to the function that adds the location to the pod
             createLocation(session.session.info.webId ,location).then(
                 ()=> {
-                    //we update the list of locations 
-                    props.loadLocations();
+                    props.loadUserLocations();//WORKING
                     toast({
                         title: 'Location correctly added to your pod',
                         description: "Location '"+location.name+"' was added to your pod.",

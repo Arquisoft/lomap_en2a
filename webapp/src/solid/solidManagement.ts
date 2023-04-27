@@ -12,6 +12,7 @@ import {
   getResourceAcl,
   setAgentResourceAccess,
   saveAclFor,
+  setAgentDefaultAccess
 } from "@inrupt/solid-client";
 
 // Friends second iteration
@@ -110,6 +111,16 @@ export async function getNameFromPod(webID: string){
   return name !== null ? name : "John Doe"; // if name is not defined, return default name
 }
 
+export async function getLocation(locationPath): Promise<LocationType |null>{
+  try{
+    let path = getStringNoLocale(locationPath, SCHEMA_INRUPT.identifier) as string;
+    let location = await getLocationFromDataset(path)
+    return location;
+  }catch(error){
+    return null;
+  }
+}
+
 /**
  * Get all the locations from the pod
  * @param webID contains the user webID
@@ -120,30 +131,25 @@ export async function getLocations(webID:string) {
   let inventoryFolder = `${baseURL}private/lomap/inventory/index.ttl`; // locations contained in index.ttl 
   let locations: LocationType[] = []; // initialize array of locations
   let locationPaths; 
-  try {
+  try{
     let dataSet = await getSolidDataset(inventoryFolder, {fetch: fetch}); // get the inventory dataset
     locationPaths = getThingAll(dataSet) // get the things from the dataset (location paths)
-    for (let locationPath of locationPaths) { // for each location in the dataset
-      // get the path of the actual location
-      let path = getStringNoLocale(locationPath, SCHEMA_INRUPT.identifier) as string;
-      // get the location : Location from the dataset of that location
-      try{
-        let location = await getLocationFromDataset(path)
-        locations.push(location)
-        // add the location to the array
-      }
-      catch(error){
-        //The url is not accessed(no permision)
-      }
-     
-    }
-  } catch (error) {
-    // if the location dataset does no exist, return empty array of locations
-    locations = [];
+    const requests = locationPaths.map(locationPath => getLocation(locationPath));
+    
+    const results = await Promise.allSettled(requests);
+    const successfulResults = results
+    .filter(result => result.status === 'fulfilled')
+    .map(result => result.status === 'fulfilled' ? result.value : null)
+    .filter(value => value !== null) as LocationType[];
+    return successfulResults;
+  }catch(error){
+    let successfulResults = [];
+    return successfulResults;
   }
-  // return the locations
-  return locations;
+  
 }
+
+
 
 /**
  * Retrieve the location from its dataset
@@ -160,7 +166,8 @@ export async function getLocationFromDataset(locationPath:string){
   let longitude = getStringNoLocale(locationAsThing, SCHEMA_INRUPT.longitude) as string; 
   let latitude = getStringNoLocale(locationAsThing, SCHEMA_INRUPT.latitude) as string; 
   let description = getStringNoLocale(locationAsThing, SCHEMA_INRUPT.description) as string; 
-  let url = getStringNoLocale(locationAsThing, SCHEMA_INRUPT.identifier) as string;
+  //let url = getStringNoLocale(locationAsThing, SCHEMA_INRUPT.identifier) as string;
+  let url =datasetPath.slice(0,-10)//WORKI
   let categoriesSerialized = getStringNoLocale(locationAsThing, SCHEMA_INRUPT.Product) as string;
   let categoriesDeserialized;
 
@@ -398,7 +405,7 @@ export async function createLocationDataSet(folder:string,locationFolder:string,
   dataSet = setThing(dataSet, newLocation); // store thing in dataset
   // save dataset to later add the images
   dataSet = await saveSolidDatasetAt(locationFolder, dataSet, {fetch: fetch}) // save dataset 
-  await addImages(locationImages, folder,location); // store the images
+  await addImages(locationImages,location); // store the images
 }
 
 /**
@@ -461,12 +468,9 @@ export async function addLocationScore(webId:string, location:LocationType, scor
 /**
  * Adds locations to the given folder. 
  * @param url folder for the images
- * @param index dataset
  * @param location location to store it's images
  */
-export async function addImages(url: string,index:string, location:LocationType){
-  let locationDataset = await getSolidDataset(index, {fetch: fetch})
-  let thing = await getThing(locationDataset, index+"/index.ttl") as Thing;
+export async function addImages(url: string, location:LocationType){
   location.imagesAsFile?.forEach(async image => {
   
       const savedFile = await overwriteFile(  
@@ -570,15 +574,15 @@ export async function setAccessToFriend(friend:string, locationURL:string, giveA
   let updatedAcl;
   if (giveAccess) {
     // grant permissions
-    updatedAcl = setAgentResourceAccess(
+    updatedAcl = setAgentDefaultAccess(
       resourceAcl,
       friend,
-      { read: true, append: true, write: false, control: false }
+      { read: true, append: true, write: false, control: true }
     );
   }
   else{
     // revoke permissions
-    updatedAcl = setAgentResourceAccess(
+    updatedAcl = setAgentDefaultAccess(
       resourceAcl,
       friend,
       { read: false, append: false, write: false, control: false }
@@ -658,38 +662,47 @@ export async function addSolidFriend(webID: string,friendURL: string): Promise<{
   return{error:false,errorMessage:""}
 
 }
+export async function getFriendsID(webID:string){
+  let test = getUrl(await getUserProfile(webID), FOAF.knows);
+  let friendURLs = getUrlAll(await getUserProfile(webID), FOAF.knows);
+  return friendURLs;
+}
 
 export async function getSolidFriends(webID:string) {
   let test = getUrl(await getUserProfile(webID), FOAF.knows);
   let friendURLs = getUrlAll(await getUserProfile(webID), FOAF.knows);
   let friends: Friend[] = [];
 
-  // for each friend url, get the fields of the object
-  for (let friend of friendURLs) {
-    
-    try{
-      
-      let name = getStringNoLocale(await getUserProfile(friend),FOAF.name);
-      let imageUrl: string | null = null;
-    
-      let pic = getUrl(await getUserProfile(friend),VCARD.hasPhoto);
+  let req = friendURLs.map(friend => getFriendDetails(friend))
+  const results = await Promise.allSettled(req);
+  const successfulResults = results
+  .filter(result => result.status === 'fulfilled')
+  .map(result => result.status === 'fulfilled' ? result.value : null)//WORKING
+  .filter(value => value !== null) as Friend[];
+  return successfulResults;
+}
+export async function getFriendDetails(friend: string): Promise<Friend | null>{
+  try{
+        
+    let name = getStringNoLocale(await getUserProfile(friend),FOAF.name);
+    let imageUrl: string | null = null;
+  
+    let pic = getUrl(await getUserProfile(friend),VCARD.hasPhoto);
 
-      
+    let f = null;
 
-      if (friend)
-      friends.push({
+    if (friend){
+      let f : Friend = {
         username: name as string,
         webID : friend,
         pfp: pic as string
-      });
-
-    } catch(err){
-
+      };
+      return f;
     }
+    return f;
+  } catch(err){
+    return null;
   }
-  
-  return friends;
-
 }
 
 export  function getSolidName(webID:string)  {

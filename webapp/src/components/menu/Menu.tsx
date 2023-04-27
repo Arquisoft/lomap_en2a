@@ -14,7 +14,8 @@ type MenuProps = {
   changeViewTo: (view: string) => void,
   ownLocations : Array<Location>,
   friendLocations : Array<Location>,
-  loadLocations : () => Promise<void>
+  loadLocations : () => Promise<void>,
+  loadUserLocations: () => Promise<void>
   loading: boolean
   clickedCoordinates : string
   setClickedCoordinates : (coordinates : string) => void

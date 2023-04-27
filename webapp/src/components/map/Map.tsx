@@ -5,7 +5,7 @@ import {GoogleMap, Marker, useJsApiLoader} from '@react-google-maps/api';
 
 import { Category, isLocationOfCategory } from '../Category';
 import { useSession } from '@inrupt/solid-ui-react';
-import { getSolidFriends } from "../../solid/solidManagement";
+import { getSolidFriends, getFriendsID } from "../../solid/solidManagement";
 import type { Friend, Location } from "../../types/types"
 import {TbMap2} from "react-icons/tb";
 
@@ -21,7 +21,11 @@ type MapProps = {
     inLocationCreationMode : boolean //indicates if the user is in LOCATION CREATION MODE
     setSelectedLocation : (location: Location) => void //changes the location that has the focus
     selectedLocation : Location|null //location that has the focus
+    loadUserLocations: ()=> Promise<void>
 }
+
+const blueIcon = 'http://maps.google.com/mapfiles/ms/icons/blue.png';
+const redIcon = 'http://maps.google.com/mapfiles/ms/icons/red.png';
 
 const Map = ( props : MapProps) => {
   const session = useSession();
@@ -272,6 +276,11 @@ const Map = ( props : MapProps) => {
                     position={{lat: Number(place.coordinates.lat), lng: Number(place.coordinates.lng)}}
                     onClick={() => handlePlaceClick(place)}
                     title={place.name}
+                    icon={
+                      place.isFriend
+                        ? blueIcon
+                        : redIcon
+                    }
                 ></Marker>))
               )
             }
