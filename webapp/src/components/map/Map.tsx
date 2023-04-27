@@ -1,4 +1,4 @@
-import React,{useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 import { Box, Button, ChakraProvider, VStack, Icon, Text,
  HStack, Menu, MenuButton, MenuItemOption, MenuList, MenuOptionGroup} from "@chakra-ui/react";
 import {GoogleMap, Marker, useJsApiLoader} from '@react-google-maps/api';
@@ -220,6 +220,7 @@ const Map = ( props : MapProps) => {
                           )
                         })
                       }
+<<<<<<< Updated upstream
                     </MenuOptionGroup> 
                       :
                       <Text>{friendChargingMsg}</Text>
@@ -293,6 +294,65 @@ const Map = ( props : MapProps) => {
               ></Marker>
               :
               <></>
+=======
+                      </MenuOptionGroup>
+                    :
+                    <Text>{friendChargingMsg}</Text>
+                  }
+                </MenuList>
+              </Menu>
+              <HStack>
+              {
+                categories.map((filter, index) => { // create as many buttons as categories to filter
+                  return (
+                    <Button
+                      key={index}
+                      borderRadius={25}
+                      value={filter}
+                      minWidth={'15%'}
+                      onClick={(e:any) => handleCategoryClick(e, index)}
+                      bgColor={activeIndex === index ? `${colors[index % colors.length]}.400` : `${colors[index % colors.length]}.50`}
+                      >
+                      {filter}
+                    </Button>
+                  )
+                })
+              }
+                <Button minWidth={'19%'}
+                  onClick={(e) => {
+                    setCheckedCategory("")
+                    setCheckedFriends([]);
+                    setActiveIndex(null)
+                    setAreCheckedFilters(false);
+                  }}
+                  >Clear Filters
+                </Button>
+              </HStack>
+          </HStack>
+          {
+            !areCheckedFilters? 
+            (
+              // if no filters are checked, use the global locations
+              props.locations.map((place, i) => (
+                  <Marker
+                      position={{
+                          lat: Number(props.clickedCoordinates.split(",")[0]),
+                          lng: Number(props.clickedCoordinates.split(",")[1])
+                      }}
+                      icon={{
+                          url: 'http://maps.google.com/mapfiles/kml/pushpin/red-pushpin.png',
+                          scaledSize: new window.google.maps.Size(40, 40),
+                          origin: new window.google.maps.Point(0, 0),
+                          anchor: new window.google.maps.Point(15, 35)
+                      }}
+                      title={'Adding Location Here'}
+                      animation={window.google.maps.Animation.DROP}
+                  ></Marker>
+              ))
+            )
+            :
+            <></>
+>>>>>>> Stashed changes
                 
             }
           </GoogleMap>
