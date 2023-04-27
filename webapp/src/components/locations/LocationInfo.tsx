@@ -300,8 +300,21 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
   const webId = session.session.info.webId;
   const [location, setlocation] = useState(props.location)
   const [friends, setFriends] = React.useState<Friend[]>([]);
-  let checkedFriends : string[] = [];
+  const colors = ['teal', 'purple', 'pink', 'blue', 'green', 'orange'];
+
+  // make this information persistent even when the user closes this panel
+  const [checkedFriends, setCheckedFriends] = React.useState<string[]>(
+    () => JSON.parse(localStorage.getItem("checkedFriends") || "[]")
+  );
+  
+  React.useEffect(() => {
+    localStorage.setItem("checkedFriends", JSON.stringify(checkedFriends));
+  }, [checkedFriends]);
+  
+
   const [friendsChargingMsg, setFriendChargingMsg] = useState("Loading...")
+  const toastShared = useToast();
+
 
   React.useEffect(() => {
     handleFriends()
@@ -321,17 +334,29 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
 
   const handleCheckedFriend = (e) => {
     // if the index is > -1, means the location was already shared with this friend
-    const index = checkedFriends.indexOf(e.target.innerText); //use innerText to get the friend webID
+    const friendWebID = e.target.innerText;
+    const index = checkedFriends.indexOf(friendWebID);
+    const friendUsername = friends.find(friend => friend.webID == friendWebID) as Friend;
     if (index > -1) {
-        checkedFriends.splice(index, 1); // 2nd parameter means remove one item only
-        // revoke the access to this location
-        setAccessToFriend(e.target.innerText, location.url as string, false)
-    }
-    // if the index was not in the checkedFriends means that the user wants to share the location with this friend
-    else{
-        checkedFriends.push(e.target.innerText) // add friend
-        // grant access to this location
-        setAccessToFriend(e.target.innerText, location.url as string, true)
+      const newCheckedFriends = checkedFriends.filter((friend) => friend !== friendWebID);
+      setCheckedFriends(newCheckedFriends);
+      setAccessToFriend(friendWebID, location.url as string, false);
+      toastShared({
+        title: `Location is no longer shared with ${friendUsername.username}`,
+        status: "info",
+        duration: 5000,
+        isClosable: true,
+      });
+    } else {
+      const newCheckedFriends = [...checkedFriends, friendWebID];
+      setCheckedFriends(newCheckedFriends);
+      setAccessToFriend(friendWebID, location.url as string, true);
+      toastShared({
+        title: `Location shared with ${friendUsername.username}`,
+        status: "success",
+        duration: 5000,
+        isClosable: true,
+      });
     }
   }
 
@@ -375,7 +400,7 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
                 <MenuList minWidth='100%'>
                   {
                     friends.length > 0 ? 
-                    <MenuOptionGroup type='checkbox'>
+                    <MenuOptionGroup type='checkbox' value={checkedFriends}> 
                       {
                         friends.map((friend,i) => {
                           return (
