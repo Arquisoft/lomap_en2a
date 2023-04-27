@@ -414,7 +414,9 @@ export async function createLocationDataSet(folder:string,locationFolder:string,
  * @param review contains the review to be added to the location
  */
 export async function addLocationReview(location:LocationType, review:ReviewType){
-  let url = location.url?.split("#")[0] as string; // get the path of the location dataset
+ // https://adrivesan.inrupt.net/private/lomap/locations/LOC_0cc0f1af-c923-4b40-b4a7-5233ccb5c2a0/index.ttl#LOC_0cc0f1af-c923-4b40-b4a7-5233ccb5c2a0
+//  let url = location.url?.split("#")[0] as string; // get the path of the location dataset
+  let url = location.url + "/index.ttl" as string
   // get dataset
   let locationDataset = await getSolidDataset(url, {fetch: fetch})
   // create review
@@ -443,7 +445,7 @@ export async function addLocationReview(location:LocationType, review:ReviewType
  * @param score contains the score of the rating
  */
 export async function addLocationScore(webId:string, location:LocationType, score:number){
-  let url = location.url?.split("#")[0] as string; // get location dataset path
+  let url = location.url + "/index.ttl" as string; // get location dataset path
   // get dataset
   let locationDataset = await getSolidDataset(url, {fetch: fetch})
   // create score

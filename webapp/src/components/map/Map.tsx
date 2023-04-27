@@ -267,6 +267,11 @@ const Map = ( props : MapProps) => {
                     position={{lat: Number(place.coordinates.lat), lng: Number(place.coordinates.lng)}}
                     onClick={() => handlePlaceClick(place)}
                     title={place.name}
+                    icon={
+                      place.isFriend
+                        ? blueIcon
+                        : redIcon
+                    }
                 ></Marker>))
               )
               :

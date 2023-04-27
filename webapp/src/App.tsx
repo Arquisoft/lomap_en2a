@@ -18,7 +18,7 @@ import LocationInfo from './components/locations/LocationInfo';
 import {GamePanel} from './components/game/GamePanel'
 import { ProfileView } from './components/profile/ProfileInfo';
 import { useSession } from '@inrupt/solid-ui-react';
-
+import EditLocationFormComp from './components/locations/EditLocation';
 
 function App(): JSX.Element {
   const session = useSession(); 
@@ -161,6 +161,22 @@ function App(): JSX.Element {
                         setSelectedLocation={setSelectedLocation}
                       />
                     );
+                    case "EditLocation":
+                      return (
+                        <EditLocationFormComp
+                          locations={ownLocations}
+                          setSelectedView={(viewName: string) => {
+                            setNameSelectedView(viewName);
+                          }}
+                          loadLocations={loadLocations}
+                          loadUserLocations={loadUserLocations}
+                          clickedCoordinates={clickedCoordinates}
+                          setClickedCoordinates={setClickedCoordinates}
+                          setInLocationCreationMode={setInLocationCreationMode}
+                          setSelectedLocation={setSelectedLocation}
+                          location={selectedLocation}
+                        />
+                      );
                   case "ListOfLocations":
                     return (
                       <ListOfLocations

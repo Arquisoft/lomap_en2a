@@ -1,6 +1,6 @@
 import React,{ useState,useEffect } from 'react';
 import { Text, Stack, HStack, Image, Box, Flex, Button, Icon, Divider, useDisclosure, Textarea, Input, Grid, Progress, Tab, TabList, TabPanel, TabPanels, Tabs, CloseButton} from "@chakra-ui/react"
-import {MdOutlineRateReview, MdShare} from 'react-icons/md'
+import {MdOutlineRateReview, MdShare,MdCreate} from 'react-icons/md'
 
 import {Popover,PopoverTrigger,PopoverContent,PopoverCloseButton, Menu, MenuButton, MenuItemOption, MenuList, MenuOptionGroup} from '@chakra-ui/react'
 import {FormControl,FormLabel,FormErrorMessage,FormHelperText,} from '@chakra-ui/react'
@@ -19,6 +19,7 @@ type LocationInfoProps = {
   location : Location
   loadLocations: () => Promise<void>
   setSelectedView: (viewName: string) => void //function to change the selected view on the left
+  
 };
 
 
@@ -367,6 +368,16 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
             </Text>
             <Flex direction='row' marginLeft='auto' marginEnd='4%' gap='5%'>
               <DeletingAlertDialog location={props.location} loadLocations={props.loadLocations}  setSelectedView={props.setSelectedView}></DeletingAlertDialog>
+              {!location.isFriend?
+                <Button onClick={() => 
+                {
+                  //we update the selected location to be the one on this card
+                  props.setSelectedView('EditLocation')}}>
+                  <Icon as={MdCreate}/>
+                  
+                </Button>
+              :<></>}
+              
               <Menu closeOnSelect={false}>
                 <MenuButton as={Button} colorScheme='blue' 
                   width='fit-content'>
