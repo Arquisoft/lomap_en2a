@@ -1,13 +1,25 @@
 import {Flex, Text, Box, Avatar} from '@chakra-ui/react'
+import React, { useState } from 'react'
+import { getProfileImage } from '../../solid/solidManagement'
 
 type ReviewProps = {
     username: string,
     title:string,
     content:string,
     date: string
+    webId: string
 }
 
 function Review (props : ReviewProps ) : JSX.Element{
+    const[usrImage, setUsrImage] = useState<string>('')
+
+    //once redered we try to get the profile image of the user
+    React.useEffect(() => {
+        getProfileImage(props.webId).then((image) => {
+            setUsrImage(image)
+        })
+    }, []);
+
   return (
     <Flex
         bg= {'white'}
@@ -31,6 +43,7 @@ function Review (props : ReviewProps ) : JSX.Element{
             alignItems='start'
             gap={'0.2em'}> 
                 <Avatar 
+                    src={usrImage}
                     bg={'blue.500'}
                     size='xs'/>
                 <Text as={'b'} fontSize='0.8em'>
