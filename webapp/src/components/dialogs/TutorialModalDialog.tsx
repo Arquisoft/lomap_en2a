@@ -9,11 +9,12 @@ import {
     ModalHeader,
     ModalBody,
     ModalFooter,
-    ModalCloseButton, Text, Image, Divider, SlideFade, Flex, UnorderedList, ListItem, Link,
+    ModalCloseButton, Text, Image, Divider, SlideFade, Flex, UnorderedList, ListItem, Link, Fade,
 } from '@chakra-ui/react'
 import { useSession } from '@inrupt/solid-ui-react';
 import images from "../../static/images/images";
 import {MdQuestionMark} from "react-icons/md";
+import './TutorialModalDialog.css';
 
 export function TutorialModalDialog(props:any) {
     const { isOpen, onOpen, onClose } = useDisclosure()
@@ -46,22 +47,24 @@ export function TutorialModalDialog(props:any) {
             Tutorial
         </Button>
 
-        <Modal size={"4xl"} isCentered isOpen={isOpen} onClose={onClose}>
+        <Modal size={"5xl"} isCentered isOpen={isOpen} onClose={onClose}>
           <ModalOverlay>
-              <ModalContent height={'80%'} overflowY={'auto'}>
+              <ModalContent height={'90%'} overflowY={'auto'} padding={'1em'}>
                 {(currentPage === 1) && (
                     <>
                         <ModalHeader fontSize='3xl' fontWeight='bold'>
                             <Image src={images.logo} height={"1em"} width={"auto"}></Image>
                             <Text >Tutorial - Introduction</Text>
+                            <Divider></Divider>
                         </ModalHeader>
                         <ModalCloseButton/>
+
 
                         <ModalBody>
                             <Text>Welcome to LoMap!</Text>
 
                             <Text>In this tutorial we will teach you the basics of LoMap.</Text>
-                            <Text>Click one of the following links to see that tutorial:</Text>
+                            <Text>Click one of the following links to navigate to that page:</Text>
                             <UnorderedList>
                                 <ListItem>
                                     <Link color={"blue.500"} onClick={()=>moveToPage(2)}>Map View</Link>
@@ -106,20 +109,28 @@ export function TutorialModalDialog(props:any) {
                       <ModalHeader fontSize='3xl' fontWeight='bold'>
                           <Image src={images.logo} height={"1em"} width={"auto"}></Image>
                           <Text>Tutorial - Map View </Text>
+                          <Divider></Divider>
                       </ModalHeader>
                       <ModalCloseButton/>
+
                       <ModalBody>
 
                           <Text>
-                            In the Map View you will be able to see the map with all the locations you and 
+                            In the <b>Map View</b> you will be able to see the map with all the locations you and
                             your friends created.
-                            You can click the button at the bottom right to enter the Adding Location mode. 
-                            The next left-click you do in the map will open the 
-                            <Link color={"blue.500"} onClick={()=>moveToPage(4)}>Add Location</Link>
-                            menu with that location.
                           </Text>
+                          <Text marginTop={"1em"} >
+                              <b>You can add a location easily!</b>
+                          </Text>
+                          <Image src={images.addingLocationFromMapView} height={"25em"} width={"auto"} marginTop={'1em'} border={'black solid 0.1em'} ></Image>
 
-                          <Image src={images.introDialogImg} marginTop={'1em'} border={'black solid'}></Image>
+                          <Text marginTop={"1em"} >
+                              <b>Filter your locations to find what you want faster!</b>
+                          </Text>
+                          <Text>
+                              While creating a location you can assign categories to it. These are very useful to keep your collection well organized.
+                              But that's not all. You can also use LoMap's filter system.
+                          </Text>
                           <Image src={images.introDialogImg} marginTop={'1em'} border={'black solid'}></Image>
                       </ModalBody>
 
@@ -151,9 +162,9 @@ export function TutorialModalDialog(props:any) {
                       <ModalHeader fontSize='3xl' fontWeight='bold'>
                           <Image src={images.logo} height={"1em"} width={"auto"}></Image>
                           <Text>Tutorial - List of Locations </Text>
+                          <Divider></Divider>
                       </ModalHeader>
                       <ModalCloseButton/>
-                      <Divider></Divider>
 
                       <ModalBody>
                           <Text>In the List of Locations you can find all your saved locations.</Text>
@@ -189,9 +200,10 @@ export function TutorialModalDialog(props:any) {
                       <ModalHeader fontSize='3xl' fontWeight='bold'>
                           <Image src={images.logo} height={"1em"} width={"auto"}></Image>
                           <Text>Tutorial - Add Location </Text>
+                          <Divider></Divider>
                       </ModalHeader>
                       <ModalCloseButton/>
-                      <Divider></Divider>
+
                       <ModalBody>
                           <Text>
                             This is where you can save a location. You can write the coordinates directly or

@@ -47,7 +47,7 @@ export function IntroductionModalDialog(props:any) {
                             You can find a tutorial inside the menu. You just have to click the sidebar at the left to open it.
                             At the bottom, you will find the tutorial.
                         </Text>
-                        <Image src={images.introDialogImg} marginTop={'1em'} border={'black solid'}></Image>
+                        <Image src={images.introDialogImg} marginTop={'1em'} border={'black solid 0.1em'}></Image>
                     </ModalBody>
 
                     <ModalFooter>
