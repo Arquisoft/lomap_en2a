@@ -35,7 +35,8 @@ export function GamePanel(props:GamePanelProps) {
     countMuseums();
     checkPlace4Categories();
     checkIf20Locations();
-    calculateTrophies()
+    calculateTrophies();
+    calculateProcessPercentage();
   },[props.locations])
 
   React.useEffect(() => {
@@ -106,6 +107,8 @@ export function GamePanel(props:GamePanelProps) {
     
     if (totalSum/totalSize == 5)
       setChallengeRating(true);
+    if (totalSum == 0 && totalSize == 0)
+      return 0;
     return totalSum / totalSize;
   };
 
@@ -141,7 +144,7 @@ export function GamePanel(props:GamePanelProps) {
   }
 
   const calculateRank = () => {
-    if (trophies < 300 && trophies > 0)
+    if (trophies < 300 && trophies >= 0)
       setRank(ranks[0]);
     if (trophies < 600 && trophies > 300)
       setRank(ranks[1]);
@@ -155,8 +158,17 @@ export function GamePanel(props:GamePanelProps) {
     const rankThresholds = [0, 300, 600, 900]; // limit of trophies for each rank
     const rankIndex = ranks.indexOf(rank);
     const currentRankTrophies = trophies - rankThresholds[rankIndex]; // current trophies in current rank
-    const nextRankTrophies = rankThresholds[rankIndex + 1] - rankThresholds[rankIndex]; // number of trophies left to reach next rank
-    const progressPercentage = (currentRankTrophies / nextRankTrophies) * 100; // current rank progress percentage
+    let nextRankTrophies;
+    let progressPercentage;
+    if (rankIndex+1 >= ranks.length){
+      nextRankTrophies = rankIndex; 
+      progressPercentage = 100;
+    }
+     
+    else{
+      nextRankTrophies = rankThresholds[rankIndex + 1] - rankThresholds[rankIndex]; // number of trophies left to reach next rank
+      progressPercentage = (currentRankTrophies / nextRankTrophies) * 100; // current rank progress percentage
+    }
     const roundedPercentage = Math.round(progressPercentage);
     setProgressPercentage(roundedPercentage);
   }
