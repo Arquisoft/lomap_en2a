@@ -1,6 +1,6 @@
 import type { Friend, Location as LocationType, Review, Review as ReviewType } from "../types/types";
 import { fetch } from "@inrupt/solid-client-authn-browser";
-import { overwriteFile, getSourceUrl,getFile,isRawData, getContentType } from "@inrupt/solid-client";
+import { overwriteFile,getFile,isRawData } from "@inrupt/solid-client";
 
 import {
   getSolidDatasetWithAcl,
@@ -12,6 +12,7 @@ import {
   getResourceAcl,
   setAgentResourceAccess,
   saveAclFor,
+  setAgentDefaultAccess
 } from "@inrupt/solid-client";
 
 // Friends second iteration
@@ -89,6 +90,17 @@ export async function getUserProfile(webID: string) : Promise<Thing>{
 }
 
 /**
+ * This function returns the profile image of the user from the pod
+ * @param webID of the user
+ * @returns image url as string
+ */
+export async function getProfileImage(webID: string) : Promise<string>{
+  let profileThing = await getUserProfile(webID);
+  let image = getUrl(profileThing, VCARD.hasPhoto) as string;
+  return image;
+}
+
+/**
  * Get name of the user from the pod
  * @param webID contains the user webID
  * @returns name as string or 'John Doe' if unidentified
@@ -154,7 +166,8 @@ export async function getLocationFromDataset(locationPath:string){
   let longitude = getStringNoLocale(locationAsThing, SCHEMA_INRUPT.longitude) as string; 
   let latitude = getStringNoLocale(locationAsThing, SCHEMA_INRUPT.latitude) as string; 
   let description = getStringNoLocale(locationAsThing, SCHEMA_INRUPT.description) as string; 
-  let url = getStringNoLocale(locationAsThing, SCHEMA_INRUPT.identifier) as string;
+  //let url = getStringNoLocale(locationAsThing, SCHEMA_INRUPT.identifier) as string;
+  let url =datasetPath.slice(0,-10)//WORKI
   let categoriesSerialized = getStringNoLocale(locationAsThing, SCHEMA_INRUPT.Product) as string;
   let categoriesDeserialized;
 
@@ -392,13 +405,7 @@ export async function createLocationDataSet(folder:string,locationFolder:string,
   dataSet = setThing(dataSet, newLocation); // store thing in dataset
   // save dataset to later add the images
   dataSet = await saveSolidDatasetAt(locationFolder, dataSet, {fetch: fetch}) // save dataset 
-  console.log(locationFolder);
   await addImages(locationImages,location); // store the images
-  try {
-    //await saveSolidDatasetAt(locationFolder, dataSet, {fetch: fetch}) // save dataset 
-  } catch (error) {
-    console.log(error)
-  }
 }
 
 /**
@@ -567,15 +574,15 @@ export async function setAccessToFriend(friend:string, locationURL:string, giveA
   let updatedAcl;
   if (giveAccess) {
     // grant permissions
-    updatedAcl = setAgentResourceAccess(
+    updatedAcl = setAgentDefaultAccess(
       resourceAcl,
       friend,
-      { read: true, append: true, write: false, control: false }
+      { read: true, append: true, write: false, control: true }
     );
   }
   else{
     // revoke permissions
-    updatedAcl = setAgentResourceAccess(
+    updatedAcl = setAgentDefaultAccess(
       resourceAcl,
       friend,
       { read: false, append: false, write: false, control: false }
