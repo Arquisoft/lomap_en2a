@@ -1,6 +1,6 @@
 import type { Friend, Location as LocationType, Review, Review as ReviewType } from "../types/types";
 import { fetch } from "@inrupt/solid-client-authn-browser";
-import { overwriteFile, getSourceUrl,getFile,isRawData, getContentType } from "@inrupt/solid-client";
+import { overwriteFile,getFile,isRawData } from "@inrupt/solid-client";
 
 import {
   getSolidDatasetWithAcl,
@@ -86,6 +86,17 @@ export async function getUserProfile(webID: string) : Promise<Thing>{
     let dataSet = await getSolidDataset(profile, {fetch: fetch});
     // return the dataset as a thing
     return getThing(dataSet, webID) as Thing;
+}
+
+/**
+ * This function returns the profile image of the user from the pod
+ * @param webID of the user
+ * @returns image url as string
+ */
+export async function getProfileImage(webID: string) : Promise<string>{
+  let profileThing = await getUserProfile(webID);
+  let image = getUrl(profileThing, VCARD.hasPhoto) as string;
+  return image;
 }
 
 /**
@@ -387,13 +398,7 @@ export async function createLocationDataSet(folder:string,locationFolder:string,
   dataSet = setThing(dataSet, newLocation); // store thing in dataset
   // save dataset to later add the images
   dataSet = await saveSolidDatasetAt(locationFolder, dataSet, {fetch: fetch}) // save dataset 
-  console.log(locationFolder);
   await addImages(locationImages, folder,location); // store the images
-  try {
-    //await saveSolidDatasetAt(locationFolder, dataSet, {fetch: fetch}) // save dataset 
-  } catch (error) {
-    console.log(error)
-  }
 }
 
 /**

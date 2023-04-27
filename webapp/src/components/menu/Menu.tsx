@@ -7,12 +7,17 @@ import AddLocationForm from '../locations/AddLocationForm';
 import Friends from '../friends/Friends';
 import { ProfileView } from '../profile/ProfileInfo';
 import {GamePanel} from '../game/GamePanel'
+import App from '../../App';
 
 
 type MenuProps = {
-  changeViewTo: (view: JSX.Element) => void,
-  locations : Array<Location>,
+  changeViewTo: (view: string) => void,
+  ownLocations : Array<Location>,
+  friendLocations : Array<Location>,
   loadLocations : () => Promise<void>
+  loading: boolean
+  clickedCoordinates : string
+  setClickedCoordinates : (coordinates : string) => void
 }
 
 
@@ -65,7 +70,7 @@ function Menu(props: MenuProps): JSX.Element {
                   size='lg'
                   width={'fi-content'}
                   height={'5vh'}
-                  onClick={() => { setinsideMenu(false); props.changeViewTo(<></>); }}>
+                  onClick={() => { setinsideMenu(false); props.changeViewTo('Map'); }}>
                   Map View
                 </Button>
               </Box>
@@ -80,7 +85,7 @@ function Menu(props: MenuProps): JSX.Element {
                 onClick={() => {
                   setinsideMenu(false);
                   props.changeViewTo(
-                    <ListOfLocations setSelectedView={(view)=> props.changeViewTo(view)} places={props.locations} loadLocations={props.loadLocations} />
+                    'ListOfLocations'
                     );
                 }}>
                   List of Locations
@@ -97,8 +102,8 @@ function Menu(props: MenuProps): JSX.Element {
                 onClick={
                   () => {
                     setinsideMenu(false);
-                    props.changeViewTo(
-                      <AddLocationForm setSelectedView={(view)=> props.changeViewTo(view)} loadLocations={props.loadLocations} clickedCoords={''}/>
+                    props.changeViewTo( 
+                      'AddLocationForm'
                     );
                   }
                 }>
@@ -116,7 +121,7 @@ function Menu(props: MenuProps): JSX.Element {
                 onClick={() => {
                   setinsideMenu(false);
                   props.changeViewTo(
-                    <Friends setSelectedView={(view)=> props.changeViewTo(view)}/>
+                    'Friends'
                   );
                 }}
                 >
@@ -133,7 +138,7 @@ function Menu(props: MenuProps): JSX.Element {
                 onClick={() => {
                   setinsideMenu(false);
                   props.changeViewTo(
-                    <GamePanel setSelectedView={(view)=> props.changeViewTo(view)} locations={props.locations}/>
+                    `GameView`
                   );
                 }}
                 >
@@ -151,7 +156,7 @@ function Menu(props: MenuProps): JSX.Element {
                 onClick={() => {
                   setinsideMenu(false);
                   props.changeViewTo(
-                    <ProfileView setSelectedView={(view)=> props.changeViewTo(view)} locations={props.locations}></ProfileView>
+                    'ProfileView'
                   );
                 }}
                 >
