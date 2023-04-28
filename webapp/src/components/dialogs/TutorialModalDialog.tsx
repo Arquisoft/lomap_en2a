@@ -117,6 +117,10 @@ export function TutorialModalDialog(props:any) {
                           <Text marginTop={"1em"} >
                               <b>You can add a location easily!</b>
                           </Text>
+                          <Text>
+                              Check a more detailed explanation in the
+                              <Link color={"blue.500"} onClick={()=>moveToPage(4)}> Add Location </Link> tutorial.
+                          </Text>
                           <Image src={images.addingLocationFromMapView} marginTop={'0.5em'} border={'black solid 0.1em'} ></Image>
 
                           <Text marginTop={"2em"} >

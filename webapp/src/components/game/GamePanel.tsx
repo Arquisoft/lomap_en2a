@@ -127,7 +127,7 @@ export function GamePanel(props:GamePanelProps) {
 
   const calculateTrophies = () => {
     const numberOfLocations = props.locations.length;
-    let trophies = numberOfLocations * 50;
+    let trophies: number = numberOfLocations * 50;
     for (let location of props.locations){
       trophies += trophiesPerCategory(location)
       trophies += trophiesPerReviews(location)
@@ -135,7 +135,7 @@ export function GamePanel(props:GamePanelProps) {
     trophies += getAverageOfAllLocations(props.locations)*10;
     checkChallengesTrophies();
     trophies += challengeTrophies;
-    setTrophies(trophies)
+    setTrophies(Math.round(trophies))
     calculateRank();
     calculateProcessPercentage();
   }

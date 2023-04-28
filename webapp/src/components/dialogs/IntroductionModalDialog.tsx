@@ -44,8 +44,8 @@ export function IntroductionModalDialog(props:any) {
                     <ModalBody>
                         <Text>With LoMap you can access to a map and add markers, routes and share it with your friends.</Text>
                         <Text paddingTop={'2em'}>
-                            You can find a tutorial inside the menu. You just have to click the sidebar at the left to open it.
-                            At the bottom, you will find the tutorial.
+                            You can find a tutorial inside the menu. Close this window and then click the sidebar at the left to open the menu.
+                            At the bottom, you will find the tutorial, just as the image below shows:
                         </Text>
                         <Image src={images.introDialogImg} marginTop={'1em'} border={'black solid 0.1em'}></Image>
                     </ModalBody>
