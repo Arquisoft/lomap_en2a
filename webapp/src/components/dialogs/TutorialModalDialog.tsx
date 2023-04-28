@@ -21,8 +21,8 @@ export function TutorialModalDialog(props:any) {
     const [currentPage, setCurrentPage] = useState(1);
 
     const nextPage = () => {
-
-        setCurrentPage(currentPage + 1);
+        if (currentPage + 1 <= 5)
+            setCurrentPage(currentPage + 1);
     };
 
     const prevPage = () => {
@@ -31,7 +31,7 @@ export function TutorialModalDialog(props:any) {
     };
 
     const moveToPage = (page) => {
-        if (page >= 1 || page < 10)
+        if (page >= 1 || page <= 5)
             setCurrentPage(page);
     };
 
