@@ -11,3 +11,16 @@
     background-color: #d4aa70;
     border-radius: 100px;
 }
+
+.page {
+    font-size: 4em;
+    color: #cccccc;
+    cursor: pointer;
+    padding-right: 0.1em;
+    padding-left: 0.1em;
+}
+
+.active {
+    color: #61dafb;
+}
+
