@@ -16,11 +16,27 @@
     font-size: 4em;
     color: #cccccc;
     cursor: pointer;
-    padding-right: 0.1em;
-    padding-left: 0.1em;
+    margin-right: 0.1em;
+    margin-left: 0.1em;
+    user-select: none;
 }
 
 .active {
     color: #61dafb;
+}
+
+.prevBtn, .nextBtn {
+    font-size: 1.5em;
+    color: black;
+    cursor: pointer;
+    padding-top: 0.5em;
+    margin: 0 0.5em;
+    user-select: none;
+}
+
+.modal-footer {
+    justify-items: center;
+    align-items: center;
+    margin: auto;
 }
 

@@ -85,8 +85,8 @@ export function TutorialModalDialog(props:any) {
                         </ModalBody>
 
                         <ModalFooter>
-                            <Flex justifyContent={"start"} margin={"auto"}>
-                                <Button onClick={prevPage} disabled> {'<'} </Button>
+                            <Flex className={'modal-footer'}>
+                                <button className={"prevBtn"} onClick={prevPage} disabled> &#10094; </button>
 
                                 <span className={"page active"} onClick={() => setCurrentPage(1)} > · </span>
                                 <span className={"page"} onClick={() => setCurrentPage(2)}> · </span>
@@ -94,7 +94,7 @@ export function TutorialModalDialog(props:any) {
                                 <span className={"page"} onClick={() => setCurrentPage(4)}> · </span>
                                 <span className={"page"} onClick={() => setCurrentPage(5)}> · </span>
 
-                                <Button onClick={nextPage} > {'>'} </Button>
+                                <button className={"nextBtn"} onClick={nextPage} > &#10095; </button>
                             </Flex>
                         </ModalFooter>
                     </>
@@ -130,8 +130,8 @@ export function TutorialModalDialog(props:any) {
                       </ModalBody>
 
                       <ModalFooter>
-                          <Flex justifyContent={"start"} margin={"auto"}>
-                              <Button onClick={prevPage}> {'<'} </Button>
+                          <Flex className={'modal-footer'}>
+                              <button className={"prevBtn"} onClick={prevPage}> &#10094; </button>
 
                               <span className={"page"} onClick={() => setCurrentPage(1)}> · </span>
                               <span className={"page active"} onClick={() => setCurrentPage(2)}> · </span>
@@ -139,7 +139,7 @@ export function TutorialModalDialog(props:any) {
                               <span className={"page"} onClick={() => setCurrentPage(4)}> · </span>
                               <span className={"page"} onClick={() => setCurrentPage(5)}> · </span>
 
-                              <Button onClick={nextPage}> {'>'} </Button>
+                              <button className={"nextBtn"} onClick={nextPage} > &#10095; </button>
                           </Flex>
                       </ModalFooter>
                   </>
@@ -165,8 +165,8 @@ export function TutorialModalDialog(props:any) {
                       </ModalBody>
 
                       <ModalFooter>
-                          <Flex justifyContent={"start"} margin={"auto"}>
-                              <Button onClick={prevPage}> {'<'} </Button>
+                          <Flex className={'modal-footer'}>
+                              <button className={"prevBtn"} onClick={prevPage}> &#10094; </button>
 
                               <span className={"page"} onClick={() => setCurrentPage(1)}> · </span>
                               <span className={"page"} onClick={() => setCurrentPage(2)}> · </span>
@@ -174,7 +174,7 @@ export function TutorialModalDialog(props:any) {
                               <span className={"page"} onClick={() => setCurrentPage(4)}> · </span>
                               <span className={"page"} onClick={() => setCurrentPage(5)}> · </span>
 
-                              <Button onClick={nextPage}> {'>'} </Button>
+                              <button className={"nextBtn"} onClick={nextPage} > &#10095; </button>
                           </Flex>
                       </ModalFooter>
                   </>
@@ -214,8 +214,8 @@ export function TutorialModalDialog(props:any) {
                       </ModalBody>
 
                       <ModalFooter>
-                          <Flex justifyContent={"start"} margin={"auto"}>
-                              <Button onClick={prevPage}> {'<'} </Button>
+                          <Flex className={'modal-footer'}>
+                              <button className={"prevBtn"} onClick={prevPage}> &#10094; </button>
 
                               <span className={"page"} onClick={() => setCurrentPage(1)}> · </span>
                               <span className={"page"} onClick={() => setCurrentPage(2)}> · </span>
@@ -223,7 +223,7 @@ export function TutorialModalDialog(props:any) {
                               <span className={"page active"} onClick={() => setCurrentPage(4)}> · </span>
                               <span className={"page"} onClick={() => setCurrentPage(5)}> · </span>
 
-                              <Button onClick={nextPage}> {'>'} </Button>
+                              <button className={"nextBtn"} onClick={nextPage} > &#10095; </button>
                           </Flex>
                       </ModalFooter>
                   </>
@@ -251,8 +251,8 @@ export function TutorialModalDialog(props:any) {
                       </ModalBody>
 
                       <ModalFooter>
-                          <Flex justifyContent={"start"} margin={"auto"} alignContent={'center'}>
-                              <Button onClick={prevPage}> {'<'} </Button>
+                          <Flex className={'modal-footer'}>
+                              <button className={"prevBtn"} onClick={prevPage}> &#10094; </button>
 
                               <span className={"page"} onClick={() => setCurrentPage(1)}> · </span>
                               <span className={"page"} onClick={() => setCurrentPage(2)}> · </span>
@@ -260,7 +260,7 @@ export function TutorialModalDialog(props:any) {
                               <span className={"page"} onClick={() => setCurrentPage(4)}> · </span>
                               <span className={"page active"} onClick={() => setCurrentPage(5)}> · </span>
 
-                              <Button onClick={nextPage} disabled> {'>'} </Button>
+                              <button className={"nextBtn"} onClick={nextPage} disabled> &#10095; </button>
                           </Flex>
                       </ModalFooter>
                   </>
