@@ -61,10 +61,12 @@ export function TutorialModalDialog(props:any) {
 
 
                         <ModalBody>
-                            <Text>Welcome to LoMap!</Text>
+                            <Text><b>Welcome to LoMap!</b></Text>
 
-                            <Text>In this tutorial we will teach you the basics of LoMap.</Text>
-                            <Text>Click one of the following links to navigate to that page:</Text>
+                            <Text>In this tutorial you will learn the basics of LoMap.</Text>
+                            <Text marginTop={"1em"}>
+                                Click one of the following links to navigate to that page:
+                            </Text>
                             <UnorderedList>
                                 <ListItem>
                                     <Link color={"blue.500"} onClick={()=>moveToPage(2)}>Map View</Link>
@@ -84,6 +86,8 @@ export function TutorialModalDialog(props:any) {
 
                         <ModalFooter>
                             <Flex justifyContent={"start"} margin={"auto"}>
+                                <Button onClick={prevPage} disabled> Previous </Button>
+
                                  <span
                                      className={"active"}
                                      onClick={() => setCurrentPage(1)}
@@ -99,8 +103,6 @@ export function TutorialModalDialog(props:any) {
 
                                 <Button onClick={nextPage} > Next </Button>
                             </Flex>
-
-                            <Button colorScheme="blue" onClick={onClose}>Close</Button>
                         </ModalFooter>
                     </>
                 )}
@@ -151,7 +153,6 @@ export function TutorialModalDialog(props:any) {
                                   onClick={() => setCurrentPage(3)}
                               ></span>
 
-
                               <Button onClick={nextPage}> Next </Button>
                           </Flex>
                       </ModalFooter>
@@ -167,15 +168,20 @@ export function TutorialModalDialog(props:any) {
                       <ModalCloseButton/>
 
                       <ModalBody>
-                          <Text>In the List of Locations you can find all your saved locations.</Text>
-                          <Text>You can click one location to open its details. </Text>
+                          <Text>In the <b>List of Locations</b> you can find all your saved locations and the locations your friends share with you.</Text>
+                          <Text marginTop={"1em"}>
+                              <b>Click a location to open the detailed view.</b>
+                          </Text>
+                          <Text>You can leave comments and give a rating to the locations.</Text>
+                          <Text>You can share your own locations with your friends. They will be able to see them, and also comment and rate them!</Text>
 
-                          <Image src={images.introDialogImg} marginTop={'1em'} border={'black solid'}></Image>
+                          <Image src={images.listOfLocationsTutorial} marginTop={'0.5em'} border={'black solid 0.1em'}></Image>
                       </ModalBody>
 
                       <ModalFooter>
                           <Flex justifyContent={"start"} margin={"auto"}>
-                              {/*these span dont work yet*/}
+                              <Button onClick={prevPage}> Previous </Button>
+
                               <span
                                   className={""}
                                   onClick={() => setCurrentPage(1)}
@@ -189,9 +195,8 @@ export function TutorialModalDialog(props:any) {
                                   onClick={() => setCurrentPage(3)}
                               ></span>
 
-                              <Button onClick={prevPage}> Previous </Button>
+                              <Button onClick={nextPage}> Next </Button>
                           </Flex>
-                          <Button colorScheme="blue" onClick={onClose}>Close</Button>
                       </ModalFooter>
                   </>
               )}
@@ -206,22 +211,33 @@ export function TutorialModalDialog(props:any) {
 
                       <ModalBody>
                           <Text>
-                            This is where you can save a location. You can write the coordinates directly or
-                            use the Adding Location mode and just click on the place you want to add.
-                            You can choose the name of the location, add images, give a more detailed description and 
-                            give it one or more categories.
-                            Categories are useful if you want to keep your locations organized. You can also filter
-                            the locations by categories in the 
-                            <Link color={"blue.500"} onClick={()=>moveToPage(2)}>Map View</Link>.
-
+                            In LoMap, you can easily save your favourite locations.
                           </Text>
 
-                          <Image src={images.introDialogImg} marginTop={'1em'} border={'black solid'}></Image>
+                          <Text marginTop={'1em'}><b>Add locations to your list</b></Text>
+                          <Text>
+                            A LoMap location requires a <b>name</b> and <b>coordinates</b>.
+                          </Text>
+                          <Text>
+                              You can manually set the coordinates or you can just click wherever you want to add a new location and they will be automatically set.
+                          </Text>
+
+                          <Text marginTop={'1em'}><b>Additional information</b></Text>
+                          <Text>
+                              Optionally, you can give your location one or more <b>categories</b>, set a <b>description</b> and add <b>images</b>.
+                          </Text>
+                          <Text marginTop={'1em'}>
+                              Once the location is added, you will see it in the
+                              <Link color={"blue.500"} onClick={()=>moveToPage(3)}> List of Locations</Link>.
+                          </Text>
+
+                          <Image src={images.addLocationTutorial} marginTop={'1.5em'} border={'black solid 0.1em'}></Image>
                       </ModalBody>
 
                       <ModalFooter>
                           <Flex justifyContent={"start"} margin={"auto"}>
-                              {/*these span dont work yet*/}
+                              <Button onClick={prevPage}> Previous </Button>
+
                               <span
                                   className={""}
                                   onClick={() => setCurrentPage(1)}
@@ -235,9 +251,8 @@ export function TutorialModalDialog(props:any) {
                                   onClick={() => setCurrentPage(3)}
                               ></span>
 
-                              <Button onClick={prevPage}> Previous </Button>
+                              <Button onClick={nextPage}> Next </Button>
                           </Flex>
-                          <Button colorScheme="blue" onClick={onClose}>Close</Button>
                       </ModalFooter>
                   </>
               )}
@@ -250,12 +265,17 @@ export function TutorialModalDialog(props:any) {
                       <ModalCloseButton/>
                       <Divider></Divider>
                       <ModalBody>
+                          <Text><b>How can you add friends?</b></Text>
+                          <Text>LoMap is an application that operates with Solid.</Text>
+                          <Text>
+                              You just need your friends' Solid WebID, and then add them as your friends. To make your friendship official,
+                              give to your friends your own WebID and when they add you, you will become officially friends!
+                          </Text>
 
+                          <Text marginTop={'1em'}><b>Friends? Why?</b></Text>
+                          <Text>Having friends is nice! Once you have friends in LoMap, you can share locations, leave comments and rate your locations.</Text>
 
-                          <Text>The tutorial test will be here.</Text>
-                          <Text>The tutorial test will be here.</Text>
-
-                          <Image src={images.introDialogImg} marginTop={'1em'} border={'black solid'}></Image>
+                          <Image src={images.addFriendsTutorial} marginTop={'1em'} border={'black solid 0.1em'}></Image>
                       </ModalBody>
 
                       <ModalFooter>
