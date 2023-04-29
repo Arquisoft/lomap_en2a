@@ -2,6 +2,9 @@ import React from 'react'
 import { render } from "@testing-library/react";
 import ListOfLocations from "../components/locations/ListOfLocations";
 
+
+//TESTED 100%
+
 const testLocations = [
     {
       "url": "https://www.nycgo.com/attractions/the-metropolitan-museum-of-art/",
@@ -172,14 +175,3 @@ test('check that when pressing the close button the setSelectedView function is 
   getByTestId("closeButton").click();
   expect(setSelectedView).toHaveBeenCalled();
 })
-
-
-
-
-// test('check that the location list renders propertly',async () => {
-//     const {getByText}= render(<ListOfLocations setSelectedLocation={jest.fn()} loadLocations={jest.fn()} loadingOwnLocations={false} loadingFriendLocations={false} ownLocations={testLocations} friendLocations={[]} setSelectedView={()=>{}}></ListOfLocations>)
-//     testLocations.forEach(location => {
-//         let name = location.name;
-//         expect(getByText(name)).toBeInTheDocument();
-//     });
-// })

@@ -23,7 +23,7 @@ const LocationRating: React.FC<LocationRatingProps> = ({ location }: LocationRat
       return (
         <HStack width='fit-content' spacing={1}>
           {[...Array(5)].map((_, i) => (
-            <Icon key={i} as={FaStar} color="gray.300" />
+            <Icon key={i} as={FaStar} color="gray.300" data-testid={'star'+i+'unselected'} />
           ))}
         </HStack>
       );
@@ -41,11 +41,11 @@ const LocationRating: React.FC<LocationRatingProps> = ({ location }: LocationRat
     return (
       <HStack width='fit-content' spacing={1}>
         {[...Array(fullStars)].map((_, i) => (
-            <Icon as={FaStar} color="yellow.400" />
+            <Icon key={i} as={FaStar} color="yellow.400" data-testid={'star'+i+'selected'}/>
         ))}
-        {halfStar && <Icon as={FaStarHalfAlt} color="yellow.400" />}
+        {halfStar && <Icon as={FaStarHalfAlt} color="yellow.400" data-testid='halfStar'/>}
         {[...Array(emptyStars)].map((_, i) => (
-            <Icon as={FaStar} color="gray.300" />
+            <Icon key={i} as={FaStar} color="gray.300" data-testid={'star'+i+'unselected'}/>
         ))}
       </HStack>
     );
@@ -83,7 +83,7 @@ function LocationCard (props : PlaceDetailProps ) : JSX.Element{
                 px={'2%'}
                 gap={'1.1em'}
                 >
-                <VStack alignItems={'start'}>
+                <VStack alignItems={'start'} width={'full'}>
                   <Flex
                   alignItems={'center'}
                   justifyContent={'space-between'}
