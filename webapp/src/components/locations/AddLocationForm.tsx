@@ -214,6 +214,7 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
                     fontSize='2.2em' alignSelf='center' borderBottomWidth='1px'>Add a location</Text>
                     <Flex direction={'column'}>
                         <CloseButton 
+                        data-testid="close-button"
                             onClick={() => {
                                 props.setSelectedView('Map');
                                 props.setClickedCoordinates('');
@@ -225,7 +226,7 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
                     </Flex>
                 </Flex>
                 <Flex direction={'row'} marginLeft={'5%'} marginRight={'3%'} gap='10%'>
-                    <Input
+                    <Input data-testid="name-input"
                         value={name}
                         onChange={(e:any) => setName(e.target.value)}                                        
                         placeholder="Location name"
@@ -235,7 +236,7 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
                         id='name'
                     />
                     <Menu closeOnSelect={false}>
-                            <MenuButton as={Button} rightIcon={<MdArrowDropDown/>} color='white' background='#4299e1' 
+                            <MenuButton data-testid="categories-button" as={Button} rightIcon={<MdArrowDropDown/>} color='white' background='#4299e1' 
                                 width={'27%'} height={'160%'}>Categories
                             </MenuButton>
                             <MenuList minWidth='240px'>
@@ -243,7 +244,7 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
                                     {
                                     categories.map((kind,i) => { // as many possible categories as items in Category enum
                                         return (
-                                            <MenuItemOption key={i} value={kind} onClick={(e) => handleCheckedCategory(e)}
+                                            <MenuItemOption key={i} value={kind} onClick={(e) => handleCheckedCategory(e)} data-testid={kind}
                                             >{kind}</MenuItemOption>
                                         )
                                     })
@@ -269,7 +270,7 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
                             <Box width = '3em' height = '3em' borderRadius = '50%' display='flex' alignItems = 'center' justifyContent = 'center' backgroundColor = 'green.500'>
                                 <RxCheck size='2.5em' color='white'></RxCheck>
                             </Box>
-                            <Text alignSelf='center' fontSize='1.1em'>Valid coordinates selected</Text>
+                            <Text alignSelf='center' fontSize='1.1em' data-testid="coord-valid">Valid coordinates selected</Text>
                             <Box width = '1.5em' height = '1.5em' borderRadius = '50%' display='flex' alignItems = 'center' justifyContent = 'center' backgroundColor = 'blue.500'>
                                 <Tooltip borderRadius='1em' label="Edit coordinates manually or click on the map to select them."> 
                                     <span>
@@ -283,7 +284,7 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
                             <Box width = '3em' height = '3em' borderRadius = '50%' display='flex' alignItems = 'center' justifyContent = 'center' backgroundColor = 'red.500'>
                                 <RxCross2 size='2.5em' color='white'></RxCross2>
                             </Box>
-                            <Text alignSelf='center' fontSize='1.1em'>Select valid coordinates</Text>
+                            <Text alignSelf='center' fontSize='1.1em' data-testid="coord-error">Select valid coordinates</Text>
                             <Box width = '1.5em' height = '1.5em' borderRadius = '50%' display='flex' alignItems = 'center' justifyContent = 'center' backgroundColor = 'blue.500'>
                                 <Tooltip borderRadius='1em' label="Edit coordinates manually or click on the button on the bottom right corner and click on the map to select them."> 
                                     <span>
@@ -295,6 +296,7 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
                     </HStack>
                     <Input
                         hidden={!editingManualCoordinates}
+                        data-testid="coordinates-input"
                         value={coordsValue}
                         onChange={(e:any) => setCoordsValue(e.target.value)}
                         placeholder='Location coordinates, Ej: 43.3534, -5.8512'
@@ -305,6 +307,7 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
 
                 <Flex direction={'column'} marginLeft={'5%'} marginRight={'3%'}>
                     <Textarea
+                        data-testid="description-input"
                         value={description}
                         onChange={(e:any) => setDescription(e.target.value)}
                         placeholder='Location description'
@@ -317,6 +320,7 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
                     <label className={"label upload-file"}
                     htmlFor="image-input">Add images</label>
                     <Input className={"upload-file"}
+                        data-testid="image-input"
                         id={"image-input"}
                         hidden={true}
                         type="file"
@@ -371,7 +375,8 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
                             Adding location
                         </Button>
                     ) : (
-                        <Button leftIcon={<MdOutlineAddLocationAlt/>}
+                        <Button data-testid="add-location-button"
+                        leftIcon={<MdOutlineAddLocationAlt/>}
                                 colorScheme={'blue'}
                                 variant={'outline'}
                                 type={'submit'}
