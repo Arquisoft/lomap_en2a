@@ -4,7 +4,7 @@ import Menu from '../components/menu/Menu';
 
 test('check menu contains 5 options', async () => {
   const { container } = render(<Menu
-      loading={false} loadLocations={jest.fn()} ownLocations={[]}
+      loading={false} loadLocations={jest.fn()} loadUserLocations={jest.fn()} ownLocations={[]}
   friendLocations={[]} changeViewTo={jest.fn()} setClickedCoordinates={jest.fn()}
   clickedCoordinates={'0,0'}></Menu>)
   //we check there are 5 icons = svg
@@ -13,7 +13,7 @@ test('check menu contains 5 options', async () => {
 
 test('check menu expands when mouse enters', async () => {
   const { getByTestId } = render(<Menu
-      loading={false} loadLocations={jest.fn()} ownLocations={[]}
+      loading={false} loadLocations={jest.fn()} loadUserLocations={jest.fn()} ownLocations={[]}
   friendLocations={[]} changeViewTo={jest.fn()} setClickedCoordinates={jest.fn()}
   clickedCoordinates={'0,0'}/>
   );
@@ -27,7 +27,7 @@ test('check menu expands when mouse enters', async () => {
 
 test('check menu shrinks when mouse exits', async () => {
   const { getByTestId } = render(<Menu
-      loading={false} loadLocations={jest.fn()} ownLocations={[]}
+      loading={false} loadLocations={jest.fn()} loadUserLocations={jest.fn()} ownLocations={[]}
   friendLocations={[]} changeViewTo={jest.fn()} setClickedCoordinates={jest.fn()}
   clickedCoordinates={'0,0'}/>
   );
@@ -52,6 +52,7 @@ test.each([/*'Map view', 'Location list', 'Add location',*/ 'Add friends', 'Prof
         loading={false}
         loadLocations={jest.fn()}
         ownLocations={[]}
+        loadUserLocations={jest.fn()}
         friendLocations={[]}
         changeViewTo={(view) => {
           viewUpdated = true;
