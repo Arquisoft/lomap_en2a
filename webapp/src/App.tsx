@@ -18,6 +18,7 @@ import LocationInfo from './components/locations/LocationInfo';
 import {GamePanel} from './components/game/GamePanel'
 import { ProfileView } from './components/profile/ProfileInfo';
 import { useSession } from '@inrupt/solid-ui-react';
+import {IntroductionModalDialog} from "./components/dialogs/IntroductionModalDialog";
 
 
 function App(): JSX.Element {
@@ -225,7 +226,7 @@ function App(): JSX.Element {
             {
               !isLoggedIn ? (
                 <Login></Login>
-              ) : <></>
+              ) : <IntroductionModalDialog></IntroductionModalDialog>
             }
             <HStack
             padding='0.2em'

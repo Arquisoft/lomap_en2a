@@ -51,7 +51,7 @@ function Review (props : ReviewProps ) : JSX.Element{
                 </Text>
             </Flex>
             <Text marginLeft={'auto'} textColor='grey' fontSize={'0.9em'}>
-                {props.date}
+                {props.date.substring(0, 10)} at {props.date.substring(11,16)}
             </Text>
         </Flex>
         <Box width='full'>

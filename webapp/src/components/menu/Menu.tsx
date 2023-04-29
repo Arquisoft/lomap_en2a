@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { Flex, Button, Icon, Box, Text } from "@chakra-ui/react";
-import { MdList, MdLocationOn, MdMap, MdPeopleAlt, MdPerson, MdOutlineSportsEsports } from "react-icons/md"
+import { MdList, MdLocationOn, MdMap, MdPeopleAlt, MdPerson, MdQuestionMark, MdOutlineSportsEsports } from "react-icons/md"
 import { Location } from '../../types/types';
 import ListOfLocations from '../locations/ListOfLocations';
 import AddLocationForm from '../locations/AddLocationForm';
@@ -8,6 +8,7 @@ import Friends from '../friends/Friends';
 import { ProfileView } from '../profile/ProfileInfo';
 import {GamePanel} from '../game/GamePanel'
 import App from '../../App';
+import {TutorialModalDialog} from "../dialogs/TutorialModalDialog";
 
 
 type MenuProps = {
@@ -103,7 +104,7 @@ function Menu(props: MenuProps): JSX.Element {
                 onClick={
                   () => {
                     setinsideMenu(false);
-                    props.changeViewTo( 
+                    props.changeViewTo(
                       'AddLocationForm'
                     );
                   }
@@ -143,12 +144,16 @@ function Menu(props: MenuProps): JSX.Element {
                   );
                 }}
                 >
-                  Progress 
+                  Progress
                 </Button>
               </Box>
 
               <Box marginTop={'auto'}>
-                <Button 
+                <TutorialModalDialog></TutorialModalDialog>
+              </Box>
+
+              <Box>
+                <Button
                 data-testid={'Profile'}
                 leftIcon={<Icon as={MdPerson} width={'2.5em'} height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
                 bg={'white'}
@@ -198,6 +203,9 @@ function Menu(props: MenuProps): JSX.Element {
                 <Icon as={MdOutlineSportsEsports} width='3em' height={'2.5vw'} cursor={'pointer'}/>
               </Flex>
               <Flex marginTop='auto' marginBottom={'2'} direction='row' gap='2' alignItems={'center'}>
+                <Icon as={MdQuestionMark} width='3em' height={'2.5vw'} cursor={'pointer'}/>
+              </Flex>
+              <Flex marginBottom={'2'} direction='row' gap='2' alignItems={'center'}>
                 <Icon as={MdPerson} width='3em' height={'2.5vw'} cursor={'pointer'}/>
               </Flex>
             </Flex>
