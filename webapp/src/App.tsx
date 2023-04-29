@@ -34,10 +34,6 @@ function App(): JSX.Element {
   const [nameSelectedView, setNameSelectedView] = useState("Map");
 
 
-  const getNewLocation = (location:Location) => {
-    ownLocations.push(location);
-    createLocation(session.session.info.webId as string, location);
-  }
 
   //we get the locations for the user and fetch them to the list
   useEffect(()=>{
@@ -57,11 +53,7 @@ function App(): JSX.Element {
 
   
 
-  
 
-  useEffect(() => {
-    console.log('ownLocations:', ownLocations);
-  }, [ownLocations]);
 
   async function loadLocations(){
     if(session.session.info.webId){

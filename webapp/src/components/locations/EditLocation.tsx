@@ -93,13 +93,11 @@ function EditLocationFormComp(props : EditLocationProps) : JSX.Element {
         if(session.session.info.webId){
             //we fake the addition of the location by means of adding it to the list of locations
             //and indicating the user the location is being added to the pod in the background
-            console.log(props.locations);
+            
             let loc = props.locations.filter(location => location.url !== props.location.url);
             loc.push(location);
             props.setOwnLocations(loc);
-            console.log(props.locations);
             
-            console.log(props.locations);
             //we set the creation mode to false
             setAddingLocationProcess(false);
             //we reset the clicked coordinates to the default value
@@ -263,7 +261,7 @@ function EditLocationFormComp(props : EditLocationProps) : JSX.Element {
                                         return (
                                             <MenuItemOption key={i} value={kind}
                                              onClick={(e) => handleCheckedCategory(e)}
-                                                isChecked={ true}//checkedCategories.includes(kind)
+                                                
                                             >{kind}</MenuItemOption>
                                         )
                                     })
