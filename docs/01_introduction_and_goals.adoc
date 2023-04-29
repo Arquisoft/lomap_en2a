@@ -47,7 +47,7 @@ shared and which is going to be private.
 
 | Security | A pod can only be accessed by its legitimate owner. User can modify their access data and manage which information is visible to other users.
 
-| Performance | The application is be able to give reasonable response times when users are interacting with it. 
+| Performance | The application is able to give reasonable response times when users are interacting with it. 
 
 | Availability | The personal data from the pods can be accessed at any time.
 
@@ -67,6 +67,6 @@ shared and which is going to be private.
 | Council of Brussels | The sponsor of the application | An application that allows users to have a better experience while visiting Brussels.
 | HappySw | The company in charge of the application development | A good application that fullfills the requirements expected by the sponsor.
 | Developers | People that are implementing and mantaining the app | A good documentation and well commented code, avoiding repetitions and with a good use of patterns, in order to be easy to modify or extend.
-| Professors | In charge of the subject. | An application fullfilling the expectations, that can be qualified. They can also give feedback and help to the developers.
+| Professors | In charge of the subject | An application fullfilling the expectations, that can be qualified. They can also give feedback and help to the developers.
 | Users | Interact with the application | A good, easy to use application, that responds well to their inputs and adds value to them, while keeping their data secure.
 |===

@@ -70,7 +70,7 @@ together with a mapping table showing the relationships between channels and inp
 | SOLID
 | Specification that lets people store their data securely in decentralized data stores called _pods_. These _pods_ are fully under its owner's (the user) control. To use SOLID, a _pod provider_ and a "web ID" are needed. Pods are structures that store the user's data, and the ID identifies the user and allows them to access their pods, and also connect with other SOLID users.
 | ReactJS
-| JavaScript open source library that will make it easier to create user interfaces. It shines in applications whose data is always changing. React is the View in the context of the MVC (Model-View-Controller) pattern.
+| JavaScript open source library that will make it easier to create user interfaces. It shines in applications whose data is always changing.
 | Docker
 | Platform used to automate the deployment of applications in lightweight _containers_ so that applications can work efficiently in different environments. Containers are isolated from one another and bundle their own software, libraries and configuration files; they can communicate with each other through well-defined channels.
 |===
