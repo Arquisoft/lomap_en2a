@@ -28,7 +28,7 @@ function App(): JSX.Element {
   const [loading, setLoading] = useState(true);
   const [ownLocations, setOwnLocations] = useState<Array<Location>>([]);
   const [friendLocations, setFriendLocations] = useState<Array<Location>>([]);
-  const[isLoggedIn, setIsLoggedIn] = useState(false);
+  const[isLoggedIn, setIsLoggedIn] = useState(true);
   const [clickedCoordinates, setClickedCoordinates] = useState("");
   const [inLocationCreationMode, setInLocationCreationMode] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState<Location>(ownLocations[0]);
