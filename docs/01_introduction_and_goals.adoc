@@ -21,9 +21,8 @@ All information is stored in a pod under the full control of the user, as LoMap 
 an impediment for the users to share their places with friends, since LoMap implements the friend system of Solid and lets the user decide which information is going to be
 shared and which is going to be private.
 
-The user requirements are actions that they can do in the application.
-
-.User requirements. The user will be able to: 
+==== Functional requirements 
+.The user will be able to: 
 * Manage their locations: add, delete and edit.
 * Add different categories for each location.
 * See the locations in the map in form of markers.
@@ -31,13 +30,12 @@ The user requirements are actions that they can do in the application.
 * Manage a list of friends.
 * Manage the information that is shared with his friends.
 * Keep track of their progress in the application in a gamified way.
+* Filter locations based on categories and friends.
 
-.System requirements. The system:
-* Stores the information about each user's places in their Solid pods, not centralized. 
-* Allows users to see their own and their friends' markers.
-* Allows map filtering by categories and friends.
-* Offers the user an interactive guide to provide guidance and training on the app functionalities.
-* Offers game features to encourage users to use the application.
+.The system will:
+* Store the information about each user's places in their Solid pods, not centralized. 
+* Allow users to see their own and their friends' markers.
+* Offer the user an interactive guide to provide guidance and training on the app functionalities.
 
 
 === Quality Goals
