@@ -4,7 +4,7 @@
 This section contains a list of identified risks that the project will face during its lifetime. In addition to it, each particular risk comes with a brief 
 self-explanatory description, the probability of its occurrence, its impact on the project and a solution on how to minimize it or mitigate it.
 
-=== 11.1 Risks
+=== Risks
 [options="header", cols="2, 3, 1, 1, 3"]
 |===
 | Risk | Description | Probability | Impact | Solution
@@ -50,13 +50,17 @@ used for a better task planning. Any major problem a member may encounter will b
 
 |===
 
-=== 11.2 Technical Debts
+=== Technical Debts
 
 .DataBase
 The decision of not using a database will have a measurable impact in the speed of application. By prioritizing easier code we are sacrificing speed delivery of data.
 
 .Solid code
 Relying on the inrupt libraries for the pod information and control management can make the application not maintainable if those libraries stop being updated.
+
+.Availability
+The fact of using user's pod as storing tool makes creates a strong dependency of availability between the application and the
+infrastructure of the user pod. This can cause our application not to be available if the pod is not available.
 
 [role="arc42help"]
 ****
