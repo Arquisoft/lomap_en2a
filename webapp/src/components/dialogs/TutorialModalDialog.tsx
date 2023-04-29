@@ -60,7 +60,7 @@ export function TutorialModalDialog(props:any) {
                         <ModalCloseButton/>
 
 
-                        <ModalBody>
+                        <ModalBody className={'modal-body'}>
                             <Text><b>Welcome to LoMap!</b></Text>
 
                             <Text>In this tutorial you will learn the basics of LoMap.</Text>
@@ -83,7 +83,7 @@ export function TutorialModalDialog(props:any) {
                             </UnorderedList>
 
                         </ModalBody>
-
+                        <Divider></Divider>
                         <ModalFooter>
                             <Flex className={'modal-footer'}>
                                 <button className={"prevBtn"} onClick={prevPage} disabled> &#10094; </button>
@@ -108,7 +108,7 @@ export function TutorialModalDialog(props:any) {
                       </ModalHeader>
                       <ModalCloseButton/>
 
-                      <ModalBody>
+                      <ModalBody className={'modal-body'}>
 
                           <Text>
                             In the <b>Map View</b> you will be able to see the map with all the locations you and
@@ -157,7 +157,7 @@ export function TutorialModalDialog(props:any) {
                       </ModalHeader>
                       <ModalCloseButton/>
 
-                      <ModalBody>
+                      <ModalBody className={'modal-body'}>
                           <Text>In the <b>List of Locations</b> you can find all your saved locations and the locations your friends share with you.</Text>
                           <Text marginTop={"1em"}>
                               <b>Click a location to open the detailed view.</b>
@@ -192,7 +192,7 @@ export function TutorialModalDialog(props:any) {
                       </ModalHeader>
                       <ModalCloseButton/>
 
-                      <ModalBody>
+                      <ModalBody className={'modal-body'}>
                           <Text>
                             In LoMap, you can easily save your favourite locations.
                           </Text>
@@ -240,7 +240,7 @@ export function TutorialModalDialog(props:any) {
                       </ModalHeader>
                       <ModalCloseButton/>
                       <Divider></Divider>
-                      <ModalBody>
+                      <ModalBody className={'modal-body'}>
                           <Text><b>How can you add friends?</b></Text>
                           <Text>LoMap is an application that operates with Solid.</Text>
                           <Text>

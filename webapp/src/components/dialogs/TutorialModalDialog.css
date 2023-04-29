@@ -38,5 +38,10 @@
     justify-items: center;
     align-items: center;
     margin: auto;
+    height: 3em;
+}
+
+.modal-body {
+
 }
 
