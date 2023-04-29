@@ -1,8 +1,9 @@
 [[section-architecture-constraints]]
 == Architecture Constraints
-When designing the LoMap application, there are several constraints that must be taken into consideration. These constraints will have a significant
-impact on the overall design of the application and the architectural decisions that are made. The constraints include privacy, user experience, deployment, security,... 
-These constraints must be considered in order to ensure that the final product meets the needs and expectations of the users and stakeholders. The following table summarizes these constraints and provides a brief explanation for each one.
+When designing the LoMap application, there are several constraints that must be taken into consideration, as they will have a significant
+impact on the overall design of the application and the architectural decisions. 
+These constraints must be considered in order to ensure that the final product meets the needs and expectations of the users and stakeholders. 
+The following table summarizes these constraints and provides a brief explanation for each one.
 
 [options="header", cols="1,1"]
 |===
@@ -22,7 +23,8 @@ These constraints must be considered in order to ensure that the final product m
 |===
 
 === Recommended technologies to take into account
-There some technologies mentioned to provide readers with a clear understanding of this application and how it works. These are not considered constraints since they were not imposed to us, but given the strong impact they have, the team considered that they should be presented in this section. 
+There some technologies mentioned to provide readers with a clear understanding of this application and how it works. 
+These are not considered constraints since they were not imposed, but given the strong impact they have, the team considered that they should be presented in this section. 
 
 [options="header", cols="1,1"]
 |===
