@@ -60,8 +60,10 @@ const testLocations = [
       ]
     }];
 
+
+
 test('check that the location list renders propertly',async () => {
-    const {getByText}= render(<ListOfLocations setSelectedLocation={jest.fn()} loadLocations={jest.fn()} loading={false} ownLocations={testLocations} friendLocations={[]} setSelectedView={()=>{}}></ListOfLocations>)
+    const {getByText}= render(<ListOfLocations setSelectedLocation={jest.fn()} loadLocations={jest.fn()} loadingOwnLocations={false} loadingFriendLocations={false} ownLocations={testLocations} friendLocations={[]} setSelectedView={()=>{}}></ListOfLocations>)
     testLocations.forEach(location => {
         let name = location.name;
         expect(getByText(name)).toBeInTheDocument();
@@ -69,6 +71,6 @@ test('check that the location list renders propertly',async () => {
 })
 
 test('check that with no location the loading squeletons appear',async () => {
-    const {getByTestId}= render(<ListOfLocations setSelectedLocation={jest.fn()} loadLocations={jest.fn()} loading={false} ownLocations={[]} friendLocations={[]} setSelectedView={()=>{}}></ListOfLocations>)
+    const {getByTestId}= render(<ListOfLocations setSelectedLocation={jest.fn()} loadLocations={jest.fn()} loadingOwnLocations={false} loadingFriendLocations={false} ownLocations={[]} friendLocations={[]} setSelectedView={()=>{}}></ListOfLocations>)
     expect(getByTestId('loadingView')).toBeInTheDocument();
 })

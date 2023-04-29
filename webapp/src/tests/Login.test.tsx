@@ -1,6 +1,6 @@
 import React from 'react'
 import { act, fireEvent, render } from "@testing-library/react";
-import Login from "./Login";
+import Login from '../components/login/Login';
 
 /*
     Still have to test the correct behavoir of the login and the prevent default

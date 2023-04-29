@@ -16,7 +16,8 @@ type ListProps = {
     setSelectedView: (viewName: string) => void //function to change the selected view on the left
     setSelectedLocation: (location: Location) => void
     loadLocations: () => Promise<void>
-    loading: boolean
+    loadingOwnLocations: boolean
+    loadingFriendLocations: boolean
 }
 
 function ListOfLocations(props : ListProps) : JSX.Element {
@@ -24,13 +25,15 @@ function ListOfLocations(props : ListProps) : JSX.Element {
     const setSelectedView = props.setSelectedView;
     const [ownLocations, setownLocations] = useState(props.ownLocations)
     const [friendLocations, setfriendLocations] = useState(props.friendLocations)
-    const [loading, setLoading] = useState(props.loading)
+    const [loadingOwnLocations, setLoadingOwnLocations] = useState(props.loadingOwnLocations)
+    const [loadingFriendLocations, setLoadingFriendLocations] = useState(props.loadingFriendLocations)
   
     useEffect(() => {
       setownLocations(props.ownLocations)
       setfriendLocations(props.friendLocations)
-      setLoading(props.loading)
-    }, [props.ownLocations, props.friendLocations, props.loading])
+      setLoadingOwnLocations(props.loadingOwnLocations)
+      setLoadingFriendLocations(props.loadingFriendLocations)
+    }, [props.ownLocations, props.friendLocations, props.loadingOwnLocations, props.loadingFriendLocations])
 
     function ProcessedFriendLocations(): JSX.Element {
     
@@ -48,7 +51,7 @@ function ListOfLocations(props : ListProps) : JSX.Element {
             */
             return(
             //if not loading
-            !loading?
+            !loadingFriendLocations?
             (   
             <>{
                 //if loaded and we have friend locations
@@ -105,7 +108,7 @@ function ListOfLocations(props : ListProps) : JSX.Element {
             */
             return(
             //if not loading
-            !loading?
+            !loadingOwnLocations?
             (   
             <>{  
                 //if loaded and we have own locations

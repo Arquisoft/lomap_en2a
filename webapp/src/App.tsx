@@ -24,7 +24,8 @@ function App(): JSX.Element {
   const session = useSession(); 
   const [userCoordinates, setUserCoordinates] = useState({lng:0, lat:0});
   //this state indicates if the user locations are being loaded
-  const [loading, setLoading] = useState(true);
+  const [loadingOwnLocations, setLoadingOwnLocations] = useState(true);
+  const [loadingFriendLocations, setLoadingFriendLocations] = useState(true);
   const [ownLocations, setOwnLocations] = useState<Array<Location>>([]);
   const [friendLocations, setFriendLocations] = useState<Array<Location>>([]);
   const[isLoggedIn, setIsLoggedIn] = useState(false);
@@ -57,11 +58,10 @@ function App(): JSX.Element {
   async function loadLocations(){
     if(session.session.info.webId){
       setOwnLocations(await getLocations(session.session.info.webId));
-      setLoading(false);
+      setLoadingOwnLocations(false);
 
       //Friends Locations
       let friends = await getFriendsID(session.session.info.webId);
-
       
       const requests = friends.map(friend => getLocations(friend as string));
       const results = await Promise.all(requests);
@@ -75,6 +75,7 @@ function App(): JSX.Element {
         locationList = locationList.concat(locArray);
       }
       setFriendLocations(locationList);
+      setLoadingFriendLocations(false);
     }
   }
 
@@ -171,7 +172,8 @@ function App(): JSX.Element {
                         friendLocations={friendLocations}
                         loadLocations={loadLocations}
                         setSelectedLocation={setSelectedLocation}
-                        loading={loading}
+                        loadingOwnLocations={loadingOwnLocations}
+                        loadingFriendLocations={loadingFriendLocations}
                       />
                     );
                   case "Friends":
@@ -217,7 +219,7 @@ function App(): JSX.Element {
                   changeViewTo={(viewName : string)=> {setNameSelectedView(viewName)}}
                   ownLocations = {ownLocations}
                   friendLocations = {friendLocations}
-                  loading={loading}
+                  loading={loadingOwnLocations && loadingFriendLocations}
                   clickedCoordinates = {clickedCoordinates}
                   setClickedCoordinates = {setClickedCoordinates}
                   loadUserLocations={loadUserLocations}
@@ -234,7 +236,7 @@ function App(): JSX.Element {
             width='25em'
             height='5em' 
             marginBottom='1%'
-            hidden = {!loading || !isLoggedIn}
+            hidden = {!loadingOwnLocations || !isLoggedIn}
             alignItems={'center'}
             backgroundColor='blue.700'
             borderRadius='1em'
