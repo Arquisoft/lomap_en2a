@@ -15,6 +15,7 @@ function Friends(props:FriendsProps) : JSX.Element {
   const session = useSession()
 
   const webId = session.session.info.webId;
+  console.log(useSession())
   const [friends, setFriends] = React.useState<Friend[]>([]);
   const[isLoged, setLogged] = React.useState(false);
   const[friendChargingMsg, setFriendChargingMsg] = React.useState("Loading...")
@@ -25,7 +26,7 @@ function Friends(props:FriendsProps) : JSX.Element {
 
   React.useEffect(() => {
     handleFriends()
-  }, [friends]);
+  }, []);
 
   const handleFriends = async () => {
     if (webId !== undefined && webId !== ""){
@@ -63,7 +64,8 @@ function Friends(props:FriendsProps) : JSX.Element {
           zIndex={1}
           borderWidth={'1px'}
           overflow='auto'>
-          <CloseButton 
+          <CloseButton
+                    data-testid='closeButton'
                     onClick={() => props.setSelectedView('Map')}
                     position='absolute'
                     top='2%'
