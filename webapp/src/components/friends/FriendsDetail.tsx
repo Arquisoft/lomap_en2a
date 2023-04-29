@@ -35,6 +35,7 @@ function FriendsDetail (props : FriendsDetailProps ) : JSX.Element{
                 <Avatar 
                     src={props.friend.pfp as string} 
                     name ={props.friend.username}
+                    data-testid = 'friendImage'
                 />
                 <Text 
                     textTransform={'capitalize'} 
