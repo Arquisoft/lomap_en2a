@@ -60,17 +60,126 @@ const testLocations = [
       ]
     }];
 
-
-
-test('check that the location list renders propertly',async () => {
-    const {getByText}= render(<ListOfLocations setSelectedLocation={jest.fn()} loadLocations={jest.fn()} loadingOwnLocations={false} loadingFriendLocations={false} ownLocations={testLocations} friendLocations={[]} setSelectedView={()=>{}}></ListOfLocations>)
-    testLocations.forEach(location => {
-        let name = location.name;
-        expect(getByText(name)).toBeInTheDocument();
-    });
+//we check that when passing the own locations are loading the screen shows the loading message
+test('check that when own locations loading it shows loading',async () => {
+    const {getByText}= render(
+      <ListOfLocations 
+        setSelectedLocation={jest.fn()}
+        loadLocations={jest.fn()}
+        loadingOwnLocations={true}
+        loadingFriendLocations={false}
+        ownLocations={[]}
+        friendLocations={[]}
+        setSelectedView={()=>{}}></ListOfLocations>)
+    expect(getByText("Loading your locations")).toBeInTheDocument();
 })
 
-test('check that with no location the loading squeletons appear',async () => {
-    const {getByTestId}= render(<ListOfLocations setSelectedLocation={jest.fn()} loadLocations={jest.fn()} loadingOwnLocations={false} loadingFriendLocations={false} ownLocations={[]} friendLocations={[]} setSelectedView={()=>{}}></ListOfLocations>)
-    expect(getByTestId('loadingView')).toBeInTheDocument();
+//we check that when passing the friend locations are loading the screen shows the loading message
+test('check that when friends locations loading it shows loading',async () => {
+  const {getByText,getByTestId}= render(
+    <ListOfLocations 
+      setSelectedLocation={jest.fn()}
+      loadLocations={jest.fn()}
+      loadingOwnLocations={true}
+      loadingFriendLocations={true}
+      ownLocations={[]}
+      friendLocations={[]}
+      setSelectedView={()=>{}}></ListOfLocations>)
+  //we click on the friendLocationsTab
+  getByTestId("friendLocationsTab").click();
+  expect(getByText("Loading your friends locations")).toBeInTheDocument();
 })
+
+//check that when no own locations the message to add locations is shown
+test('check that when no own locations the message to add locations is shown',async () => {
+  const {getByText}= render(
+    <ListOfLocations
+      setSelectedLocation={jest.fn()}
+      loadLocations={jest.fn()}
+      loadingOwnLocations={false}
+      loadingFriendLocations={false}
+      ownLocations={[]}
+      friendLocations={testLocations}
+      setSelectedView={()=>{}}></ListOfLocations>)
+  expect(getByText("Ups")).toBeInTheDocument();
+})
+
+//check that when no own locations the message to add locations is shown
+test('check that when no friends locations the message to add friends and share locations appears',async () => {
+  const {getByText,getByTestId}= render(
+    <ListOfLocations
+      setSelectedLocation={jest.fn()}
+      loadLocations={jest.fn()}
+      loadingOwnLocations={false}
+      loadingFriendLocations={false}
+      ownLocations={testLocations}
+      friendLocations={[]}
+      setSelectedView={()=>{}}></ListOfLocations>)
+    //we click on the friendLocationsTab
+  getByTestId("friendLocationsTab").click();
+  expect(getByText("Ups")).toBeVisible();
+})
+
+//test that with a list of own locations the list is rendered properly
+test('check that the own location list renders propertly',async () => {
+  const {getByText}= render(
+    <ListOfLocations
+      setSelectedLocation={jest.fn()}
+      loadLocations={jest.fn()}
+      loadingOwnLocations={false}
+      loadingFriendLocations={false}
+      ownLocations={testLocations}
+      friendLocations={[]}
+      setSelectedView={()=>{}}></ListOfLocations>)
+  testLocations.forEach(location => {
+    let name = location.name;
+    expect(getByText(name)).toBeInTheDocument();
+  });
+})
+
+//test that with a list of own locations the list is rendered properly
+test('check that the friend location list renders propertly',async () => {
+  const {getByText,getByTestId}= render(
+    <ListOfLocations
+      setSelectedLocation={jest.fn()}
+      loadLocations={jest.fn()}
+      loadingOwnLocations={false}
+      loadingFriendLocations={false}
+      ownLocations={[]}
+      friendLocations={testLocations}
+      setSelectedView={()=>{}}></ListOfLocations>)
+  //we click on the friendLocationsTab
+  getByTestId("friendLocationsTab").click();
+  testLocations.forEach(location => {
+    let name = location.name;
+    expect(getByText(name)).toBeInTheDocument();
+  });
+})
+
+//test when pressing the close button the setSelectedView function is called
+test('check that when pressing the close button the setSelectedView function is called',async () => {
+  const setSelectedView = jest.fn();
+  const {getByTestId}= render(
+    <ListOfLocations
+      setSelectedLocation={jest.fn()}
+      loadLocations={jest.fn()}
+      loadingOwnLocations={false}
+      loadingFriendLocations={false}
+      ownLocations={[]}
+      friendLocations={testLocations}
+      setSelectedView={setSelectedView}></ListOfLocations>)
+  //we click on the friendLocationsTab
+  getByTestId("closeButton").click();
+  expect(setSelectedView).toHaveBeenCalled();
+})
+
+
+
+
+// test('check that the location list renders propertly',async () => {
+//     const {getByText}= render(<ListOfLocations setSelectedLocation={jest.fn()} loadLocations={jest.fn()} loadingOwnLocations={false} loadingFriendLocations={false} ownLocations={testLocations} friendLocations={[]} setSelectedView={()=>{}}></ListOfLocations>)
+//     testLocations.forEach(location => {
+//         let name = location.name;
+//         expect(getByText(name)).toBeInTheDocument();
+//     });
+// })

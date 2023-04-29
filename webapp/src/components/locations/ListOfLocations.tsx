@@ -172,6 +172,7 @@ function ListOfLocations(props : ListProps) : JSX.Element {
             fontSize='2.2em' alignSelf='center' borderBottomWidth='1px'>List of locations</Text>
             <Flex direction={'column'}>
                 <CloseButton 
+                    data-testid='closeButton'
                     onClick={() => {
                         props.setSelectedView('Map') }}
                     position='absolute'
@@ -185,11 +186,11 @@ function ListOfLocations(props : ListProps) : JSX.Element {
         { 
             <Tabs isFitted={true} variant='enclosed' >
             <TabList>
-                <Tab as='b' >
+                <Tab as='b' data-testid='myLocationsTab' >
                     <Icon as={MdEmojiPeople} color='black' minHeight={'10px'} minWidth={'10px'} marginRight='1.1em' />
                     Your locations
                 </Tab>
-                <Tab as='b'>
+                <Tab as='b' data-testid='friendLocationsTab'>
                     <Icon as={IoPeople} color='black' minHeight={'10px'} minWidth={'10px'} marginRight='1.1em' />
                     Friend Locations
                 </Tab>
