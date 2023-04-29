@@ -460,7 +460,13 @@ body.book #toc,body.book #preamble,body.book h1.sect0,body.book .sect1>h2{page-b
 <li><a href="#_technical_context">3.2. Technical Context</a></li>
 </ul>
 </li>
-<li><a href="#section-solution-strategy">4. Solution Strategy</a></li>
+<li><a href="#section-solution-strategy">4. Solution Strategy</a>
+<ul class="sectlevel2">
+<li><a href="#_technologies">4.1. Technologies</a></li>
+<li><a href="#_design">4.2. Design</a></li>
+<li><a href="#_organizational">4.3. Organizational</a></li>
+</ul>
+</li>
 <li><a href="#section-building-block-view">5. Building Block View</a>
 <ul class="sectlevel2">
 <li><a href="#_whitebox_overall_system">5.1. Whitebox Overall System</a></li>
@@ -590,17 +596,36 @@ to any place in the world. These locations can have images, reviews, scores&#823
 an impediment for the users to share their places with friends, since LoMap implements the friend system of Solid and lets the user decide which information is going to be
 shared and which is going to be private.</p>
 </div>
-<div class="paragraph">
-<div class="title">Functional requirements</div>
-<p>The user will be able to:
-* Manage their locations: add, delete and edit.
-* Add different categories for each location.
-* See the locations in the map in form of markers.
-* Interact with the locations adding photos, reviews or ratings.
-* Manage a list of friends.
-* Manage the information that is shared with his friends.
-* Keep track of their progress in the application in a gamified way.
-* Filter locations based on categories and friends.</p>
+<div class="sect3">
+<h4 id="_functional_requirements">1.1.1. Functional requirements</h4>
+<div class="ulist">
+<div class="title">The user will be able to:</div>
+<ul>
+<li>
+<p>Manage their locations: add, delete and edit.</p>
+</li>
+<li>
+<p>Add different categories for each location.</p>
+</li>
+<li>
+<p>See the locations in the map in form of markers.</p>
+</li>
+<li>
+<p>Interact with the locations adding photos, reviews or ratings.</p>
+</li>
+<li>
+<p>Manage a list of friends.</p>
+</li>
+<li>
+<p>Manage the information that is shared with his friends.</p>
+</li>
+<li>
+<p>Keep track of their progress in the application in a gamified way.</p>
+</li>
+<li>
+<p>Filter locations based on categories and friends.</p>
+</li>
+</ul>
 </div>
 <div class="ulist">
 <div class="title">The system will:</div>
@@ -615,6 +640,7 @@ shared and which is going to be private.</p>
 <p>Offer the user an interactive guide to provide guidance and training on the app functionalities.</p>
 </li>
 </ul>
+</div>
 </div>
 </div>
 <div class="sect2">
@@ -909,34 +935,85 @@ together with a mapping table showing the relationships between channels and inp
 <div class="paragraph">
 <p>In this section strategies decided by the team will be stated.</p>
 </div>
-<div class="paragraph">
-<p>&lt;h2&gt;Technologies&lt;/h2&gt;
-* TypeScript: This language, that comes from JavaScript, provides a powerful language to program the client part of our application. It provides a good documentation and some tools that JavaScript does not provide that makes it more powerfull.
-* Arc42: This template allows our documentation to be organized, and well specified, and also gives us a path to follow and simplify the process.
-* Google Maps API: This API allows us to build the map which will be needed to the development of the application. This api has been chosen because it&#8217;s reliable and has been used by some of our team members before. Achieves usability, deployment and good user experience.
-* Solid: In order to store each user&#8217;s pod and keep the data decentralized. Achieves security and privacy.
-* React: A JavaScript library for user interfaces. It is widely used in the industry because it helps building rich user interfaces in a simple way, and allows flexibility and is easy to mantain.
-* NodeJS: Another JavaScript library for the server layer that provides the tools to implement the application. It also supports different types of databases and has a large and active community, that might comme in handy when we have questions.
-* Docker: In order to deploy the application. It containerizes it for automated deployment. Achieves portability.
-* Chakra UI: component and modular library to create HTML customized and themeable components. Achieves usability.
-* Inrupt Solid APIs: set of libraries developed by inrupt to manage and control the information and features in the Solid pod.
-* RDF: semantic web standard used to describe and model information for web resources, in this case, used to store information in the Solid pod.
-* Turtle: RDF syntax that allows an RDF graph to be completely written in a compact and natural text form, with abbreviations for common usage patterns and datatypes
-* Cucumber: testing tool that supports Behavior Driven Development (BDD). Achieves Testability
-* Gatling: load testing tool. Achieves Testability.
-* End-to-end testing: methodology to test from the end user&#8217;s experience by simulating the real user scenario and validating the system and its components for integration and data integrity. Achieves Test Coverage</p>
+<div class="sect2">
+<h3 id="_technologies">4.1. Technologies</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>TypeScript: This language, that comes from JavaScript, provides a powerful language to program the client part of our application. It provides a good documentation and some tools that JavaScript does not provide that makes it more powerfull.</p>
+</li>
+<li>
+<p>Arc42: This template allows our documentation to be organized, and well specified, and also gives us a path to follow and simplify the process.</p>
+</li>
+<li>
+<p>Google Maps API: This API allows us to build the map which will be needed to the development of the application. This api has been chosen because it&#8217;s reliable and has been used by some of our team members before. Achieves usability, deployment and good user experience.</p>
+</li>
+<li>
+<p>Solid: In order to store each user&#8217;s pod and keep the data decentralized. Achieves security and privacy.</p>
+</li>
+<li>
+<p>React: A JavaScript library for user interfaces. It is widely used in the industry because it helps building rich user interfaces in a simple way, and allows flexibility and is easy to mantain.</p>
+</li>
+<li>
+<p>NodeJS: Another JavaScript library for the server layer that provides the tools to implement the application. It also supports different types of databases and has a large and active community, that might comme in handy when we have questions.</p>
+</li>
+<li>
+<p>Docker: In order to deploy the application. It containerizes it for automated deployment. Achieves portability.</p>
+</li>
+<li>
+<p>Chakra UI: component and modular library to create HTML customized and themeable components. Achieves usability.</p>
+</li>
+<li>
+<p>Inrupt Solid APIs: set of libraries developed by inrupt to manage and control the information and features in the Solid pod.</p>
+</li>
+<li>
+<p>RDF: semantic web standard used to describe and model information for web resources, in this case, used to store information in the Solid pod.</p>
+</li>
+<li>
+<p>Turtle: RDF syntax that allows an RDF graph to be completely written in a compact and natural text form, with abbreviations for common usage patterns and datatypes</p>
+</li>
+<li>
+<p>Cucumber: testing tool that supports Behavior Driven Development (BDD). Achieves Testability</p>
+</li>
+<li>
+<p>Gatling: load testing tool. Achieves Testability.</p>
+</li>
+<li>
+<p>End-to-end testing: methodology to test from the end user&#8217;s experience by simulating the real user scenario and validating the system and its components for integration and data integrity. Achieves Test Coverage</p>
+</li>
+</ul>
 </div>
-<div class="paragraph">
-<p>&lt;h2&gt;Design&lt;/h2&gt;
-* Serverless application: this application won&#8217;t rely on a server nor have a database.
-* Client-side component: the code resides in the browser, receives requests and presents the user with the required information.
-* Pod architecture: data stored in pods will be divided in different paths and subfolders to achieve privacy and security.</p>
 </div>
-<div class="paragraph">
-<p>&lt;h2&gt;Organizational&lt;/h2&gt;
-* Good, up to date documentation, in order to make the development easy to follow.
-* Github for communication of the team members and merging the code, by using branches, issues and wikis.
-* Weekly meetings, where we take and discuss decisions and review each week&#8217;s tasks.</p>
+<div class="sect2">
+<h3 id="_design">4.2. Design</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Serverless application: this application won&#8217;t rely on a server nor have a database.</p>
+</li>
+<li>
+<p>Client-side component: the code resides in the browser, receives requests and presents the user with the required information.</p>
+</li>
+<li>
+<p>Pod architecture: data stored in pods will be divided in different paths and subfolders to achieve privacy and security.</p>
+</li>
+</ul>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_organizational">4.3. Organizational</h3>
+<div class="ulist">
+<ul>
+<li>
+<p>Good, up to date documentation, in order to make the development easy to follow.</p>
+</li>
+<li>
+<p>Github for communication of the team members and merging the code, by using branches, issues and wikis.</p>
+</li>
+<li>
+<p>Weekly meetings, where we take and discuss decisions and review each week&#8217;s tasks.</p>
+</li>
+</ul>
 </div>
 <div class="sidebarblock arc42help">
 <div class="content">
@@ -976,6 +1053,7 @@ Refer to details in the following sections.</p>
 </div>
 </div>
 <div style="page-break-after: always;"></div>
+</div>
 </div>
 </div>
 <div class="sect1">
