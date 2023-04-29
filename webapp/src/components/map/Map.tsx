@@ -25,7 +25,7 @@ type MapProps = {
 }
 
 const blueIcon = 'http://maps.google.com/mapfiles/ms/icons/blue.png';
-const redIcon = 'http://maps.google.com/mapfiles/ms/icons/red.png';
+const redIcon = 'https://maps.gstatic.com/mapfiles/api-3/images/spotlight-poi.png';
 
 const Map = ( props : MapProps) => {
   const session = useSession();

@@ -49,10 +49,19 @@ function App(): JSX.Element {
     let locList = ownLocations;
     if(session.session.info.webId){
       let list = await getLocations(session.session.info.webId)
-      locList = locList.concat(list)
+      //locList = locList.concat(list)
+      setOwnLocations(list);
     }
-    setOwnLocations(locList);
+    
   }
+
+  
+
+  
+
+  useEffect(() => {
+    console.log('ownLocations:', ownLocations);
+  }, [ownLocations]);
 
   async function loadLocations(){
     if(session.session.info.webId){
@@ -165,6 +174,7 @@ function App(): JSX.Element {
                       return (
                         <EditLocationFormComp
                           locations={ownLocations}
+                          setOwnLocations={setOwnLocations}
                           setSelectedView={(viewName: string) => {
                             setNameSelectedView(viewName);
                           }}
@@ -221,7 +231,7 @@ function App(): JSX.Element {
                     return (
                       <GamePanel
                         setSelectedView={(view)=> setNameSelectedView(view)}
-                        locations={ownLocations.concat(friendLocations)}/>
+                        locations={ownLocations}/>
                     );
                   default:
                     return null;

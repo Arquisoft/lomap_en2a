@@ -386,7 +386,7 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
                 <MenuList minWidth='100%'>
                   {
                     friends.length > 0 ? 
-                    <MenuOptionGroup type='checkbox'>
+                    <MenuOptionGroup type='checkbox' >
                       {
                         friends.map((friend,i) => {
                           return (

@@ -18,7 +18,7 @@ import {
 } from "@chakra-ui/react";
 import { Category } from '../Category';
 import { useToast } from "@chakra-ui/react";
-import {createLocation} from "../../solid/solidManagement";
+import {editLocationSolid} from "../../solid/solidManagement";
 import {useSession} from "@inrupt/solid-ui-react";
 import {MdOutlineAddLocationAlt, MdArrowDropDown} from "react-icons/md";
 import {RxCross2,RxCheck} from "react-icons/rx";
@@ -35,6 +35,7 @@ type EditLocationProps = {
     setInLocationCreationMode: (activated : boolean) => void;
     setSelectedLocation: (location: Location) => void;
     location: Location;
+    setOwnLocations: (newLocations: Location[]) => void;
 }
 
 /**
@@ -88,12 +89,17 @@ function EditLocationFormComp(props : EditLocationProps) : JSX.Element {
     let isValidName: boolean = !name || name.trim().length === 0;
 
 
-    function addLocation(location:Location):void{
+    function editLocation(location:Location):void{
         if(session.session.info.webId){
             //we fake the addition of the location by means of adding it to the list of locations
             //and indicating the user the location is being added to the pod in the background
-            props.locations.push(location);
+            console.log(props.locations);
+            let loc = props.locations.filter(location => location.url !== props.location.url);
+            loc.push(location);
+            props.setOwnLocations(loc);
+            console.log(props.locations);
             
+            console.log(props.locations);
             //we set the creation mode to false
             setAddingLocationProcess(false);
             //we reset the clicked coordinates to the default value
@@ -106,14 +112,14 @@ function EditLocationFormComp(props : EditLocationProps) : JSX.Element {
             setDescription('');
             setImgs([]);
             setEditingManualCoordinates(false);
-            
+             
             //we perform a call to the function that adds the location to the pod
-            createLocation(session.session.info.webId ,location).then(
+            editLocationSolid(location).then(
                 ()=> {
                     props.loadUserLocations();//WORKING
                     toast({
-                        title: 'Location correctly added to your pod',
-                        description: "Location '"+location.name+"' was added to your pod.",
+                        title: 'Location correctly edited in your pod',
+                        description: "Location '"+location.name+"' was edited in your pod.",
                         status: 'success',
                         duration: 5000,
                         isClosable: true,
@@ -130,6 +136,7 @@ function EditLocationFormComp(props : EditLocationProps) : JSX.Element {
                 }
             );
         }
+        
     }
 
     const regexCoords = /^-?(90|[0-8]?\d)(\.\d+)?, *-?(180|1[0-7]\d|\d?\d)(\.\d+)?$/;
@@ -174,11 +181,11 @@ function EditLocationFormComp(props : EditLocationProps) : JSX.Element {
             },
             category: checkedCategories,
             description: description.trimStart().trimEnd(),
-            imagesAsFile : imgsFiles
-
+            imagesAsFile : imgsFiles,
+            url: props.location.url
         }
 
-        addLocation(l);
+        editLocation(l);
 
     };
     /**
@@ -249,14 +256,14 @@ function EditLocationFormComp(props : EditLocationProps) : JSX.Element {
                                 width={'27%'} height={'160%'}>Categories
                             </MenuButton>
                             <MenuList minWidth='240px'>
-                                <MenuOptionGroup type='checkbox'>
+                                <MenuOptionGroup type='checkbox' value={checkedCategories}>
                                     {
                                     categories.map((kind,i) => { // as many possible categories as items in Category enum
                                         console.log(checkedCategories.includes(kind))
                                         return (
                                             <MenuItemOption key={i} value={kind}
                                              onClick={(e) => handleCheckedCategory(e)}
-                                                isChecked={checkedCategories.includes(kind) }
+                                                isChecked={ true}//checkedCategories.includes(kind)
                                             >{kind}</MenuItemOption>
                                         )
                                     })
@@ -324,52 +331,7 @@ function EditLocationFormComp(props : EditLocationProps) : JSX.Element {
                     />
                 </Flex>
                 
-                <Flex direction={'column'} marginLeft={'5%'} marginRight={'3%'} gap='5%'>
-                    <label className={"label upload-file"}
-                    htmlFor="image-input">Add images</label>
-                    <Input className={"upload-file"}
-                        id={"image-input"}
-                        hidden={true}
-                        type="file"
-                        accept='image/*'
-                        htmlSize={200}
-                        onChange={async function(e) {
-                            //imgs = []; // array of images empty
-                            let reader = new FileReader(); // create reader
-                            let files = e.target.files !== null ? e.target.files : []; // obtain files
-                            for (let image of files){
-                                let res = await readFileAsync(image, reader); // wait for the result
-                                //imgs.push(res); // add file to array
-                                setImgs(oldArray => [...oldArray, res]);
-                                setImgsFiles(oldArray => [...oldArray,image]);
-                            }
-                        }}
-                        multiple>
-                    </Input>
-
-                    <HStack shouldWrapChildren={true} display='flex' marginTop={'2%'}
-                        overflowX='auto' height={'200px'}>
-                        {
-                            imgs.length ? 
-                            (
-                                imgs.map((image,i)=>{
-                                    return (
-                                        <Image
-                                            key={i}
-                                            src={image as string}
-                                            width='200'
-                                            height='200'
-                                            borderRadius='lg'
-                                            fallbackSrc='https://www.resultae.com/wp-content/uploads/2018/07/reloj-100.jpg'>
-                                        </Image>
-                                    );
-                                })
-                            ) 
-                            : 
-                            (<></>)
-                        }
-                    </HStack>
-                </Flex>
+                
                 <Box alignSelf={'center'} marginTop={'auto'} marginBottom={'10%'}>
                     {addingLocationProcess ? (
                         <Button leftIcon={<Spinner size={"xs"}/>}
@@ -379,7 +341,7 @@ function EditLocationFormComp(props : EditLocationProps) : JSX.Element {
                                 disabled
                                 height={'170%'}
                                 fontSize={'2xl'}>
-                            Adding location
+                            Editing location
                         </Button>
                     ) : (
                         <Button leftIcon={<MdOutlineAddLocationAlt/>}
@@ -390,7 +352,7 @@ function EditLocationFormComp(props : EditLocationProps) : JSX.Element {
                                 fontSize={'2xl'}
                                 disabled={!areValidCoords || name.trim().length == 0}
                                 >
-                            Add location
+                            Edit location
                         </Button>
                     )}
                 </Box>

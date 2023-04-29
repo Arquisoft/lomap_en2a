@@ -408,6 +408,34 @@ export async function createLocationDataSet(folder:string,locationFolder:string,
   await addImages(locationImages,location); // store the images
 }
 
+export async function editLocationSolid(location:LocationType) {
+  
+  let url = location.url as string;
+  let aux = url.split("/");
+  let ID = aux[aux.length-1]; // get the ID of the location
+  let locationUrl = location.url+"/index.ttl#"+ID; // construct the url of the location "ID/index.ttl#ID"
+  let locationFolder = location.url+"/index.ttl";
+  let dataSet = await getSolidDataset(locationUrl, {fetch: fetch})
+
+  // create dataset for the location
+  let categoriesSerialized = serializeCategories(location.category); // serialize categories
+  // build location thing
+  let newLocation = buildThing(createThing({name: ID})) 
+  .addStringNoLocale(SCHEMA_INRUPT.name, location.name.toString())
+  .addStringNoLocale(SCHEMA_INRUPT.longitude, location.coordinates.lng.toString())
+  .addStringNoLocale(SCHEMA_INRUPT.latitude, location.coordinates.lat.toString())
+  .addStringNoLocale(SCHEMA_INRUPT.description, location.description.toString())
+  .addStringNoLocale(SCHEMA_INRUPT.identifier, locationUrl) // store the url of the location
+  .addStringNoLocale(SCHEMA_INRUPT.Product, categoriesSerialized) // store string containing the categories
+  .addUrl(RDF.type, "https://schema.org/Place")
+  .build();
+
+
+  dataSet = setThing(dataSet, newLocation); // store thing in dataset
+  // save dataset to later add the images
+  dataSet = await saveSolidDatasetAt(locationFolder, dataSet, {fetch: fetch}) // save dataset 
+}
+
 /**
  * Add a review to the given location
  * @param location contains the location
