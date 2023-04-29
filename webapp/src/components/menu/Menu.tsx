@@ -60,6 +60,7 @@ function Menu(props: MenuProps): JSX.Element {
                   px={2}
                   alignItems='left'
                   marginTop={'3%'}
+                  id='smallContainer'
             >
               <Box>
                 <Button
@@ -125,7 +126,7 @@ function Menu(props: MenuProps): JSX.Element {
                   );
                 }}
                 >
-                  Add friends
+                  Add Friends
                 </Button>
               </Box>
 
@@ -169,6 +170,7 @@ function Menu(props: MenuProps): JSX.Element {
           (
             <Flex
               data-testid='smallContainer'
+              id='smallContainer'
               direction={'column'}
               bg={'white'}
               width={"60px"}
@@ -186,7 +188,7 @@ function Menu(props: MenuProps): JSX.Element {
               <Flex direction='row' gap='2' alignItems={'center'}>
                 <Icon as={MdList} width='3em' height={'2.5vw'} cursor={'pointer'}/>
               </Flex>
-              <Flex direction='row' gap='2' alignItems={'center'}>
+              <Flex direction='row' gap='2' alignItems={'center'} id='addLocationIcon'>
                 <Icon as={MdLocationOn} width='3em' height={'2.5vw'} cursor={'pointer'}/> 
               </Flex>
               <Flex direction='row' gap='2' alignItems={'center'}>
