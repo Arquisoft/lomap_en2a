@@ -60,27 +60,41 @@ class Map
     Map : - locations : List<Location>
     Map : + sharedLocations : List<Location>
 
-class Location
-    Location : - latitude : double
-    Location : - longitude : double    
-    Location : - name : String
-    Location : - description : String
-    Location : - images : List<Images>
-    Location : - reviews : ListOfLocations<String>
-    Location : - rating : double
+class Coordinates
+    Coordinates : - lng : Number
+    Coordinates : - lat : Number
 
-    Location : + getLatitude() : String
-    Location : + getLongitude() : String
-    Location : + getName() : String
-    Location : + getDescription() : String
+class Location
+    Location : - url : string
+    Location : - name : string
+    Location : - description : string
+    Location : - category : Array<string>
+    Location : - rating : Map<string,Number>
+    Location : - images : Array<string>
+    Location : - imagesAsFile : Array<File>
+
+class Review
+    Review : - webId : string
+    Review : - date : string
+    Review : - title : string
+    Review : - content : string
+    Review : - username : string
 
 class User
-    User : friends : ListOfLocations<User>
+    User : name : string
+    User : email : string
+
+class Friend
+    Friend : username : string
+    Friend : webID : string
+    Friend : pfp : string
 
 
-Map <-- "*" Location
-User *--> "1" Map
-User --> "*" User
+
+Coordinates *--> "1" Location
+Review *--> "*" Location
+Map "1" *--> User
+Friend "*" --> User
 ----
 
 === _Architecture and design patterns_
@@ -107,7 +121,16 @@ These are rules to be considered when implementing our code:
 
 === _User Experience (UX)_
 
-We want to have adaptable so it can be used in different devices. We also want it to have accessible interfaces, so we have to be careful with the use of colors, alternative texts and more details.
+We want to have adaptable so it can be used in different devices. We also want it to have accessible interfaces, so we have to be careful with the use of colors,
+alternative texts and more details.
+
+After doing some usability tests, we found that the application was not very friendly with new users.
+A viable solution we came to was the implementation of a tutorial. This tutorial uses texts and GIFs to
+show the user how to do basic actions in the application like how to add a location, check your added locations,
+add a friend...
+
+Internationalizing the application was discussed during the development, but in the actual version of the application,
+it is not yet implemented. The application is only available in English.
 
 === _Development concepts_
 .Testing
@@ -121,8 +144,8 @@ We have tested the application with different tests:
 * Load tests: to measure the performance of the application while many users use it. The tool Gatling was used.
 
 .Deployment
-The application will be deployed to a cloud server.
+The application will be deployed to GitHub Pages.
 
 .Configurability
 The application will not have configurable features. An early idea was to include a "dark mode".
-Through the development we decided to discard these ideas in order to focus on a better application in general.
+Through the development we decided to postpone these ideas in order to focus on a better application in general.
