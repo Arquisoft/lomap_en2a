@@ -16,8 +16,8 @@ LoMap is the perfect way to explore🔍 and share the world around you with your
 
 <a name="lomap"></a>
 ## 🔭LoMap
-With the initiative of the Council of Brussels and the collaboration of the <b>Solid community</b>, we are eager to present you THE maps software system: LoMap.  
-This application allows our users to have personalized maps about places and local businesses in a city, wherever they may be. All the users personal data will be stored in their personal pods, that could be provided by <b>Inrupt</b>, <b>Solid</b> or any other pod supplier. In addition to this, users can have the chance to share their map and information with their friends. Also, if you are a competitive person, you are safe with us :), just try to be better than everyone else achieveng challenges and reach the Master rank!
+With the initiative of the Council of Brussels and the collaboration of the <b>Solid community</b>, we are eager to present you THE maps software system: ✨LoMap✨.  
+This application allows our users to have personalized 🗺️maps🗺️ about places and local businesses in a city, wherever they may be. All the users personal data will be stored in their 🔒personal pods🔒, that could be provided by <b>Inrupt</b>, <b>Solid</b> or any other pod supplier. In addition to this, users can have the chance to share their map and information with their 👁️‍🗨️friends👁️‍🗨️. Also, if you are a competitive person, you are safe with us :), just try to be 🥇better🥇 than everyone else achieveng challenges and winning trophies to reach the 🏆Master🏆 rank!
 
 To start using LoMap, just follow the steps below and 🔮 may the map be with you 🔮
 
