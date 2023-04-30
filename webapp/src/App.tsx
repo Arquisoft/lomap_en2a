@@ -50,9 +50,9 @@ function App(): JSX.Element {
     let locList = ownLocations;
     if(session.session.info.webId){
       let list = await getLocations(session.session.info.webId)
-      locList = locList.concat(list)
+      // locList = locList.concat(list)
+      setOwnLocations(locList);
     }
-    setOwnLocations(locList);
   }
 
   async function loadLocations(){
@@ -206,7 +206,7 @@ function App(): JSX.Element {
                     return (
                       <GamePanel
                         setSelectedView={(view)=> setNameSelectedView(view)}
-                        locations={ownLocations.concat(friendLocations)}/>
+                        locations={ownLocations}/>
                     );
                   default:
                     return null;
