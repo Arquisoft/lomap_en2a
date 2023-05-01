@@ -6,12 +6,12 @@ import {
     AlertDialogHeader,
     AlertDialogContent,
     AlertDialogOverlay,
-    useDisclosure, Button, Icon, useToast, Spinner
+    useDisclosure, Button, Icon
 } from '@chakra-ui/react'
 import {RiLogoutBoxLine} from 'react-icons/ri'
 import { useSession } from '@inrupt/solid-ui-react';
 
-export function LogoutAlertDialog(props:any) {
+export function LogoutAlertDialog() {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const cancelRef = React.useRef() as React.MutableRefObject<HTMLInputElement>;
     const session = useSession()
@@ -45,7 +45,7 @@ export function LogoutAlertDialog(props:any) {
                 <Button onClick={onClose}>
                   Cancel
                 </Button>
-                <Button colorScheme='red' onClick={() => {session.logout(); window.location.reload()}} ml={3} leftIcon={<Icon as={RiLogoutBoxLine}/>}>
+                <Button colorScheme='red' onClick={() => {void session.logout(); window.location.reload()}} ml={3} leftIcon={<Icon as={RiLogoutBoxLine}/>}>
                   Logout
                 </Button>
               </AlertDialogFooter>
