@@ -62,7 +62,7 @@ You can get more information about the repository in the other README files:
 <a name="team"></a>
 # 😶‍🌫️TEAM MEMBERS (COLLABORATORS)
 
-🤓☝️ Adrián Vega Sánchez UO282365@uniovi.es<br>
+🤓☝️ Adrián Vega Sánchez uo282365@uniovi.es<br>
 🤯💸 Patricia Garcia Fernández uo282210@uniovi.es <br>
 🦍🦧 Pablo Argallero Fernández uo283216@uniovi.es <br>
 🗿🍪 Santiago Fernández Carballal uo283523@uniovi.es
