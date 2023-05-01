@@ -18,13 +18,15 @@ import LocationInfo from './components/locations/LocationInfo';
 import {GamePanel} from './components/game/GamePanel'
 import { ProfileView } from './components/profile/ProfileInfo';
 import { useSession } from '@inrupt/solid-ui-react';
+import EditLocationFormComp from './components/locations/EditLocation';import {IntroductionModalDialog} from "./components/dialogs/IntroductionModalDialog";
 
 
 function App(): JSX.Element {
   const session = useSession(); 
   const [userCoordinates, setUserCoordinates] = useState({lng:0, lat:0});
   //this state indicates if the user locations are being loaded
-  const [loading, setLoading] = useState(true);
+  const [loadingOwnLocations, setLoadingOwnLocations] = useState(true);
+  const [loadingFriendLocations, setLoadingFriendLocations] = useState(true);
   const [ownLocations, setOwnLocations] = useState<Array<Location>>([]);
   const [friendLocations, setFriendLocations] = useState<Array<Location>>([]);
   const[isLoggedIn, setIsLoggedIn] = useState(false);
@@ -34,10 +36,6 @@ function App(): JSX.Element {
   const [nameSelectedView, setNameSelectedView] = useState("Map");
 
 
-  const getNewLocation = (location:Location) => {
-    ownLocations.push(location);
-    createLocation(session.session.info.webId as string, location);
-  }
 
   //we get the locations for the user and fetch them to the list
   useEffect(()=>{
@@ -49,19 +47,19 @@ function App(): JSX.Element {
     let locList = ownLocations;
     if(session.session.info.webId){
       let list = await getLocations(session.session.info.webId)
-      locList = locList.concat(list)
+      //locList = locList.concat(list)
+      setOwnLocations(list);
     }
-    setOwnLocations(locList);
+    
   }
 
   async function loadLocations(){
     if(session.session.info.webId){
       setOwnLocations(await getLocations(session.session.info.webId));
-      setLoading(false);
+      setLoadingOwnLocations(false);
 
       //Friends Locations
       let friends = await getFriendsID(session.session.info.webId);
-
       
       const requests = friends.map(friend => getLocations(friend as string));
       const results = await Promise.all(requests);
@@ -75,15 +73,18 @@ function App(): JSX.Element {
         locationList = locationList.concat(locArray);
       }
       setFriendLocations(locationList);
+      setLoadingFriendLocations(false);
     }
   }
 
   //get the user's current location and save it for the map to use it as a center
   useEffect(()=>{
-    navigator.geolocation.getCurrentPosition(({coords : {latitude,longitude}}) =>{
-      //we set the coordinates to be the ones of the user for them to be passed to the map
-      setUserCoordinates({lat: latitude , lng : longitude});
-    })
+    if(navigator.geolocation !== null && navigator.geolocation !== undefined){
+      navigator.geolocation?.getCurrentPosition(({coords : {latitude,longitude}}) =>{
+        //we set the coordinates to be the ones of the user for them to be passed to the map
+        setUserCoordinates({lat: latitude , lng : longitude});
+      })
+    }
     handleRedirectAfterLogin();
   },[]);
 
@@ -101,6 +102,7 @@ function App(): JSX.Element {
     <>
       <ChakraProvider>
         <Flex
+          data-testid={'google-maps-map'}
           justifyContent={'center'}
           alignItems={'center'}
           width={'100vw'}
@@ -128,6 +130,7 @@ function App(): JSX.Element {
             }  
 
             <Button
+              data-testid={'add-location-button-corner'}
               size="lg"
               borderRadius="50%"
               width="4.5em"
@@ -161,6 +164,23 @@ function App(): JSX.Element {
                         setSelectedLocation={setSelectedLocation}
                       />
                     );
+                    case "EditLocation":
+                      return (
+                        <EditLocationFormComp
+                          locations={ownLocations}
+                          setOwnLocations={setOwnLocations}
+                          setSelectedView={(viewName: string) => {
+                            setNameSelectedView(viewName);
+                          }}
+                          loadLocations={loadLocations}
+                          loadUserLocations={loadUserLocations}
+                          clickedCoordinates={clickedCoordinates}
+                          setClickedCoordinates={setClickedCoordinates}
+                          setInLocationCreationMode={setInLocationCreationMode}
+                          setSelectedLocation={setSelectedLocation}
+                          location={selectedLocation}
+                        />
+                      );
                   case "ListOfLocations":
                     return (
                       <ListOfLocations
@@ -171,7 +191,8 @@ function App(): JSX.Element {
                         friendLocations={friendLocations}
                         loadLocations={loadLocations}
                         setSelectedLocation={setSelectedLocation}
-                        loading={loading}
+                        loadingOwnLocations={loadingOwnLocations}
+                        loadingFriendLocations={loadingFriendLocations}
                       />
                     );
                   case "Friends":
@@ -205,7 +226,7 @@ function App(): JSX.Element {
                     return (
                       <GamePanel
                         setSelectedView={(view)=> setNameSelectedView(view)}
-                        locations={ownLocations.concat(friendLocations)}/>
+                        locations={ownLocations}/>
                     );
                   default:
                     return null;
@@ -217,7 +238,7 @@ function App(): JSX.Element {
                   changeViewTo={(viewName : string)=> {setNameSelectedView(viewName)}}
                   ownLocations = {ownLocations}
                   friendLocations = {friendLocations}
-                  loading={loading}
+                  loading={loadingOwnLocations && loadingFriendLocations}
                   clickedCoordinates = {clickedCoordinates}
                   setClickedCoordinates = {setClickedCoordinates}
                   loadUserLocations={loadUserLocations}
@@ -225,7 +246,7 @@ function App(): JSX.Element {
             {
               !isLoggedIn ? (
                 <Login></Login>
-              ) : <></>
+              ) : <IntroductionModalDialog></IntroductionModalDialog>
             }
             <HStack
             padding='0.2em'
@@ -234,7 +255,7 @@ function App(): JSX.Element {
             width='25em'
             height='5em' 
             marginBottom='1%'
-            hidden = {!loading || !isLoggedIn}
+            hidden = {!loadingOwnLocations || !isLoggedIn}
             alignItems={'center'}
             backgroundColor='blue.700'
             borderRadius='1em'
