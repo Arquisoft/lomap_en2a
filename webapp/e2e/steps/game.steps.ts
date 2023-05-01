@@ -37,15 +37,16 @@ defineFeature(feature, test => {
 
             await page.waitForNavigation(); // wait for the redirect
             // await page.waitForTimeout(30000); // wait for 25 seconds (load locations??)
+            await expect(page).toClick("button", {text:"Close"});
             await page.waitForTimeout(8000);
             
-            const [menu] = await page.$x('/html/body/div[1]/div/div[2]/div');
+            const [menu] = await page.$x('//*[@id="smallContainer"]');
             await menu.click();
             await page.waitForTimeout(3000)
         });
 
         when("The user clicks the game button", async () => {
-            const [profile] = await page.$x('/html/body/div[1]/div/div[2]/div/div[5]/button')
+            const [profile] = await page.$x('/html/body/div[1]/div/div[4]/div/div[5]/button')
             await profile.click();
             await page.waitForTimeout(3000); // wait for 10 seconds
 
