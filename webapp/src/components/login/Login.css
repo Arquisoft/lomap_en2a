@@ -24,3 +24,10 @@
     row-gap: 1vh;
 }
 
+.title-text {
+    margin-top: 4%;
+    width: fit-content;
+    font-size: 2.2em;
+    align-self: center;
+    border-bottom-width: 1px;
+}

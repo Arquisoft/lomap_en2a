@@ -378,7 +378,7 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
         >
           <Flex direction='row' gap='8%' marginLeft='auto' marginRight='3%' marginTop='2%'>
             <CloseButton 
-                    onClick={() => props.setSelectedView('Map')}
+                    onClick={() => props.setSelectedView('ListOfLocations')}
             ></CloseButton>
           </Flex>
           <Flex direction='row' marginLeft='5%' width='90%' >

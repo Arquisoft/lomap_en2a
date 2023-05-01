@@ -1,13 +1,25 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Location } from '../../types/types'
 
-import {Flex,VStack,Text, Icon, CloseButton,Divider,Tabs,TabList,Tab,TabPanels,TabPanel} from "@chakra-ui/react";
+import {
+    Flex,
+    VStack,
+    Text,
+    Icon,
+    CloseButton,
+    Divider,
+    Tabs,
+    TabList,
+    Tab,
+    TabPanels,
+    TabPanel,
+    Button, Grid, GridItem, Tooltip,
+} from "@chakra-ui/react";
 import  LocationCard  from './LocationCard';
-import {MdOutlineLocationOff,MdEmojiPeople , } from 'react-icons/md'
+import {MdOutlineLocationOff, MdEmojiPeople} from 'react-icons/md'
 import {IoPeople} from 'react-icons/io5' 
-import {TbShareOff} from 'react-icons/tb'
+import {TbReload, TbShareOff} from 'react-icons/tb'
 import {BsClockHistory} from 'react-icons/bs'
-
 
 
 type ListProps = {
@@ -159,24 +171,38 @@ function ListOfLocations(props : ListProps) : JSX.Element {
         zIndex={1}
         overflow='auto'
         px={'2%'}
-        >
-            
-        
-    
-        <Flex direction='column'>
-            <Text marginTop='4%' width='fit-content' 
-            fontSize='2.2em' alignSelf='center' borderBottomWidth='1px'>List of locations</Text>
-            <Flex direction={'column'}>
-                <CloseButton 
-                    onClick={() => {
-                        props.setSelectedView('Map') }}
-                    position='absolute'
-                    top='2%'
-                    right='3%'
-                ></CloseButton>
-            </Flex>
-        </Flex>
-        
+    >
+        <Grid templateColumns={'repeat(5, 1fr)'}>
+            <GridItem></GridItem>
+            <GridItem colSpan={3}>
+                <Text className={'title-text'}>
+                    List of locations
+                </Text>
+            </GridItem>
+            <GridItem>
+                <Flex direction='row' marginEnd='4%' justifyContent={'right'}>
+                    <Tooltip label={'Reload locations'}>
+                        <Button colorScheme='blue' marginTop={'1em'} marginRight={'1em'}
+
+                                onClick={() => {
+                            void props.loadLocations();
+                        }}
+                        >
+                            <Icon as={TbReload}/>
+                        </Button>
+                    </Tooltip>
+                    <CloseButton
+                        onClick={() => {
+                            props.setSelectedView('Map') }}
+                        position='absolute'
+                        top='2%'
+                        right='3%'
+                    ></CloseButton>
+                </Flex>
+            </GridItem>
+        </Grid>
+
+
         <Divider marginTop={'2%'} marginBottom={'2%'} borderWidth={'2px'} borderRadius={"lg"} width='100%'/> 
         { 
             <Tabs isFitted={true} variant='enclosed' >

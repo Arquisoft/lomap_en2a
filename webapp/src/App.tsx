@@ -22,10 +22,8 @@ import EditLocationFormComp from './components/locations/EditLocation';import {I
 
 
 function App(): JSX.Element {
-  const session = useSession(); 
-  //const [userCoordinates, setUserCoordinates] = useState({lng:0, lat:0});
-  //this state indicates if the user locations are being loaded
-  const [loading, setLoading] = useState(true);
+  const session = useSession();
+  const [loading, setLoading] = useState(true); //this state indicates if the user locations are being loaded
   const [ownLocations, setOwnLocations] = useState<Array<Location>>([]);
   const [friendLocations, setFriendLocations] = useState<Array<Location>>([]);
   const[isLoggedIn, setIsLoggedIn] = useState(false);
@@ -34,11 +32,6 @@ function App(): JSX.Element {
   const [selectedLocation, setSelectedLocation] = useState<Location>(ownLocations[0]);
   const [nameSelectedView, setNameSelectedView] = useState("Map");
 
-
-  // const getNewLocation = (location:Location) => {
-  //   ownLocations.push(location);
-  //   createLocation(session.session.info.webId as string, location);
-  // }
 
   //we get the locations for the user and fetch them to the list
   useEffect(()=>{
@@ -53,8 +46,9 @@ function App(): JSX.Element {
     }
   }
 
-  async function loadLocations(){
+  async function loadLocations() {
     if(session.session.info.webId){
+      setLoading(true);
       setOwnLocations(await getLocations(session.session.info.webId));
       setLoading(false);
 
@@ -67,7 +61,7 @@ function App(): JSX.Element {
 
       let locationList: Array<Location> = [];
 
-      for(let locArray of results){
+      for(let locArray of results) {
         
         locArray.forEach(location =>location.isFriend = true);
 
@@ -105,8 +99,7 @@ function App(): JSX.Element {
           maxHeight={'100vh'}
           position={'relative'}
           >
-            <Map
-                 locations={ownLocations.concat(friendLocations)}
+            <Map locations={ownLocations.concat(friendLocations)}
                  changeViewTo={(viewName : string)=> {setNameSelectedView(viewName)}}
                  setClickedCoordinates={setClickedCoordinates}
                  clickedCoordinates={clickedCoordinates}
@@ -115,7 +108,7 @@ function App(): JSX.Element {
                  inLocationCreationMode={inLocationCreationMode}
                  setSelectedLocation={setSelectedLocation}
                  selectedLocation={selectedLocation}
-                loadUserLocations={loadUserLocations}
+                 loadUserLocations={loadUserLocations}
               />
             {
               //we define as the button (circle sized) that will be placed in the bottom right corner of the map
