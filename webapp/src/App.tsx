@@ -18,7 +18,7 @@ import LocationInfo from './components/locations/LocationInfo';
 import {GamePanel} from './components/game/GamePanel'
 import { ProfileView } from './components/profile/ProfileInfo';
 import { useSession } from '@inrupt/solid-ui-react';
-import {IntroductionModalDialog} from "./components/dialogs/IntroductionModalDialog";
+import EditLocationFormComp from './components/locations/EditLocation';import {IntroductionModalDialog} from "./components/dialogs/IntroductionModalDialog";
 
 
 function App(): JSX.Element {
@@ -28,7 +28,7 @@ function App(): JSX.Element {
   const [loading, setLoading] = useState(true);
   const [ownLocations, setOwnLocations] = useState<Array<Location>>([]);
   const [friendLocations, setFriendLocations] = useState<Array<Location>>([]);
-  const[isLoggedIn, setIsLoggedIn] = useState(true);
+  const[isLoggedIn, setIsLoggedIn] = useState(false);
   const [clickedCoordinates, setClickedCoordinates] = useState("");
   const [inLocationCreationMode, setInLocationCreationMode] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState<Location>(ownLocations[0]);
@@ -157,6 +157,23 @@ function App(): JSX.Element {
                         setSelectedLocation={setSelectedLocation}
                       />
                     );
+                    case "EditLocation":
+                      return (
+                        <EditLocationFormComp
+                          locations={ownLocations}
+                          setOwnLocations={setOwnLocations}
+                          setSelectedView={(viewName: string) => {
+                            setNameSelectedView(viewName);
+                          }}
+                          loadLocations={loadLocations}
+                          loadUserLocations={loadUserLocations}
+                          clickedCoordinates={clickedCoordinates}
+                          setClickedCoordinates={setClickedCoordinates}
+                          setInLocationCreationMode={setInLocationCreationMode}
+                          setSelectedLocation={setSelectedLocation}
+                          location={selectedLocation}
+                        />
+                      );
                   case "ListOfLocations":
                     return (
                       <ListOfLocations
