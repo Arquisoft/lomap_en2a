@@ -408,13 +408,43 @@ export async function createLocationDataSet(folder:string,locationFolder:string,
   await addImages(locationImages,location); // store the images
 }
 
+export async function editLocationSolid(location:LocationType) {
+  
+  let url = location.url as string;
+  let aux = url.split("/");
+  let ID = aux[aux.length-1]; // get the ID of the location
+  let locationUrl = location.url+"/index.ttl#"+ID; // construct the url of the location "ID/index.ttl#ID"
+  let locationFolder = location.url+"/index.ttl";
+  let dataSet = await getSolidDataset(locationUrl, {fetch: fetch})
+
+  // create dataset for the location
+  let categoriesSerialized = serializeCategories(location.category); // serialize categories
+  // build location thing
+  let newLocation = buildThing(createThing({name: ID})) 
+  .addStringNoLocale(SCHEMA_INRUPT.name, location.name.toString())
+  .addStringNoLocale(SCHEMA_INRUPT.longitude, location.coordinates.lng.toString())
+  .addStringNoLocale(SCHEMA_INRUPT.latitude, location.coordinates.lat.toString())
+  .addStringNoLocale(SCHEMA_INRUPT.description, location.description.toString())
+  .addStringNoLocale(SCHEMA_INRUPT.identifier, locationUrl) // store the url of the location
+  .addStringNoLocale(SCHEMA_INRUPT.Product, categoriesSerialized) // store string containing the categories
+  .addUrl(RDF.type, "https://schema.org/Place")
+  .build();
+
+
+  dataSet = setThing(dataSet, newLocation); // store thing in dataset
+  // save dataset to later add the images
+  dataSet = await saveSolidDatasetAt(locationFolder, dataSet, {fetch: fetch}) // save dataset 
+}
+
 /**
  * Add a review to the given location
  * @param location contains the location
  * @param review contains the review to be added to the location
  */
 export async function addLocationReview(location:LocationType, review:ReviewType){
-  let url = location.url?.split("#")[0] as string; // get the path of the location dataset
+ // https://adrivesan.inrupt.net/private/lomap/locations/LOC_0cc0f1af-c923-4b40-b4a7-5233ccb5c2a0/index.ttl#LOC_0cc0f1af-c923-4b40-b4a7-5233ccb5c2a0
+//  let url = location.url?.split("#")[0] as string; // get the path of the location dataset
+  let url = location.url + "/index.ttl" as string//HOLA
   // get dataset
   let locationDataset = await getSolidDataset(url, {fetch: fetch})
   // create review
@@ -443,7 +473,7 @@ export async function addLocationReview(location:LocationType, review:ReviewType
  * @param score contains the score of the rating
  */
 export async function addLocationScore(webId:string, location:LocationType, score:number){
-  let url = location.url?.split("#")[0] as string; // get location dataset path
+  let url = location.url + "/index.ttl" as string; // get location dataset path
   // get dataset
   let locationDataset = await getSolidDataset(url, {fetch: fetch})
   // create score
@@ -485,13 +515,20 @@ export async function addImages(url: string, location:LocationType){
 /**
  * Deletes location dataset and from inventory
  * @param webID contains the webId of the user
- * @param locationUrl contains the location url
+ * @param locationUrl contains the location urlfds
  * @returns updated dataset or reject if any errors arise
  */
 export async function deleteLocation(webID:string, locationUrl: string) {
-  let url = locationUrl.split("#")[0] as string; // get location dataset path
+  //HOLA
+ // let url = locationUrl.split("#")[0] as string; // get location dataset path
+  
+  let url = locationUrl + "/index.ttl" as string//HOLA
+
+  let aux = locationUrl.split("/"); 
+  let ID = aux[aux.length-1]; 
+
   let inventory = `${locationUrl.split("locations")[0]}inventory/index.ttl`;
-  let locationUrlInventory = `${inventory}#${locationUrl.split("#")[1]}`
+  let locationUrlInventory = `${inventory}#${ID}`
   try {
     let dataset = await getSolidDataset(url, {fetch:fetch}) // remove location dataset
     await deleteSolidDataset(dataset, {fetch: fetch})

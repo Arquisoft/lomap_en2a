@@ -18,7 +18,7 @@ import LocationInfo from './components/locations/LocationInfo';
 import {GamePanel} from './components/game/GamePanel'
 import { ProfileView } from './components/profile/ProfileInfo';
 import { useSession } from '@inrupt/solid-ui-react';
-import {IntroductionModalDialog} from "./components/dialogs/IntroductionModalDialog";
+import EditLocationFormComp from './components/locations/EditLocation';import {IntroductionModalDialog} from "./components/dialogs/IntroductionModalDialog";
 
 
 function App(): JSX.Element {
@@ -28,17 +28,13 @@ function App(): JSX.Element {
   const [loading, setLoading] = useState(true);
   const [ownLocations, setOwnLocations] = useState<Array<Location>>([]);
   const [friendLocations, setFriendLocations] = useState<Array<Location>>([]);
-  const[isLoggedIn, setIsLoggedIn] = useState(true);
+  const[isLoggedIn, setIsLoggedIn] = useState(false);
   const [clickedCoordinates, setClickedCoordinates] = useState("");
   const [inLocationCreationMode, setInLocationCreationMode] = useState(false);
   const [selectedLocation, setSelectedLocation] = useState<Location>(ownLocations[0]);
   const [nameSelectedView, setNameSelectedView] = useState("Map");
 
 
-  const getNewLocation = (location:Location) => {
-    ownLocations.push(location);
-    createLocation(session.session.info.webId as string, location);
-  }
 
   //we get the locations for the user and fetch them to the list
   useEffect(()=>{
@@ -50,10 +46,15 @@ function App(): JSX.Element {
     let locList = ownLocations;
     if(session.session.info.webId){
       let list = await getLocations(session.session.info.webId)
-      // locList = locList.concat(list)
-      setOwnLocations(locList);
+      //locList = locList.concat(list)
+      setOwnLocations(list);
     }
+    
   }
+
+  
+
+
 
   async function loadLocations(){
     if(session.session.info.webId){
@@ -162,6 +163,23 @@ function App(): JSX.Element {
                         setSelectedLocation={setSelectedLocation}
                       />
                     );
+                    case "EditLocation":
+                      return (
+                        <EditLocationFormComp
+                          locations={ownLocations}
+                          setOwnLocations={setOwnLocations}
+                          setSelectedView={(viewName: string) => {
+                            setNameSelectedView(viewName);
+                          }}
+                          loadLocations={loadLocations}
+                          loadUserLocations={loadUserLocations}
+                          clickedCoordinates={clickedCoordinates}
+                          setClickedCoordinates={setClickedCoordinates}
+                          setInLocationCreationMode={setInLocationCreationMode}
+                          setSelectedLocation={setSelectedLocation}
+                          location={selectedLocation}
+                        />
+                      );
                   case "ListOfLocations":
                     return (
                       <ListOfLocations
