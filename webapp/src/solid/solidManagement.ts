@@ -444,7 +444,7 @@ export async function editLocationSolid(location:LocationType) {
 export async function addLocationReview(location:LocationType, review:ReviewType){
  // https://adrivesan.inrupt.net/private/lomap/locations/LOC_0cc0f1af-c923-4b40-b4a7-5233ccb5c2a0/index.ttl#LOC_0cc0f1af-c923-4b40-b4a7-5233ccb5c2a0
 //  let url = location.url?.split("#")[0] as string; // get the path of the location dataset
-  let url = location.url + "/index.ttl" as string
+  let url = location.url + "/index.ttl" as string//HOLA
   // get dataset
   let locationDataset = await getSolidDataset(url, {fetch: fetch})
   // create review
@@ -515,13 +515,20 @@ export async function addImages(url: string, location:LocationType){
 /**
  * Deletes location dataset and from inventory
  * @param webID contains the webId of the user
- * @param locationUrl contains the location url
+ * @param locationUrl contains the location urlfds
  * @returns updated dataset or reject if any errors arise
  */
 export async function deleteLocation(webID:string, locationUrl: string) {
-  let url = locationUrl.split("#")[0] as string; // get location dataset path
+  //HOLA
+ // let url = locationUrl.split("#")[0] as string; // get location dataset path
+  
+  let url = locationUrl + "/index.ttl" as string//HOLA
+
+  let aux = locationUrl.split("/"); 
+  let ID = aux[aux.length-1]; 
+
   let inventory = `${locationUrl.split("locations")[0]}inventory/index.ttl`;
-  let locationUrlInventory = `${inventory}#${locationUrl.split("#")[1]}`
+  let locationUrlInventory = `${inventory}#${ID}`
   try {
     let dataset = await getSolidDataset(url, {fetch:fetch}) // remove location dataset
     await deleteSolidDataset(dataset, {fetch: fetch})
