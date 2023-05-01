@@ -101,9 +101,9 @@ export function GamePanel(props:GamePanelProps) {
       return acc + ratings.size;
     }, 0);
     
-    if (totalSum/totalSize == 5)
+    if (totalSum/totalSize === 5)
       setChallengeRating(true);
-    if (totalSum == 0 && totalSize == 0)
+    if (totalSum === 0 && totalSize === 0)
       return 0;
     return totalSum / totalSize;
   };

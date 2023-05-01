@@ -111,7 +111,7 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
             //we perform a call to the function that adds the location to the pod
             createLocation(session.session.info.webId ,location).then(
                 ()=> {
-                    props.loadUserLocations();//WORKING
+                    void props.loadUserLocations();
                     toast({
                         title: 'Location correctly added to your pod',
                         description: "Location '"+location.name+"' was added to your pod.",
