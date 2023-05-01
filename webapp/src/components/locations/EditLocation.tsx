@@ -5,7 +5,6 @@ import {
     Button,
     Tooltip,
     Flex, HStack,
-    Image,
     Input,
     Menu,
     MenuButton,
@@ -38,23 +37,6 @@ type EditLocationProps = {
     setOwnLocations: (newLocations: Location[]) => void;
 }
 
-/**
- * Read the file and obtain its base64 encoding.
- * @param file contains the file
- * @param reader FileReader object to do the reading
- * @returns Promise<string> containing the base64 encoding of the file
- */
-async function readFileAsync(file, reader) : Promise<string> {
-    return new Promise((resolve, reject) => {
-        reader.onload = () => {
-            resolve(reader.result);
-        }
-        reader.readAsDataURL(file);
-    })
-}
-
-
-
 function EditLocationFormComp(props : EditLocationProps) : JSX.Element {
     const [session, setSession] = useState(useSession());
     const [name, setName] = useState(props.location.name);
@@ -77,11 +59,8 @@ function EditLocationFormComp(props : EditLocationProps) : JSX.Element {
     , [coordsValue]);
 
     //we update the state of the coordsvalue when props.clickedCoordinates changes
-
-
     const categories = Object.values(Category); // array of strings containing the values of the categories
 
-    //let imgs: string[] = [];
     const [imgs, setImgs] = React.useState<string[]>([]);
     const [imgsFiles, setImgsFiles] = React.useState<File[]>([]);
  
@@ -166,7 +145,7 @@ function EditLocationFormComp(props : EditLocationProps) : JSX.Element {
         }
 
         // if no category was selected, autoselect 'Other'
-        if (checkedCategories.length == 0){
+        if (checkedCategories.length === 0) {
             checkedCategories.push(Category.Other)
         }
 
@@ -196,17 +175,6 @@ function EditLocationFormComp(props : EditLocationProps) : JSX.Element {
             setCheckedCategories(checkedCategories.filter(c => c !== category));
         } else {
             setCheckedCategories([...checkedCategories, category]);
-        }
-        console.log(checkedCategories);
-                
-    }
-
-    const handleCategory = (e) => {
-        const category = e.target.innerText;
-        if (checkedCategories.includes(category)) {
-            setCheckedCategories([...checkedCategories]);
-        } else {
-            
         }
         console.log(checkedCategories);
                 
@@ -348,7 +316,7 @@ function EditLocationFormComp(props : EditLocationProps) : JSX.Element {
                                 type={'submit'}
                                 height={'170%'}
                                 fontSize={'2xl'}
-                                disabled={!areValidCoords || name.trim().length == 0}
+                                disabled={!areValidCoords || name.trim().length === 0}
                                 >
                             Edit location
                         </Button>
