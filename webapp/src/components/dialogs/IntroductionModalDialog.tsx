@@ -24,12 +24,6 @@ export function IntroductionModalDialog(props:any) {
     const { isOpen, onOpen, onClose } = useDisclosure({defaultIsOpen: true})
     const session = useSession()
 
-    // const customSize = defineStyle({
-    //     px: '6',
-    //     py: '2',
-    //     fontSize: 'sm'
-    // })
-
     return (
     <>
         <Modal size={"4xl"} isCentered isOpen={isOpen} onClose={onClose}>
