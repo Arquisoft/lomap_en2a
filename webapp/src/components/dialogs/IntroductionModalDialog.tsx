@@ -1,14 +1,7 @@
-import React, {useEffect} from "react";
+import React from "react";
 import {
-    AlertDialog,
-    AlertDialogBody,
-    AlertDialogFooter,
-    AlertDialogHeader,
-    AlertDialogContent,
-    AlertDialogOverlay,
     useDisclosure,
     Button,
-    Icon,
     Modal,
     ModalOverlay,
     ModalContent,
@@ -17,18 +10,10 @@ import {
     ModalFooter,
     ModalCloseButton, Text, Image, Divider,
 } from '@chakra-ui/react'
-import { useSession } from '@inrupt/solid-ui-react';
 import images from "../../static/images/images";
 
-export function IntroductionModalDialog(props:any) {
-    const { isOpen, onOpen, onClose } = useDisclosure({defaultIsOpen: true})
-    const session = useSession()
-
-    // const customSize = defineStyle({
-    //     px: '6',
-    //     py: '2',
-    //     fontSize: 'sm'
-    // })
+export function IntroductionModalDialog() {
+    const { isOpen, onClose } = useDisclosure({defaultIsOpen: true})
 
     return (
     <>
