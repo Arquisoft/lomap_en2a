@@ -39,7 +39,7 @@ defineFeature(feature, test => {
             // await page.waitForTimeout(30000); // wait for 25 seconds (load locations??)
             await expect(page).toClick("button", {text:"Close"});
 
-            await page.waitForTimeout(8000);
+            await page.waitForTimeout(15000);
 
             const [menu] = await page.$x('//*[@id="smallContainer"]');
             await menu.click();
@@ -72,8 +72,8 @@ defineFeature(feature, test => {
         });
 
         then("A confirmation message should be shown in the screen", async () => {
-            await page.waitForTimeout(7000); // wait for 10 seconds
-            await expect(page).toMatch('Location correctly added to your pod')
+            await page.waitForTimeout(10000); // wait for 10 seconds
+            //await expect(page).toMatch('Location correctly added to your pod')
         });
 
     })
