@@ -181,7 +181,7 @@ export async function getLocationFromDataset(locationPath:string){
   // create Location object
   let location : LocationType = {
       name: name,
-      coordinates : {lng: new Number(longitude), lat: new Number(latitude)},
+      coordinates : {lng: Number(longitude), lat: Number(latitude)},
       description: description,
       url: url,
       category: categoriesDeserialized,
@@ -395,7 +395,7 @@ export async function createLocationDataSet(folder:string,locationFolder:string,
 
   dataSet = setThing(dataSet, newLocation); // store thing in dataset
   // save dataset to later add the images
-  dataSet = await saveSolidDatasetAt(locationFolder, dataSet, {fetch: fetch}) // save dataset 
+  await saveSolidDatasetAt(locationFolder, dataSet, {fetch: fetch}) // save dataset
   await addImages(locationImages,location); // store the images
 }
 
@@ -424,7 +424,7 @@ export async function editLocationSolid(location:LocationType) {
 
   dataSet = setThing(dataSet, newLocation); // store thing in dataset
   // save dataset to later add the images
-  dataSet = await saveSolidDatasetAt(locationFolder, dataSet, {fetch: fetch}) // save dataset 
+  await saveSolidDatasetAt(locationFolder, dataSet, {fetch: fetch}) // save dataset
 }
 
 /**
@@ -451,7 +451,7 @@ export async function addLocationReview(location:LocationType, review:ReviewType
 
   try {
     // save dataset
-    locationDataset = await saveSolidDatasetAt(url, locationDataset, {fetch: fetch});
+    await saveSolidDatasetAt(url, locationDataset, {fetch: fetch});
   } catch (error){
     console.log(error);
   }
@@ -478,7 +478,7 @@ export async function addLocationScore(webId:string, location:LocationType, scor
 
   try {
     // save dataset
-    locationDataset = await saveSolidDatasetAt(url, locationDataset, {fetch: fetch});
+    await saveSolidDatasetAt(url, locationDataset, {fetch: fetch});
   } catch (error){
     console.log(error);
   }
@@ -493,8 +493,7 @@ export async function addLocationScore(webId:string, location:LocationType, scor
  */
 export async function addImages(url: string, location:LocationType){
   location.imagesAsFile?.forEach(async image => {
-  
-      const savedFile = await overwriteFile(  
+      await overwriteFile(
         url+"/"+image.name,                              
         image,                                       
         { contentType: image.type, fetch: fetch }    
@@ -547,7 +546,6 @@ export async function deleteLocation(webID:string, locationUrl: string) {
  */
 export async function deleteReview(locationUrl:string, review:Review){
   let datasetPath = locationUrl.split('#')[0] // get until index.ttl
-  let reviews : ReviewType[] = [];
   try {
     let dataSet = await getSolidDataset(datasetPath, {fetch:fetch}); // get location dataset
     // get the review thing in the dataset of the location. as getThingAll returns Thing[], get the first item in the array
@@ -674,15 +672,13 @@ export async function addSolidFriend(webID: string,friendURL: string): Promise<{
     let newFriend = buildThing(thing)
     .addUrl(FOAF.knows, friendURL as string)
     .build();
-      
-    const urlRegex = /^https:\/\/[a-zA-Z0-9]+\.(solid|inrupt)\.net\/card#me$/i;//RegExp to check if it's a valid URL.
 
     let friends = await getSolidFriends(webID);
     if(friends.some(f => f.webID === friendURL))
       return{error:true,errorMessage:"You are already friends"}
 
     dataSet = setThing(dataSet, newFriend);
-    dataSet = await saveSolidDatasetAt(webID, dataSet, {fetch: fetch})
+    await saveSolidDatasetAt(webID, dataSet, {fetch: fetch})
   } catch(err){
     return{error:true,errorMessage:"The url is not valid."}
   }
@@ -697,9 +693,7 @@ export async function getFriendsID(webID:string){
 }
 
 export async function getSolidFriends(webID:string) {
-  let test = getUrl(await getUserProfile(webID), FOAF.knows);
   let friendURLs = getUrlAll(await getUserProfile(webID), FOAF.knows);
-  let friends: Friend[] = [];
 
   let req = friendURLs.map(friend => getFriendDetails(friend))
   const results = await Promise.allSettled(req);
@@ -711,12 +705,8 @@ export async function getSolidFriends(webID:string) {
 }
 export async function getFriendDetails(friend: string): Promise<Friend | null>{
   try{
-        
     let name = getStringNoLocale(await getUserProfile(friend),FOAF.name);
-    let imageUrl: string | null = null;
-  
     let pic = getUrl(await getUserProfile(friend),VCARD.hasPhoto);
-
     let f = null;
 
     if (friend){
@@ -731,12 +721,4 @@ export async function getFriendDetails(friend: string): Promise<Friend | null>{
   } catch(err){
     return null;
   }
-}
-
-export  function getSolidName(webID:string)  {
- // let name = await getSolidFriends(webId).then(friendsPromise => {return friendsPromise})
-
-  let name =  getUserProfile(webID).then(u => getStringNoLocale(u,FOAF.name)).then(p => {return p as string});
-
-  
 }
