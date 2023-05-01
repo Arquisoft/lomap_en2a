@@ -46,8 +46,8 @@ defineFeature(feature, test => {
         });
 
         when("The user clicks the game button", async () => {
-            const [profile] = await page.$x('/html/body/div[1]/div/div[4]/div/div[5]/button')
-            await profile.click();
+            const [game] = await page.$x('/html/body/div[1]/div/div[3]/div/div[5]/button')
+            await game.click();
             await page.waitForTimeout(3000); // wait for 10 seconds
 
         });
