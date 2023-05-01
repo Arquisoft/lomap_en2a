@@ -43,7 +43,7 @@ type AddLocationProps = {
  * @returns Promise<string> containing the base64 encoding of the file
  */
 async function readFileAsync(file, reader) : Promise<string> {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         reader.onload = () => {
             resolve(reader.result);
         }
@@ -54,7 +54,7 @@ async function readFileAsync(file, reader) : Promise<string> {
 
 
 function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
-    const [session, setSession] = useState(useSession());
+    const [session] = useState(useSession());
     const [name, setName] = useState('');
     const [areValidCoords, setAreValidCoords] = useState(false);
     const [coordsValue, setCoordsValue] = useState('');
@@ -162,7 +162,7 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
         }
 
         // if no category was selected, autoselect 'Other'
-        if (checkedCategories.length == 0){
+        if (checkedCategories.length === 0){
             checkedCategories.push(Category.Other)
         }
 
@@ -235,7 +235,7 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
                         id='name'
                     />
                     <Menu closeOnSelect={false}>
-                            <MenuButton as={Button} rightIcon={<MdArrowDropDown/>} color='white' background='#4299e1' 
+                            <MenuButton as={Button} rightIcon={<MdArrowDropDown/>} color='white' background={'#4299e1'}
                                 width={'27%'} height={'160%'}>Categories
                             </MenuButton>
                             <MenuList minWidth='240px'>
@@ -256,7 +256,7 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
                 >
                     <HStack>
                         <Text fontSize='1.5em' >Coordinates</Text>
-                        <Button leftIcon={<MdEdit/>} color='white' background='#4299e1'  marginLeft={'auto'}
+                        <Button leftIcon={<MdEdit/>} color='white' background={'#4299e1'}  marginLeft={'auto'}
                             onClick={()=>{ setEditingManualCoordinates(!editingManualCoordinates) }}>
                             Edit manually
                         </Button>
@@ -377,7 +377,7 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
                                 type={'submit'}
                                 height={'170%'}
                                 fontSize={'2xl'}
-                                disabled={!areValidCoords || name.trim().length == 0}
+                                disabled={!areValidCoords || name.trim().length === 0}
                                 >
                             Add location
                         </Button>

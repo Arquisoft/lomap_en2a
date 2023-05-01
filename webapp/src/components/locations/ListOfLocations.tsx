@@ -33,7 +33,6 @@ function ListOfLocations(props : ListProps) : JSX.Element {
     }, [props.ownLocations, props.friendLocations, props.loading])
 
     function ProcessedFriendLocations(): JSX.Element {
-    
         {
              /*
                 We display the two sections of the location list according to the data received.
