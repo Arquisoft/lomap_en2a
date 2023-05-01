@@ -3,13 +3,6 @@ import { act, render, screen, fireEvent } from "@testing-library/react";
 import LocationInfo from '../components/locations/LocationInfo';
 import { Location } from '../types/types';
 
-//TODO
-/*
-  These tests miss the parts where the solidManagement calls are done. Click on add a review (gets name from user) and
-  the update of the ratings using interface (that also takes the logged in user to change the value)
-
-  Once mocking is understood it could be easy to test them, by now it has 70.4% coverage which is okay
-*/
 
 
 const testLocation : Location =

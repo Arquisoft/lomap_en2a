@@ -15,7 +15,6 @@ function Friends(props:FriendsProps) : JSX.Element {
   const session = useSession()
 
   const webId = session.session.info.webId;
-  console.log(useSession())
   const [friends, setFriends] = React.useState<Friend[]>([]);
   const[isLoged, setLogged] = React.useState(false);
   const[friendChargingMsg, setFriendChargingMsg] = React.useState("Loading...")
