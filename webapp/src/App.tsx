@@ -9,7 +9,7 @@ import './App.css';
 import { Location } from './types/types';
 import Login from './components/login/Login';
 import Map from './components/map/Map';
-import {createLocation, getLocations,getFriendsID} from './solid/solidManagement'
+import {getLocations,getFriendsID} from './solid/solidManagement'
 import Menu from './components/menu/Menu';
 import AddLocationForm from './components/locations/AddLocationForm';
 import ListOfLocations from './components/locations/ListOfLocations';
@@ -23,7 +23,7 @@ import {IntroductionModalDialog} from "./components/dialogs/IntroductionModalDia
 
 function App(): JSX.Element {
   const session = useSession(); 
-  const [userCoordinates, setUserCoordinates] = useState({lng:0, lat:0});
+  //const [userCoordinates, setUserCoordinates] = useState({lng:0, lat:0});
   //this state indicates if the user locations are being loaded
   const [loading, setLoading] = useState(true);
   const [ownLocations, setOwnLocations] = useState<Array<Location>>([]);
@@ -35,23 +35,21 @@ function App(): JSX.Element {
   const [nameSelectedView, setNameSelectedView] = useState("Map");
 
 
-  const getNewLocation = (location:Location) => {
-    ownLocations.push(location);
-    createLocation(session.session.info.webId as string, location);
-  }
+  // const getNewLocation = (location:Location) => {
+  //   ownLocations.push(location);
+  //   createLocation(session.session.info.webId as string, location);
+  // }
 
   //we get the locations for the user and fetch them to the list
   useEffect(()=>{
     if(session.session.info.isLoggedIn)
-      loadLocations();
+      void loadLocations();
   },[session.session.info.isLoggedIn]);
 
   async function loadUserLocations(){
-    let locList = ownLocations;
     if(session.session.info.webId){
-      let list = await getLocations(session.session.info.webId)
-      // locList = locList.concat(list)
-      setOwnLocations(locList);
+      await getLocations(session.session.info.webId);
+      setOwnLocations(ownLocations);
     }
   }
 
@@ -81,11 +79,8 @@ function App(): JSX.Element {
 
   //get the user's current location and save it for the map to use it as a center
   useEffect(()=>{
-    navigator.geolocation.getCurrentPosition(({coords : {latitude,longitude}}) =>{
-      //we set the coordinates to be the ones of the user for them to be passed to the map
-      setUserCoordinates({lat: latitude , lng : longitude});
-    })
-    handleRedirectAfterLogin();
+    navigator.geolocation.getCurrentPosition(() =>{})
+    void handleRedirectAfterLogin();
   },[]);
 
   async function handleRedirectAfterLogin() {
