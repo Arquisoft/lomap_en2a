@@ -9,13 +9,13 @@ In this section strategies decided by the team will be stated.
 * *Solid*. In order to store each user's pod and keep the data decentralized. Achieves security and privacy.
 * *React*. A JavaScript library for user interfaces. It is widely used in the industry because it helps building rich user interfaces in a simple way, and allows flexibility and is easy to mantain.
 * *NodeJS*. Another JavaScript library for the server layer that provides the tools to implement the application. It also supports different types of databases and has a large and active community, that might comme in handy when we have questions.
-* *Docker*. In order to deploy the application. It containerizes it for automated deployment. Achieves portability.
 * *Chakra UI*. Component and modular library to create HTML customized and themeable components. Achieves usability.
 * *Inrupt Solid APIs*. Set of libraries developed by inrupt to manage and control the information and features in the Solid pod.
 * *RDF*. Semantic web standard used to describe and model information for web resources, in this case, used to store information in the Solid pod.
 * *Turtle*. RDF syntax that allows an RDF graph to be completely written in a compact and natural text form, with abbreviations for common usage patterns and datatypes
 * *Cucumber*. Testing tool that supports Behavior Driven Development (BDD). Achieves Testability
 * *Gatling*. Load testing tool. Achieves Testability.
+* *Apache jmeter*. Load testing tool. Achieves Testability.
 * *End-to-end testing*. Methodology to test from the end user's experience by simulating the real user scenario and validating the system and its components for integration and data integrity. Achieves Test Coverage
 
 === Design
