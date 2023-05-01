@@ -15,9 +15,6 @@ import {
   setAgentDefaultAccess
 } from "@inrupt/solid-client";
 
-// Friends second iteration
-import { Friends } from 'solid-auth-client';
-
 import {
   createThing, removeThing,Thing,getThing, setThing,buildThing,
   getSolidDataset, saveSolidDatasetAt, getThingAll,
@@ -25,11 +22,9 @@ import {
   getStringNoLocale,
   createSolidDataset, deleteSolidDataset
 } from "@inrupt/solid-client";
+
 import { Category, deserializeCategories, serializeCategories } from "../components/Category";
-import { DatasetContext } from "@inrupt/solid-ui-react";
-
 import { FOAF, VCARD, SCHEMA_INRUPT, RDF} from "@inrupt/vocab-common-rdf"
-
 import {v4 as uuid} from "uuid" // for the uuids of the locations
 
 
@@ -96,8 +91,7 @@ export async function getUserProfile(webID: string) : Promise<Thing>{
  */
 export async function getProfileImage(webID: string) : Promise<string>{
   let profileThing = await getUserProfile(webID);
-  let image = getUrl(profileThing, VCARD.hasPhoto) as string;
-  return image;
+  return getUrl(profileThing, VCARD.hasPhoto) as string;
 }
 
 /**
@@ -114,8 +108,7 @@ export async function getNameFromPod(webID: string){
 export async function getLocation(locationPath): Promise<LocationType |null>{
   try{
     let path = getStringNoLocale(locationPath, SCHEMA_INRUPT.identifier) as string;
-    let location = await getLocationFromDataset(path)
-    return location;
+    return await getLocationFromDataset(path);
   }catch(error){
     return null;
   }
@@ -128,23 +121,21 @@ export async function getLocation(locationPath): Promise<LocationType |null>{
  */
 export async function getLocations(webID:string) {
   let baseURL = webID.split("profile")[0]; // url of the type https://<nombreusuario>.provider/
-  let inventoryFolder = `${baseURL}private/lomap/inventory/index.ttl`; // locations contained in index.ttl 
-  let locations: LocationType[] = []; // initialize array of locations
-  let locationPaths; 
+  let inventoryFolder = `${baseURL}private/lomap/inventory/index.ttl`; // locations contained in index.ttl
+  let locationPaths;
+
   try{
     let dataSet = await getSolidDataset(inventoryFolder, {fetch: fetch}); // get the inventory dataset
     locationPaths = getThingAll(dataSet) // get the things from the dataset (location paths)
     const requests = locationPaths.map(locationPath => getLocation(locationPath));
     
     const results = await Promise.allSettled(requests);
-    const successfulResults = results
-    .filter(result => result.status === 'fulfilled')
-    .map(result => result.status === 'fulfilled' ? result.value : null)
-    .filter(value => value !== null) as LocationType[];
-    return successfulResults;
+    return results
+                .filter(result => result.status === 'fulfilled')
+                .map(result => result.status === 'fulfilled' ? result.value : null)
+                .filter(value => value !== null) as LocationType[]; // successful results
   }catch(error){
-    let successfulResults = [];
-    return successfulResults;
+    return [];
   }
   
 }
@@ -180,9 +171,9 @@ export async function getLocationFromDataset(locationPath:string){
     categoriesDeserialized = deserializeCategories(Category.Other)
   }
   
-  let locationImages: string [] = []; // initialize array to store the images as strings
+  let locationImages: string []; // initialize array to store the images as strings
   locationImages = await getLocationImage(imagesUrl); // get the images
-  let reviews: ReviewType[] = []; // initialize array to store the reviews
+  let reviews: ReviewType[]; // initialize array to store the reviews
   reviews = await getLocationReviews(datasetPath) // get the reviews
   let scores : Map<string, number>; // map to store the ratings
   scores = await getLocationScores(datasetPath); // get the ratings
