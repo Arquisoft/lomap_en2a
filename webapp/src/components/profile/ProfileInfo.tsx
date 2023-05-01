@@ -1,4 +1,4 @@
-import { Avatar, Text, Flex, VStack, Box, HStack,Icon, Checkbox, Button, CloseButton } from "@chakra-ui/react"
+import { Avatar, Text, Flex, VStack, Box, HStack,Icon, CloseButton } from "@chakra-ui/react"
 import React, { useState } from "react"
 import { getNameFromPod, getSolidFriends, getProfileImage} from "../../solid/solidManagement"
 import { useSession } from '@inrupt/solid-ui-react';
@@ -20,7 +20,7 @@ export function ProfileView(props:ProfileProps) {
   const [image, setImage] = useState("")
 
   React.useEffect(() => {
-    handleName()
+    void handleName()
     //we load the image of the user
     getProfileImage(session.session.info.webId as string).then((image) => {
       setImage(image)
@@ -32,7 +32,7 @@ export function ProfileView(props:ProfileProps) {
   },[props.locations])
 
   React.useEffect(() => {
-    getNumberOfFriends()
+    void getNumberOfFriends()
   })
 
   const handleName = async () => {
@@ -53,11 +53,13 @@ export function ProfileView(props:ProfileProps) {
       const sum = Array.from(ratings.values()).reduce((acc, val) => ((acc as number) + (val as number)) as number, 0);
       return acc + sum;
     }, 0);
+
     const totalSize = locations.reduce((acc, location) => {
       const ratings = location.ratings;
       if (!ratings) return acc;
       return acc + ratings.size;
     }, 0);
+
     return totalSum / totalSize;
   };
 
