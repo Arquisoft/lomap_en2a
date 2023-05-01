@@ -141,7 +141,7 @@ We have tested the application with different tests:
 * Usability tests: with the help of people we know (family and friends), we tested our application usability.
     Thanks to these tests, we found that some people had problems, and we decided to add a tutorial that people can check.
     This way, they'll learn what can they use LoMap for, and how to use it.
-* Load tests: to measure the performance of the application while many users use it. The tools Gatling and Apache Jmeter were used.
+* Load tests: to measure the performance of the application while many users use it. The tools Gatling and Apache Benchmark were used.
 
 .Deployment
 The application will be deployed to GitHub Pages.
