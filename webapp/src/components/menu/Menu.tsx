@@ -1,13 +1,11 @@
 import React, { useState } from 'react'
-import { Flex, Button, Icon, Box, Text } from "@chakra-ui/react";
+import { Flex, Button, Icon, Box } from "@chakra-ui/react";
 import { MdList, MdLocationOn, MdMap, MdPeopleAlt, MdPerson, MdQuestionMark, MdOutlineSportsEsports } from "react-icons/md"
 import { Location } from '../../types/types';
 import ListOfLocations from '../locations/ListOfLocations';
 import AddLocationForm from '../locations/AddLocationForm';
 import Friends from '../friends/Friends';
 import { ProfileView } from '../profile/ProfileInfo';
-import {GamePanel} from '../game/GamePanel'
-import App from '../../App';
 import {TutorialModalDialog} from "../dialogs/TutorialModalDialog";
 
 
