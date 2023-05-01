@@ -14,6 +14,7 @@ In this section strategies decided by the team will be stated.
 * *RDF*. Semantic web standard used to describe and model information for web resources, in this case, used to store information in the Solid pod.
 * *Turtle*. RDF syntax that allows an RDF graph to be completely written in a compact and natural text form, with abbreviations for common usage patterns and datatypes
 * *Cucumber*. Testing tool that supports Behavior Driven Development (BDD). Achieves Testability
+* *Docker*. In order to deploy the application. It containerizes it for automated deployment. Achieves portability.
 * *Gatling*. Load testing tool. Achieves Testability.
 * *Apache Benchmark*. Load testing tool. Achieves Testability.
 * *End-to-end testing*. Methodology to test from the end user's experience by simulating the real user scenario and validating the system and its components for integration and data integrity. Achieves Test Coverage
