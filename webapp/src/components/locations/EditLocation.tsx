@@ -38,7 +38,7 @@ type EditLocationProps = {
 }
 
 function EditLocationFormComp(props : EditLocationProps) : JSX.Element {
-    const [session, setSession] = useState(useSession());
+    const [session] = useState(useSession());
     const [name, setName] = useState(props.location.name);
     const [areValidCoords, setAreValidCoords] = useState(true);
     const [coordsValue, setCoordsValue] = useState(props.location.coordinates.lat + ', ' + props.location.coordinates.lng);
@@ -61,8 +61,8 @@ function EditLocationFormComp(props : EditLocationProps) : JSX.Element {
     //we update the state of the coordsvalue when props.clickedCoordinates changes
     const categories = Object.values(Category); // array of strings containing the values of the categories
 
-    const [imgs, setImgs] = React.useState<string[]>([]);
-    const [imgsFiles, setImgsFiles] = React.useState<File[]>([]);
+    const [, setImgs] = React.useState<string[]>([]);
+    const [imgsFiles] = React.useState<File[]>([]);
  
     let lat: number, lon: number;
     let isValidName: boolean = !name || name.trim().length === 0;
@@ -218,7 +218,7 @@ function EditLocationFormComp(props : EditLocationProps) : JSX.Element {
                         height='160%'
                     />
                     <Menu closeOnSelect={false}>
-                            <MenuButton as={Button} rightIcon={<MdArrowDropDown/>} color='white' background='#4299e1' 
+                            <MenuButton as={Button} rightIcon={<MdArrowDropDown/>} color='white' background={'#4299e1'}
                                 width={'27%'} height={'160%'}>Categories
                             </MenuButton>
                             <MenuList minWidth='240px'>
@@ -242,7 +242,7 @@ function EditLocationFormComp(props : EditLocationProps) : JSX.Element {
                 >
                     <HStack>
                         <Text fontSize='1.5em' >Coordinates</Text>
-                        <Button leftIcon={<MdEdit/>} color='white' background='#4299e1'  marginLeft={'auto'}
+                        <Button leftIcon={<MdEdit/>} color='white' background={'#4299e1'}  marginLeft={'auto'}
                             onClick={()=>{ setEditingManualCoordinates(!editingManualCoordinates) }}>
                             Edit manually
                         </Button>
