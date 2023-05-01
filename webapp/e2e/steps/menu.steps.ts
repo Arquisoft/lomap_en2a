@@ -27,7 +27,7 @@ defineFeature(feature, test => {
         given("The user logs in", async () => {
             await expect(page).toClick("span", {text:"Inrupt"});
             await expect(page).toClick("button", {text:"Login"});
-            
+
             await page.waitForNavigation(); // wait for the login page to load
 
             await page.type('#username', "pruebaLomap")
@@ -36,12 +36,13 @@ defineFeature(feature, test => {
             await page.click('#login')
 
             await page.waitForNavigation(); // wait for the redirect
+            await expect(page).toClick("button", {text:"Close"});
             await page.waitForTimeout(8000);
-            
+
         });
 
         when("The user clicks the menu", async () => {
-            const [menu] = await page.$x('/html/body/div[1]/div/div[2]/div');
+            const [menu] = await page.$x('//*[@id="smallContainer"]');
             await menu.click();
         });
 
@@ -52,6 +53,7 @@ defineFeature(feature, test => {
             await expect(page).toMatch('Add Location')
             await expect(page).toMatch('Add Friends')
             await expect(page).toMatch('Progress')
+            await expect(page).toMatch('Tutorial')
             await expect(page).toMatch('Profile')
         });
 

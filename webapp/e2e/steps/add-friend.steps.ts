@@ -27,7 +27,7 @@ defineFeature(feature, test => {
         given("The user logs in", async () => {
             await expect(page).toClick("span", {text:"Inrupt"});
             await expect(page).toClick("button", {text:"Login"});
-            
+
             await page.waitForNavigation(); // wait for the login page to load
 
             await page.type('#username', "pruebaLomap")
@@ -37,33 +37,35 @@ defineFeature(feature, test => {
 
             await page.waitForNavigation(); // wait for the redirect
             // await page.waitForTimeout(30000); // wait for 25 seconds (load locations??)
+            await expect(page).toClick("button", {text:"Close"});
+
             await page.waitForTimeout(8000);
 
         });
 
         and("goes to Add a friend", async () => {
-            const [menu] = await page.$x('/html/body/div[1]/div/div[2]/div');
+            const [menu] = await page.$x('//*[@id="smallContainer"]');
             await menu.click();
             await page.waitForTimeout(3000)
-            
-            const [friend] = await page.$x('/html/body/div[1]/div/div[2]/div/div[4]/button')
+
+            const [friend] = await page.$x('/html/body/div[1]/div/div[3]/div/div[4]/button')
             await friend.click();
             await page.waitForTimeout(3000)
         })
 
         when("The user introduces a valid webId", async () => {
-            const [webId] = await page.$x('/html/body/div[1]/div/div[2]/div/div[1]/input');
+            const [webId] = await page.$x('/html/body/div[1]/div/div[3]/div/div[1]/input');
             webId.type('https://patrigarcia.solidcommunity.net/profile/card#me')
-            await page.waitForTimeout(15000); 
+            await page.waitForTimeout(15000);
 
-            const [addFriend] = await page.$x('/html/body/div[1]/div/div[2]/div/div[1]/button');
+            const [addFriend] = await page.$x('/html/body/div[1]/div/div[3]/div/div[1]/button');
             addFriend.click()
             await page.waitForTimeout(11000)
 
         });
 
         then("The friend is added", async () => {
-            const [friend] = await page.$x('/html/body/div[1]/div/div[2]/div/div[2]/div/div');
+            const [friend] = await page.$x('/html/body/div[1]/div/div[3]/div/div[2]/div/div');
             await expect(page).toMatch('Patricia')
         });
 
