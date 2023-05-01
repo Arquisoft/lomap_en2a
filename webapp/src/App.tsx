@@ -53,10 +53,6 @@ function App(): JSX.Element {
     
   }
 
-  
-
-
-
   async function loadLocations(){
     if(session.session.info.webId){
       setOwnLocations(await getLocations(session.session.info.webId));
@@ -83,10 +79,12 @@ function App(): JSX.Element {
 
   //get the user's current location and save it for the map to use it as a center
   useEffect(()=>{
-    navigator.geolocation.getCurrentPosition(({coords : {latitude,longitude}}) =>{
-      //we set the coordinates to be the ones of the user for them to be passed to the map
-      setUserCoordinates({lat: latitude , lng : longitude});
-    })
+    if(navigator.geolocation !== null && navigator.geolocation !== undefined){
+      navigator.geolocation?.getCurrentPosition(({coords : {latitude,longitude}}) =>{
+        //we set the coordinates to be the ones of the user for them to be passed to the map
+        setUserCoordinates({lat: latitude , lng : longitude});
+      })
+    }
     handleRedirectAfterLogin();
   },[]);
 
@@ -104,6 +102,7 @@ function App(): JSX.Element {
     <>
       <ChakraProvider>
         <Flex
+          data-testid={'google-maps-map'}
           justifyContent={'center'}
           alignItems={'center'}
           width={'100vw'}
@@ -131,6 +130,7 @@ function App(): JSX.Element {
             }  
 
             <Button
+              data-testid={'add-location-button-corner'}
               size="lg"
               borderRadius="50%"
               width="4.5em"

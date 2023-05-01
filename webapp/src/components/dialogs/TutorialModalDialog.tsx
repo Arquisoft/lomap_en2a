@@ -26,7 +26,7 @@ export function TutorialModalDialog(props:any) {
     };
 
     const prevPage = () => {
-        if (currentPage - 1 > 0)    // validation because better safe than sorry
+        if (currentPage - 1 > 0)    // validation because better safe than sorry - Santi, 2023
             setCurrentPage(currentPage - 1);
     };
 
@@ -52,16 +52,16 @@ export function TutorialModalDialog(props:any) {
               <ModalContent height={'90%'} padding={'1em 1em 0 1em'}>
                 {(currentPage === 1) && (
                     <>
-                        <ModalHeader fontSize='3xl' fontWeight='bold'>
+                        <ModalHeader  fontSize='3xl' fontWeight='bold'>
                             <Image src={images.logo} height={"1em"} width={"auto"}></Image>
-                            <Text >Tutorial - Introduction</Text>
+                            <Text data-testid='tutorial-page-1'>Tutorial - Introduction</Text>
                             <Divider></Divider>
                         </ModalHeader>
                         <ModalCloseButton/>
 
 
-                        <ModalBody className={'modal-body'}>
-                            <Text><b>Welcome to LoMap!</b></Text>
+                        <ModalBody className={'modal-body'} data-testid='body-tutorial-page-1'>
+                            <Text data-testid='body-tutorial-page-1'><b>Welcome to LoMap!</b></Text>
 
                             <Text>In this tutorial you will learn the basics of LoMap.</Text>
                             <Text marginTop={"1em"}>
@@ -69,16 +69,16 @@ export function TutorialModalDialog(props:any) {
                             </Text>
                             <UnorderedList>
                                 <ListItem>
-                                    <Link color={"blue.500"} onClick={()=>moveToPage(2)}>Map View</Link>
+                                    <Link data-testid='link-to-first-page' color={"blue.500"} onClick={()=>moveToPage(2)}>Map View</Link>
                                 </ListItem>
                                 <ListItem>
-                                    <Link color={"blue.500"} onClick={()=>moveToPage(3)}>List of Locations</Link>
+                                    <Link data-testid='link-to-second-page' color={"blue.500"} onClick={()=>moveToPage(3)}>List of Locations</Link>
                                 </ListItem>
                                 <ListItem>
-                                    <Link color={"blue.500"} onClick={()=>moveToPage(4)}>Add Location</Link>
+                                    <Link data-testid='link-to-third-page' color={"blue.500"} onClick={()=>moveToPage(4)}>Add Location</Link>
                                 </ListItem>
                                 <ListItem>
-                                    <Link color={"blue.500"} onClick={()=>moveToPage(5)}>Add Friends</Link>
+                                    <Link data-testid='link-to-last-page' color={"blue.500"} onClick={()=>moveToPage(5)}>Add Friends</Link>
                                 </ListItem>
                             </UnorderedList>
 
@@ -86,29 +86,28 @@ export function TutorialModalDialog(props:any) {
                         <Divider></Divider>
                         <ModalFooter>
                             <Flex className={'modal-footer'}>
-                                <button className={"prevBtn"} onClick={prevPage} disabled> &#10094; </button>
-
+                                <button data-testid='move-to-page-0' className={"prevBtn"} onClick={prevPage} disabled> &#10094; </button>
                                 <span className={"page active"} onClick={() => setCurrentPage(1)} > · </span>
                                 <span className={"page"} onClick={() => setCurrentPage(2)}> · </span>
                                 <span className={"page"} onClick={() => setCurrentPage(3)}> · </span>
                                 <span className={"page"} onClick={() => setCurrentPage(4)}> · </span>
                                 <span className={"page"} onClick={() => setCurrentPage(5)}> · </span>
 
-                                <button className={"nextBtn"} onClick={nextPage} > &#10095; </button>
+                                <button data-testid='move-to-page-2' className={"nextBtn"} onClick={nextPage} > &#10095; </button>
                             </Flex>
                         </ModalFooter>
                     </>
                 )}
               {(currentPage === 2) && (
                   <>
-                      <ModalHeader fontSize='3xl' fontWeight='bold'>
+                      <ModalHeader  fontSize='3xl' fontWeight='bold'>
                           <Image src={images.logo} height={"1em"} width={"auto"}></Image>
-                          <Text>Tutorial - Map View </Text>
+                          <Text data-testid='tutorial-page-2'>Tutorial - Map View </Text>
                           <Divider></Divider>
                       </ModalHeader>
                       <ModalCloseButton/>
 
-                      <ModalBody className={'modal-body'}>
+                      <ModalBody className={'modal-body'} data-testid='body-tutorial-page-2'>
 
                           <Text>
                             In the <b>Map View</b> you will be able to see the map with all the locations you and
@@ -135,7 +134,7 @@ export function TutorialModalDialog(props:any) {
 
                       <ModalFooter>
                           <Flex className={'modal-footer'}>
-                              <button className={"prevBtn"} onClick={prevPage}> &#10094; </button>
+                              <button data-testid='move-to-page-1' className={"prevBtn"} onClick={prevPage}> &#10094; </button>
 
                               <span className={"page"} onClick={() => setCurrentPage(1)}> · </span>
                               <span className={"page active"} onClick={() => setCurrentPage(2)}> · </span>
@@ -143,21 +142,21 @@ export function TutorialModalDialog(props:any) {
                               <span className={"page"} onClick={() => setCurrentPage(4)}> · </span>
                               <span className={"page"} onClick={() => setCurrentPage(5)}> · </span>
 
-                              <button className={"nextBtn"} onClick={nextPage} > &#10095; </button>
+                              <button data-testid='move-to-page-3' className={"nextBtn"} onClick={nextPage} > &#10095; </button>
                           </Flex>
                       </ModalFooter>
                   </>
               )}
               {(currentPage === 3) && (
                   <>
-                      <ModalHeader fontSize='3xl' fontWeight='bold'>
+                      <ModalHeader  fontSize='3xl' fontWeight='bold'>
                           <Image src={images.logo} height={"1em"} width={"auto"}></Image>
-                          <Text>Tutorial - List of Locations </Text>
+                          <Text data-testid='tutorial-page-3'>Tutorial - List of Locations </Text>
                           <Divider></Divider>
                       </ModalHeader>
                       <ModalCloseButton/>
 
-                      <ModalBody className={'modal-body'}>
+                      <ModalBody className={'modal-body'} data-testid='body-tutorial-page-3'>
                           <Text>In the <b>List of Locations</b> you can find all your saved locations and the locations your friends share with you.</Text>
                           <Text marginTop={"1em"}>
                               <b>Click a location to open the detailed view.</b>
@@ -170,7 +169,7 @@ export function TutorialModalDialog(props:any) {
 
                       <ModalFooter>
                           <Flex className={'modal-footer'}>
-                              <button className={"prevBtn"} onClick={prevPage}> &#10094; </button>
+                              <button data-testid='move-to-page-2' className={"prevBtn"} onClick={prevPage}> &#10094; </button>
 
                               <span className={"page"} onClick={() => setCurrentPage(1)}> · </span>
                               <span className={"page"} onClick={() => setCurrentPage(2)}> · </span>
@@ -178,21 +177,21 @@ export function TutorialModalDialog(props:any) {
                               <span className={"page"} onClick={() => setCurrentPage(4)}> · </span>
                               <span className={"page"} onClick={() => setCurrentPage(5)}> · </span>
 
-                              <button className={"nextBtn"} onClick={nextPage} > &#10095; </button>
+                              <button data-testid='move-to-page-4' className={"nextBtn"} onClick={nextPage} > &#10095; </button>
                           </Flex>
                       </ModalFooter>
                   </>
               )}
               {(currentPage === 4) && (
                   <>
-                      <ModalHeader fontSize='3xl' fontWeight='bold'>
+                      <ModalHeader  fontSize='3xl' fontWeight='bold'>
                           <Image src={images.logo} height={"1em"} width={"auto"}></Image>
-                          <Text>Tutorial - Add Location </Text>
+                          <Text data-testid='tutorial-page-4'>Tutorial - Add Location </Text>
                           <Divider></Divider>
                       </ModalHeader>
                       <ModalCloseButton/>
 
-                      <ModalBody className={'modal-body'}>
+                      <ModalBody className={'modal-body'} data-testid='body-tutorial-page-4'>
                           <Text>
                             In LoMap, you can easily save your favourite locations.
                           </Text>
@@ -219,7 +218,7 @@ export function TutorialModalDialog(props:any) {
 
                       <ModalFooter>
                           <Flex className={'modal-footer'}>
-                              <button className={"prevBtn"} onClick={prevPage}> &#10094; </button>
+                              <button data-testid='move-to-page-3' className={"prevBtn"} onClick={prevPage}> &#10094; </button>
 
                               <span className={"page"} onClick={() => setCurrentPage(1)}> · </span>
                               <span className={"page"} onClick={() => setCurrentPage(2)}> · </span>
@@ -227,20 +226,20 @@ export function TutorialModalDialog(props:any) {
                               <span className={"page active"} onClick={() => setCurrentPage(4)}> · </span>
                               <span className={"page"} onClick={() => setCurrentPage(5)}> · </span>
 
-                              <button className={"nextBtn"} onClick={nextPage} > &#10095; </button>
+                              <button data-testid='move-to-page-5' className={"nextBtn"} onClick={nextPage} > &#10095; </button>
                           </Flex>
                       </ModalFooter>
                   </>
               )}
               {(currentPage === 5) && (
                   <>
-                      <ModalHeader fontSize='3xl' fontWeight='bold'>
+                      <ModalHeader  fontSize='3xl' fontWeight='bold'>
                           <Image src={images.logo} height={"1em"} width={"auto"}></Image>
-                          <Text>Tutorial - Add Friends </Text>
+                          <Text data-testid='tutorial-page-5'>Tutorial - Add Friends </Text>
                       </ModalHeader>
                       <ModalCloseButton/>
                       <Divider></Divider>
-                      <ModalBody className={'modal-body'}>
+                      <ModalBody className={'modal-body'} data-testid='body-tutorial-page-5'>
                           <Text><b>How can you add friends?</b></Text>
                           <Text>LoMap is an application that operates with Solid.</Text>
                           <Text>
@@ -256,7 +255,7 @@ export function TutorialModalDialog(props:any) {
 
                       <ModalFooter>
                           <Flex className={'modal-footer'}>
-                              <button className={"prevBtn"} onClick={prevPage}> &#10094; </button>
+                              <button data-testid='move-to-page-4' className={"prevBtn"} onClick={prevPage}> &#10094; </button>
 
                               <span className={"page"} onClick={() => setCurrentPage(1)}> · </span>
                               <span className={"page"} onClick={() => setCurrentPage(2)}> · </span>
@@ -264,7 +263,7 @@ export function TutorialModalDialog(props:any) {
                               <span className={"page"} onClick={() => setCurrentPage(4)}> · </span>
                               <span className={"page active"} onClick={() => setCurrentPage(5)}> · </span>
 
-                              <button className={"nextBtn"} onClick={nextPage} disabled> &#10095; </button>
+                              <button data-testid='move-to-page-6' className={"nextBtn"} onClick={nextPage} disabled> &#10095; </button>
                           </Flex>
                       </ModalFooter>
                   </>

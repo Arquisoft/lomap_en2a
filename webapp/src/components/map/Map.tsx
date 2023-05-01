@@ -48,11 +48,12 @@ const Map = ( props : MapProps) => {
   //set as center the user location
   useEffect(() => {
     // get the user's current location
-    navigator.geolocation.getCurrentPosition(position => {
-      const { latitude, longitude } = position.coords;
-      setCenter({ lat: latitude, lng: longitude });
-    });
-
+    if(navigator.geolocation){
+      navigator.geolocation.getCurrentPosition(position => {
+        const { latitude, longitude } = position.coords;
+        setCenter({ lat: latitude, lng: longitude });
+      });
+    }
   }, []);
 
   //when the selectedLocation is changed the center of the map will be the location that has the focus
