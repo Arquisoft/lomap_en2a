@@ -1,9 +1,9 @@
 import React from 'react'
-import { act, fireEvent, render } from "@testing-library/react";
+import { fireEvent, render } from "@testing-library/react";
 import Login from "./Login";
 
 /*
-    Still have to test the correct behavoir of the login and the prevent default
+    Still have to test the correct behavior of the login and the prevention default
     Current coverage = 73.33%
 */
 

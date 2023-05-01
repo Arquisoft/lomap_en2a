@@ -118,7 +118,7 @@ function App(): JSX.Element {
                 loadUserLocations={loadUserLocations}
               />
             {
-              //we define as the button (circle sized) that will be placed at the botton right corner of the map
+              //we define as the button (circle sized) that will be placed in the bottom right corner of the map
               //and that will have the icon MdAddLocationAlt from react-icons. The button will be red and the icon will be white
               //once clicked it will toggle the state inLocationCreationMode
             }  

@@ -31,5 +31,5 @@ export function deserializeCategories(categories : string) : string[] {
  */
 export function isLocationOfCategory(location:Location, category:string) : boolean {
     let res = location.category.indexOf(category);
-    return res > -1 ? true: false;
+    return res > -1;
 }

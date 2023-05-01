@@ -6,7 +6,6 @@ import { SessionInfo } from "@inrupt/solid-ui-react/dist/src/hooks/useSession";
 import { login } from "@inrupt/solid-client-authn-browser";
 import images from "../../static/images/images";
 import {useState } from "react";
-import {MdOutlineAddLocationAlt} from "react-icons/md";
 
 function Login() : JSX.Element  {
 
@@ -32,7 +31,7 @@ function Login() : JSX.Element  {
     }).then(() => setNowLoggingIn(false) );
   };
 
-  const [loginMessage, setLoginMessage] = useState("")
+  const [, setLoginMessage] = useState("")
   const [isDisabled, setDisabled] = useState(false);
 
   return (
@@ -50,12 +49,12 @@ function Login() : JSX.Element  {
                 {
                   providerOptions.map((element,i) => {
                     if(i < providerOptions.length - 1) 
-                      return (<Radio key={i} value={element.value}  onChange={(e)=>{setcustomSelected(false)}}>{element.label}</Radio>)
+                      return (<Radio key={i} value={element.value}  onChange={()=>{setcustomSelected(false)}}>{element.label}</Radio>)
                     else //Last one is the custom one and should trigger the textBox
                       return (<Radio
                                 key = {i}
                                 value={element.value} 
-                                onChange={(e)=>{setcustomSelected(true)}}
+                                onChange={()=>{setcustomSelected(true)}}
                                 >
                                   {element.label}</Radio>)
                   })
@@ -77,7 +76,7 @@ function Login() : JSX.Element  {
             ) : (
                 <Button onClick={(e) => {
                             //setLoginMessage("Logging in...");
-                            handleSubmit(e);
+                            void handleSubmit(e);
                             setNowLoggingIn(true);
                         }}
                         colorScheme='blue'
@@ -90,7 +89,7 @@ function Login() : JSX.Element  {
             )}
           </Flex> 
         </Flex>
-      ) : <>{setLoginMessage("")}</>
+      ) : <>{()=>setLoginMessage("")}</>
   )
 }
 
