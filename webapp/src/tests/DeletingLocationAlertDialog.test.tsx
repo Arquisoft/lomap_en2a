@@ -2,7 +2,7 @@ import React from 'react'
 import { render } from "@testing-library/react";
 import { DeletingAlertDialog } from '../components/dialogs/DeletingLocationAlertDialog';
 import userEvent from '@testing-library/user-event';
-
+import {Location} from '../types/types';
 
 const testLocation : Location = {
     name: "Central Park",
