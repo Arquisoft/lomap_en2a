@@ -92,7 +92,7 @@ const RatingSection = ({location, setLocation, session})=>{
     let avgLocal = 0;
     //we compute the number of reviews of each type
     if(location.ratings !== undefined)
-      location.ratings.forEach((value,key,map) => {
+      location.ratings.forEach((value) => {
         switch (value){
           case 1: ones++; break;
           case 2: twos++; break;
@@ -301,7 +301,6 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
   const webId = session.session.info.webId;
   const [location, setlocation] = useState(props.location)
   const [friends, setFriends] = React.useState<Friend[]>([]);
-  const colors = ['teal', 'purple', 'pink', 'blue', 'green', 'orange'];
 
   // make this information persistent even when the user closes this panel
   const [checkedFriends, setCheckedFriends] = React.useState<string[]>(
@@ -324,7 +323,7 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
   const handleFriends = async () => {
     if ( webId !== undefined && webId !== ""){
       const n  = await getSolidFriends(webId).then(friendsPromise => {return friendsPromise});
-      if (n.length == 0)
+      if (n.length === 0)
         setFriendChargingMsg("Add a friend to share the location!")
       setFriends(n);
     }
@@ -337,7 +336,7 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
     // if the index is > -1, means the location was already shared with this friend
     const friendWebID = e.target.innerText;
     const index = checkedFriends.indexOf(friendWebID);
-    const friendUsername = friends.find(friend => friend.webID == friendWebID) as Friend;
+    const friendUsername = friends.find(friend => friend.webID === friendWebID) as Friend;
     if (index > -1) {
       const newCheckedFriends = checkedFriends.filter((friend) => friend !== friendWebID);
       setCheckedFriends(newCheckedFriends);
@@ -382,7 +381,7 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
                     onClick={() => props.setSelectedView('Map')}
             ></CloseButton>
           </Flex>
-          <Flex direction='row' marginLeft='5%'width='90%' >
+          <Flex direction='row' marginLeft='5%' width='90%' >
             <Text
               word-wrap="break-word"
               fontSize='2.2em'
