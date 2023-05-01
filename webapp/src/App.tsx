@@ -9,7 +9,7 @@ import './App.css';
 import { Location } from './types/types';
 import Login from './components/login/Login';
 import Map from './components/map/Map';
-import {createLocation, deleteLocation, getLocations,getSolidFriends,getFriendsID} from './solid/solidManagement'
+import {createLocation, getLocations,getFriendsID} from './solid/solidManagement'
 import Menu from './components/menu/Menu';
 import AddLocationForm from './components/locations/AddLocationForm';
 import ListOfLocations from './components/locations/ListOfLocations';
