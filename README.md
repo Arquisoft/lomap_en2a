@@ -3,6 +3,9 @@
 LoMap is the perfect way to explore🔍 and share the world around you with your 🎅👮friends🤴🐒! With its up-to-date mapping and pods from the [Solid Project](https://solidproject.org/)<img src="https://solidproject.org/assets/img/solid-emblem.svg" height="20"> for decentralized data🔑, LoMap makes it easy to customize your map by adding and sharing places of interest🎢. Discover new locations and experiences with LoMap, and never worry about data privacy—because with pods, you are in 🔫control🔫.
 
 
+https://user-images.githubusercontent.com/99753806/235486571-02cb676d-1544-47fb-88ff-80441807d5fd.mp4
+
+
 1. 🔭[ LoMap ](#lomap)
 2. 🏁[ Quick start guide ](#guide)
 3. ☝️[ More information ](#more)
@@ -20,7 +23,6 @@ With the initiative of the Council of Brussels and the collaboration of the <b>S
 This application allows our users to have personalized 🗺️maps🗺️ about places and local businesses in a city, wherever they may be. All the users personal data will be stored in their 🔒personal pods🔒, that could be provided by <b>Inrupt</b>, <b>Solid</b> or any other pod supplier. In addition to this, users can have the chance to share their map and information with their 👁️‍🗨️friends👁️‍🗨️. Also, if you are a competitive person, you are safe with us :), just try to be 🥇better🥇 than everyone else achieveng challenges and winning trophies to reach the 🏆Master🏆 rank!
 
 To start using LoMap, just follow the steps below and 🔮 may the map be with you 🔮
-
 
 <a name="guide"></a>
 ## 🏁Quick start guide
@@ -60,7 +62,7 @@ You can get more information about the repository in the other README files:
 - Webapp: https://github.com/arquisoft/lomap_en2a/tree/master/webapp
 
 <a name="team"></a>
-# 😶‍🌫️TEAM MEMBERS (COLLABORATORS)
+# 📩 TEAM MEMBERS
 
 🤓☝️ Adrián Vega Sánchez uo282365@uniovi.es<br>
 🤯💸 Patricia Garcia Fernández uo282210@uniovi.es <br>
