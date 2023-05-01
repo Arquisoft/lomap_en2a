@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import {
     useDisclosure,
     Button,
@@ -9,14 +9,13 @@ import {
     ModalHeader,
     ModalBody,
     ModalFooter,
-    ModalCloseButton, Text, Image, Divider, SlideFade, Flex, UnorderedList, ListItem, Link, Fade,
+    ModalCloseButton, Text, Image, Divider, Flex, UnorderedList, ListItem, Link,
 } from '@chakra-ui/react'
-import { useSession } from '@inrupt/solid-ui-react';
 import images from "../../static/images/images";
 import {MdQuestionMark} from "react-icons/md";
 import './TutorialModalDialog.css';
 
-export function TutorialModalDialog(props:any) {
+export function TutorialModalDialog() {
     const { isOpen, onOpen, onClose } = useDisclosure()
     const [currentPage, setCurrentPage] = useState(1);
 

@@ -1,5 +1,5 @@
-import React, { useContext, useState } from 'react'
-import {Flex,Text, Button, Input, Icon,  InputRightElement, InputGroup, CloseButton, Spinner} from "@chakra-ui/react";
+import React from 'react'
+import {Flex,Text, Button, Input, CloseButton, Spinner} from "@chakra-ui/react";
 import { addSolidFriend,getSolidFriends} from "../../solid/solidManagement";
 import type { Friend } from "../../types/types";
 import FriendsDetail from './FriendsDetail';
@@ -16,7 +16,7 @@ function Friends(props:FriendsProps) : JSX.Element {
 
   const webId = session.session.info.webId;
   const [friends, setFriends] = React.useState<Friend[]>([]);
-  const[isLoged, setLogged] = React.useState(false);
+  const[, setLogged] = React.useState(false);
   const[friendChargingMsg, setFriendChargingMsg] = React.useState("Loading...")
 
   const[error, setError]=React.useState(false);
@@ -24,7 +24,7 @@ function Friends(props:FriendsProps) : JSX.Element {
   const[addIcon, setAddIcon] = React.useState(<MdPersonAdd></MdPersonAdd>)
 
   React.useEffect(() => {
-    handleFriends()
+    void handleFriends()
   }, [friends]);
 
   const handleFriends = async () => {
@@ -48,7 +48,7 @@ function Friends(props:FriendsProps) : JSX.Element {
     const result = await addSolidFriend(webId as string,value);
     setAddIcon(<MdPersonAdd/>)
     setError(result.error);setErrorMessage(result.errorMessage);
-    handleFriends();
+    void handleFriends();
   }
 
     return (
@@ -86,7 +86,7 @@ function Friends(props:FriendsProps) : JSX.Element {
               {error && <Text marginLeft='5%'>{errorMessage}</Text> }
               <Text fontSize='1.9em' borderBottomWidth='1px' 
               marginTop={'4%'} alignSelf='center'>Current Solid Friends</Text>
-              <Flex flex={1} overflowY={'auto'}overflowX={'auto'} width={'100%'} 
+              <Flex flex={1} overflowY={'auto'} overflowX={'auto'} width={'100%'}
                 mt={'3%'} direction={'column'} margin={'2%'} px={'2%'}>
               {
                   friends.length > 0 ? friends.map((f,i) => <FriendsDetail friend={f} key ={i}/>) 
