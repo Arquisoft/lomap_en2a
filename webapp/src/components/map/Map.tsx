@@ -1,4 +1,4 @@
-import React,{useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 import { Box, Button, ChakraProvider, VStack, Icon, Text,
  HStack, Menu, MenuButton, MenuItemOption, MenuList, MenuOptionGroup} from "@chakra-ui/react";
 import {GoogleMap, Marker, useJsApiLoader} from '@react-google-maps/api';
@@ -99,6 +99,7 @@ const Map = ( props : MapProps) => {
 
   const colors = ['teal', 'purple', 'pink', 'blue', 'green', 'orange'];
   const categories = Object.values(Category); // array of strings containing the values of the categories
+  const [activeIndex, setActiveIndex] = useState(null);
 
 
   const handleFriends = async () => {
@@ -129,7 +130,8 @@ const Map = ( props : MapProps) => {
   }, [checkedCategory]);
 
   // handle clicks on the category filter buttons
-  const handleCategoryClick = (e) => {
+  const handleCategoryClick = (e, index) => {
+      setActiveIndex(index);
       setAreCheckedFilters(true);
       setCheckedCategory(e.target.value);
   }
@@ -239,8 +241,8 @@ const Map = ( props : MapProps) => {
                         borderRadius={25}
                         value={filter}
                         minWidth={'15%'}
-                        onClick={(e:any) => handleCategoryClick(e)}
-                        bgColor={`${colors[index % colors.length]}.50`}
+                        onClick={(e:any) => handleCategoryClick(e, index)}
+                        bgColor={activeIndex === index ? `${colors[index % colors.length]}.400` : `${colors[index % colors.length]}.50`}
                         >
                         {filter}
                       </Button>
