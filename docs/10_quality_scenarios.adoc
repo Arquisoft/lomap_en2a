@@ -28,7 +28,7 @@ To have a measurable response of the system regarding some stimulus correspondin
 
 | *Portability* 
 | To reach the maximum number of users the application must work in the maximum number of infrastructures. 
-| When users access the web from different browsers and devices, it must work and provide all the possible functinalities.
+| When users access the web from different browsers and devices, it must work and provide all the possible functionalities.
 | Very high
 
 | *Testability* 
@@ -71,7 +71,7 @@ To have a measurable response of the system regarding some stimulus correspondin
 
 | *Maintainability*
 | An application should be maintainable to remain usable over the years and to be able to improve functionalities and to fix misfunctionalities.
-| When developers must fix errors and bugs on the system, they should be able to do it without major consequences on the system.
+| When fixing errors and bugs on the system, developers should be able to do it without major consequences on the system.
 | High
 
 |===

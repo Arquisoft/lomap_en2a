@@ -137,10 +137,6 @@ Application -> usr1 : return location
 usr1 -> podUsr1 : getFriends
 podUsr1 ->usr1 : return ["usr2", ...]
 usr1 -> Application : shareLocation(Location,"usr2")
-database db
-Application -> db : getUserByName("usr2")
-db -> Application : return ID
-
 database podUsr2
 Application -> podUsr2 : addSharedLocation(Location,"usr1")
 

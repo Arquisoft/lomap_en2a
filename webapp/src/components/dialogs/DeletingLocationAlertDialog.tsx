@@ -34,10 +34,13 @@ export function DeletingAlertDialog(props:any) {
                             title: 'Location deleted.',
                             description: "The location was deleted from your pod.",
                             status: 'success',
-                            duration: 5000,
+                            duration: 15000,
                             isClosable: true,
                         })
                     );
+                    setDisabled(false)
+                    onClose()
+                    props.setSelectedView('Map')
                 },
                 ()=> {
                     toast({
@@ -47,6 +50,8 @@ export function DeletingAlertDialog(props:any) {
                         duration: 5000,
                         isClosable: true,
                     });
+                    setDisabled(false)
+                    onClose()
                 }
             ) 
     }
@@ -91,7 +96,7 @@ export function DeletingAlertDialog(props:any) {
                                 ml={3}>
                                 Delete
                             </Button>
-                            
+
                         </AlertDialogFooter>
                     </AlertDialogContent>
                 </AlertDialogOverlay>

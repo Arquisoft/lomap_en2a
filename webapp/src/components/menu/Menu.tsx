@@ -7,12 +7,18 @@ import AddLocationForm from '../locations/AddLocationForm';
 import Friends from '../friends/Friends';
 import { ProfileView } from '../profile/ProfileInfo';
 import {GamePanel} from '../game/GamePanel'
+import App from '../../App';
 
 
 type MenuProps = {
-  changeViewTo: (view: JSX.Element) => void,
-  locations : Array<Location>,
-  loadLocations : () => Promise<void>
+  changeViewTo: (view: string) => void,
+  ownLocations : Array<Location>,
+  friendLocations : Array<Location>,
+  loadLocations : () => Promise<void>,
+  loadUserLocations: () => Promise<void>
+  loading: boolean
+  clickedCoordinates : string
+  setClickedCoordinates : (coordinates : string) => void
 }
 
 
@@ -54,6 +60,7 @@ function Menu(props: MenuProps): JSX.Element {
                   px={2}
                   alignItems='left'
                   marginTop={'3%'}
+                  id='smallContainer'
             >
               <Box>
                 <Button
@@ -64,7 +71,7 @@ function Menu(props: MenuProps): JSX.Element {
                   size='lg'
                   width={'fi-content'}
                   height={'5vh'}
-                  onClick={() => { setinsideMenu(false); props.changeViewTo(<></>); }}>
+                  onClick={() => { setinsideMenu(false); props.changeViewTo('Map'); }}>
                   Map View
                 </Button>
               </Box>
@@ -79,7 +86,7 @@ function Menu(props: MenuProps): JSX.Element {
                 onClick={() => {
                   setinsideMenu(false);
                   props.changeViewTo(
-                    <ListOfLocations setSelectedView={(view)=> props.changeViewTo(view)} places={props.locations} loadLocations={props.loadLocations} />
+                    'ListOfLocations'
                     );
                 }}>
                   List of Locations
@@ -96,8 +103,8 @@ function Menu(props: MenuProps): JSX.Element {
                 onClick={
                   () => {
                     setinsideMenu(false);
-                    props.changeViewTo(
-                      <AddLocationForm setSelectedView={(view)=> props.changeViewTo(view)} loadLocations={props.loadLocations} clickedCoords={''}/>
+                    props.changeViewTo( 
+                      'AddLocationForm'
                     );
                   }
                 }>
@@ -115,11 +122,11 @@ function Menu(props: MenuProps): JSX.Element {
                 onClick={() => {
                   setinsideMenu(false);
                   props.changeViewTo(
-                    <Friends setSelectedView={(view)=> props.changeViewTo(view)}/>
+                    'Friends'
                   );
                 }}
                 >
-                  Add friends
+                  Add Friends
                 </Button>
               </Box>
 
@@ -132,7 +139,7 @@ function Menu(props: MenuProps): JSX.Element {
                 onClick={() => {
                   setinsideMenu(false);
                   props.changeViewTo(
-                    <GamePanel setSelectedView={(view)=> props.changeViewTo(view)} locations={props.locations}/>
+                    `GameView`
                   );
                 }}
                 >
@@ -150,7 +157,7 @@ function Menu(props: MenuProps): JSX.Element {
                 onClick={() => {
                   setinsideMenu(false);
                   props.changeViewTo(
-                    <ProfileView setSelectedView={(view)=> props.changeViewTo(view)} locations={props.locations}></ProfileView>
+                    'ProfileView'
                   );
                 }}
                 >
@@ -163,6 +170,7 @@ function Menu(props: MenuProps): JSX.Element {
           (
             <Flex
               data-testid='smallContainer'
+              id='smallContainer'
               direction={'column'}
               bg={'white'}
               width={"60px"}
@@ -180,7 +188,7 @@ function Menu(props: MenuProps): JSX.Element {
               <Flex direction='row' gap='2' alignItems={'center'}>
                 <Icon as={MdList} width='3em' height={'2.5vw'} cursor={'pointer'}/>
               </Flex>
-              <Flex direction='row' gap='2' alignItems={'center'}>
+              <Flex direction='row' gap='2' alignItems={'center'} id='addLocationIcon'>
                 <Icon as={MdLocationOn} width='3em' height={'2.5vw'} cursor={'pointer'}/> 
               </Flex>
               <Flex direction='row' gap='2' alignItems={'center'}>

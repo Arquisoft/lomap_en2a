@@ -3,8 +3,6 @@
 
 == Building Block View
 The building block view shows in a graphic way a decomposition of the system. 
-As of now, some internal decisions have not been decided yet, it's a very early build, so changes will be added as the development proceeds. We will be using a MVC pattern.
-
 
 [role="arc42help"]
 ****
