@@ -1,4 +1,4 @@
-import { Avatar, Text, Flex, VStack, Box, HStack,Icon, Stack, Progress, CloseButton } from "@chakra-ui/react"
+import { Text, Flex, VStack, Box,Icon, Stack, Progress, CloseButton } from "@chakra-ui/react"
 import React, { useState } from "react"
 import { useSession } from '@inrupt/solid-ui-react';
 import { Location } from "../../types/types";
@@ -15,13 +15,11 @@ type GamePanelProps = {
 
 export function GamePanel(props:GamePanelProps) {  
   const session = useSession();
-  const [avgRatings, setavgRatings] = useState(0)
   const [trophies, setTrophies] = useState(0);
   const ranks = ["Newbie", "Explorer", "Connoisseur", "Master"]
   const [rank, setRank] = useState("");
   const [progressPercentage, setProgressPercentage] = useState(0);
   const [museumsCounter, setMuseumsCounter] = useState(0);
-  const [isPlaceWith4Categories, setIsPlaceWith4Categories] = useState(false)
   const [numberFriends, setNumberFriends] = useState(0)
   const [challengeAddLocations, setChallengeAddLocations] = useState(false)
   const [challengeCategories, setChallengeCategories] = useState(false)
@@ -31,7 +29,6 @@ export function GamePanel(props:GamePanelProps) {
   const [challengeTrophies, setChallengeTrophies] = useState(0)
 
   React.useEffect(()=>{
-    setavgRatings( getAverageOfAllLocations(props.locations))
     countMuseums();
     checkPlace4Categories();
     checkIf20Locations();
@@ -73,10 +70,9 @@ export function GamePanel(props:GamePanelProps) {
 
   const checkPlace4Categories = () => {
     let isPlace = false;
-    props.locations.find(location => location.category.length >= 4? isPlace=true : isPlace=isPlace)
+    props.locations.find(location => location.category.length >= 4? isPlace=true : isPlace)
     if (isPlace)
       setChallengeCategories(true);
-    setIsPlaceWith4Categories(isPlace);
   }
 
   const countMuseums = () => {
@@ -161,7 +157,6 @@ export function GamePanel(props:GamePanelProps) {
     let nextRankTrophies;
     let progressPercentage;
     if (rankIndex+1 >= ranks.length){
-      nextRankTrophies = rankIndex; 
       progressPercentage = 100;
     }
      
