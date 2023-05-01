@@ -1,0 +1,3 @@
+This folder contains the results of doing load testing of the lomap_en2a application using the 
+Apache Bench with 1000000 requests done in parallel in groups of 1000.
+A representation of the information obtained will be included in the presentation of the application.

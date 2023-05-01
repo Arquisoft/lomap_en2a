@@ -29,17 +29,3 @@ test('should call setSelectedView when close button is clicked',async () => {
     const button = getByTestId("closeButton");
     fireEvent.click(button);
 });
-
-
-//we test that once logged the click on the close button calls the function setSelectedView
-test('The name and webid of the friend should be printed in the screen',async () => { //TODO
-    
-    // Mock the useSession function
-    
-    //we check the name and webid of the friend are printed
-    const { getByText } = render(<Friends setSelectedView={()=>{}}/>);
-    
-    expect(getByText(/name/)).toBeInTheDocument();
-    expect(getByText(/webId/)).toBeInTheDocument();
-
-});

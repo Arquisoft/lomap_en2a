@@ -12,7 +12,9 @@ test('check that the name input works',async () => {
     expect(inputElement).toHaveAttribute('placeholder', 'Location name');
     expect(inputElement).toHaveAttribute('id', 'name');
     //we change the value of the input to 'Los Angeles'
-    fireEvent.change(inputElement, { target: { value: 'Los Angeles' } })
+    act(() => {
+      fireEvent.change(inputElement, { target: { value: 'Los Angeles' } })
+    });
     expect(inputElement.value).toBe('Los Angeles');
 
 })
@@ -25,7 +27,9 @@ test('check that the description input works',async () => {
     expect(inputElement).toHaveAttribute('placeholder', 'Location description');
     expect(inputElement).toHaveAttribute('id', 'description');
     //we change the value of the input to 'Los Angeles'
-    fireEvent.change(inputElement, { target: { value: 'Description' } })
+    act(() => {
+      fireEvent.change(inputElement, { target: { value: 'Description' } })
+    });
     expect(inputElement.value).toBe('Description');
 
 })
@@ -37,7 +41,9 @@ test('check that the coordinates input doesnt work with wrong coordinates',async
     expect(inputElement).toBeInTheDocument();
     expect(inputElement).toHaveAttribute('id', 'coordinates');
     //we change the value of the input to 'Los Angeles'
-    fireEvent.change(inputElement, { target: { value: 'Los Angeles' } })
+    act(() => {
+      fireEvent.change(inputElement, { target: { value: 'Los Angeles' } })
+    });
     expect(inputElement.value).toBe('Los Angeles');
     //we check that the error message appears
     expect(getByTestId('coord-error')).toBeInTheDocument();
@@ -53,8 +59,9 @@ test('handles file upload correctly', async () => {
 
     const file = new File(['image data'], 'test.png', { type: 'image/png' });
 
-    
-    userEvent.upload(inputElement, file);
+    act(() => {
+      userEvent.upload(inputElement, file);
+    });
   });
 
 test('handles image upload', async () => {
@@ -80,64 +87,76 @@ test('handles image upload', async () => {
     // add more assertions as needed to check the component's state changes
   });
 
-  test('selects a category', async () => {
-    const {getByTestId}= render(<AddLocationForm locations={[]} setSelectedView={jest.fn()} loadLocations={jest.fn()} loadUserLocations={jest.fn()} clickedCoordinates={""} setClickedCoordinates={jest.fn()} setInLocationCreationMode={jest.fn()} setSelectedLocation={jest.fn()}></AddLocationForm>)
-    
-        userEvent.click(getByTestId('categories-button'));
-        
-    let cb = getByTestId('Shop')
+test('selects a category', async () => {
+  const {getByTestId}= render(<AddLocationForm locations={[]} setSelectedView={jest.fn()} loadLocations={jest.fn()} loadUserLocations={jest.fn()} clickedCoordinates={""} setClickedCoordinates={jest.fn()} setInLocationCreationMode={jest.fn()} setSelectedLocation={jest.fn()}></AddLocationForm>)
+  
+      userEvent.click(getByTestId('categories-button'));
+      
+  let cb = getByTestId('Shop')
+  act(() => {
     userEvent.click(cb);
-    expect(cb).toHaveAttribute('aria-checked', 'true');
-    
-    
   });
+  expect(cb).toHaveAttribute('aria-checked', 'true');
+  
+  
+});
 
-  test('adds location', async () => {
-    const {getByTestId}= render(<AddLocationForm locations={[]} setSelectedView={jest.fn()} loadLocations={jest.fn()} loadUserLocations={jest.fn()} clickedCoordinates={""} setClickedCoordinates={jest.fn()} setInLocationCreationMode={jest.fn()} setSelectedLocation={jest.fn()}></AddLocationForm>)
-    const nameInput = getByTestId("name-input") as HTMLInputElement;
+test('adds location', async () => {
+  const {getByTestId}= render(<AddLocationForm locations={[]} setSelectedView={jest.fn()} loadLocations={jest.fn()} loadUserLocations={jest.fn()} clickedCoordinates={""} setClickedCoordinates={jest.fn()} setInLocationCreationMode={jest.fn()} setSelectedLocation={jest.fn()}></AddLocationForm>)
+  const nameInput = getByTestId("name-input") as HTMLInputElement;
 
+  act(() => {
     fireEvent.change(nameInput, { target: { value: 'Los Angeles' } })
-    expect(nameInput.value).toBe('Los Angeles');
-    const descriptionInput = getByTestId("description-input") as HTMLInputElement;
+  });
+  expect(nameInput.value).toBe('Los Angeles');
+  const descriptionInput = getByTestId("description-input") as HTMLInputElement;
 
+  act(() => {
     fireEvent.change(descriptionInput, { target: { value: 'Description' } })
-    expect(descriptionInput.value).toBe('Description');
-    const coordinatesInput = getByTestId("coordinates-input") as HTMLInputElement;
+  });
+  expect(descriptionInput.value).toBe('Description');
+  const coordinatesInput = getByTestId("coordinates-input") as HTMLInputElement;
 
+  act(() => {
     fireEvent.change(coordinatesInput, { target: { value: '40.416775,-3.703790' } })
-    expect(coordinatesInput.value).toBe('40.416775,-3.703790');
-    const input = getByTestId('image-input') as HTMLInputElement;
+  });
+  expect(coordinatesInput.value).toBe('40.416775,-3.703790');
+  const input = getByTestId('image-input') as HTMLInputElement;
 
-    // create a mock file
-    const file = new File(['image data'], 'test.png', { type: 'image/png' });
-    //input the file
-    act(() => {
-        fireEvent.change(input, { target: { files: [file] } });
-        });
-    // wait for state updates to occur
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    //click the button
-    let button = getByTestId('add-location-button')
+  // create a mock file
+  const file = new File(['image data'], 'test.png', { type: 'image/png' });
+  //input the file
+  act(() => {
+    fireEvent.change(input, { target: { files: [file] } });
+  });
+  // wait for state updates to occur
+  await new Promise((resolve) => setTimeout(resolve, 0));
+  //click the button
+  let button = getByTestId('add-location-button')
+  act(() => {
     userEvent.click(button);
-    // wait for state updates to occur
-    await new Promise((resolve) => setTimeout(resolve, 0));
-    //check that a toast appears
-    expect(button).toBeDisabled()
-    
-  })
+  });
+  // wait for state updates to occur
+  await new Promise((resolve) => setTimeout(resolve, 0));
 
-  test('close button', async () => {
-    const setSelectedView = jest.fn();
-    const setClickedCoordinates = jest.fn();
-    const {getByTestId}= render(<AddLocationForm locations={[]} setSelectedView={setSelectedView} loadLocations={jest.fn()} loadUserLocations={jest.fn()} clickedCoordinates={""} setClickedCoordinates={setClickedCoordinates} setInLocationCreationMode={jest.fn()} setSelectedLocation={jest.fn()}></AddLocationForm>)
-    const closeButton = getByTestId("close-button") ;
+  //check that a toast appears
+  expect(button).toBeDisabled()
+  
+})
 
+test('close button', async () => {
+  const setSelectedView = jest.fn();
+  const setClickedCoordinates = jest.fn();
+  const {getByTestId}= render(<AddLocationForm locations={[]} setSelectedView={setSelectedView} loadLocations={jest.fn()} loadUserLocations={jest.fn()} clickedCoordinates={""} setClickedCoordinates={setClickedCoordinates} setInLocationCreationMode={jest.fn()} setSelectedLocation={jest.fn()}></AddLocationForm>)
+  const closeButton = getByTestId("close-button") ;
+
+  act(() => {
     fireEvent.click(closeButton);
-
-  // Check that the appropriate functions were called with the expected arguments
-  expect(setSelectedView).toHaveBeenCalledWith('Map');
-  expect(setClickedCoordinates).toHaveBeenCalledWith('');
-    
-  })
+  });
+// Check that the appropriate functions were called with the expected arguments
+expect(setSelectedView).toHaveBeenCalledWith('Map');
+expect(setClickedCoordinates).toHaveBeenCalledWith('');
+  
+})
 
 

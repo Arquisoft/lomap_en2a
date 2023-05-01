@@ -18,9 +18,10 @@ export function LogoutAlertDialog(props:any) {
   
     return (
       <>
-        <Button colorScheme='red' leftIcon={<Icon as={RiLogoutBoxLine}/>}
-          size='lg'
-          onClick={onOpen}
+        <Button colorScheme='red' 
+                leftIcon={<Icon as={RiLogoutBoxLine}/>}
+                size='lg'
+                onClick={onOpen}
           data-testid="logout"
         >
           Logout
