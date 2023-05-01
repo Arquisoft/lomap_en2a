@@ -1,0 +1,10 @@
+{
+  "simulation": "pruebaASW.LoadLomap",
+  "simulationId": "loadlomap-20230430215725044",
+  "start": 1682891845961,
+  "description": "",
+  "scenarios": ["JustLoad"],
+  "assertions": [
+
+  ]
+}

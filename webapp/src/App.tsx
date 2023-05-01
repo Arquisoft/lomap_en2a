@@ -18,6 +18,7 @@ import LocationInfo from './components/locations/LocationInfo';
 import {GamePanel} from './components/game/GamePanel'
 import { ProfileView } from './components/profile/ProfileInfo';
 import { useSession } from '@inrupt/solid-ui-react';
+import EditLocationFormComp from './components/locations/EditLocation';import {IntroductionModalDialog} from "./components/dialogs/IntroductionModalDialog";
 
 
 function App(): JSX.Element {
@@ -35,10 +36,6 @@ function App(): JSX.Element {
   const [nameSelectedView, setNameSelectedView] = useState("Map");
 
 
-  const getNewLocation = (location:Location) => {
-    ownLocations.push(location);
-    createLocation(session.session.info.webId as string, location);
-  }
 
   //we get the locations for the user and fetch them to the list
   useEffect(()=>{
@@ -50,10 +47,15 @@ function App(): JSX.Element {
     let locList = ownLocations;
     if(session.session.info.webId){
       let list = await getLocations(session.session.info.webId)
-      locList = locList.concat(list)
+      //locList = locList.concat(list)
+      setOwnLocations(list);
     }
-    setOwnLocations(locList);
+    
   }
+
+  
+
+
 
   async function loadLocations(){
     if(session.session.info.webId){
@@ -162,6 +164,23 @@ function App(): JSX.Element {
                         setSelectedLocation={setSelectedLocation}
                       />
                     );
+                    case "EditLocation":
+                      return (
+                        <EditLocationFormComp
+                          locations={ownLocations}
+                          setOwnLocations={setOwnLocations}
+                          setSelectedView={(viewName: string) => {
+                            setNameSelectedView(viewName);
+                          }}
+                          loadLocations={loadLocations}
+                          loadUserLocations={loadUserLocations}
+                          clickedCoordinates={clickedCoordinates}
+                          setClickedCoordinates={setClickedCoordinates}
+                          setInLocationCreationMode={setInLocationCreationMode}
+                          setSelectedLocation={setSelectedLocation}
+                          location={selectedLocation}
+                        />
+                      );
                   case "ListOfLocations":
                     return (
                       <ListOfLocations
@@ -207,7 +226,7 @@ function App(): JSX.Element {
                     return (
                       <GamePanel
                         setSelectedView={(view)=> setNameSelectedView(view)}
-                        locations={ownLocations.concat(friendLocations)}/>
+                        locations={ownLocations}/>
                     );
                   default:
                     return null;
@@ -227,7 +246,7 @@ function App(): JSX.Element {
             {
               !isLoggedIn ? (
                 <Login></Login>
-              ) : <></>
+              ) : <IntroductionModalDialog></IntroductionModalDialog>
             }
             <HStack
             padding='0.2em'
