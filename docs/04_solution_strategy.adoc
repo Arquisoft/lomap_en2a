@@ -15,7 +15,7 @@ In this section strategies decided by the team will be stated.
 * *Turtle*. RDF syntax that allows an RDF graph to be completely written in a compact and natural text form, with abbreviations for common usage patterns and datatypes
 * *Cucumber*. Testing tool that supports Behavior Driven Development (BDD). Achieves Testability
 * *Gatling*. Load testing tool. Achieves Testability.
-* *Apache jmeter*. Load testing tool. Achieves Testability.
+* *Apache Benchmark*. Load testing tool. Achieves Testability.
 * *End-to-end testing*. Methodology to test from the end user's experience by simulating the real user scenario and validating the system and its components for integration and data integrity. Achieves Test Coverage
 
 === Design
