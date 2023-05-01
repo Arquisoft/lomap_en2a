@@ -93,7 +93,7 @@ function EditLocationFormComp(props : EditLocationProps) : JSX.Element {
             //we perform a call to the function that adds the location to the pod
             editLocationSolid(location).then(
                 ()=> {
-                    props.loadUserLocations();//WORKING
+                    void props.loadUserLocations();//WORKING
                     toast({
                         title: 'Location correctly edited in your pod',
                         description: "Location '"+location.name+"' was edited in your pod.",
@@ -144,7 +144,7 @@ function EditLocationFormComp(props : EditLocationProps) : JSX.Element {
             return;
         }
 
-        // if no category was selected, autoselect 'Other'
+        // if no category was selected, select 'Other'
         if (checkedCategories.length === 0) {
             checkedCategories.push(Category.Other)
         }
@@ -247,7 +247,7 @@ function EditLocationFormComp(props : EditLocationProps) : JSX.Element {
                             Edit manually
                         </Button>
                     </HStack>
-                    {/*Circle element with a x in the middle of it */}
+                    {/*Circle element with an x in the middle of it */}
                     <HStack>
                         {
                         areValidCoords ?

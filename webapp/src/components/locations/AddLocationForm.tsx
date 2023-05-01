@@ -81,7 +81,6 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
 
     const categories = Object.values(Category); // array of strings containing the values of the categories
 
-    //let imgs: string[] = [];
     const [imgs, setImgs] = React.useState<string[]>([]);
     const [imgsFiles, setImgsFiles] = React.useState<File[]>([]);
  
@@ -161,7 +160,7 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
             return;
         }
 
-        // if no category was selected, autoselect 'Other'
+        // if no category was selected, select 'Other'
         if (checkedCategories.length === 0){
             checkedCategories.push(Category.Other)
         }
@@ -261,7 +260,7 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
                             Edit manually
                         </Button>
                     </HStack>
-                    {/*Circle element with a x in the middle of it */}
+                    {/*Circle element with an x in the middle of it */}
                     <HStack>
                         {
                         areValidCoords ?

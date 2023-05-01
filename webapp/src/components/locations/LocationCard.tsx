@@ -3,6 +3,7 @@ import {Flex,HStack, Text,Image,Icon,Box,VStack} from '@chakra-ui/react'
 import images from '../../static/images/images'
 import { FaStar, FaStarHalfAlt } from 'react-icons/fa';
 import BubbleContainer from './CategoriesBubbles';
+import React from "react";
 
 type PlaceDetailProps = {
     place : Location;
@@ -40,11 +41,11 @@ const LocationRating: React.FC<LocationRatingProps> = ({ location }: LocationRat
   
     return (
       <HStack width='fit-content' spacing={1}>
-        {[...Array(fullStars)].map((_, i) => (
+        {[...Array(fullStars)].map((_) => (
             <Icon as={FaStar} color="yellow.400" />
         ))}
         {halfStar && <Icon as={FaStarHalfAlt} color="yellow.400" />}
-        {[...Array(emptyStars)].map((_, i) => (
+        {[...Array(emptyStars)].map((_) => (
             <Icon as={FaStar} color="gray.300" />
         ))}
       </HStack>

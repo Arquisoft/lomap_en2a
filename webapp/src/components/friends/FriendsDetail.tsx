@@ -1,5 +1,5 @@
 
-import {Flex, Text,Image, Avatar} from '@chakra-ui/react'
+import {Flex, Text, Avatar} from '@chakra-ui/react'
 import type { Friend } from '../../types/types';
 
 type FriendsDetailProps = {

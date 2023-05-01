@@ -134,7 +134,7 @@ const RatingSection = ({location, setLocation, session})=>{
               //we update the visual part of the application
               computeStatistics()
               // solid management
-              addLocationScore(session.session.info.webId, localLocation, value)
+              void addLocationScore(session.session.info.webId, localLocation, value)
 
           }}></StarRating>
           <HStack gap='10%' placeContent={'center'} width={'full'}>
@@ -262,7 +262,7 @@ const ReviewSection =  ( {location ,setLocation,session}) =>{
                         //we persist the update on the Solid pod
 
                         // make call to the solidManagement module here
-                        addLocationReview(localLocation, review)
+                        void addLocationReview(localLocation, review)
                         //we close the add review window
                         onClose()
                       }}
@@ -317,7 +317,7 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
 
 
   React.useEffect(() => {
-    handleFriends()
+    void handleFriends()
   }, []); 
 
   const handleFriends = async () => {
@@ -340,7 +340,7 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
     if (index > -1) {
       const newCheckedFriends = checkedFriends.filter((friend) => friend !== friendWebID);
       setCheckedFriends(newCheckedFriends);
-      setAccessToFriend(friendWebID, location.url as string, false);
+      void setAccessToFriend(friendWebID, location.url as string, false);
       toastShared({
         title: `Location is no longer shared with ${friendUsername.username}`,
         status: "info",
@@ -350,7 +350,7 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
     } else {
       const newCheckedFriends = [...checkedFriends, friendWebID];
       setCheckedFriends(newCheckedFriends);
-      setAccessToFriend(friendWebID, location.url as string, true);
+      void setAccessToFriend(friendWebID, location.url as string, true);
       toastShared({
         title: `Location shared with ${friendUsername.username}`,
         status: "success",

@@ -32,7 +32,7 @@ function Friends(props:FriendsProps) : JSX.Element {
       const n  = await getSolidFriends(webId)
       setFriends(n);
       if (n.length === 0)
-        setFriendChargingMsg("Uups! It seems you don't have any friends...")
+        setFriendChargingMsg("Ups! It seems you don't have any friends...")
       setLogged(true);
     }
     else{

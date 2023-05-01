@@ -46,7 +46,7 @@ export function GamePanel(props:GamePanelProps) {
   }, [rank])
 
   React.useEffect(() => {
-    getNumberOfFriends();
+    void getNumberOfFriends();
   }, [])
 
   React.useEffect(() => {
