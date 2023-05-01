@@ -5,7 +5,7 @@ import {GoogleMap, Marker, useJsApiLoader} from '@react-google-maps/api';
 
 import { Category, isLocationOfCategory } from '../Category';
 import { useSession } from '@inrupt/solid-ui-react';
-import { getSolidFriends, getFriendsID } from "../../solid/solidManagement";
+import { getSolidFriends } from "../../solid/solidManagement";
 import type { Friend, Location } from "../../types/types"
 import {TbMap2} from "react-icons/tb";
 
@@ -35,7 +35,6 @@ const Map = ( props : MapProps) => {
         googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY as string
       })
   const [center, setCenter] = React.useState( {lat: 43.37776784391247, lng: -5.874621861782328})
-  const [map, setMap] = React.useState(null)
   const [areCheckedFilters, setAreCheckedFilters] = React.useState<boolean>(false);
   const [filteredLocations, setFilteredLocations] = React.useState<Array<Location>>([]) //need constant for the filter to work
   const [friends, setFriends] = React.useState<Friend[]>([]);
@@ -73,7 +72,7 @@ const Map = ( props : MapProps) => {
     setInLocationCreationMode(props.inLocationCreationMode);
   }, [props.inLocationCreationMode]);
 
-  const onUnmount = React.useCallback(function callback() {setMap(null)}, [])
+  const onUnmount = React.useCallback(function callback() {}, [])
 
   const handlePlaceClick = (location) => {
     props.setSelectedLocation(location);
@@ -250,7 +249,7 @@ const Map = ( props : MapProps) => {
                   })
                 }
                   <Button minWidth={'19%'}
-                    onClick={(e) => {
+                    onClick={() => {
                       setCheckedCategory("")
                       setCheckedFriends([]);
                       setAreCheckedFilters(false);
@@ -278,7 +277,7 @@ const Map = ( props : MapProps) => {
               )
               :
               (
-                filteredLocations.map((place, i) => (
+                filteredLocations.map((place) => (
                 <Marker
                     position={{lat: Number(place.coordinates.lat), lng: Number(place.coordinates.lng)}}
                     onClick={() => handlePlaceClick(place)}
@@ -324,7 +323,7 @@ const Map = ( props : MapProps) => {
             width='30em'
             height='7em' 
             marginBottom='1%'
-            hidden = {inLocationCreationMode ? false : true}
+            hidden = {!inLocationCreationMode}
             alignItems={'center'}
             backgroundColor='white'
             borderRadius='1em'
