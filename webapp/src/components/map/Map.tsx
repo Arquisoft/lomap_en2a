@@ -1,4 +1,4 @@
-import React,{useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 import { Box, Button, ChakraProvider, VStack, Icon, Text,
  HStack, Menu, MenuButton, MenuItemOption, MenuList, MenuOptionGroup} from "@chakra-ui/react";
 import {GoogleMap, Marker, useJsApiLoader} from '@react-google-maps/api';
@@ -52,7 +52,7 @@ const Map = ( props : MapProps) => {
       const { latitude, longitude } = position.coords;
       setCenter({ lat: latitude, lng: longitude });
     });
-    
+
   }, []);
 
   //when the selectedLocation is changed the center of the map will be the location that has the focus
@@ -83,22 +83,23 @@ const Map = ( props : MapProps) => {
 
   function handleMapClick(lat:any,lon:any):void {
 
-    // get coordinates where clicked
-    let clickedCoords = lat + ", " + lon;
+        // get coordinates where clicked
+        let clickedCoords = lat + ", " + lon;
 
-    //we update the currently clicked coordinates
-    props.setClickedCoordinates(clickedCoords);
-    //we update the state of the location creation mode
-    props.setInLocationCreationMode(false);
+        //we update the currently clicked coordinates
+        props.setClickedCoordinates(clickedCoords);
+        //we update the state of the location creation mode
+        props.setInLocationCreationMode(false);
 
-    //if the currently selected view is not the add location form, we change it to it
-    if (props.selectedView !== 'AddLocationForm'){
-      props.changeViewTo('AddLocationForm');
+        //if the currently selected view is not the add location form, we change it to it
+        if (props.selectedView !== 'AddLocationForm'){
+            props.changeViewTo('AddLocationForm');
+        }
     }
-  }
 
   const colors = ['teal', 'purple', 'pink', 'blue', 'green', 'orange'];
   const categories = Object.values(Category); // array of strings containing the values of the categories
+  const [activeIndex, setActiveIndex] = useState(null);
 
 
   const handleFriends = async () => {
@@ -129,7 +130,8 @@ const Map = ( props : MapProps) => {
   }, [checkedCategory]);
 
   // handle clicks on the category filter buttons
-  const handleCategoryClick = (e) => {
+  const handleCategoryClick = (e, index) => {
+      setActiveIndex(index);
       setAreCheckedFilters(true);
       setCheckedCategory(e.target.value);
   }
@@ -239,8 +241,8 @@ const Map = ( props : MapProps) => {
                         borderRadius={25}
                         value={filter}
                         minWidth={'15%'}
-                        onClick={(e:any) => handleCategoryClick(e)}
-                        bgColor={`${colors[index % colors.length]}.50`}
+                        onClick={(e:any) => handleCategoryClick(e, index)}
+                        bgColor={activeIndex === index ? `${colors[index % colors.length]}.400` : `${colors[index % colors.length]}.50`}
                         >
                         {filter}
                       </Button>

@@ -18,7 +18,8 @@ import LocationInfo from './components/locations/LocationInfo';
 import {GamePanel} from './components/game/GamePanel'
 import { ProfileView } from './components/profile/ProfileInfo';
 import { useSession } from '@inrupt/solid-ui-react';
-import EditLocationFormComp from './components/locations/EditLocation';
+import EditLocationFormComp from './components/locations/EditLocation';import {IntroductionModalDialog} from "./components/dialogs/IntroductionModalDialog";
+
 
 function App(): JSX.Element {
   const session = useSession(); 
@@ -243,7 +244,7 @@ function App(): JSX.Element {
             {
               !isLoggedIn ? (
                 <Login></Login>
-              ) : <></>
+              ) : <IntroductionModalDialog></IntroductionModalDialog>
             }
             <HStack
             padding='0.2em'
