@@ -194,7 +194,9 @@ const ReviewSection =  ( {location ,setLocation,session}) =>{
   let localLocation = location;
   //we get the name of the user
   useEffect(() => {
-    getNameFromPod(session.session.info.webId).then(res=> setusername(res));
+    if(session.session.info.webId)
+      getNameFromPod(session.session.info.webId).then(res=> setusername(res));
+
   }, []);
   return (
     <>
@@ -208,13 +210,13 @@ const ReviewSection =  ( {location ,setLocation,session}) =>{
             closeOnBlur={false}
           >
             <PopoverTrigger>
-              <Button data-testid ='buttonReview' colorScheme={'green'} size='sm' leftIcon ={<MdOutlineRateReview/>} >Add review</Button>
+              <Button data-testid ='add-review-button' colorScheme={'green'} size='sm' leftIcon ={<MdOutlineRateReview/>} >Add review</Button>
             </PopoverTrigger>
             <PopoverContent >
               <Box padding='6%' marginLeft='5%'>
               <PopoverCloseButton data-testid='closeButtonReview' />
                   <FormControl isInvalid={errorOnBody}  >
-                    <FormLabel fontSize={'1.6em'}>Leave a review </FormLabel>
+                    <FormLabel fontSize={'1.6em'}>Leave a review</FormLabel>
                     <FormLabel>Title</FormLabel>
                     <Input 
                       data-testid ='inputTitle'
@@ -490,12 +492,12 @@ export default function LocationInfo (props : LocationInfoProps) : JSX.Element {
       <Divider marginTop={'2%'} marginBottom={'2%'} borderWidth={'2px'} borderRadius={"lg"} width='100%'/> 
         <Tabs isFitted={true} variant='enclosed' mx='5%' marginLeft='5%'>
           <TabList>
-            <Tab >Reviews</Tab>
-            <Tab >Ratings</Tab>
+            <Tab data-testid="review-button">Reviews</Tab>
+            <Tab data-testid="rating-button">Ratings</Tab>
           </TabList>
           <TabPanels alignSelf='center'>
-            <TabPanel>
-              <ReviewSection location={location} setLocation={setlocation} session={session} ></ReviewSection>
+            <TabPanel >
+              <ReviewSection  location={location} setLocation={setlocation} session={session} ></ReviewSection>
             </TabPanel>
             <TabPanel>
               <RatingSection location={location} setLocation={setlocation} session={session} ></RatingSection>

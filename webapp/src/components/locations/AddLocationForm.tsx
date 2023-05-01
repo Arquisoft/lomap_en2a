@@ -152,14 +152,6 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
         setAddingLocationProcess(true);
         checkCoordinates(coordsValue);
 
-        if (isValidName) {
-            return;
-        }
-
-        if (!areValidCoords) {
-            alert("areValidCoords da false");
-            return;
-        }
 
         // if no category was selected, autoselect 'Other'
         if (checkedCategories.length == 0){
