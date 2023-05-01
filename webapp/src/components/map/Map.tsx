@@ -116,8 +116,8 @@ const Map = ( props : MapProps) => {
   const handleFilter = () => {
     const filtered = props.locations.filter(location => {
       const locationCreator = `${(location.url as string).split("private")[0]}profile/card#me`;
-      const categoryToFilter = (checkedCategory == "") ? true : isLocationOfCategory(location, checkedCategory);
-      const friendsToFilter = (checkedFriends.length == 0) ? true : checkedFriends.includes(locationCreator);
+      const categoryToFilter = (checkedCategory === "") ? true : isLocationOfCategory(location, checkedCategory);
+      const friendsToFilter = (checkedFriends.length === 0) ? true : checkedFriends.includes(locationCreator);
       return categoryToFilter && friendsToFilter;
     });
     setFilteredLocations(filtered);
@@ -216,10 +216,10 @@ const Map = ( props : MapProps) => {
                                 onClick={(e:any) =>{ 
                                   // check if it is being selected or unselected
                                   let index = checkedFriends.indexOf(e.target.innerText);
-                                  (index == -1)? checkedFriends.push(e.target.innerText) : 
+                                  (index === -1)? checkedFriends.push(e.target.innerText) :
                                     checkedFriends.splice(index, 1);
                                   handleFilter()
-                                  setAreCheckedFilters(checkedFriends.length != 0 || checkedCategory != "") }}>
+                                  setAreCheckedFilters(checkedFriends.length !== 0 || checkedCategory !== "") }}>
                               {friend.webID as string}</MenuItemOption>
                           )
                         })
