@@ -2,10 +2,7 @@ import React from 'react'
 import { act, fireEvent, render } from "@testing-library/react";
 import Login from '../components/login/Login';
 
-/*
-    Still have to test the correct behavoir of the login and the prevent default
-    Current coverage = 73.33%
-*/
+
 
 
 test('check first option is selected by default',async () => {

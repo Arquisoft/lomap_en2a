@@ -42,7 +42,6 @@ test('check menu shrinks when mouse exits', async () => {
   expect(getByTestId('smallContainer')).toBeInTheDocument()
 });
 
-//TODO fix the first 3 -> when merging do not pass
 test.each(['Map View', 'List of Locations', 'Add Location', 'Add Friends','Progress','Profile'])(
   'clicking %s updates the view',
   async (buttonText) => {
