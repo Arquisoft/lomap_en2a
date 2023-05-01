@@ -58,9 +58,9 @@ test('check description shows in view', async () => {
 
 test('check images shows in view', async () => {
   const { container } = render(<LocationInfo setSelectedView={()=>{}} location={testLocation} loadLocations={jest.fn()} ></LocationInfo>)
-  await act(async () => {
+  // await act(async () => {
     expect(container.querySelectorAll("img").length).toBe(testLocation.images?.length);
-  })
+  // })
 })
 
 test('check reviews are displayed correctly', async () => {
