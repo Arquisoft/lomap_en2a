@@ -36,18 +36,16 @@ This project is a basic example of website using **React** with **Typescript** a
 
 <mark>In case you already have node.js and npm, make sure you update them before attempting to build the images</mark>
 
-If you want to execute the project you will need [git](https://git-scm.com/downloads), [Node.js and npm](https://www.npmjs.com/get-npm) and [Docker](https://docs.docker.com/get-docker/). Make sure the three of them are installed in your system. Download the project with `git clone https://github.com/arquisoft/lomap_en2a`. The fastest way to launch everything is with docker:
+You have different options to run the application:
+- Click on this link and you should see the deployed app https://arquisoft.github.io/lomap_en2a/
+- Docker. Since the application is dockerized, you only have to clone this repository with `git clone https://github.com/arquisoft/lomap_en2a` and execute the following command:
 ```bash
-docker-compose up --build
+docker run -p 3000:3000 lomap
 ```
-This will create two docker images as they don't exist in your system (the webapp and the restapi) and launch a mongo container database. It will also launch Prometheus and Grafana containers to monitor the webservice. You should be able to access everything from here:
- - [Webapp - http://localhost:3000](http://localhost:3000)
- - [Prometheus server - http://localhost:9090](http://localhost:9090)
- - [Grafana server http://localhost:9091](http://localhost:9091)
- 
-If you want to run it without docker. Compile and run the webapp:
+This will create the image corresponding to the webapp. 
 
-```shell
+- Using Node.js and npm. If you want to execute the project you will need [git](https://git-scm.com/downloads), [Node.js and npm](https://www.npmjs.com/get-npm). Download the project with `git clone https://github.com/arquisoft/lomap_en2a`. In order to deploy the app place yourself in the lomap directory and compile and run the webapp:
+```bash
 cd webapp
 npm install
 npm start
