@@ -236,7 +236,7 @@ function AddLocationFormComp(props : AddLocationProps) : JSX.Element {
                     />
                     <Menu closeOnSelect={false}>
                             <MenuButton as={Button} rightIcon={<MdArrowDropDown/>} color='white' background='#4299e1' 
-                                width={'27%'} height={'160%'}>Categories
+                                width={'30%'} height={'160%'}>Categories
                             </MenuButton>
                             <MenuList minWidth='240px'>
                                 <MenuOptionGroup type='checkbox'>
