@@ -102,12 +102,12 @@ test('check that the name input works',async () => {
 
 })
 
-//we test that writting in the name input works
+//we test that writting in the description input works
 test('check that the description input works',async () => {
     const {getByTestId}= render(<EditLocationFormComp location={testLocation} setSelectedView={jest.fn()} loadLocations={jest.fn()} loadUserLocations={jest.fn()} clickedCoordinates={""} setClickedCoordinates={jest.fn()} setInLocationCreationMode={jest.fn()} setSelectedLocation={jest.fn()} locations={[]} setOwnLocations={jest.fn()}></EditLocationFormComp>)
     const inputElement = getByTestId("description-input") as HTMLInputElement;
     expect(inputElement).toBeInTheDocument();
-    //we change the value of the input to 'Los Angeles'
+
     act(() => {
       fireEvent.change(inputElement, { target: { value: 'Description' } })
     });
@@ -127,7 +127,7 @@ test('check that the coordinates input doesnt work with wrong coordinates',async
     expect(inputElement.value).toBe('Los Angeles');
     //we check that the error message appears
     expect(getByTestId('coord-error')).toBeInTheDocument();
-    //we change the value of the input to 'Los Angeles'
+
     
     
     
@@ -182,7 +182,7 @@ test('edits location', async () => {
   // wait for state updates to occur
   await new Promise((resolve) => setTimeout(resolve, 0));
 
-  //check that a toast appears
+
   expect(button).toBeDisabled()
   
 })
@@ -196,7 +196,7 @@ test('close button', async () => {
   act(() => {
     fireEvent.click(closeButton);
   });
-// Check that the appropriate functions were called with the expected arguments
+
 expect(setSelectedView).toHaveBeenCalledWith('Map');
 expect(setClickedCoordinates).toHaveBeenCalledWith('');
   

@@ -14,35 +14,28 @@ Our goal is to develop an application that fullfills the requirements and good q
 
 
 === Requirements Overview
-The application shows a map of a city or place. Each user is able to modify it's map to customize and personalized. The users can personalize it's maps by adding 
-markers, which can define bars, restaurants, sights, or points of interests from the city. This markers are stored, so that each user, by login in, can access to his personal map.
+LoMap is a desktop application which allows users to have a customized map about places and local businesses in their city, although it can be scalable
+to any place in the world. These locations can have images, reviews, scores... and can be categorized into shops, bars or museums among others.
 
-This storage will be handled according to the SOLID principles.
+All information is stored in a pod under the full control of the user, as LoMap is developed following the guidelines of the Solid Project. However, this is not
+an impediment for the users to share their places with friends, since LoMap implements the friend system of Solid and lets the user decide which information is going to be
+shared and which is going to be private.
 
-It's also possible to personalize a map of every city, since this app is not limited by a region or country, and can be accessed from anywhere.
+==== Functional requirements 
+.The user will be able to: 
+* Manage their locations: add, delete and edit.
+* Add different categories for each location.
+* See the locations in the map in form of markers.
+* Interact with the locations adding photos, reviews or ratings.
+* Manage a list of friends.
+* Manage the information that is shared with his friends.
+* Keep track of their progress in the application in a gamified way.
+* Filter locations based on categories and friends.
 
-The user requirements are actions that they can do in the application.
-
-.User requirements. The user can: 
-* add different categories for each location.
-* see the locations in a map in form of markers.
-* interact with the locations adding photos, reviews or comments.
-* manage a list of friends.
-* manage the information that is shared with his friends.
-* create personalized routes.(optional)
-* compare specific categories. (optional)
-
-.System requirements. The system must:
-* store the information about each user's places in his Solid pod, not centralized. 
-* allow users to see their friends' markers.
-* allow map filtering by categories.
-* allow places to create their own pods.(optional)
-* be able to create newsfeed from places.(optional)
-* add some game features to engage people for discovering new places.(optional)
-* allow the creation of maps between groups of users.(optional)
-* be able to create place recomendations or check information about them.(optional)
-* allow different roles for the users.(optional)
-* allow business owners to create opportunities.(optional)
+.The system will:
+* Store the information about each user's places in their Solid pods, not centralized. 
+* Allow users to see their own and their friends' markers.
+* Offer the user an interactive guide to provide guidance and training on the app functionalities.
 
 
 === Quality Goals
@@ -52,17 +45,17 @@ The user requirements are actions that they can do in the application.
 |===
 | Goal | Description
 
-| Security | Each user should access to it's pod and it can not be accessed by other user. User can modify their access data.
+| Security | A pod can only be accessed by its legitimate owner. User can modify their access data and manage which information is visible to other users.
 
-| Performance | The application should be able to give reasonable response times when users are interacting with it. 
+| Performance | The application is able to give reasonable response times when users are interacting with it. 
 
 | Availability | The personal data from the pods can be accessed at any time.
 
-| Usability | The application should be easy to use. This can be achieved by using different technices such as familiarity, learnability, etc.
+| Usability | The application is easy to use.
 
-| Portability | The application must work regarding the device, since it will be developed as a web application.
+| Portability | The application works regarding the device, since it is developed as a web application.
 
-| Testability | There must be tests for the application in order to check it's correct behavior.
+| Testability | Tests are developed for the application in order to check it's correct behavior.
 
 |===
 
@@ -72,8 +65,8 @@ The user requirements are actions that they can do in the application.
 |===
 |Role/Name|Description|Expectations
 | Council of Brussels | The sponsor of the application | An application that allows users to have a better experience while visiting Brussels.
-| HappySw | The company in charge of the application | A good application that fullfills the requirements expected by the sponsor.
+| HappySw | The company in charge of the application development | A good application that fullfills the requirements expected by the sponsor.
 | Developers | People that are implementing and mantaining the app | A good documentation and well commented code, avoiding repetitions and with a good use of patterns, in order to be easy to modify or extend.
-| Professors | In charge of the subject. | An application fullfilling the expectations, that can be qualified. They can also give feedback and help to the developers.
+| Professors | In charge of the subject | An application fullfilling the expectations, that can be qualified. They can also give feedback and help to the developers.
 | Users | Interact with the application | A good, easy to use application, that responds well to their inputs and adds value to them, while keeping their data secure.
 |===
