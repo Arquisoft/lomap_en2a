@@ -73,7 +73,10 @@ export function GamePanel(props:GamePanelProps) {
 
   const checkPlace4Categories = () => {
     let isPlace = false;
-    props.locations.find(location => location.category.length >= 4? isPlace=true : isPlace=isPlace)
+    for (let location of props.locations){
+      if (location.category.length >= 4)
+        isPlace = true;
+    }
     if (isPlace)
       setChallengeCategories(true);
     setIsPlaceWith4Categories(isPlace);
