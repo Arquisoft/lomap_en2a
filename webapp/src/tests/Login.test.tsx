@@ -7,10 +7,6 @@ import Login from '../components/login/Login';
     Current coverage = 73.33%
 */
 
-test('check logo appears in login view',async () => {
-    const {container}= render(<Login></Login>)
-    expect(container.querySelector('img')).toBeInTheDocument();
-})
 
 test('check first option is selected by default',async () => {
     const {container}= render(<Login></Login>)

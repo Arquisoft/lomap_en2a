@@ -104,6 +104,7 @@ test('check ratings are shown in view', async () => {
   expect(getByTestId('avgRatings').textContent).toBe('3.00')
 })
 
+
 test('check review addition form is working', async () => {
   const { getByTestId, getByText, getByLabelText } = render(<LocationInfo setSelectedView={()=>{}} location={testLocation} loadLocations={jest.fn()} ></LocationInfo>)
   //we get the button to add a review
@@ -134,4 +135,3 @@ test('check review addition form is working', async () => {
   //we expect the add review window to not be in the screen
   expect(getByText('Leave a review')).not.toHaveStyle({ visibility: 'hidden' })
 })
-

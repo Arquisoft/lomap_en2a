@@ -72,6 +72,7 @@ test('check that when own locations loading it shows loading',async () => {
         loadingOwnLocations={true}
         loadingFriendLocations={false}
         ownLocations={[]}
+
         friendLocations={[]}
         setSelectedView={()=>{}}></ListOfLocations>)
     expect(getByText("Loading your locations")).toBeInTheDocument();

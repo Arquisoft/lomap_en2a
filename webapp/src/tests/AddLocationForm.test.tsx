@@ -3,6 +3,7 @@ import { render,fireEvent,act,screen  } from "@testing-library/react";
 import userEvent from '@testing-library/user-event';
 import AddLocationForm from "../components/locations/AddLocationForm";
 
+
 //we test that writting in the name input works
 test('check that the name input works',async () => {
     const {getByTestId}= render(<AddLocationForm locations={[]} setSelectedView={jest.fn()} loadLocations={jest.fn()} loadUserLocations={jest.fn()} clickedCoordinates={""} setClickedCoordinates={jest.fn()} setInLocationCreationMode={jest.fn()} setSelectedLocation={jest.fn()}></AddLocationForm>)
@@ -139,17 +140,4 @@ test('handles image upload', async () => {
     
   })
 
-/**
-test('check that the location list renders propertly',async () => {
-    const {getByText}= render(<ListOfLocations setSelectedLocation={jest.fn()} loadLocations={jest.fn()} loading={false} ownLocations={testLocations} friendLocations={[]} setSelectedView={()=>{}}></ListOfLocations>)
-    testLocations.forEach(location => {
-        let name = location.name;
-        expect(getByText(name)).toBeInTheDocument();
-    });
-})
 
-test('check that with no location the loading squeletons appear',async () => {w
-    const {getByTestId}= render(<ListOfLocations setSelectedLocation={jest.fn()} loadLocations={jest.fn()} loading={false} ownLocations={[]} friendLocations={[]} setSelectedView={()=>{}}></ListOfLocations>)
-    expect(getByTestId('loadingView')).toBeInTheDocument();
-})
- */

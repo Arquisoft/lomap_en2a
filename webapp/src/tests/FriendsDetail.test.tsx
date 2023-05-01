@@ -15,6 +15,7 @@ test('check image renders correctly',async () => {
     expect(getByTestId("friendImage")).toBeInTheDocument();
 })
 
+
 test('check webID renders correctly',async () => {
     let user : Friend = {username:String("username"), webID:String("webID"), pfp:""}
     const {getByText}= render(<FriendsDetail friend={user} key={1}></FriendsDetail>)
