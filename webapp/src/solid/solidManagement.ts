@@ -370,6 +370,7 @@ export async function createInventory(locationsFolder: string, location:Location
 
 /**
  * Create the location in the given folder
+ * @param folder
  * @param locationFolder contains the folder to store the location .../private/lomap/locations/${locationId}/index.ttl
  * @param location contains the location to be created
  * @param id contains the location uuid
@@ -686,10 +687,8 @@ export async function addSolidFriend(webID: string,friendURL: string): Promise<{
   return{error:false,errorMessage:""}
 
 }
-export async function getFriendsID(webID:string){
-  let test = getUrl(await getUserProfile(webID), FOAF.knows);
-  let friendURLs = getUrlAll(await getUserProfile(webID), FOAF.knows);
-  return friendURLs;
+export async function getFriendsID(webID:string) {
+  return getUrlAll(await getUserProfile(webID), FOAF.knows);
 }
 
 export async function getSolidFriends(webID:string) {
@@ -697,12 +696,12 @@ export async function getSolidFriends(webID:string) {
 
   let req = friendURLs.map(friend => getFriendDetails(friend))
   const results = await Promise.allSettled(req);
-  const successfulResults = results
-  .filter(result => result.status === 'fulfilled')
-  .map(result => result.status === 'fulfilled' ? result.value : null)//WORKING
-  .filter(value => value !== null) as Friend[];
-  return successfulResults;
+  return results
+              .filter(result => result.status === 'fulfilled')
+              .map(result => result.status === 'fulfilled' ? result.value : null)//WORKING
+              .filter(value => value !== null) as Friend[];
 }
+
 export async function getFriendDetails(friend: string): Promise<Friend | null>{
   try{
     let name = getStringNoLocale(await getUserProfile(friend),FOAF.name);
@@ -710,12 +709,11 @@ export async function getFriendDetails(friend: string): Promise<Friend | null>{
     let f = null;
 
     if (friend){
-      let f : Friend = {
+      return {
         username: name as string,
         webID : friend,
         pfp: pic as string
       };
-      return f;
     }
     return f;
   } catch(err){
