@@ -183,10 +183,7 @@ function ListOfLocations(props : ListProps) : JSX.Element {
                 <Flex direction='row' marginEnd='4%' justifyContent={'right'}>
                     <Tooltip label={'Reload locations'}>
                         <Button colorScheme='blue' marginTop={'1em'} marginRight={'1em'}
-
-                                onClick={() => {
-                            void props.loadLocations();
-                        }}
+                                onClick={() => {void props.loadLocations();}}
                         >
                             <Icon as={TbReload}/>
                         </Button>

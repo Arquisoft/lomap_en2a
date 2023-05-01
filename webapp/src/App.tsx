@@ -1,6 +1,6 @@
 // External imports
 import  { useState, useEffect } from 'react';
-import { ChakraProvider, Button, VStack } from '@chakra-ui/react';
+import {ChakraProvider, Button, VStack, Tooltip} from '@chakra-ui/react';
 import {Flex,HStack,Text, Spinner} from "@chakra-ui/react";
 import { MdAddLocationAlt } from 'react-icons/md';
 
@@ -115,20 +115,21 @@ function App(): JSX.Element {
               //and that will have the icon MdAddLocationAlt from react-icons. The button will be red and the icon will be white
               //once clicked it will toggle the state inLocationCreationMode
             }  
-
-            <Button
-              size="lg"
-              borderRadius="50%"
-              width="4.5em"
-              height="4.5em"
-              position="absolute"
-              bottom="2em"
-              right="4em"
-              colorScheme="red"
-              onClick={() => {  setInLocationCreationMode(!inLocationCreationMode) }}
-            >
-              <MdAddLocationAlt  size="4.5em" color={"white"}/> 
-            </Button>
+            <Tooltip label={"Enter Adding Location mode"}>
+              <Button
+                size="lg"
+                borderRadius="50%"
+                width="4.5em"
+                height="4.5em"
+                position="absolute"
+                bottom="2em"
+                right="4em"
+                colorScheme="red"
+                onClick={() => {  setInLocationCreationMode(!inLocationCreationMode) }}
+              >
+                <MdAddLocationAlt  size="4.5em" color={"white"}/>
+              </Button>
+            </Tooltip>
                
             {
               (() => {
