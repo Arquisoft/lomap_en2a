@@ -37,6 +37,8 @@ type EditLocationProps = {
     setOwnLocations: (newLocations: Location[]) => void;
 }
 
+
+
 function EditLocationFormComp(props : EditLocationProps) : JSX.Element {
     const [session] = useState(useSession());
     const [name, setName] = useState(props.location.name);
@@ -135,14 +137,6 @@ function EditLocationFormComp(props : EditLocationProps) : JSX.Element {
         setAddingLocationProcess(true);
         checkCoordinates(coordsValue);
 
-        if (isValidName) {
-            return;
-        }
-
-        if (!areValidCoords) {
-            alert("areValidCoords da false");
-            return;
-        }
 
         // if no category was selected, select 'Other'
         if (checkedCategories.length === 0) {
@@ -176,9 +170,10 @@ function EditLocationFormComp(props : EditLocationProps) : JSX.Element {
         } else {
             setCheckedCategories([...checkedCategories, category]);
         }
-        console.log(checkedCategories);
-                
+
     }
+
+
 
     return (
         <form onSubmit={handleSubmit}>
@@ -198,6 +193,7 @@ function EditLocationFormComp(props : EditLocationProps) : JSX.Element {
                     fontSize='2.2em' alignSelf='center' borderBottomWidth='1px'>Edit a location</Text>
                     <Flex direction={'column'}>
                         <CloseButton 
+                            data-testid='close-button'
                             onClick={() => {
                                 props.setSelectedView('Map');
                                 props.setClickedCoordinates('');
@@ -210,6 +206,7 @@ function EditLocationFormComp(props : EditLocationProps) : JSX.Element {
                 </Flex>
                 <Flex direction={'row'} marginLeft={'5%'} marginRight={'3%'} gap='10%'>
                     <Input
+                        data-testid='name-input'
                         value={name}
                         onChange={(e:any) => setName(e.target.value)}                                        
                         placeholder="Location name"
@@ -218,18 +215,18 @@ function EditLocationFormComp(props : EditLocationProps) : JSX.Element {
                         height='160%'
                     />
                     <Menu closeOnSelect={false}>
-                            <MenuButton as={Button} rightIcon={<MdArrowDropDown/>} color='white' background={'#4299e1'}
+                            <MenuButton data-testid="categories-button" as={Button} rightIcon={<MdArrowDropDown/>} color='white' background={'#4299e1'}
                                 width={'27%'} height={'160%'}>Categories
                             </MenuButton>
                             <MenuList minWidth='240px'>
                                 <MenuOptionGroup type='checkbox' value={checkedCategories}>
                                     {
                                     categories.map((kind,i) => { // as many possible categories as items in Category enum
-                                        console.log(checkedCategories.includes(kind))
                                         return (
                                             <MenuItemOption key={i} value={kind}
                                              onClick={(e) => handleCheckedCategory(e)}
-                                                
+                                             data-testid={kind}
+
                                             >{kind}</MenuItemOption>
                                         )
                                     })
@@ -269,7 +266,7 @@ function EditLocationFormComp(props : EditLocationProps) : JSX.Element {
                             <Box width = '3em' height = '3em' borderRadius = '50%' display='flex' alignItems = 'center' justifyContent = 'center' backgroundColor = 'red.500'>
                                 <RxCross2 size='2.5em' color='white'></RxCross2>
                             </Box>
-                            <Text alignSelf='center' fontSize='1.1em'>Select valid coordinates</Text>
+                            <Text alignSelf='center' fontSize='1.1em' data-testid="coord-error">Select valid coordinates</Text>
                             <Box width = '1.5em' height = '1.5em' borderRadius = '50%' display='flex' alignItems = 'center' justifyContent = 'center' backgroundColor = 'blue.500'>
                                 <Tooltip borderRadius='1em' label="Edit coordinates manually or click on the button on the bottom right corner and click on the map to select them."> 
                                     <span>
@@ -280,6 +277,7 @@ function EditLocationFormComp(props : EditLocationProps) : JSX.Element {
                         </>}
                     </HStack>
                     <Input
+                        data-testid='coordinates-input'
                         hidden={!editingManualCoordinates}
                         value={coordsValue}
                         onChange={(e:any) => setCoordsValue(e.target.value)}
@@ -290,6 +288,7 @@ function EditLocationFormComp(props : EditLocationProps) : JSX.Element {
 
                 <Flex direction={'column'} marginLeft={'5%'} marginRight={'3%'}>
                     <Textarea
+                        data-testid='description-input'
                         value={description}
                         onChange={(e:any) => setDescription(e.target.value)}
                         placeholder='Location description'
@@ -310,7 +309,9 @@ function EditLocationFormComp(props : EditLocationProps) : JSX.Element {
                             Editing location
                         </Button>
                     ) : (
-                        <Button leftIcon={<MdOutlineAddLocationAlt/>}
+                        <Button
+                        data-testid='edit-location-button'
+                        leftIcon={<MdOutlineAddLocationAlt/>}
                                 colorScheme={'blue'}
                                 variant={'outline'}
                                 type={'submit'}

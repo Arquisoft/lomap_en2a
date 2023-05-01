@@ -118,10 +118,12 @@ export function GamePanel(props:GamePanelProps) {
   }
 
   const getNumberOfFriends = async () => {
-    const n  = (await getSolidFriends(session.session.info.webId as string)).length
-    if (n > 15)
-      setChallengeFriends(true);
-    setNumberFriends(n)
+    if(session.session.info.webId) {
+      const n  = (await getSolidFriends(session.session.info.webId as string)).length
+      if (n > 15)
+        setChallengeFriends(true);
+      setNumberFriends(n)
+    }
   }
 
   const calculateTrophies = () => {
@@ -182,7 +184,7 @@ export function GamePanel(props:GamePanelProps) {
       overflow='auto'
       px={2}>
       <CloseButton onClick={() => props.setSelectedView("Map")} position='absolute' top='2%' right='2%'></CloseButton>
-      <Text alignSelf='center' fontSize='1.5vw' borderBottomWidth='1px' margin={'2%'}>Progress Record</Text>
+      <Text data-testid="record-message" alignSelf='center' fontSize='1.5vw' borderBottomWidth='1px' margin={'2%'}>Progress Record</Text>
       <Text alignSelf='center' fontSize='1vw' margin={'2%'}>Keep adding locations to increase your trophies and rank!</Text>
       <Flex px={'1vw'} marginTop={'2%'} marginLeft='1vw' direction='row' width={'100%'}>
         <Flex alignItems={'center'} width={'fit-content'} gap='6%' borderWidth={'2px'} px='4%' borderRadius={'25'} bgColor={'gray.200'}>

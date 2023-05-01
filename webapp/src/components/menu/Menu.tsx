@@ -90,7 +90,7 @@ function Menu(props: MenuProps): JSX.Element {
 
               <Box>
                 <Button 
-                data-testid={'Add location'}
+                data-testid={'Add Location'}
                 leftIcon={<Icon as={MdLocationOn} width={'2.5em'} height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
                 bg={'white'}
                 color={'black'}
@@ -109,7 +109,7 @@ function Menu(props: MenuProps): JSX.Element {
 
               <Box>
                 <Button
-                data-testid={'Add friends'}
+                data-testid={'Add Friends'}
                 leftIcon={<Icon alignContent={'left'} as={MdPeopleAlt} width={'2.5em'} height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
                 bg={'white'}
                 color={'black'}
@@ -127,6 +127,7 @@ function Menu(props: MenuProps): JSX.Element {
 
               <Box>
                 <Button
+                data-testid={'Progress'}
                 leftIcon={<Icon alignContent={'left'} as={MdOutlineSportsEsports} width={'2.5em'} height={'2.5vw'} minHeight={'10px'} minWidth={'10px'} />}
                 bg={'white'}
                 color={'black'}

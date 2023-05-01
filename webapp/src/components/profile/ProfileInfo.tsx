@@ -22,9 +22,11 @@ export function ProfileView(props:ProfileProps) {
   React.useEffect(() => {
     void handleName()
     //we load the image of the user
-    getProfileImage(session.session.info.webId as string).then((image) => {
-      setImage(image)
-    })
+    if(session.session.info.webId){
+      getProfileImage(session.session.info.webId as string).then((image) => {
+        setImage(image)
+      })
+    }
   }, []);
 
   React.useEffect(()=>{
@@ -64,8 +66,10 @@ export function ProfileView(props:ProfileProps) {
   };
 
   const getNumberOfFriends = async () => {
-    const n  = (await getSolidFriends(session.session.info.webId as string)).length
-    setNumberFriends(n.toString())
+    if(session.session.info.webId){
+      const n  = (await getSolidFriends(session.session.info.webId as string)).length
+      setNumberFriends(n.toString())
+    }
   }
 
   

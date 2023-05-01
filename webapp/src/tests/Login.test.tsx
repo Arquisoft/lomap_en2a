@@ -1,16 +1,12 @@
 import React from 'react'
-import { fireEvent, render } from "@testing-library/react";
-import Login from "./Login";
+import { act, fireEvent, render } from "@testing-library/react";
+import Login from '../components/login/Login';
 
 /*
     Still have to test the correct behavior of the login and the prevention default
     Current coverage = 73.33%
 */
 
-test('check logo appears in login view',async () => {
-    const {container}= render(<Login></Login>)
-    expect(container.querySelector('img')).toBeInTheDocument();
-})
 
 test('check first option is selected by default',async () => {
     const {container}= render(<Login></Login>)

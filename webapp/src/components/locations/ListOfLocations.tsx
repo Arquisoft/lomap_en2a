@@ -28,7 +28,8 @@ type ListProps = {
     setSelectedView: (viewName: string) => void //function to change the selected view on the left
     setSelectedLocation: (location: Location) => void
     loadLocations: () => Promise<void>
-    loading: boolean
+    loadingOwnLocations: boolean
+    loadingFriendLocations: boolean
 }
 
 function ListOfLocations(props : ListProps) : JSX.Element {
@@ -36,13 +37,15 @@ function ListOfLocations(props : ListProps) : JSX.Element {
     const setSelectedView = props.setSelectedView;
     const [ownLocations, setownLocations] = useState(props.ownLocations)
     const [friendLocations, setfriendLocations] = useState(props.friendLocations)
-    const [loading, setLoading] = useState(props.loading)
+    const [loadingOwnLocations, setLoadingOwnLocations] = useState(props.loadingOwnLocations)
+    const [loadingFriendLocations, setLoadingFriendLocations] = useState(props.loadingFriendLocations)
   
     useEffect(() => {
       setownLocations(props.ownLocations)
       setfriendLocations(props.friendLocations)
-      setLoading(props.loading)
-    }, [props.ownLocations, props.friendLocations, props.loading])
+      setLoadingOwnLocations(props.loadingOwnLocations)
+      setLoadingFriendLocations(props.loadingFriendLocations)
+    }, [props.ownLocations, props.friendLocations, props.loadingOwnLocations, props.loadingFriendLocations])
 
     function ProcessedFriendLocations(): JSX.Element {
         {
@@ -59,7 +62,7 @@ function ListOfLocations(props : ListProps) : JSX.Element {
             */
             return(
             //if not loading
-            !loading?
+            !loadingFriendLocations?
             (   
             <>{
                 //if loaded and we have friend locations
@@ -116,7 +119,7 @@ function ListOfLocations(props : ListProps) : JSX.Element {
             */
             return(
             //if not loading
-            !loading?
+            !loadingOwnLocations?
             (   
             <>{  
                 //if loaded and we have own locations
@@ -188,7 +191,7 @@ function ListOfLocations(props : ListProps) : JSX.Element {
                             <Icon as={TbReload}/>
                         </Button>
                     </Tooltip>
-                    <CloseButton
+                    <CloseButton data-testid='closeButton'
                         onClick={() => {
                             props.setSelectedView('Map') }}
                         position='absolute'
@@ -204,11 +207,11 @@ function ListOfLocations(props : ListProps) : JSX.Element {
         { 
             <Tabs isFitted={true} variant='enclosed' >
             <TabList>
-                <Tab as='b' >
+                <Tab as='b' data-testid='myLocationsTab' >
                     <Icon as={MdEmojiPeople} color='black' minHeight={'10px'} minWidth={'10px'} marginRight='1.1em' />
                     Your locations
                 </Tab>
-                <Tab as='b'>
+                <Tab as='b' data-testid='friendLocationsTab'>
                     <Icon as={IoPeople} color='black' minHeight={'10px'} minWidth={'10px'} marginRight='1.1em' />
                     Friend Locations
                 </Tab>

@@ -22,6 +22,7 @@ export function LogoutAlertDialog() {
                 leftIcon={<Icon as={RiLogoutBoxLine}/>}
                 size='lg'
                 onClick={onOpen}
+          data-testid="logout"
         >
           Logout
         </Button>
@@ -37,15 +38,16 @@ export function LogoutAlertDialog() {
                 Logout
               </AlertDialogHeader>
   
-              <AlertDialogBody>
+              <AlertDialogBody data-testid="info-dialog">
                 Are you sure you want to log out?
               </AlertDialogBody>
   
               <AlertDialogFooter>
-                <Button onClick={onClose}>
+                <Button onClick={onClose} data-testid="cancel-button">
                   Cancel
                 </Button>
-                <Button colorScheme='red' onClick={() => {void session.logout(); window.location.reload()}} ml={3} leftIcon={<Icon as={RiLogoutBoxLine}/>}>
+                <Button data-testid="logout-button"
+                colorScheme='red' onClick={() => {session.logout(); window.location.reload()}} ml={3} leftIcon={<Icon as={RiLogoutBoxLine}/>}>
                   Logout
                 </Button>
               </AlertDialogFooter>

@@ -24,8 +24,8 @@ function Friends(props:FriendsProps) : JSX.Element {
   const[addIcon, setAddIcon] = React.useState(<MdPersonAdd></MdPersonAdd>)
 
   React.useEffect(() => {
-    void handleFriends()
-  }, [friends]);
+    handleFriends()
+  }, []);
 
   const handleFriends = async () => {
     if (webId !== undefined && webId !== ""){
@@ -63,7 +63,8 @@ function Friends(props:FriendsProps) : JSX.Element {
           zIndex={1}
           borderWidth={'1px'}
           overflow='auto'>
-          <CloseButton 
+          <CloseButton
+                    data-testid='closeButton'
                     onClick={() => props.setSelectedView('Map')}
                     position='absolute'
                     top='2%'
