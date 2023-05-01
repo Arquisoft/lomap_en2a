@@ -104,20 +104,20 @@ We decided to not use a restapi (back-end). This means our application will oper
 
 === _Rules for using specific technology_
 
-Right now we now little about the technologies we are going to use. Once we learn more about them more content will be added to this section.
+Right now we know little about the technologies we are going to use. Once we learn more about them more content will be added to this section.
 
 .Rules:
 
 * Always make a _git pull_ before getting to work. This will prevent possible problems in the repository.
 * Never make a _commit_ to the master branch.
-* Never merge a branch into another by yourself. Create always a _pull request_ so the rest of the team can check the changes and approve them.
+* Never merge a branch into another by yourself, unless that branch is only yours and does not affect others.
+  Create always a _pull request_ so the rest of the team can check the changes and approve them.
 
 === _Implementation rules_
 
 These are rules to be considered when implementing our code:
 
 * Write in English the names of all the functions, variables, etc.
-* Never get the responsabilities of the different layer of the MVC pattern mixed (no UI outside View, no database access outside Model...).
 
 === _User Experience (UX)_
 
@@ -141,7 +141,7 @@ We have tested the application with different tests:
 * Usability tests: with the help of people we know (family and friends), we tested our application usability.
     Thanks to these tests, we found that some people had problems, and we decided to add a tutorial that people can check.
     This way, they'll learn what can they use LoMap for, and how to use it.
-* Load tests: to measure the performance of the application while many users use it. The tool Gatling was used.
+* Load tests: to measure the performance of the application while many users use it. The tools Gatling and Apache Jmeter were used.
 
 .Deployment
 The application will be deployed to GitHub Pages.
