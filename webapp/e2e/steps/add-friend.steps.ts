@@ -72,7 +72,7 @@ defineFeature(feature, test => {
     })
 
     afterAll(async ()=>{
-
+        browser.close()
     })
 
 });
