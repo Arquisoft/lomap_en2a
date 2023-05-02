@@ -7,7 +7,6 @@ node_modules
 
 # testing
 webapp/coverage
-restapi/coverage
 
 # production
 webapp/build
@@ -26,8 +25,6 @@ yarn-error.log*
 #vscode files
 .vscode
 
-#documentation build does not go into master
-docs/build
 
 .idea
 /webapp/env.local
