@@ -32,7 +32,6 @@ function Login() : JSX.Element  {
     }).then(() => setNowLoggingIn(false) );
   };
 
-  const [loginMessage, setLoginMessage] = useState("")
   const [isDisabled, setDisabled] = useState(false);
 
   return (
@@ -76,7 +75,6 @@ function Login() : JSX.Element  {
                 </Button>
             ) : (
                 <Button onClick={(e) => {
-                            //setLoginMessage("Logging in...");
                             handleSubmit(e);
                             setNowLoggingIn(true);
                         }}
@@ -90,7 +88,7 @@ function Login() : JSX.Element  {
             )}
           </Flex> 
         </Flex>
-      ) : <>{setLoginMessage("")}</>
+      ) : <></>
   )
 }
 

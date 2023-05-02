@@ -16,7 +16,8 @@ type ListProps = {
     setSelectedView: (viewName: string) => void //function to change the selected view on the left
     setSelectedLocation: (location: Location) => void
     loadLocations: () => Promise<void>
-    loading: boolean
+    loadingOwnLocations: boolean
+    loadingFriendLocations: boolean
 }
 
 function ListOfLocations(props : ListProps) : JSX.Element {
@@ -24,13 +25,15 @@ function ListOfLocations(props : ListProps) : JSX.Element {
     const setSelectedView = props.setSelectedView;
     const [ownLocations, setownLocations] = useState(props.ownLocations)
     const [friendLocations, setfriendLocations] = useState(props.friendLocations)
-    const [loading, setLoading] = useState(props.loading)
+    const [loadingOwnLocations, setLoadingOwnLocations] = useState(props.loadingOwnLocations)
+    const [loadingFriendLocations, setLoadingFriendLocations] = useState(props.loadingFriendLocations)
   
     useEffect(() => {
       setownLocations(props.ownLocations)
       setfriendLocations(props.friendLocations)
-      setLoading(props.loading)
-    }, [props.ownLocations, props.friendLocations, props.loading])
+      setLoadingOwnLocations(props.loadingOwnLocations)
+      setLoadingFriendLocations(props.loadingFriendLocations)
+    }, [props.ownLocations, props.friendLocations, props.loadingOwnLocations, props.loadingFriendLocations])
 
     function ProcessedFriendLocations(): JSX.Element {
     
@@ -48,7 +51,7 @@ function ListOfLocations(props : ListProps) : JSX.Element {
             */
             return(
             //if not loading
-            !loading?
+            !loadingFriendLocations?
             (   
             <>{
                 //if loaded and we have friend locations
@@ -105,7 +108,7 @@ function ListOfLocations(props : ListProps) : JSX.Element {
             */
             return(
             //if not loading
-            !loading?
+            !loadingOwnLocations?
             (   
             <>{  
                 //if loaded and we have own locations
@@ -162,24 +165,32 @@ function ListOfLocations(props : ListProps) : JSX.Element {
         px={'2%'}
         >
             
-        <CloseButton 
-                onClick={() => props.setSelectedView('Map')}
-                position='absolute'
-                top='2%'
-                right='2%'
-        ></CloseButton>
+        
     
-
-        <Text as='b' fontSize='3xl' marginTop={'2%'} marginLeft={'5%'}>List of Locations</Text>
+        <Flex direction='column'>
+            <Text marginTop='4%' width='fit-content' 
+            fontSize='2.2em' alignSelf='center' borderBottomWidth='1px'>List of locations</Text>
+            <Flex direction={'column'}>
+                <CloseButton 
+                    data-testid='closeButton'
+                    onClick={() => {
+                        props.setSelectedView('Map') }}
+                    position='absolute'
+                    top='2%'
+                    right='3%'
+                ></CloseButton>
+            </Flex>
+        </Flex>
+        
         <Divider marginTop={'2%'} marginBottom={'2%'} borderWidth={'2px'} borderRadius={"lg"} width='100%'/> 
         { 
             <Tabs isFitted={true} variant='enclosed' >
             <TabList>
-                <Tab as='b' >
+                <Tab as='b' data-testid='myLocationsTab' >
                     <Icon as={MdEmojiPeople} color='black' minHeight={'10px'} minWidth={'10px'} marginRight='1.1em' />
                     Your locations
                 </Tab>
-                <Tab as='b'>
+                <Tab as='b' data-testid='friendLocationsTab'>
                     <Icon as={IoPeople} color='black' minHeight={'10px'} minWidth={'10px'} marginRight='1.1em' />
                     Friend Locations
                 </Tab>

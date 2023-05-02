@@ -35,7 +35,8 @@ export function GamePanel(props:GamePanelProps) {
     countMuseums();
     checkPlace4Categories();
     checkIf20Locations();
-    calculateTrophies()
+    calculateTrophies();
+    calculateProcessPercentage();
   },[props.locations])
 
   React.useEffect(() => {
@@ -72,7 +73,10 @@ export function GamePanel(props:GamePanelProps) {
 
   const checkPlace4Categories = () => {
     let isPlace = false;
-    props.locations.find(location => location.category.length >= 4? isPlace=true : isPlace=isPlace)
+    for (let location of props.locations){
+      if (location.category.length >= 4)
+        isPlace = true;
+    }
     if (isPlace)
       setChallengeCategories(true);
     setIsPlaceWith4Categories(isPlace);
@@ -106,6 +110,8 @@ export function GamePanel(props:GamePanelProps) {
     
     if (totalSum/totalSize == 5)
       setChallengeRating(true);
+    if (totalSum == 0 && totalSize == 0)
+      return 0;
     return totalSum / totalSize;
   };
 
@@ -119,15 +125,17 @@ export function GamePanel(props:GamePanelProps) {
   }
 
   const getNumberOfFriends = async () => {
-    const n  = (await getSolidFriends(session.session.info.webId as string)).length
-    if (n > 15)
-      setChallengeFriends(true);
-    setNumberFriends(n)
+    if(session.session.info.webId) {
+      const n  = (await getSolidFriends(session.session.info.webId as string)).length
+      if (n > 15)
+        setChallengeFriends(true);
+      setNumberFriends(n)
+    }
   }
 
   const calculateTrophies = () => {
     const numberOfLocations = props.locations.length;
-    let trophies = numberOfLocations * 50;
+    let trophies: number = numberOfLocations * 50;
     for (let location of props.locations){
       trophies += trophiesPerCategory(location)
       trophies += trophiesPerReviews(location)
@@ -135,13 +143,13 @@ export function GamePanel(props:GamePanelProps) {
     trophies += getAverageOfAllLocations(props.locations)*10;
     checkChallengesTrophies();
     trophies += challengeTrophies;
-    setTrophies(trophies)
+    setTrophies(Math.round(trophies))
     calculateRank();
     calculateProcessPercentage();
   }
 
   const calculateRank = () => {
-    if (trophies < 300 && trophies > 0)
+    if (trophies < 300 && trophies >= 0)
       setRank(ranks[0]);
     if (trophies < 600 && trophies > 300)
       setRank(ranks[1]);
@@ -155,8 +163,17 @@ export function GamePanel(props:GamePanelProps) {
     const rankThresholds = [0, 300, 600, 900]; // limit of trophies for each rank
     const rankIndex = ranks.indexOf(rank);
     const currentRankTrophies = trophies - rankThresholds[rankIndex]; // current trophies in current rank
-    const nextRankTrophies = rankThresholds[rankIndex + 1] - rankThresholds[rankIndex]; // number of trophies left to reach next rank
-    const progressPercentage = (currentRankTrophies / nextRankTrophies) * 100; // current rank progress percentage
+    let nextRankTrophies;
+    let progressPercentage;
+    if (rankIndex+1 >= ranks.length){
+      nextRankTrophies = rankIndex; 
+      progressPercentage = 100;
+    }
+     
+    else{
+      nextRankTrophies = rankThresholds[rankIndex + 1] - rankThresholds[rankIndex]; // number of trophies left to reach next rank
+      progressPercentage = (currentRankTrophies / nextRankTrophies) * 100; // current rank progress percentage
+    }
     const roundedPercentage = Math.round(progressPercentage);
     setProgressPercentage(roundedPercentage);
   }
@@ -175,7 +192,7 @@ export function GamePanel(props:GamePanelProps) {
       overflow='auto'
       px={2}>
       <CloseButton onClick={() => props.setSelectedView("Map")} position='absolute' top='2%' right='2%'></CloseButton>
-      <Text alignSelf='center' fontSize='1.5vw' borderBottomWidth='1px' margin={'2%'}>Progress Record</Text>
+      <Text data-testid="record-message" alignSelf='center' fontSize='1.5vw' borderBottomWidth='1px' margin={'2%'}>Progress Record</Text>
       <Text alignSelf='center' fontSize='1vw' margin={'2%'}>Keep adding locations to increase your trophies and rank!</Text>
       <Flex px={'1vw'} marginTop={'2%'} marginLeft='1vw' direction='row' width={'100%'}>
         <Flex alignItems={'center'} width={'fit-content'} gap='6%' borderWidth={'2px'} px='4%' borderRadius={'25'} bgColor={'gray.200'}>

@@ -57,54 +57,7 @@ const testArray5Ratings = [
     }
 ];
 
-//TODO fix the mock on this errors now working (top one is the same as the first down, just another alternative)
-/* 
-  Missing to test the name of the pod loading correctly -> once mocking works this should be easy to ipmlement
-  Current coverage = 85.71%
-*/
 
-// describe("Test suite" , ()=>{
-//     it("Renders the name correctly",async () => {
-//         (useSession as jest.Mock).mockResolvedValue({session:{info:{webId: undefined}}})
-//         let getByText:any;
-//         await act(async ()=>{ 
-//             ({getByText} = render(<ProfileView locations={[]}></ProfileView>));
-//         })
-//         //we expect the name not be loaded by now because webId = undefined
-//         expect(getByText('Loading name...')).toBeInTheDocument();
-//     })
-// })
-
-
-// test('check name is correctly loaded -> no webId',async () => {
-//     //we mock the session to give it no webId
-//     // jest.mock('@inrupt/solid-ui-react',() => ({
-//     //     useSession: ()=>{ {session:{info:{webId: undefined}}} }}));
-//     Solid.getSession
-//     const {getByText} = render(<ProfileView locations={[]}></ProfileView>);
-//     //we expect the name not be loaded by now because webId = undefined
-//     expect(getByText('Loading name...')).toBeInTheDocument();
-// })
-
-// test('check name is correctly loaded -> valid webId',async () => {
-//     //we mock the session to give it no webId
-//     jest.mock('@inrupt/solid-ui-react',() => ({
-//         useSession: ()=>{ {session:{info:{webId: 'https://example.com/profile/card#me'}}} }}));
-//     //we also mock the returned value from the solidManagement module 
-//     //that gets the name from the webId
-//     jest.mock('../solid/solidManagement',() => ({
-//         getNameFromPod: (webId)=>{ 
-//             {
-//                 console.log('entro')
-//                 return ('ValidName') 
-//             }
-//         }}));
-    
-
-//     const {getByText} = render(<ProfileView locations={[]}></ProfileView>);
-//     //we expect the name to be loaded
-//     expect(getByText('ValidName')).toBeInTheDocument();
-// })
 
 // TESTS ON STATS --------------------------------------------------------------------------------------------
 

@@ -12,6 +12,7 @@ import {
   getResourceAcl,
   setAgentResourceAccess,
   saveAclFor,
+  setAgentDefaultAccess
 } from "@inrupt/solid-client";
 
 // Friends second iteration
@@ -30,7 +31,7 @@ import { DatasetContext } from "@inrupt/solid-ui-react";
 import { FOAF, VCARD, SCHEMA_INRUPT, RDF} from "@inrupt/vocab-common-rdf"
 
 import {v4 as uuid} from "uuid" // for the uuids of the locations
-import { data } from "jquery";
+
 
 // ****************************************
 /*
@@ -110,6 +111,16 @@ export async function getNameFromPod(webID: string){
   return name !== null ? name : "John Doe"; // if name is not defined, return default name
 }
 
+export async function getLocation(locationPath): Promise<LocationType |null>{
+  try{
+    let path = getStringNoLocale(locationPath, SCHEMA_INRUPT.identifier) as string;
+    let location = await getLocationFromDataset(path)
+    return location;
+  }catch(error){
+    return null;
+  }
+}
+
 /**
  * Get all the locations from the pod
  * @param webID contains the user webID
@@ -120,30 +131,25 @@ export async function getLocations(webID:string) {
   let inventoryFolder = `${baseURL}private/lomap/inventory/index.ttl`; // locations contained in index.ttl 
   let locations: LocationType[] = []; // initialize array of locations
   let locationPaths; 
-  try {
+  try{
     let dataSet = await getSolidDataset(inventoryFolder, {fetch: fetch}); // get the inventory dataset
     locationPaths = getThingAll(dataSet) // get the things from the dataset (location paths)
-    for (let locationPath of locationPaths) { // for each location in the dataset
-      // get the path of the actual location
-      let path = getStringNoLocale(locationPath, SCHEMA_INRUPT.identifier) as string;
-      // get the location : Location from the dataset of that location
-      try{
-        let location = await getLocationFromDataset(path)
-        locations.push(location)
-        // add the location to the array
-      }
-      catch(error){
-        //The url is not accessed(no permision)
-      }
-     
-    }
-  } catch (error) {
-    // if the location dataset does no exist, return empty array of locations
-    locations = [];
+    const requests = locationPaths.map(locationPath => getLocation(locationPath));
+    
+    const results = await Promise.allSettled(requests);
+    const successfulResults = results
+    .filter(result => result.status === 'fulfilled')
+    .map(result => result.status === 'fulfilled' ? result.value : null)
+    .filter(value => value !== null) as LocationType[];
+    return successfulResults;
+  }catch(error){
+    let successfulResults = [];
+    return successfulResults;
   }
-  // return the locations
-  return locations;
+  
 }
+
+
 
 /**
  * Retrieve the location from its dataset
@@ -160,7 +166,8 @@ export async function getLocationFromDataset(locationPath:string){
   let longitude = getStringNoLocale(locationAsThing, SCHEMA_INRUPT.longitude) as string; 
   let latitude = getStringNoLocale(locationAsThing, SCHEMA_INRUPT.latitude) as string; 
   let description = getStringNoLocale(locationAsThing, SCHEMA_INRUPT.description) as string; 
-  let url = getStringNoLocale(locationAsThing, SCHEMA_INRUPT.identifier) as string;
+  //let url = getStringNoLocale(locationAsThing, SCHEMA_INRUPT.identifier) as string;
+  let url =datasetPath.slice(0,-10)//WORKI
   let categoriesSerialized = getStringNoLocale(locationAsThing, SCHEMA_INRUPT.Product) as string;
   let categoriesDeserialized;
 
@@ -398,7 +405,35 @@ export async function createLocationDataSet(folder:string,locationFolder:string,
   dataSet = setThing(dataSet, newLocation); // store thing in dataset
   // save dataset to later add the images
   dataSet = await saveSolidDatasetAt(locationFolder, dataSet, {fetch: fetch}) // save dataset 
-  await addImages(locationImages, folder,location); // store the images
+  await addImages(locationImages,location); // store the images
+}
+
+export async function editLocationSolid(location:LocationType) {
+  
+  let url = location.url as string;
+  let aux = url.split("/");
+  let ID = aux[aux.length-1]; // get the ID of the location
+  let locationUrl = location.url+"/index.ttl#"+ID; // construct the url of the location "ID/index.ttl#ID"
+  let locationFolder = location.url+"/index.ttl";
+  let dataSet = await getSolidDataset(locationUrl, {fetch: fetch})
+
+  // create dataset for the location
+  let categoriesSerialized = serializeCategories(location.category); // serialize categories
+  // build location thing
+  let newLocation = buildThing(createThing({name: ID})) 
+  .addStringNoLocale(SCHEMA_INRUPT.name, location.name.toString())
+  .addStringNoLocale(SCHEMA_INRUPT.longitude, location.coordinates.lng.toString())
+  .addStringNoLocale(SCHEMA_INRUPT.latitude, location.coordinates.lat.toString())
+  .addStringNoLocale(SCHEMA_INRUPT.description, location.description.toString())
+  .addStringNoLocale(SCHEMA_INRUPT.identifier, locationUrl) // store the url of the location
+  .addStringNoLocale(SCHEMA_INRUPT.Product, categoriesSerialized) // store string containing the categories
+  .addUrl(RDF.type, "https://schema.org/Place")
+  .build();
+
+
+  dataSet = setThing(dataSet, newLocation); // store thing in dataset
+  // save dataset to later add the images
+  dataSet = await saveSolidDatasetAt(locationFolder, dataSet, {fetch: fetch}) // save dataset 
 }
 
 /**
@@ -407,7 +442,9 @@ export async function createLocationDataSet(folder:string,locationFolder:string,
  * @param review contains the review to be added to the location
  */
 export async function addLocationReview(location:LocationType, review:ReviewType){
-  let url = location.url?.split("#")[0] as string; // get the path of the location dataset
+ // https://adrivesan.inrupt.net/private/lomap/locations/LOC_0cc0f1af-c923-4b40-b4a7-5233ccb5c2a0/index.ttl#LOC_0cc0f1af-c923-4b40-b4a7-5233ccb5c2a0
+//  let url = location.url?.split("#")[0] as string; // get the path of the location dataset
+  let url = location.url + "/index.ttl" as string//HOLA
   // get dataset
   let locationDataset = await getSolidDataset(url, {fetch: fetch})
   // create review
@@ -436,7 +473,7 @@ export async function addLocationReview(location:LocationType, review:ReviewType
  * @param score contains the score of the rating
  */
 export async function addLocationScore(webId:string, location:LocationType, score:number){
-  let url = location.url?.split("#")[0] as string; // get location dataset path
+  let url = location.url + "/index.ttl" as string; // get location dataset path
   // get dataset
   let locationDataset = await getSolidDataset(url, {fetch: fetch})
   // create score
@@ -461,12 +498,9 @@ export async function addLocationScore(webId:string, location:LocationType, scor
 /**
  * Adds locations to the given folder. 
  * @param url folder for the images
- * @param index dataset
  * @param location location to store it's images
  */
-export async function addImages(url: string,index:string, location:LocationType){
-  let locationDataset = await getSolidDataset(index, {fetch: fetch})
-  let thing = await getThing(locationDataset, index+"/index.ttl") as Thing;
+export async function addImages(url: string, location:LocationType){
   location.imagesAsFile?.forEach(async image => {
   
       const savedFile = await overwriteFile(  
@@ -481,13 +515,20 @@ export async function addImages(url: string,index:string, location:LocationType)
 /**
  * Deletes location dataset and from inventory
  * @param webID contains the webId of the user
- * @param locationUrl contains the location url
+ * @param locationUrl contains the location urlfds
  * @returns updated dataset or reject if any errors arise
  */
 export async function deleteLocation(webID:string, locationUrl: string) {
-  let url = locationUrl.split("#")[0] as string; // get location dataset path
+  //HOLA
+ // let url = locationUrl.split("#")[0] as string; // get location dataset path
+  
+  let url = locationUrl + "/index.ttl" as string//HOLA
+
+  let aux = locationUrl.split("/"); 
+  let ID = aux[aux.length-1]; 
+
   let inventory = `${locationUrl.split("locations")[0]}inventory/index.ttl`;
-  let locationUrlInventory = `${inventory}#${locationUrl.split("#")[1]}`
+  let locationUrlInventory = `${inventory}#${ID}`
   try {
     let dataset = await getSolidDataset(url, {fetch:fetch}) // remove location dataset
     await deleteSolidDataset(dataset, {fetch: fetch})
@@ -570,15 +611,15 @@ export async function setAccessToFriend(friend:string, locationURL:string, giveA
   let updatedAcl;
   if (giveAccess) {
     // grant permissions
-    updatedAcl = setAgentResourceAccess(
+    updatedAcl = setAgentDefaultAccess(
       resourceAcl,
       friend,
-      { read: true, append: true, write: false, control: false }
+      { read: true, append: true, write: false, control: true }
     );
   }
   else{
     // revoke permissions
-    updatedAcl = setAgentResourceAccess(
+    updatedAcl = setAgentDefaultAccess(
       resourceAcl,
       friend,
       { read: false, append: false, write: false, control: false }
@@ -658,38 +699,47 @@ export async function addSolidFriend(webID: string,friendURL: string): Promise<{
   return{error:false,errorMessage:""}
 
 }
+export async function getFriendsID(webID:string){
+  let test = getUrl(await getUserProfile(webID), FOAF.knows);
+  let friendURLs = getUrlAll(await getUserProfile(webID), FOAF.knows);
+  return friendURLs;
+}
 
 export async function getSolidFriends(webID:string) {
   let test = getUrl(await getUserProfile(webID), FOAF.knows);
   let friendURLs = getUrlAll(await getUserProfile(webID), FOAF.knows);
   let friends: Friend[] = [];
 
-  // for each friend url, get the fields of the object
-  for (let friend of friendURLs) {
-    
-    try{
-      
-      let name = getStringNoLocale(await getUserProfile(friend),FOAF.name);
-      let imageUrl: string | null = null;
-    
-      let pic = getUrl(await getUserProfile(friend),VCARD.hasPhoto);
+  let req = friendURLs.map(friend => getFriendDetails(friend))
+  const results = await Promise.allSettled(req);
+  const successfulResults = results
+  .filter(result => result.status === 'fulfilled')
+  .map(result => result.status === 'fulfilled' ? result.value : null)//WORKING
+  .filter(value => value !== null) as Friend[];
+  return successfulResults;
+}
+export async function getFriendDetails(friend: string): Promise<Friend | null>{
+  try{
+        
+    let name = getStringNoLocale(await getUserProfile(friend),FOAF.name);
+    let imageUrl: string | null = null;
+  
+    let pic = getUrl(await getUserProfile(friend),VCARD.hasPhoto);
 
-      
+    let f = null;
 
-      if (friend)
-      friends.push({
+    if (friend){
+      let f : Friend = {
         username: name as string,
         webID : friend,
         pfp: pic as string
-      });
-
-    } catch(err){
-
+      };
+      return f;
     }
+    return f;
+  } catch(err){
+    return null;
   }
-  
-  return friends;
-
 }
 
 export  function getSolidName(webID:string)  {

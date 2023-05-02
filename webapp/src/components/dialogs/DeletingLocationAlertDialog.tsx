@@ -34,7 +34,7 @@ export function DeletingAlertDialog(props:any) {
                             title: 'Location deleted.',
                             description: "The location was deleted from your pod.",
                             status: 'success',
-                            duration: 5000,
+                            duration: 15000,
                             isClosable: true,
                         })
                     );
@@ -60,6 +60,7 @@ export function DeletingAlertDialog(props:any) {
     return (
         <>
             <Button 
+            data-testid="delete-button"
                 colorScheme='red'
                 onClick={onOpen}
                 size='md'
@@ -78,7 +79,7 @@ export function DeletingAlertDialog(props:any) {
                             Delete Location
                         </AlertDialogHeader>
 
-                        <AlertDialogBody>
+                        <AlertDialogBody data-testid="warning-message">
                             Are you sure you want to delete this location?
                             <p>This action can't be undone.</p>
                         </AlertDialogBody>
@@ -88,6 +89,7 @@ export function DeletingAlertDialog(props:any) {
                                 Cancel
                             </Button>
                             <Button colorScheme='red'
+                                data-testid="delete-button2"
                                 onClick={()=> {
                                     deleteLoc(props.location);
                                 }}

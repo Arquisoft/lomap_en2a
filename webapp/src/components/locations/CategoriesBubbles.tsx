@@ -12,7 +12,7 @@ export default function CategoriesBubbles(props : CategoriesBubblesProps):JSX.El
             {
               props.location.category.map((category, index) => {
                 return (
-                  <Badge key={index} padding='2%' borderRadius='10' 
+                  <Badge data-testid={'category-bubble-'+category} key={index} padding='2%' borderRadius='10' 
                   colorScheme={colors[index % colors.length]}>{category}
                   </Badge>
                 )

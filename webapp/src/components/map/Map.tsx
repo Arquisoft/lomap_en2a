@@ -1,11 +1,11 @@
-import React,{useEffect} from 'react'
+import React, {useEffect, useState} from 'react'
 import { Box, Button, ChakraProvider, VStack, Icon, Text,
  HStack, Menu, MenuButton, MenuItemOption, MenuList, MenuOptionGroup} from "@chakra-ui/react";
 import {GoogleMap, Marker, useJsApiLoader} from '@react-google-maps/api';
 
 import { Category, isLocationOfCategory } from '../Category';
 import { useSession } from '@inrupt/solid-ui-react';
-import { getSolidFriends } from "../../solid/solidManagement";
+import { getSolidFriends, getFriendsID } from "../../solid/solidManagement";
 import type { Friend, Location } from "../../types/types"
 import {TbMap2} from "react-icons/tb";
 
@@ -14,13 +14,18 @@ import {TbMap2} from "react-icons/tb";
 type MapProps = {
     locations : Array<Location>
     changeViewTo: (viewName: string) => void //function to change the selected view on the left
-    setClickedCoordinates : (coordinates: string) => void
-    clickedCoordinates : string
-    selectedView : string
-    setInLocationCreationMode : (inLocationCreationMode: boolean) => void
-    inLocationCreationMode : boolean
-    setSelectedLocation : (location: Location) => void
+    setClickedCoordinates : (coordinates: string) => void //function to change the coordinates of the location that has been clicked
+    clickedCoordinates : string //coordinates of the location that has been clicked
+    selectedView : string //indicates the view that is currently selected on the left
+    setInLocationCreationMode : (inLocationCreationMode: boolean) => void //function to change the state of the location creation mode
+    inLocationCreationMode : boolean //indicates if the user is in LOCATION CREATION MODE
+    setSelectedLocation : (location: Location) => void //changes the location that has the focus
+    selectedLocation : Location|null //location that has the focus
+    loadUserLocations: ()=> Promise<void>
 }
+
+const blueIcon = 'http://maps.google.com/mapfiles/ms/icons/blue.png';
+const redIcon = 'https://maps.gstatic.com/mapfiles/api-3/images/spotlight-poi.png';
 
 const Map = ( props : MapProps) => {
   const session = useSession();
@@ -43,12 +48,26 @@ const Map = ( props : MapProps) => {
   //set as center the user location
   useEffect(() => {
     // get the user's current location
-    navigator.geolocation.getCurrentPosition(position => {
-      const { latitude, longitude } = position.coords;
-      setCenter({ lat: latitude, lng: longitude });
-    });
-    
+    if(navigator.geolocation){
+      navigator.geolocation.getCurrentPosition(position => {
+        const { latitude, longitude } = position.coords;
+        setCenter({ lat: latitude, lng: longitude });
+      });
+    }
   }, []);
+
+  //when the selectedLocation is changed the center of the map will be the location that has the focus
+  useEffect(() => {
+    //if no selected location, we do nothing
+    if(props.selectedLocation === null || props.selectedLocation === undefined) return;
+
+    const newCenter = {
+      lat: props.selectedLocation.coordinates.lat.valueOf(),
+      lng: props.selectedLocation.coordinates.lng.valueOf()
+    }
+    
+    setCenter(newCenter)
+  }, [props.selectedLocation])
 
   //we update the state of the location creation mode when the prop changes
   React.useEffect(() => {
@@ -58,37 +77,30 @@ const Map = ( props : MapProps) => {
   const onUnmount = React.useCallback(function callback() {setMap(null)}, [])
 
   const handlePlaceClick = (location) => {
-    const newCenter = {
-      lat: location.coordinates.lat.valueOf(),
-      lng: location.coordinates.lng.valueOf()
-    }
-    
-    setCenter(newCenter)
     props.setSelectedLocation(location);
     props.changeViewTo('Map');
     props.changeViewTo('LocationInfo');
   }
 
   function handleMapClick(lat:any,lon:any):void {
-    //we update the center of the map
-    setCenter({lat: lat, lng: lon});
 
-    // get coordinates where clicked
-    let clickedCoords = lat + ", " + lon;
+        // get coordinates where clicked
+        let clickedCoords = lat + ", " + lon;
 
-    //we update the currently clicked coordinates
-    props.setClickedCoordinates(clickedCoords);
-    //we update the state of the location creation mode
-    props.setInLocationCreationMode(false);
+        //we update the currently clicked coordinates
+        props.setClickedCoordinates(clickedCoords);
+        //we update the state of the location creation mode
+        props.setInLocationCreationMode(false);
 
-    //if the currently selected view is not the add location form, we change it to it
-    if (props.selectedView !== 'AddLocationForm'){
-      props.changeViewTo('AddLocationForm');
+        //if the currently selected view is not the add location form, we change it to it
+        if (props.selectedView !== 'AddLocationForm'){
+            props.changeViewTo('AddLocationForm');
+        }
     }
-  }
 
   const colors = ['teal', 'purple', 'pink', 'blue', 'green', 'orange'];
   const categories = Object.values(Category); // array of strings containing the values of the categories
+  const [activeIndex, setActiveIndex] = useState(null);
 
 
   const handleFriends = async () => {
@@ -119,7 +131,8 @@ const Map = ( props : MapProps) => {
   }, [checkedCategory]);
 
   // handle clicks on the category filter buttons
-  const handleCategoryClick = (e) => {
+  const handleCategoryClick = (e, index) => {
+      setActiveIndex(index);
       setAreCheckedFilters(true);
       setCheckedCategory(e.target.value);
   }
@@ -229,8 +242,8 @@ const Map = ( props : MapProps) => {
                         borderRadius={25}
                         value={filter}
                         minWidth={'15%'}
-                        onClick={(e:any) => handleCategoryClick(e)}
-                        bgColor={`${colors[index % colors.length]}.50`}
+                        onClick={(e:any) => handleCategoryClick(e, index)}
+                        bgColor={activeIndex === index ? `${colors[index % colors.length]}.400` : `${colors[index % colors.length]}.50`}
                         >
                         {filter}
                       </Button>
@@ -257,6 +270,11 @@ const Map = ( props : MapProps) => {
                     position={{lat: Number(place.coordinates.lat), lng: Number(place.coordinates.lng)}}
                     onClick={() => handlePlaceClick(place)}
                     title={place.name}
+                    icon={
+                      place.isFriend
+                        ? blueIcon
+                        : redIcon
+                    }
                 ></Marker>))
               )
               :
@@ -266,6 +284,11 @@ const Map = ( props : MapProps) => {
                     position={{lat: Number(place.coordinates.lat), lng: Number(place.coordinates.lng)}}
                     onClick={() => handlePlaceClick(place)}
                     title={place.name}
+                    icon={
+                      place.isFriend
+                        ? blueIcon
+                        : redIcon
+                    }
                 ></Marker>))
               )
             }

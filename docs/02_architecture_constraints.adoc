@@ -1,6 +1,9 @@
 [[section-architecture-constraints]]
 == Architecture Constraints
-When designing the LoMap application, there are several constraints that must be taken into consideration. These constraints will have a significant impact on the overall design of the application and the architectural decisions that are made. The constraints include privacy, user experience, deployment, security,... These constraints must be considered in order to ensure that the final product meets the needs and expectations of the users and stakeholders. The following table summarizes these constraints and provides a brief explanation for each.
+When designing the LoMap application, there are several constraints that must be taken into consideration, as they will have a significant
+impact on the overall design of the application and the architectural decisions. 
+These constraints must be considered in order to ensure that the final product meets the needs and expectations of the users and stakeholders. 
+The following table summarizes these constraints and provides a brief explanation for each one.
 
 [options="header", cols="1,1"]
 |===
@@ -20,20 +23,19 @@ When designing the LoMap application, there are several constraints that must be
 |===
 
 === Recommended technologies to take into account
-For the development of this application, some technologies have been proposed to us in order to ease the implementation of the dessired application. These are not considered constraints since they are not forced to us, but given the strong recommendation we considered it should be taken into account and presented in this section. In the following table, we can see the set of technologies proposed. 
+There some technologies mentioned to provide readers with a clear understanding of this application and how it works. 
+These are not considered constraints since they were not imposed, but given the strong impact they have, the team considered that they should be presented in this section. 
 
 [options="header", cols="1,1"]
 |===
 | Technology | Explanation
 
-| TypeScript | It is a really versatile programming language that takes the best out of JavaScript and adds Type definition on top of it. Making it much more understandable and consistent.
+| Google Maps API | Collection of APIs that allows developers to integrate Google Maps into their applications. Also provides developers with access to a range of features and functionality related to maps and location-based services.
 
-| NodeJS | Node.js is a JavaScript runtime environment that allows developers to run JavaScript code outside of a web browser. This allows to use TypeScript language from the server side.
+| NodeJS | JavaScript runtime environment that allows developers to run JavaScript code outside of a web browser. This allows to use TypeScript language from the server side.
 
-| React | It is a JavaScript framework that allows the creation of web application UI in an easy way.
+| React | JavaScript library that allows the creation of web application UI in an easy way. The user interface of our application was built using react componentes and libraries.
 
-| Inrupt | SOLID pod provider. Also offers a set of libraries to ease the use and management of pods.
-
-| Chakra UI | Modular component library for React which decreases the effort on creating HTML components. 
+| Inrupt | Platform (and SOLID pod provider) that allows a secure and decentralized way to store and share data. Also offers a set of libraries to ease the use and management of pods.
 
 |===

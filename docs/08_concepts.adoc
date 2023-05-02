@@ -57,59 +57,95 @@ This is the actual state of the domain model, which will change along the develo
 [plantuml,Domain model,png]
 ----
 class Map
-    Map : - locations : ListOfLocations<Location>
+    Map : - locations : List<Location>
+    Map : + sharedLocations : List<Location>
+
+class Coordinates
+    Coordinates : - lng : Number
+    Coordinates : - lat : Number
 
 class Location
-    Location : - latitude : double
-    Location : - longitude : double    
-    Location : - name : String
-    Location : - description : String
-    Location : - reviews : ListOfLocations<String>
+    Location : - url : string
+    Location : - name : string
+    Location : - description : string
+    Location : - category : Array<string>
+    Location : - rating : Map<string,Number>
+    Location : - images : Array<string>
+    Location : - imagesAsFile : Array<File>
 
-    Location : + getLatitude() : String
-    Location : + getLongitude() : String
-    Location : + getName() : String
-    Location : + getDescription() : String
+class Review
+    Review : - webId : string
+    Review : - date : string
+    Review : - title : string
+    Review : - content : string
+    Review : - username : string
 
 class User
-    User : maps : ListOfLocations<Map>
-    User : friends : ListOfLocations<User>
+    User : name : string
+    User : email : string
+
+class Friend
+    Friend : username : string
+    Friend : webID : string
+    Friend : pfp : string
 
 
-Map <-- "*" Location
-User "1" *--> "*" Map 
-User --> "*" User
+
+Coordinates *--> "1" Location
+Review *--> "*" Location
+Map "1" *--> User
+Friend "*" --> User
 ----
 
 === _Architecture and design patterns_
 
-.Architecture pattern: MVC
-We will use the MVC (Model-View-Controller) Pattern, which is very commonly used for developing applications with Graphical User Interfaces (GUIs). Both desktop and web applications use ir. It is simple but powerful, allowing us to separate the application in three different but interconnected parts or layers:
-
-* Model: contains the core functionality and data. It contains the data that the View layer will represent
-* View: displays information to the user. It passes the input information to the Controller layer.
-* Controller: handles the inputs from the users. It communicates with the Model layer.
-
-.Design pattern: Adapter
-We will use this pattern when working with the geolocalization API. We chose to use Google Maps for this, but maybe in the future we want or have to change it. To prevent and minimize the impact such a change could have in our application, we will use an Adapter pattern. This way only a few changes will be necessary in our code.
+.Just front-end and SOLID
+We decided to not use a restapi (back-end). This means our application will operate only with a front-end together with SOLID.
 
 === _Rules for using specific technology_
 
-Right now we now little about the technologies we are going to use. Once we learn more about them more content will be added to this section.
+Right now we know little about the technologies we are going to use. Once we learn more about them more content will be added to this section.
 
 .Rules:
 
 * Always make a _git pull_ before getting to work. This will prevent possible problems in the repository.
 * Never make a _commit_ to the master branch.
-* Never merge a branch into another by yourself. Create always a _pull request_ so the rest of the team can check the changes and approve them.
+* Never merge a branch into another by yourself, unless that branch is only yours and does not affect others.
+  Create always a _pull request_ so the rest of the team can check the changes and approve them.
 
 === _Implementation rules_
 
 These are rules to be considered when implementing our code:
 
 * Write in English the names of all the functions, variables, etc.
-* Never get the responsabilities of the different layer of the MVC pattern mixed (no UI outside View, no database access outside Model...).
 
 === _User Experience (UX)_
 
-We want to have adaptable so it can be used in different devices. We also want it to have accessible interfaces, so we have to be careful with the use of colors, alternative texts and more details.
+We want to have adaptable so it can be used in different devices. We also want it to have accessible interfaces, so we have to be careful with the use of colors,
+alternative texts and more details.
+
+After doing some usability tests, we found that the application was not very friendly with new users.
+A viable solution we came to was the implementation of a tutorial. This tutorial uses texts and GIFs to
+show the user how to do basic actions in the application like how to add a location, check your added locations,
+add a friend...
+
+Internationalizing the application was discussed during the development, but in the actual version of the application,
+it is not yet implemented. The application is only available in English.
+
+=== _Development concepts_
+.Testing
+We have tested the application with different tests:
+
+* Unit testing: with the help of the SonarCloud tool to keep track of the code covered by these tests. The Continuous Integration practice was applied with GitHub Actions.
+* Acceptance tests with Cucumber: tests that are meant to be ran in front of the client. They were developed using user stories, which are simple and easy to understand. We applied the Behaviour-Driven Development.
+* Usability tests: with the help of people we know (family and friends), we tested our application usability.
+    Thanks to these tests, we found that some people had problems, and we decided to add a tutorial that people can check.
+    This way, they'll learn what can they use LoMap for, and how to use it.
+* Load tests: to measure the performance of the application while many users use it. The tools Gatling and Apache Benchmark were used.
+
+.Deployment
+The application will be deployed to GitHub Pages.
+
+.Configurability
+The application will not have configurable features. An early idea was to include a "dark mode".
+Through the development we decided to postpone these ideas in order to focus on a better application in general.
