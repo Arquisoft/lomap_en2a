@@ -19,7 +19,7 @@ test('check that the name input works',async () => {
 
 })
 
-//we test that writting in the name input works
+//we test that writting in the description input works
 test('check that the description input works',async () => {
     const {getByTestId}= render(<AddLocationForm locations={[]} setSelectedView={jest.fn()} loadLocations={jest.fn()} loadUserLocations={jest.fn()} clickedCoordinates={""} setClickedCoordinates={jest.fn()} setInLocationCreationMode={jest.fn()} setSelectedLocation={jest.fn()}></AddLocationForm>)
     const inputElement = getByTestId("description-input") as HTMLInputElement;
@@ -47,7 +47,7 @@ test('check that the coordinates input doesnt work with wrong coordinates',async
     expect(inputElement.value).toBe('Los Angeles');
     //we check that the error message appears
     expect(getByTestId('coord-error')).toBeInTheDocument();
-    //we change the value of the input to 'Los Angeles'
+
     
     
     
@@ -83,8 +83,6 @@ test('handles image upload', async () => {
         expect(input.files.length).toBe(1);
         expect(input.files[0].name).toBe('test.png');
       }
-
-    // add more assertions as needed to check the component's state changes
   });
 
 test('selects a category', async () => {
@@ -153,7 +151,7 @@ test('close button', async () => {
   act(() => {
     fireEvent.click(closeButton);
   });
-// Check that the appropriate functions were called with the expected arguments
+  
 expect(setSelectedView).toHaveBeenCalledWith('Map');
 expect(setClickedCoordinates).toHaveBeenCalledWith('');
   

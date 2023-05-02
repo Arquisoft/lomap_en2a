@@ -98,7 +98,7 @@ export function TutorialModalDialog(props:any) {
                         </ModalFooter>
                     </>
                 )}
-              {(currentPage === 2) && (
+              {(currentPage === 2) && (  
                   <>
                       <ModalHeader  fontSize='3xl' fontWeight='bold'>
                           <Image src={images.logo} height={"1em"} width={"auto"}></Image>

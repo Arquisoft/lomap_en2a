@@ -1,64 +1,72 @@
 [[section-runtime-view]]
 == Runtime View
 
-A very basic representation of the workflow of the application could be the following:
-[plantuml,"General structure",png]
+In this section some use cases will be explained.
+
+=== Login to Solid
+
+When the user enters the application, a dialog is displayed for login, where he gets redirected to the pod provider's login.
+
+[plantuml,"Login to Solid",png]
 ----
 @startuml
-
 header LoMap-en2a
-title Runtime view
-database Pod
- 
-User-> Pod : Login
-Application ->Pod: Request auth
-Pod -> Application : Grant access
-Application -> Pod : RequestLocations
-Pod->Application : returnLocations
-Application -> MapProvider : RepresentLocations
-User ->Application :saveLocation
-Application -> Pod : saveLocation
-Application -> MapProvider : showLocation
+
+title Login to Solid
+
+database PodProvider
+
+User -> Application: select pod provider
+User -> Application: click login button
+Application-> PodProvider: redirect login
+User -> PodProvider: login to solid
+Application -> PodProvider: useSession()
+Application -> Application: setLogged(true)
 
 @enduml
 ----
 
-Now let us start to expand some of the use cases the application has to face for us to see the structure with more depth.
-
-
 === Add location to the user's map
 
-Once user decides to add a new location by selecting the corresponding tool to add a new location and clicking on some location on the map a menu to introduce location data will be presented to the user. Once fulfilled and confirmed location is created and added to user's pod.
+To add a location, the user clicks on the bottom-right corner icon. Once it's selected, the user clicks on the desired place in the map.
+A window appears where he writes the information. Once it's written, he adds the location, and the application saves it at the user's pod.
 
-In terms of runtime execution of this action application will perform actions similar to the ones bellow.
 [plantuml,"Addition of a location",png]
 ----
 @startuml
 
 header LoMap-en2a
 
-title Add location
+title Addition of a location
 
-database Pod
+database PodProvider
 
-User -> Application : select create location tool
-Application -> Application : change selected tool
-User -> Application : selectPoint(x,y)
-Application -> Location : create location on x,y
-Application -> Pod : saveLocation()
-Application -> Map : addLocation(Location)
-Map -> MapAdapter :representInMap(Location)
-MapAdapter -> MapAPI : addMarker(location.x,location.y)
-MapAdapter -> MapAPI : setLocationImage(location.img)
-
+User -> Application: select add location
+Application -> Application: setAddLocationMode()
+User -> Map: click on the map
+Map -> Application: setClickedCoordinates(lat,lon)
+Map -> Application: setAddLocationMode(false)
+Map -> Application: setSelectedView(AddLocationForm)
+User -> AddLocationForm: write fields of the location
+User -> AddLocationForm: click add location
+AddLocationForm -> AddLocationForm: addLocation(location)
+AddLocationForm -> Application: setSelectedView(Map)
+AddLocationForm -> Application: setClickedCoordinates(lat,lon)
+AddLocationForm -> SolidManagement: createLocation(webId,location)
+SolidManagement -> PodProvider: createLocation(webId, location)
+AddLocationForm -> SolidManagement: loadUserLocations()
+PodProvider -> SolidManagement: Location[]
+SolidManagement -> Application: list of locations
+Application -> Application: setOwnLocations(locations)
+Application -> Map: generates markers
 @enduml
 ----
 
 === Remove location from user's map
 
-In order to remove a location from the user's map user will click on a Location of the map that he/she has created previously. This will show more information on the location selected (name, coordinates, description,...). On this location view the option to delete the location will be presented to the user. Once clicked and confirmed by the user location will be deleted from the user's pod and from the map.
+To remove a location, the user clicks on the marker of the map. The marker will display the details of a location. There, he can click the delete button,
+and the location will be removed.
 
-Bellow we can see a representation of this process in a runtime diagram:
 [plantuml,"Remove location from map",png]
 -----
 @startuml
@@ -67,26 +75,31 @@ header LoMap-en2a
 
 title Remove a location
 
-database Pod
+database PodProvider
 actor User
 
-User -> Application : click on the map
-Application -> Map : verifyLocation(x,y)
-Map -> Map : findLocation(x,y)
-Map -> Application : return location object
-Application -> Application : show location info
-User -> Application : select delete option for the location
-Application -> Map :deleteLocation(Location)
-Map -> MapAdapter : deleteLocation(Location)
-MapAdapter -> MapAPI : removeMark(x,y)
-Application -> Pod : removeLocation(Location)
+User -> Map : click on the marker
+Map -> Application: setSelectedLocation(location)
+Map -> Application: setSelectedView(LocationDetail)
+User -> LocationInfo: click delete button
+User -> DeleteAlertDialog: wants to delete
+DeleteAlertDialog -> SolidManagement: deleteLocation(webId, location)
+SolidManagement -> PodProvider: deleteLocation(webId, location)
+DeleteAlertDialog -> Application: setSelectedView(Map)
+DeleteAlertDialog -> SolidManagement: loadUserLocations()
+SolidManagement -> PodProvider: gets user locations
+PodProvider -> SolidManagement: list of locations
+SolidManagement -> Application: list of locations
+Application -> Application: setOwnLocations(locations)
+Application -> Map: generates markers
 
 @enduml
 -----
 
 === Add a friend
-LoMap will allow users to add new friends. This is where the centralized database will come into play. User will send friend requests by giving the username of the other user, after that, application will search for that username in the centralized database and obtain it's webId
-If that username is found the friend request will be sent to the other user. Information of friend status will be all stored in the user's pod since it is considered personal information. A diagram that could model the behavior of this scenario could be the following one:
+With lomap, users can add friends directly to their solid account. The user clicks the friends button in the menu, and inputs the webId of the friend.
+Then, the friend is added to it's solid account.
+
 [plantuml,"Add a friend",png]
 ----
 @startuml
@@ -95,32 +108,36 @@ header LoMap-en2a
 
 title Add a friend
 
-database podUsr1
-actor usr1
+database PodProvider
+actor User
 
-usr1 -> Application : addFriend("usr2")
-database db
-Application -> db : getUserByName("usr2")
-db -> Application : returnId
-actor usr2
-database podUsr2
-Application -> podUsr2 : addFriendRequest("usr1",idUsr1)
-|||
-......usr2 logs in.........
-|||
-usr2 -> Application : login
-Application -> podUsr2 : getFriendRequests()
-usr2 -> Application : acceptFriendRequest("usr1")
-Application -> podUsr2 : addFriend("usr1",idUsr1)
-Application -> podUsr1 : addFriend("usr2")
+User -> Application: click friends button
+Application -> Application: setSelectedView(friends)
+Friends -> SolidManagement: loadFriends(webId)
+SolidManagement -> PodProvider: loadFriends()
+PodProvider -> PodProvider: gets user's pictures and names
+PodProvider -> SolidManagement: List of friends
+Friends -> Friends: shows friends
+User -> Friends: writes webId of the friend
+User -> Friends: clicks add button
+Friends -> SolidManagement: addFriend(webID)
+SolidManagement -> PodProvider: addFriend(friendWebID, userWebID)
+Friends -> SolidManagement: loadFriends(webId)
+SolidManagement -> PodProvider: loadFriends()
+PodProvider -> PodProvider: gets user's pictures and names
+PodProvider -> SolidManagement: List of friends
+SolidManagement -> Friends: list of friends
+Friends -> Friends: shows friends
 
 @enduml
 ----
-As it can be seen in the previous diagram information stored in a centralized way is mainly performance related information to speed up the process of making two friends. 
+
 
 === Share location with friends
 
-Application will allow users to share their locations with friends or group of friends. This functionality will be covered by adding to the creation (or configuration once created) of a location to have a sharing section where user can select the people or group of people that will be able to access that location.
+Application will allow users to share their locations with their friends. This is achieved by clicking on the share button at a 
+location's details and selecting the friend to share with. Then, on the pod, the needed permisions will be given to the friend.
+
 [plantuml,"Share a location with friends",png]
 ----
 @startuml
@@ -129,20 +146,21 @@ header LoMap-en2a
 
 title Share a location
 
-database podUsr1
-actor usr1
+database PodProvider
+actor User
 
-usr1 -> Application : selectLocation
-Application -> usr1 : return location
-usr1 -> podUsr1 : getFriends
-podUsr1 ->usr1 : return ["usr2", ...]
-usr1 -> Application : shareLocation(Location,"usr2")
-database db
-Application -> db : getUserByName("usr2")
-db -> Application : return ID
-
-database podUsr2
-Application -> podUsr2 : addSharedLocation(Location,"usr1")
+User -> Map : click on the marker
+Map -> Application: setSelectedLocation(location)
+Map -> Application: setSelectedView(LocationDetail)
+User -> LocationInfo: click share button
+LocationInfo -> SolidManagement: loadFriends(webID)
+SolidManagement -> PodProvider: loadFriends()
+PodProvider -> PodProvider: gets user's pictures and names
+PodProvider -> SolidManagement: List of friends
+SolidManagement -> LocationInfo: list of friends
+User -> LocationInfo: clicks on friend's webId
+LocationInfo -> SolidManagement: shareLocation(location, friendWebId)
+SolidManagement -> PodProvider: sets the permisions to the friend for the location url
 
 @enduml
 ----
