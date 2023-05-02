@@ -36,6 +36,7 @@ defineFeature(feature, test => {
             await page.click('#login')
 
             await page.waitForNavigation(); // wait for the redirect
+            await page.waitForTimeout(15000);
             await expect(page).toClick("button", {text:"Close"});
             await page.waitForTimeout(8000);
 
