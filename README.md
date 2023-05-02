@@ -1,5 +1,7 @@
 # 🗺️LoMap_en2a🗺️
 
+Documentation of the project at https://arquisoft.github.io/lomap_en2a/docs/
+
 LoMap is the perfect way to explore🔍 and share the world around you with your 🎅👮friends🤴🐒! With its up-to-date mapping and pods from the [Solid Project](https://solidproject.org/)<img src="https://solidproject.org/assets/img/solid-emblem.svg" height="20"> for decentralized data🔑, LoMap makes it easy to customize your map by adding and sharing places of interest🎢. Discover new locations and experiences with LoMap, and never worry about data privacy—because with pods, you are in 🔫control🔫.
 
 
