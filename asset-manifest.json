@@ -1,26 +1,26 @@
 {
   "files": {
-    "main.css": "/static/css/main.de398e84.css",
-    "main.js": "/static/js/main.4a217814.js",
-    "static/js/670.c6d4f233.chunk.js": "/static/js/670.c6d4f233.chunk.js",
-    "static/js/787.994511a4.chunk.js": "/static/js/787.994511a4.chunk.js",
-    "static/js/180.303bdfdb.chunk.js": "/static/js/180.303bdfdb.chunk.js",
-    "static/media/list-of-locations-tutorial.gif": "/static/media/list-of-locations-tutorial.94ace9c2626e624e92ef.gif",
-    "static/media/add-location-tutorial.gif": "/static/media/add-location-tutorial.d6f7366835e4f07ed856.gif",
-    "static/media/add-friends-tutorial.gif": "/static/media/add-friends-tutorial.57ba95b2ff5b8ef8ce2d.gif",
-    "static/media/using-filters.gif": "/static/media/using-filters.767cabe1f5a7d4ea6c89.gif",
-    "static/media/adding-location-from-map-view.gif": "/static/media/adding-location-from-map-view.8ae01c1221ab770a52b7.gif",
-    "static/media/lomap_logo.png": "/static/media/lomap_logo.d883f3a0203db76ec900.png",
-    "static/media/introduction-dialog-img.jpg": "/static/media/introduction-dialog-img.8848213ee1060068b4d1.jpg",
-    "static/media/no-pictures-picture.png": "/static/media/no-pictures-picture.79caf0eb1f1872587504.png",
-    "index.html": "/index.html",
-    "main.de398e84.css.map": "/static/css/main.de398e84.css.map",
-    "main.4a217814.js.map": "/static/js/main.4a217814.js.map",
-    "787.994511a4.chunk.js.map": "/static/js/787.994511a4.chunk.js.map",
-    "180.303bdfdb.chunk.js.map": "/static/js/180.303bdfdb.chunk.js.map"
+    "main.css": "/lomap_en2a/static/css/main.de398e84.css",
+    "main.js": "/lomap_en2a/static/js/main.116a0a63.js",
+    "static/js/670.c6d4f233.chunk.js": "/lomap_en2a/static/js/670.c6d4f233.chunk.js",
+    "static/js/787.994511a4.chunk.js": "/lomap_en2a/static/js/787.994511a4.chunk.js",
+    "static/js/180.303bdfdb.chunk.js": "/lomap_en2a/static/js/180.303bdfdb.chunk.js",
+    "static/media/list-of-locations-tutorial.gif": "/lomap_en2a/static/media/list-of-locations-tutorial.94ace9c2626e624e92ef.gif",
+    "static/media/add-location-tutorial.gif": "/lomap_en2a/static/media/add-location-tutorial.d6f7366835e4f07ed856.gif",
+    "static/media/add-friends-tutorial.gif": "/lomap_en2a/static/media/add-friends-tutorial.57ba95b2ff5b8ef8ce2d.gif",
+    "static/media/using-filters.gif": "/lomap_en2a/static/media/using-filters.767cabe1f5a7d4ea6c89.gif",
+    "static/media/adding-location-from-map-view.gif": "/lomap_en2a/static/media/adding-location-from-map-view.8ae01c1221ab770a52b7.gif",
+    "static/media/lomap_logo.png": "/lomap_en2a/static/media/lomap_logo.d883f3a0203db76ec900.png",
+    "static/media/introduction-dialog-img.jpg": "/lomap_en2a/static/media/introduction-dialog-img.8848213ee1060068b4d1.jpg",
+    "static/media/no-pictures-picture.png": "/lomap_en2a/static/media/no-pictures-picture.79caf0eb1f1872587504.png",
+    "index.html": "/lomap_en2a/index.html",
+    "main.de398e84.css.map": "/lomap_en2a/static/css/main.de398e84.css.map",
+    "main.116a0a63.js.map": "/lomap_en2a/static/js/main.116a0a63.js.map",
+    "787.994511a4.chunk.js.map": "/lomap_en2a/static/js/787.994511a4.chunk.js.map",
+    "180.303bdfdb.chunk.js.map": "/lomap_en2a/static/js/180.303bdfdb.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.de398e84.css",
-    "static/js/main.4a217814.js"
+    "static/js/main.116a0a63.js"
   ]
 }
