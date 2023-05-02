@@ -3,8 +3,6 @@
 
 == Building Block View
 The building block view shows in a graphic way a decomposition of the system. 
-As of now, some internal decisions have not been decided yet, it's a very early build, so changes will be added as the development proceeds. We will be using a MVC pattern.
-
 
 [role="arc42help"]
 ****
@@ -38,7 +36,7 @@ Thus it contains the white box description of selected building blocks of level 
 ****
 
 === Whitebox Overall System
-Main view of the system, without much detail. It has the application as a black box with the external interactions.
+Main view of the system. The Lomap application is related to two external components: the Solid Provider and the Google Maps API.
 [role="arc42help"]
 ****
 Here you describe the decomposition of the overall system using the following white box template. It contains
@@ -62,19 +60,17 @@ In the best case you will get away with examples or simple signatures.
 
 _**Overview Diagram**_
 
-image:BuildingBlocks1.jpg["Main Build Block"]
+image:Scope&ContextBuildingBlock.jpg["Main Build Block"]
 
 
 Motivation::
-This is a general overview of the application. Here it can be seen the External services that will be used.
+This is a general overview of the application. Here it can be seen the external services that will be used and the interaction between them.
 
 
 Contained Building Blocks::
-* _System._ It's the main application, which will be explained later on. There is also blocks for the Google Maps API and SOLID.
-
-
-Important Interfaces::
-No important interfaces yet.
+* **LoMap.** It's the main application, represented as a whitebox that will be detailed in the following decompositions. 
+* **Google Maps API.** It's the external API used by the system to achieve the map functionalities.
+* **Solid Provider.** System to which the application is going to rely on for the storage of data.
 
 [role="arc42help"]
 ****
@@ -96,61 +92,70 @@ If you use a list of black box descriptions then you fill in a separate black bo
 Its headline is the name of the black box.
 ****
 
+=== Level 1
 
-==== System
-
-[role="arc42help"]
-****
-Here you describe <black box 1>
-according the the following black box template:
-
-* Purpose/Responsibility
-* Interface(s), when they are not extracted as separate paragraphs. This interfaces may include qualities and performance characteristics.
-* (Optional) Quality-/Performance characteristics of the black box, e.g.availability, run time behavior, ....
-* (Optional) directory/file location
-* (Optional) Fulfilled requirements (if you need traceability to requirements).
-* (Optional) Open issues/problems/risks
-
-****
-
-The main application. It interacts with the external services and provides the user a GUI to interact with the system.
-
-There are no interfaces defined yet
-
-=== Level 2
-
-[role="arc42help"]
-****
-Here you can specify the inner structure of (some) building blocks from level 1 as white boxes.
-
-You have to decide which building blocks of your system are important enough to justify such a detailed description.
-Please prefer relevance over completeness. Specify important, surprising, risky, complex or volatile building blocks.
-Leave out normal, simple, boring or standardized parts of your system
-****
+The main application. It interacts with the external services and provides the user a GUI to interact with the system. It is composed by a single module representing the web application.
 
 ==== White Box _System_
 
 _**Overview Diagram**_
 
-image:BuildingBlocks2.jpg["White Box System"]
+image:level1BuildingBlocks.jpg["White Box System"]
 
 Motivation::
 
-The inner part of the application and how it interacts with the external services and the database.
+First decomposition of the system. It shows the webapp module as a whitebox. Also displays the docs module which contains the documentation of the project.
 
 
 Contained Building Blocks::
 
-* _View._ It's the graphic part of the application. It interacts with the controller and the user.
-* _Model._ Interacts with the database and the external services and it's the part where the logic takes place.
-* _Controller._ Connects the view with the model, in order to process the petitions from the view and the responses from the model.
-* _DataBase._ It's the app's database. It has not been decided yet it's desing, but we will be using MySQL as stated in the https://github.com/Arquisoft/lomap_en2a/wiki/ARD---Data-Base[Architecturall decisions.]
+* **Webapp.** It's the main module of the application. It interacts with the external components to build the whole system.
+* **Docs.** It's the module of the project devoted to provide all the documentation of the application. It won't be decomposed any further.
 
 Fulfilled requirements::
 
-* Keep the information decentralized with SOLID.
+* The fact of not having a database connected to the system totally fulfills the requirement about the decentralization of the information, as all data will be privately and securetly stored in each user's pod.
 
-Important Interfaces::
-Some interfaces might be used for the communication of each layer. We will also use interfaces to apply de adapter pattern for communication with the API.
+=== Level 2
+
+The webapp module is the core of the application. It contains all the components that make up the web and all the interactions with the external libraries. In its contents we can differentiate the following directories: src, e2e and public.
+
+==== White Box _System_
+
+_**Overview Diagram**_
+
+image:level2BuildingBlocks.jpg["White Box System"]
+
+Motivation::
+
+Core of the application. It is reponsible of all the processes and functionalities fulfilled by LoMap.
+
+Contained Building Blocks::
+
+* **Src.** Directory containing all the React components, Solid interaction and the project's unit tests.
+* **e2e.** Contains the end-to-end testing of the application using the Cucumber software tool.
+* **Public.** Contains files that will be used as the entry point for the React application in a web browser
+
+=== Level 3
+
+Decomposition of the src directory. This directory contains the source code and assets for the web application: css and typescript files along with images and static assets.
+
+==== White Box _System_
+
+_**Overview Diagram**_
+
+image:level3BuildingBlocks.jpg["White Box System"]
+
+Motivation::
+
+This folder serves as the central location for storing all the components of the application. It provides a well-organized and easy-to-navigate structure for the development team, allowing them to quickly find and modify the files they need, as well as providing an easy-to-maintain structure.
+
+Contained Building Blocks::
+
+* **Solid.** Contains all the source code utility for the conections with the pod provider. Provides a general file responsible for all the exchange of information between the application and the solid pod.
+* **Components.** Contains all the React components displayed to the user. Basically represents the GUI and the logic of the interfaces interactions.
+* **Static.** Contains files that are not processed by the build system or the application itself.
+* **Tests.** Contains all the unit tests of the system, which are responsible for the coverage percentage.
+* **Types.** Folder containing all the types used in the application to represent the different entities of the system.
 
 

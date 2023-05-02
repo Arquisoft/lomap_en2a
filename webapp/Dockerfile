@@ -1,16 +1,18 @@
-FROM node:18.13.0
-LABEL org.opencontainers.image.source https://github.com/arquisoft/lomap_en2a
+FROM node:16-alpine
+LABEL name="LOMAP"
 COPY . /app
 WORKDIR /app
+
 #Install the dependencies
 RUN npm install
-
-ARG API_URI="http://localhost:5000/api"
-ENV REACT_APP_API_URI=$API_URI
 
 #Create an optimized version of the webapp
 RUN npm run build
 
 #Execute npm run prod to run the server
-#CMD [ "npm", "run", "prod" ]
-CMD ["npm", "start"]
+CMD [ "npm", "run", "prod" ]
+#CMD ["npm", "start"]
+
+# To get a the image of the docker on a moment use -> docker save -o lomap.tar lomap
+# To use an image once it has been stored can use -> docker load -i lomap.tar
+# To execute the image use docker run -p 3000:3000 lomap
