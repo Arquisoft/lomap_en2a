@@ -12,11 +12,11 @@ jobs:
     - uses: actions/setup-node@v3
       with:
         node-version: 18
+    - name: Deploy to GitHub Pages
     - run: npm ci
     - run: npm run deploy
       env:
         REACT_APP_GOOGLE_MAPS_API_KEY : ${{secrets.REACT_APP_GOOGLE_MAPS_API_KEY}}
-    - name: Deploy to GitHub Pages
   unit-test-webapp:
     runs-on: ubuntu-latest
     defaults:
