@@ -17,7 +17,6 @@ jobs:
       env:
         REACT_APP_GOOGLE_MAPS_API_KEY : ${{secrets.REACT_APP_GOOGLE_MAPS_API_KEY}}
     - name: Deploy to GitHub Pages
-      uses:
   unit-test-webapp:
     runs-on: ubuntu-latest
     defaults:
